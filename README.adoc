@@ -1,4 +1,4 @@
-== Object Detection with RHDE LAB Guide
+== Guide for Object Detection with RHDE LAB
 
 === Accessing the Guide
 
