@@ -1,7 +1,7 @@
 ---
 site:
-  title: Showroom Template Demo
-  url: https://redhat-scholars.github.io/course-template
+  title: MLOps workshop with RHDE and OpenShift AI
+  url: https://luisarizmendi.github.io/guide-object-detection
   start_page: modules::index.adoc
 
 content:
@@ -26,7 +26,7 @@ runtime:
 antora:
   extensions:
     - require: ./content/lib/dev-mode.js
-      enabled: true
+      enabled: false
 
 output:
   dir: ./www
