@@ -10,6 +10,7 @@ import torch
 import threading
 import queue
 import time
+from collections import defaultdict
 
 app = Flask(__name__)
 
@@ -28,16 +29,17 @@ if torch.cuda.is_available():
 else:
     print("Using CPU for inference")
 
-current_counts = {}
+current_detections = defaultdict(lambda: {"count": 0, "confidences": []})
 
 def process_frame(frame, conf_dict):
     """
     Process a single frame and return detections
     """
-    global current_counts
+    global current_detections
+          
     results = model(frame)[0]
-    
-    object_counts = {}
+
+
     
     for detection in results.boxes.data:
         x1, y1, x2, y2, conf, cls = detection
@@ -46,7 +48,10 @@ def process_frame(frame, conf_dict):
         threshold = conf_dict.get(class_name, 0.25)  # Default threshold is 0.25
         
         if conf >= threshold:
-            object_counts[class_name] = object_counts.get(class_name, 0) + 1
+            # Update detection tracking
+            current_detections.clear()
+            current_detections[class_name]["count"] += 1
+            current_detections[class_name]["confidences"].append(float(conf))
             
             cv2.rectangle(frame, 
                         (int(x1), int(y1)), 
@@ -63,9 +68,7 @@ def process_frame(frame, conf_dict):
                        (0, 255, 0), 
                        2)
 
-    current_counts.update(object_counts)
-    
-    return frame, object_counts
+    return frame, dict(current_detections)
 
 def continuous_inference_thread():
     """
@@ -182,7 +185,7 @@ def generate_frames():
         frame_bytes = buffer.tobytes()
 
         # Get the current counts
-        counts_json = json.dumps(current_counts)
+        counts_json = json.dumps(current_detections)
   
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n'
@@ -199,9 +202,16 @@ def video_feed():
 @app.route('/current_counts', methods=['GET'])
 def current_counts_endpoint():
     """
-    Return the current object counts
+    Return the current object counts with confidence scores
     """
-    return jsonify(current_counts)
+    formatted_detections = {
+        class_name: {
+            "count": details["count"], 
+            "confidences": details["confidences"]
+        } for class_name, details in current_detections.items()
+    }
+    
+    return jsonify(formatted_detections)
 
 # Continuous inference thread
 inference_thread = None
