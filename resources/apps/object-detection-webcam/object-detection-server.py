@@ -7,7 +7,9 @@ from datetime import datetime
 import os
 import base64
 import torch
-import subprocess
+import threading
+import queue
+import time
 
 app = Flask(__name__)
 
@@ -15,6 +17,10 @@ model_path = os.getenv('YOLO_MODEL_PATH', '../../../models/luisarizmendi/object-
 model = YOLO(model_path)
 
 confidence_thresholds = {}
+
+# Create a thread-safe queue to store processed frames
+frame_queue = queue.Queue(maxsize=1)
+stop_event = threading.Event()
 
 if torch.cuda.is_available():
     model.to('cuda') 
@@ -57,9 +63,79 @@ def process_frame(frame, conf_dict):
                        (0, 255, 0), 
                        2)
 
-    current_counts = object_counts
+    current_counts.update(object_counts)
     
     return frame, object_counts
+
+def continuous_inference_thread():
+    """
+    Continuously capture frames and process them
+    """
+    camera_index = int(os.getenv('CAMERA_INDEX', -1))  # Default to -1 if not set
+    
+    cap = None
+    if camera_index != -1:
+        # Try to open the camera at the specified index
+        cap = cv2.VideoCapture(camera_index)
+    
+    if not cap or not cap.isOpened():
+        print(f"Camera index {camera_index} not working, looking for any available camera...")
+        
+        available_cameras = []
+        max_resolution = (0, 0)
+        selected_camera_index = None
+
+        for camera_index in range(10):  # Adjust range if necessary
+            cap = cv2.VideoCapture(camera_index)
+            
+            if cap.isOpened():
+                print(f"Camera {camera_index} is available.")
+                
+                # Check the resolution of the current camera
+                width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                print(f"Camera {camera_index} resolution: {width}x{height}")
+                
+                # Check if this camera has the highest resolution so far
+                if (width * height) > (max_resolution[0] * max_resolution[1]):
+                    max_resolution = (width, height)
+                    selected_camera_index = camera_index
+                    
+                available_cameras.append(camera_index)           
+        
+        if available_cameras:
+            print(f"Available camera indices: {available_cameras}")
+            print(f"Selected camera: {selected_camera_index} with resolution {max_resolution[0]}x{max_resolution[1]}")
+        else:
+            print("No available cameras found.")
+            return
+       
+        cap = cv2.VideoCapture(selected_camera_index)
+           
+    if not cap or not cap.isOpened():
+        print("Unable to access any camera")
+        return
+
+    try:
+        while not stop_event.is_set():
+            success, frame = cap.read()
+            if not success:
+                time.sleep(0.1)  #  delay
+                continue
+            
+            processed_frame, _ = process_frame(frame, confidence_thresholds)
+            
+            # Clear the queue if it's full to ensure we always have the latest frame
+            try:
+                frame_queue.get_nowait()
+            except queue.Empty:
+                pass
+            
+            # Put the processed frame in the queue
+            frame_queue.put(processed_frame)
+    
+    finally:
+        cap.release()
 
 @app.route('/detect_image', methods=['POST'])
 def detect_batch():
@@ -99,61 +175,14 @@ def generate_frames():
     """
     Generator function for streaming webcam
     """
-    camera_index = int(os.getenv('CAMERA_INDEX', -1))  # Default to -1 if not set
-    
-    cap = None
-    if camera_index != -1:
-        # Try to open the camera at the specified index
-        cap = cv2.VideoCapture(camera_index)
-    
-    if not cap or not cap.isOpened():
-        print(f"Camera index {camera_index} not working, looking for any available camera...")
-        
-        available_cameras = []
-        max_resolution = (0, 0)
-        selected_camera_index = None
-
-        for camera_index in range(10):  # Adjust range if necessary
-            cap = cv2.VideoCapture(camera_index)
-            
-            if cap.isOpened():
-                print(f"Camera {camera_index} is available.")
-                
-                # Check the resolution of the current camera
-                width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                print(f"Camera {camera_index} resolution: {width}x{height}")
-                
-                # Check if this camera has the highest resolution so far
-                if (width * height) > (max_resolution[0] * max_resolution[1]):
-                    max_resolution = (width, height)
-                    selected_camera_index = camera_index
-                    
-                available_cameras.append(camera_index)           
-        
-        if available_cameras:
-            print(f"Available camera indices: {available_cameras}")
-            print(f"Selected camera: {selected_camera_index} with resolution {max_resolution[0]}x{max_resolution[1]}")
-        else:
-            print("No available cameras found.")
-            exit -1
-       
-        cap = cv2.VideoCapture(selected_camera_index)
-           
-    if not cap or not cap.isOpened():
-        raise RuntimeError("Unable to access any camera")
-
     while True:
-        success, frame = cap.read()
-        if not success:
-            break
+        frame = frame_queue.get()
         
-        processed_frame, counts = process_frame(frame, confidence_thresholds)
-        
-        _, buffer = cv2.imencode('.jpg', processed_frame)
+        _, buffer = cv2.imencode('.jpg', frame)
         frame_bytes = buffer.tobytes()
 
-        counts_json = json.dumps(counts)
+        # Get the current counts
+        counts_json = json.dumps(current_counts)
   
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n'
@@ -174,5 +203,31 @@ def current_counts_endpoint():
     """
     return jsonify(current_counts)
 
+# Continuous inference thread
+inference_thread = None
+
+def start_inference():
+    """
+    Start the continuous inference thread
+    """
+    global inference_thread
+    stop_event.clear()
+    inference_thread = threading.Thread(target=continuous_inference_thread, daemon=True)
+    inference_thread.start()
+
+def stop_inference():
+    """
+    Stop the continuous inference thread
+    """
+    global inference_thread
+    if inference_thread:
+        stop_event.set()
+        inference_thread.join()
+
+start_inference()
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    try:
+        app.run(host='0.0.0.0', port=5000, debug=True)
+    finally:
+        stop_inference()
