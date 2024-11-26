@@ -1,0 +1,37 @@
+FROM registry.access.redhat.com/ubi9/python-39:latest AS base
+
+USER root
+
+RUN dnf install -y \
+    python3 \
+    mesa-libGL \
+    mesa-dri-drivers \
+    libX11 \
+    libXext \
+    gstreamer1-plugins-base \
+    && dnf clean all \
+    && python3 -m ensurepip --upgrade
+    
+COPY requirements.txt /opt/app-root/src/
+
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --no-cache-dir  -r /opt/app-root/src/requirements.txt
+
+COPY . /opt/app-root/src
+
+WORKDIR /opt/app-root/src
+
+COPY object-detector-safety-v1.pt /opt/app-root/src/models/object-detector-safety-v1.pt
+
+# To avoid using local permissions for the camera
+#USER 1001
+
+EXPOSE 5000
+
+ENV FLASK_APP=object-detection-server.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5000
+ENV FLASK_ENV=production
+ENV YOLO_MODEL_PATH=/opt/app-root/src/models/object-detector-safety-v1.pt
+
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
