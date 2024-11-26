@@ -23,7 +23,7 @@ confidence_thresholds = {}
 frame_queue = queue.Queue(maxsize=1)
 stop_event = threading.Event()
 
-current_detections = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": 0.0, "last_seen": datetime.min, "count_last_sec": 0})
+current_detections = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": 0.0, "last_seen": datetime.min, "count": 0})
 
 if torch.cuda.is_available():
     model.to('cuda') 
@@ -37,7 +37,7 @@ def process_frame(frame, conf_dict):
     Process a single frame and return detections
     """
     global current_detections
-    detections_this_frame = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": float('inf'), "last_seen": datetime.min, "count_last_sec": 0})
+    detections_this_frame = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": float('inf'), "last_seen": datetime.min, "count": 0})
         
     results = model(frame)[0]
     
@@ -52,7 +52,7 @@ def process_frame(frame, conf_dict):
             detections_this_frame[class_name]["max_confidence"] = max(detections_this_frame[class_name]["max_confidence"], float(conf))
             detections_this_frame[class_name]["min_confidence"] = min(detections_this_frame[class_name]["min_confidence"], float(conf))
             detections_this_frame[class_name]["last_seen"] = datetime.now()
-            detections_this_frame[class_name]["count_last_sec"] += 1
+            detections_this_frame[class_name]["count"] += 1
 
             cv2.rectangle(frame, 
                         (int(x1), int(y1)), 
@@ -83,7 +83,7 @@ def process_frame(frame, conf_dict):
         class_name: {
             "max_confidence": details["max_confidence"],
             "min_confidence": details["min_confidence"],
-            "count_last_sec": details["count_last_sec"] 
+            "count": details["count"] 
         }
         for class_name, details in current_detections.items()
     }
@@ -208,7 +208,7 @@ def generate_frames():
                 "max_confidence": details["max_confidence"],
                 "min_confidence": details["min_confidence"],
                 "last_seen": details["last_seen"].strftime("%Y-%m-%d %H:%M:%S"),
-                "count_last_sec": details["count_last_sec"]
+                "count": details["count"]
             }
             for class_name, details in current_detections.items()
         }
@@ -237,7 +237,7 @@ def current_detections_endpoint():
         class_name: {
             "max_confidence": details["max_confidence"],
             "min_confidence": details["min_confidence"],
-            "count_last_sec": details["count_last_sec"]
+            "count": details["count"]
         } for class_name, details in current_detections.items()
     }
     
