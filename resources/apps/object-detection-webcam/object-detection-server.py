@@ -45,7 +45,7 @@ def process_frame(frame, conf_dict):
         x1, y1, x2, y2, conf, cls = detection
         class_name = results.names[int(cls)]
         
-        threshold = conf_dict.get(class_name, 0.25)  # Default threshold is 0.25
+        threshold = conf_dict.get(class_name, 0.6)  # Default threshold is 0.6
         
         if conf >= threshold:
             # Store the highest confidence for each object class
