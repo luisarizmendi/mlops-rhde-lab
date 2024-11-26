@@ -220,8 +220,8 @@ def generate_frames():
                b'Content-Type: application/json\r\n\r\n' + counts_json.encode() + b'\r\n')
 
 
-@app.route('/video_feed')
-def video_feed():
+@app.route('/video_stream')
+def video_stream():
     """
     Route for webcam streaming
     """
