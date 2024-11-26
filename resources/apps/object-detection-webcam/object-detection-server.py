@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import base64
 import torch
@@ -23,23 +23,23 @@ confidence_thresholds = {}
 frame_queue = queue.Queue(maxsize=1)
 stop_event = threading.Event()
 
+current_detections = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": 0.0, "last_seen": datetime.min, "count_last_sec": 0})
+
 if torch.cuda.is_available():
     model.to('cuda') 
     print("Using GPU for inference")
 else:
     print("Using CPU for inference")
 
-current_detections = defaultdict(lambda: {"count": 0, "confidences": []})
 
 def process_frame(frame, conf_dict):
     """
     Process a single frame and return detections
     """
     global current_detections
-          
+    detections_this_frame = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": float('inf'), "last_seen": datetime.min, "count_last_sec": 0})
+        
     results = model(frame)[0]
-
-
     
     for detection in results.boxes.data:
         x1, y1, x2, y2, conf, cls = detection
@@ -48,11 +48,12 @@ def process_frame(frame, conf_dict):
         threshold = conf_dict.get(class_name, 0.25)  # Default threshold is 0.25
         
         if conf >= threshold:
-            # Update detection tracking
-            current_detections.clear()
-            current_detections[class_name]["count"] += 1
-            current_detections[class_name]["confidences"].append(float(conf))
-            
+            # Store the highest confidence for each object class
+            detections_this_frame[class_name]["max_confidence"] = max(detections_this_frame[class_name]["max_confidence"], float(conf))
+            detections_this_frame[class_name]["min_confidence"] = min(detections_this_frame[class_name]["min_confidence"], float(conf))
+            detections_this_frame[class_name]["last_seen"] = datetime.now()
+            detections_this_frame[class_name]["count_last_sec"] += 1
+
             cv2.rectangle(frame, 
                         (int(x1), int(y1)), 
                         (int(x2), int(y2)), 
@@ -67,9 +68,27 @@ def process_frame(frame, conf_dict):
                        0.5, 
                        (0, 255, 0), 
                        2)
+    
+    # Update the current detections, removing old ones (no detections in the last second)
+    now = datetime.now()
+    for class_name, detection in list(current_detections.items()):
+        if (now - detection["last_seen"]).total_seconds() > 1:  
+            del current_detections[class_name]  
+    
+    # Merge new detections with current detections
+    for class_name, detection in detections_this_frame.items():
+        current_detections[class_name] = detection
 
-    return frame, dict(current_detections)
-
+    return frame, {
+        class_name: {
+            "max_confidence": details["max_confidence"],
+            "min_confidence": details["min_confidence"],
+            "count_last_sec": details["count_last_sec"] 
+        }
+        for class_name, details in current_detections.items()
+    }
+    
+    
 def continuous_inference_thread():
     """
     Continuously capture frames and process them
@@ -184,12 +203,22 @@ def generate_frames():
         _, buffer = cv2.imencode('.jpg', frame)
         frame_bytes = buffer.tobytes()
 
-        # Get the current counts
-        counts_json = json.dumps(current_detections)
+        current_detections_serializable = {
+            class_name: {
+                "max_confidence": details["max_confidence"],
+                "min_confidence": details["min_confidence"],
+                "last_seen": details["last_seen"].strftime("%Y-%m-%d %H:%M:%S"),
+                "count_last_sec": details["count_last_sec"]
+            }
+            for class_name, details in current_detections.items()
+        }
+
+        counts_json = json.dumps(current_detections_serializable)
   
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n'
                b'Content-Type: application/json\r\n\r\n' + counts_json.encode() + b'\r\n')
+
 
 @app.route('/video_feed')
 def video_feed():
@@ -199,15 +228,16 @@ def video_feed():
     return Response(generate_frames(),
                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/current_counts', methods=['GET'])
-def current_counts_endpoint():
+@app.route('/current_detections', methods=['GET'])
+def current_detections_endpoint():
     """
     Return the current object counts with confidence scores
     """
     formatted_detections = {
         class_name: {
-            "count": details["count"], 
-            "confidences": details["confidences"]
+            "max_confidence": details["max_confidence"],
+            "min_confidence": details["min_confidence"],
+            "count_last_sec": details["count_last_sec"]
         } for class_name, details in current_detections.items()
     }
     
