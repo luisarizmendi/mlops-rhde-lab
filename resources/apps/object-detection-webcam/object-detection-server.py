@@ -11,6 +11,7 @@ import threading
 import queue
 import time
 from collections import defaultdict
+import random
 
 app = Flask(__name__)
 
@@ -18,11 +19,9 @@ model_path = os.getenv('YOLO_MODEL_PATH', '../../../models/luisarizmendi/object-
 model = YOLO(model_path)
 
 confidence_thresholds = {}
-
-# Create a thread-safe queue to store processed frames
+class_colors = {}
 frame_queue = queue.Queue(maxsize=1)
 stop_event = threading.Event()
-
 current_detections = defaultdict(lambda: {"max_confidence": 0.0, "min_confidence": 0.0, "last_seen": datetime.min, "count": 0})
 
 if torch.cuda.is_available():
@@ -31,6 +30,17 @@ if torch.cuda.is_available():
 else:
     print("Using CPU for inference")
 
+def get_color_for_class(class_name):
+    """
+    Generate and return a unique color for the given class if it doesn't already exist.
+    """
+    if class_name not in class_colors:
+        class_colors[class_name] = (
+            random.randint(0, 255),  #  R
+            random.randint(0, 255),  #  G
+            random.randint(0, 255)   #  B
+        )
+    return class_colors[class_name]
 
 def process_frame(frame, conf_dict):
     """
@@ -44,7 +54,8 @@ def process_frame(frame, conf_dict):
     for detection in results.boxes.data:
         x1, y1, x2, y2, conf, cls = detection
         class_name = results.names[int(cls)]
-        
+        color = get_color_for_class(class_name)
+              
         threshold = conf_dict.get(class_name, 0.6)  # Default threshold is 0.6
         
         if conf >= threshold:
@@ -54,20 +65,23 @@ def process_frame(frame, conf_dict):
             detections_this_frame[class_name]["last_seen"] = datetime.now()
             detections_this_frame[class_name]["count"] += 1
 
-            cv2.rectangle(frame, 
-                        (int(x1), int(y1)), 
-                        (int(x2), int(y2)), 
-                        (0, 255, 0), 
-                        2)
-            
+            # box
+            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 2)
+
+            # rectangle behind the text
             label = f"{class_name}: {conf:.2f}"
-            cv2.putText(frame, 
-                       label, 
-                       (int(x1), int(y1) - 10),
-                       cv2.FONT_HERSHEY_SIMPLEX, 
-                       0.5, 
-                       (0, 255, 0), 
-                       2)
+            (text_width, text_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+            text_background_start = (int(x1), int(y1) - text_height - baseline)
+            text_background_end = (int(x1) + text_width, int(y1))
+            cv2.rectangle(frame, text_background_start, text_background_end, color, -1)
+
+            # white on dark colors, black on bright colors
+            brightness = (color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114)
+            text_color = (0, 0, 0) if brightness > 128 else (255, 255, 255)
+
+            # Add the class name text
+            cv2.putText(frame, label, (int(x1), int(y1) - baseline), cv2.FONT_HERSHEY_SIMPLEX, 0.5, text_color, 1)
+
     
     # Update the current detections, removing old ones (no detections in the last second)
     now = datetime.now()
