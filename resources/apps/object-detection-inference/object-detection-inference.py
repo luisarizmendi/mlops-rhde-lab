@@ -60,7 +60,7 @@ def process_frame(frame, conf_dict):
         class_name = results.names[int(cls)]
         color = get_color_for_class(class_name)
 
-        threshold = conf_dict.get(class_name, 0.6)  # Default threshold is 0.6
+        threshold = conf_dict.get(class_name, 0.5)  # Default threshold is 0.5
 
         if conf >= threshold:
             # Store the highest confidence for each object class
