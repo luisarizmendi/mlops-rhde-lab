@@ -11,27 +11,24 @@ RUN dnf install -y \
     gstreamer1-plugins-base \
     && dnf clean all \
     && python3 -m ensurepip --upgrade
-    
+
 COPY requirements.txt /opt/app-root/src/
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --no-cache-dir  -r /opt/app-root/src/requirements.txt
 
-COPY . /opt/app-root/src
+COPY object-detection-server.py /opt/app-root/src
 
 WORKDIR /opt/app-root/src
 
-COPY object-detector-safety-v1.pt /opt/app-root/src/models/object-detector-safety-v1.pt
+COPY *.pt /opt/app-root/src/models/
 
 # To avoid using local permissions for the camera
 #USER 1001
 
 EXPOSE 5000
 
-ENV FLASK_APP=object-detection-server.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
-ENV FLASK_ENV=production
-ENV YOLO_MODEL_PATH=/opt/app-root/src/models/object-detector-safety-v1.pt
+ENV YOLO_MODEL_PATH=/opt/app-root/src/models
+ENV YOLO_MODEL_FILE=object-detector-safety-v1.pt
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["python", "object-detection-server.py"]
