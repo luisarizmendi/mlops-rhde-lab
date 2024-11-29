@@ -13,7 +13,11 @@ logger = logging.getLogger("sqlalchemy.engine")
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False},
-    echo=False  # Set to True for verbose SQL logging
+    echo=False,
+    pool_size=10,
+    max_overflow=20,
+    pool_timeout=30,
+    pool_recycle=3600
 )
 
 # Add a custom logger to log all SQL statements
