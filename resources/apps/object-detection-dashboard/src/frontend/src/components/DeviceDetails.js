@@ -32,12 +32,13 @@ const DeviceDetails = () => {
 
     const handleNameUpdate = async () => {
         try {
+            // Update device name
             await DeviceService.updateDeviceName(uuid, deviceName);
-            // Update the device state to reflect the new name
-            setDevice(prevDevice => ({
-                ...prevDevice,
-                name: deviceName
-            }));
+
+            // Re-fetch device details to update alarms and other information
+            const updatedDevice = await DeviceService.getDeviceDetails(uuid);
+            setDevice(updatedDevice);  // Update device state with latest data
+
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating device name:', error);

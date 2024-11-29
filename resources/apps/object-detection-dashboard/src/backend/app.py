@@ -24,7 +24,8 @@ def receive_alive_signal():
     # Find or create device
     device = db.query(Device).filter_by(uuid=data['device_uuid']).first()
     if not device:
-        device = Device(uuid=data['device_uuid'])
+        # Device doesn't exist, create it and set the name to uuid if not set
+        device = Device(uuid=data['device_uuid'], name=data['device_uuid'])  # Set name to uuid initially
         db.add(device)
 
     # Update last alive time
@@ -37,16 +38,34 @@ def receive_alive_signal():
 @app.route('/alert', methods=['POST'])
 def receive_alert():
     db = next(get_db())
-    data = request.json
+
+    # Attempt to parse incoming JSON data
+    try:
+        data = request.json
+    except Exception as e:
+        return jsonify({"error": f"Invalid JSON format: {str(e)}"}), 400
+
+    # Ensure device_uuid is not empty
+    device_uuid = data.get('device_uuid')
+    if not device_uuid:
+        return jsonify({"error": "device_uuid is required"}), 400
+
+    # Ensure message is present
+    message = data.get('message')
+    if not message:
+        return jsonify({"error": "message is required"}), 400
 
     # Log the alert
-    alert_log = AlarmLog(
-        device_uuid=data.get('device_uuid', 'unknown'),
-        message=data['message'],
-        is_alarm_on=data['message'] == 'ALERT_ON'
-    )
-    db.add(alert_log)
-    db.commit()
+    try:
+        alert_log = AlarmLog(
+            device_uuid=device_uuid,
+            message=message,
+            is_alarm_on=message == 'ALERT_ON'
+        )
+        db.add(alert_log)
+        db.commit()
+    except Exception as e:
+        return jsonify({"error": "Failed to log alert"}), 500
 
     return jsonify({"status": "success"}), 200
 
@@ -73,7 +92,7 @@ def list_devices():
 
         device_list.append({
             'uuid': device.uuid,
-            'name': device.name or device.uuid,
+            'name': device.name or device.uuid,  # Use uuid as the name if not set
             'last_alive_time': device.last_alive_time.isoformat() if device.last_alive_time else None,
             'is_active': is_active,
             'current_alarm_status': latest_alarm.is_alarm_on if latest_alarm else False
@@ -118,6 +137,7 @@ def update_device(uuid):
         return jsonify({"error": "Device not found"}), 404
 
     data = request.json
+    # Update the name if provided
     device.name = data.get('name', device.name)
 
     db.commit()
