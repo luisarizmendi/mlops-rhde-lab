@@ -54,14 +54,36 @@ def get_device_uuid() -> str:
             return f.read().strip()
 
     # Generate a new UUID based on the MAC address
-    mac = None
-    for line in os.popen("ip link show"):
-        if 'link/ether' in line:
-            mac = line.split()[1]
+    # Step 1: Get the IP address of the default gateway
+    default_gateway_ip = None
+    for line in os.popen("ip route show"):
+        if 'default' in line:
+            default_gateway_ip = line.split()[2]  # Extract the gateway IP address
             break
+
+    # Step 2: Find the interface associated with that default gateway IP
+    interface = None
+    if default_gateway_ip:
+        for line in os.popen(f"ip route get {default_gateway_ip}"):
+            # Extract the interface name from the route details
+            if 'dev' in line:
+                interface = line.split('dev')[1].split()[0]
+                break
+
+    # Step 3: Get the MAC address of that interface
+    mac = None
+    if interface:
+        for line in os.popen(f"ip link show {interface}"):
+            if 'link/ether' in line:
+                mac_address = line.split()[1]
+                # Skip invalid MAC addresses (e.g., 00:00:00:00:00:00)
+                if mac_address != "00:00:00:00:00:00":
+                    mac = mac_address
+                    break
 
     if mac:
         # Create a UUID from the MAC address to ensure it's unique to the device
+        print(f"MAC: {mac}")
         device_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, mac))
     else:
         # If MAC is not found, generate a random UUID
