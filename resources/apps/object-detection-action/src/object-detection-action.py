@@ -84,7 +84,7 @@ def get_device_uuid() -> str:
     if mac:
         # Create a UUID from the MAC address to ensure it's unique to the device
         print(f"MAC: {mac}")
-        device_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, mac))
+        device_uuid = str(mac)
     else:
         # If MAC is not found, generate a random UUID
         device_uuid = str(uuid.uuid4())
