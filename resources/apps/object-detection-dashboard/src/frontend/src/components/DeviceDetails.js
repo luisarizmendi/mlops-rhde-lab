@@ -142,20 +142,23 @@ const DeviceDetails = () => {
         {/* Alarm Status */}
         <div>
         <p>
-        Current Alarm Status:{' '}
+
         {currentAlarmStatus ? (
             <span className="text-red-500">
-            <AlertCircleIcon /> Active
+            <AlertCircleIcon /> Alarm active
             </span>
         ) : (
             <span className="text-green-500">
-            <CheckCircleIcon /> Inactive
+            <CheckCircleIcon /> Alarm inactive
             </span>
         )}
         </p>
+        <p>
+        -------------------------------------
+        </p>
         {alarmStartTime && (
             <p>
-            Alarm active since: {alarmStartTime.toLocaleString()}
+            Last alarm: {alarmStartTime.toLocaleString()}
             </p>
         )}
         </div>
@@ -169,11 +172,14 @@ const DeviceDetails = () => {
         )}
         {lastAliveTime && (
             <p>
-            Last Alive Signal Received: {lastAliveTime.toLocaleString()}
+            Last Alive: {lastAliveTime.toLocaleString()}
             </p>
         )}
         </div>
 
+        <p>
+        -------------------------------------
+        </p>
         {/* Alarm Log List */}
         <div className="mt-4">
         <h2 className="text-xl font-bold">Alarm History</h2>
