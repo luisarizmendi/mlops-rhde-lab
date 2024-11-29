@@ -29,14 +29,15 @@ def get_detections(endpoint: str) -> dict:
         return {}
 
 
-def send_alert(alert_endpoint: str, message: str) -> None:
+def send_alert(alert_endpoint: str, message: str, device_uuid: str) -> None:
     """
-    Send an alert message to the specified endpoint.
+    Send an alert message with a device UUID to the specified endpoint.
     """
     try:
-        response = requests.post(alert_endpoint, json={"message": message}, timeout=5)
+        payload = {"message": message, "device_uuid": device_uuid}
+        response = requests.post(alert_endpoint, json=payload, timeout=5)
         response.raise_for_status()
-        print(f"Sent alert: {message}")
+        print(f"Sent alert: {message} for device {device_uuid}")
     except requests.exceptions.RequestException as e:
         print(f"Error sending alert: {e}")
 
@@ -89,6 +90,9 @@ def main():
     reset_count = 0
     last_alive_signal = time.time()
 
+    # Get the device UUID once
+    device_uuid = get_device_uuid()
+
     while True:
         detections = get_detections(detections_endpoint)
 
@@ -104,14 +108,14 @@ def main():
 
             if time.time() - last_alert_time >= alert_duration:
                 if not alert_active:
-                    send_alert(alert_endpoint, "ALERT_ON")
+                    send_alert(alert_endpoint, "ALERT_ON", device_uuid)
                     alert_active = True
                 reset_count = 0
         else:
             if alert_active:
                 reset_count += 1
                 if reset_count >= reset_checks:
-                    send_alert(alert_endpoint, "ALERT_OFF")
+                    send_alert(alert_endpoint, "ALERT_OFF", device_uuid)
                     alert_active = False
                     reset_count = 0
             else:
