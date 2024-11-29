@@ -11,7 +11,7 @@ RUN dnf install -y \
     gstreamer1-plugins-base \
     && dnf clean all \
     && python3 -m ensurepip --upgrade
-
+    
 COPY requirements.txt /opt/app-root/src/
 
 RUN python3 -m pip install --upgrade pip
@@ -29,6 +29,6 @@ COPY *.pt /opt/app-root/src/models/
 EXPOSE 5000
 
 ENV YOLO_MODEL_PATH=/opt/app-root/src/models
-ENV YOLO_MODEL_FILE=object-detector-safety-v1.pt
+ENV YOLO_MODEL_FILE=object-detector-hardhat-v1.pt
 
 CMD ["python", "object-detection-server.py"]
