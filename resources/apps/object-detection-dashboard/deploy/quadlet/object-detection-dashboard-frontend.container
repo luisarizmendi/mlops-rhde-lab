@@ -1,0 +1,17 @@
+[Unit]
+Description=Object Detection Dashboard Frontend
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+Image=quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+AutoUpdate=registry
+Ports=3000:3000
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
+
+
