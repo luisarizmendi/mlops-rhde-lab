@@ -4,6 +4,7 @@ import requests
 import uuid
 import hashlib
 
+UUID_FILE = "./device_uuid"
 
 def get_detections(endpoint: str) -> dict:
     """
@@ -44,21 +45,34 @@ def send_alert(alert_endpoint: str, message: str, device_uuid: str) -> None:
 
 def get_device_uuid() -> str:
     """
-    Generate or retrieve a unique device identifier (UUID).
-    This uses a persistent UUID based on a hash of the MAC address.
-    If you want to create a new UUID for the device, you can modify this logic.
+    Retrieve or generate a persistent UUID for the device.
+    The UUID is stored in a file for reuse across script executions.
     """
+    # Check if the UUID file exists
+    if os.path.exists(UUID_FILE):
+        with open(UUID_FILE, "r") as f:
+            return f.read().strip()
+
+    # Generate a new UUID based on the MAC address
     mac = None
-    for line in os.popen('ifconfig -a'):
-        if 'ether' in line:
+    for line in os.popen("ip link show"):
+        if 'link/ether' in line:
             mac = line.split()[1]
             break
+
     if mac:
         # Create a UUID from the MAC address to ensure it's unique to the device
-        return str(uuid.uuid5(uuid.NAMESPACE_DNS, mac))
+        device_uuid = str(uuid.uuid5(uuid.NAMESPACE_DNS, mac))
     else:
         # If MAC is not found, generate a random UUID
-        return str(uuid.uuid4())
+        device_uuid = str(uuid.uuid4())
+
+    # Save the UUID to the file
+    os.makedirs(os.path.dirname(UUID_FILE), exist_ok=True)
+    with open(UUID_FILE, "w") as f:
+        f.write(device_uuid)
+
+    return device_uuid
 
 
 def send_alive_signal(alive_endpoint: str) -> None:

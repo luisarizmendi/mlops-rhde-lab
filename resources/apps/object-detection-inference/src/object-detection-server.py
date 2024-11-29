@@ -16,7 +16,7 @@ import random
 app = Flask(__name__)
 
 model_path = os.getenv('YOLO_MODEL_PATH', '.')
-model_file= os.getenv('YOLO_MODEL_FILE', 'object-detection-hardhat-v2-m.pt')
+model_file= os.getenv('YOLO_MODEL_FILE', 'object-detector-hardhat-v1.pt')
 model_threshold= float(os.getenv('YOLO_MODEL_THRESHOLD', '0.25'))
 model = YOLO(f"{model_path}/{model_file}")
 
@@ -62,7 +62,7 @@ def process_frame(frame, conf_dict):
         class_name = results.names[int(cls)]
         color = get_color_for_class(class_name)
 
-        threshold = conf_dict.get(class_name, model_threshold )
+        threshold = conf_dict.get(class_name, model_threshold )  
 
         if conf >= threshold:
             # Store the highest confidence for each object class
