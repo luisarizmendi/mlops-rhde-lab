@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.podman
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - DEVICE_TIMEOUT=30
+    volumes:
+      - ./backend:/app
+      - device_monitoring_db:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.podman
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:5000
+    depends_on:
+      - backend
+
+volumes:
+  device_monitoring_db:
