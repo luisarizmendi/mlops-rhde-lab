@@ -56,7 +56,7 @@ python object_detection_action.py
 You can run it containerized, but it's recommended to make the container use the host network, since the UUID will be based on the MAC address and because the container will need to call the object-detection-server endpoint:
 
 ```bash
-podman run -d --network=host -e DETECTIONS_ENDPOINT=http://your-detection-server:5000/current_detections -e ALERT_ENDPOINT=http://your-alert-server:5005/alert -e ALIVE_ENDPOINT=http://your-alive-server:5005/alive <image name>
+podman run -d --network=host -e DETECTIONS_ENDPOINT=http://<inference server ip>:<port>/current_detections -e ALERT_ENDPOINT=http://<dashboard backend ip>:<port>/alert -e ALIVE_ENDPOINT=http://<dashboard backend ip>:<port>/alive <image name>
 ```
 > **Note:**
 > You can find an image in `quay.io/luisarizmendi/object-detection-action:x86`
