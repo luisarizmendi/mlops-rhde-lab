@@ -32,6 +32,33 @@ Device details screen on the Dashboard:
 
 
 
+## Quick local setup
+
+If you want to run a quick test you could run all components locally. First start the inference server as root:
+
+```bash
+sudo podman run -d -p 5000:5000 --privileged quay.io/luisarizmendi/object-detection-webcam:x86
+```
+
+If you have an NVIDIA card in your device you can use it:
+
+```bash
+sudo podman run -d -p 5000:5000 --device nvidia.com/gpu=all --security-opt=label=disable  --privileged quay.io/luisarizmendi/object-detection-webcam:x86
+```
+
+After that, start the rest of the services:
+
+
+```bash
+podman run -d --network=host quay.io/luisarizmendi/object-detection-action:x86
+
+podman run -d -p 5005:5005 quay.io/luisarizmendi/object-detection-dashboard-backend:v1
+
+podman run -d -p 3000:3000 quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+```
+
+
+Then you can see the video stream in `http://localhost:5000/video_stream` and the dashboard in `http://localhost:3000`
 
 
 
