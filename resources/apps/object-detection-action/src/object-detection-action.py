@@ -130,7 +130,7 @@ def main():
 
     monitored_classes = {
         "no_helmet": {"count_threshold": 0},
-        "hat": {"count_threshold": 0},
+        #"hat": {"count_threshold": 0},
     }
 
     while True:
