@@ -70,7 +70,7 @@ python object-detection-server.py
 If you want to run it containerized, you will need to run with root user as a "privileged" container to have access to the video input device.
 
 ```bash
-sudo podman run -d -p 5000:5000 --privileged <image name>
+sudo podman run -d -p 5000:5000 -e YOLO_MODEL_THRESHOLD=0.3 --privileged <image name>
 ```
 > **Note:**
 > You can find an image in `quay.io/luisarizmendi/object-detection-webcam:x86`. It is a big image so it could take time to pull it.
@@ -84,7 +84,7 @@ The Container always tries to run the model on a GPU (fallbacks to CPU if it's n
 
 
 ```bash
-sudo podman run -d -p 5000:5000 --device nvidia.com/gpu=all --security-opt=label=disable --privileged <image name>
+sudo podman run -d -p 5000:5000 --device nvidia.com/gpu=all --security-opt=label=disable --privileged -e YOLO_MODEL_THRESHOLD=0.3 <image name>
 ```
 
 
