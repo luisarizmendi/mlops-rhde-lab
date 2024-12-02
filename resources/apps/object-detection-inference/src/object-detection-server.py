@@ -16,7 +16,7 @@ import random
 app = Flask(__name__)
 
 model_path = os.getenv('YOLO_MODEL_PATH', '.')
-model_file= os.getenv('YOLO_MODEL_FILE', 'object-detection-hardhat-v2-m.pt')
+model_file= os.getenv('YOLO_MODEL_FILE', 'object-detection-hardhat-v1-m.pt')
 model_threshold= float(os.getenv('YOLO_MODEL_THRESHOLD', '0.25'))
 model = YOLO(f"{model_path}/{model_file}")
 
