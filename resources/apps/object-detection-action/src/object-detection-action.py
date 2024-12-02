@@ -126,21 +126,27 @@ def main():
     reset_count = 0
     last_alive_signal = time.time()
 
-    # Get the device UUID once
     device_uuid = get_device_uuid()
+
+    monitored_classes = {
+        "no_helmet": {"count_threshold": 0},
+        "hat": {"count_threshold": 0},
+    }
 
     while True:
         detections = get_detections(detections_endpoint)
 
-        # Check if "no_helmet" or "hat" exists with a count > 0
-        has_no_helmet = detections.get("no_helmet", {}).get("count", 0) > 0
-        has_hat = detections.get("hat", {}).get("count", 0) > 0
+        class_detected = None
+        for cls, config in monitored_classes.items():
+            if detections.get(cls, {}).get("count", 0) > config["count_threshold"]:
+                class_detected = cls
+                break
 
-        if has_no_helmet or has_hat:
+        if class_detected:
             if not alert_active:
                 if last_alert_time == 0:
                     last_alert_time = time.time()
-                print(f"Detected: {'no_helmet' if has_no_helmet else 'hat'}")
+                print(f"Detected: {class_detected}")
 
             if time.time() - last_alert_time >= alert_duration:
                 if not alert_active:
@@ -157,7 +163,7 @@ def main():
             else:
                 last_alert_time = time.time()
 
-        # Send alive signal
+        # alive 
         if time.time() - last_alive_signal >= alive_interval:
             send_alive_signal(alive_endpoint)
             last_alive_signal = time.time()
