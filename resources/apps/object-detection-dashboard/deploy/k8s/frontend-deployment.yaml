@@ -23,7 +23,7 @@ spec:
         - containerPort: 3000
         env:
         - name: BACKEND_API_BASE_URL
-          value: http://object-detection-dashboard-backend:5005
+          value: HERE-YOU-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
 ---
 apiVersion: v1
 kind: Service
