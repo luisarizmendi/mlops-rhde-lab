@@ -35,7 +35,7 @@ This is a React-based web application for monitoring devices, their status, and 
 If you are not running the backend in the same host, you will need first to setup an environment variable:
 
 ```bash
-export BACKEND_API_BASE_URL=http://<dashboard backend ip>:<port>
+export REACT_APP_BACKEND_API_BASE_URL=http://<dashboard backend ip>:<port>
 ```
 
 
@@ -53,7 +53,7 @@ export BACKEND_API_BASE_URL=http://<dashboard backend ip>:<port>
 If you want to run it containerized:
 
 ```bash
-podman run -d -p 3000:3000 -e BACKEND_API_BASE_URL=http://<dashboard backend ip>:<port> <image name>
+podman run -d -p 3000:3000 -e REACT_APP_BACKEND_API_BASE_URL=http://<dashboard backend ip>:<port> <image name>
 ```
 > **Note:**
 > You can find an image in `quay.io/luisarizmendi/object-detection-dashboard-frontend:v1`
