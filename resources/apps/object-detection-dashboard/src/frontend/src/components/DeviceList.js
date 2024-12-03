@@ -31,7 +31,6 @@ const AlarmStatusIcon = ({ isActive, hasAlarm }) => {
 const DeviceList = () => {
     const [devices, setDevices] = useState([]);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const fetchDevices = async () => {
             try {

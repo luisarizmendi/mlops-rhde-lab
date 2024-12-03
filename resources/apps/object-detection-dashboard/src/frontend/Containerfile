@@ -11,8 +11,13 @@ COPY . .
 
 RUN npm run build
 
+# Add the custom script
+COPY serve.sh /app/serve.sh
+RUN chmod +x /app/serve.sh && \
+    chown -R node /app
+
 RUN npm install -g serve
 
 EXPOSE 3000
 
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["/app/serve.sh"]
