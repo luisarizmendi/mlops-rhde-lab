@@ -4,6 +4,8 @@ metadata:
   name: object-detection-dashboard-backend
   labels:
     app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "python"
 spec:
   replicas: 1
   selector:
