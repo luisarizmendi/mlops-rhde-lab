@@ -11,10 +11,11 @@ COPY . .
 
 RUN npm run build
 
-# Add the custom script
 COPY serve.sh /app/serve.sh
 RUN chmod +x /app/serve.sh && \
-    chown -R node /app
+    chown -R node /app && \
+    touch /app/build/runtime-config.js && \
+    chmod 777 /app/build/runtime-config.js
 
 RUN npm install -g serve
 
