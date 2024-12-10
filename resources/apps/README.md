@@ -7,6 +7,15 @@ This is an example use case of how you can use a webcam to detect objects at the
 ![](images/object-detection-webcam.png)
 
 
+[Inference server](object-detection-inference/README.md)
+
+[Actuator service](object-detection-action/README.md)
+
+[Dashboard backend](object-detection-dashboard/src/backend/README.md)
+
+[Dashboard frontend](object-detection-dashboard/src/frontend/README.md)
+
+
 ## Application workflow
 
 1. The inference server, that contains the AI model detecting objects, publish the predictions in an endpoint
