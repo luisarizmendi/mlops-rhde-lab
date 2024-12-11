@@ -17,6 +17,9 @@
       let cdomain = (document.getElementById('cdomain').value).toLowerCase().includes('https://')
           ? document.getElementById('cdomain').value.toLowerCase().substring(8)
           : document.getElementById('cdomain').value.toLowerCase();
+      let cdomain = (document.getElementById('gitserver').value).toLowerCase().includes('https://')
+          ? document.getElementById('gitserver').value.toLowerCase().substring(8)
+          : document.getElementById('gitserver').value.toLowerCase();
 
       if (uname === '') {
           alert('Please enter a username');
@@ -30,16 +33,19 @@
 
       localStorage.setItem('USER_NAME', uname);
       localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+      localStorage.setItem('GIT_SERVER', gitserver);
       updateMessage();
   }
 
   function clearStorage() {
       localStorage.removeItem('USER_NAME');
       localStorage.removeItem('CLUSTER_DOMAIN');
+      localStorage.removeItem('GIT_SERVER');
 
       // Clean input fields
       document.getElementById('uname').value = '';
       document.getElementById('cdomain').value = '';
+      document.getElementById('gitserver').value = '';
       
       updateMessage();
   }
