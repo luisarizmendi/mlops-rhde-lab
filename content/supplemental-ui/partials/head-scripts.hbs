@@ -1,6 +1,9 @@
 
 <script>
-  // Add the functions before they are referenced in the HTML
+    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
+    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
+    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
+
   function setNamesInStorage() {
     let uname = (document.getElementById('uname').value.toLowerCase());
     let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
@@ -48,6 +51,9 @@
     const username = localStorage.getItem('USER_NAME') || 'Not set';
     console.info('INFO - setting user :', username);
     document.getElementById('uname').textContent = `USERNAME= ${username}`;
+
+    const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || 'Not set';
+    document.getElementById('cdomain').textContent = `CLUSTER= ${cdomain}`;
   }
 
   // Update the message display on page load
