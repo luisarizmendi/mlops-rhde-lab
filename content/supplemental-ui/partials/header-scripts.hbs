@@ -1,0 +1,123 @@
+
+  <script>
+    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
+    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
+    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
+
+    function setNamesInStorage () {
+      let uname = document.getElementById('uname').value.toLowerCase();
+      let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
+                    ? document.getElementById('cdomain').value.toLowerCase().substring(8) 
+                    : document.getElementById('cdomain').value.toLowerCase();
+      let gitserver = (document.getElementById('gitserver').value.toLowerCase().indexOf('https://') > -1) 
+                    ? document.getElementById('gitserver').value.toLowerCase().substring(8) 
+                    : document.getElementById('gitserver').value.toLowerCase();
+
+      // Check inputs
+      if (uname == '') {        
+        alert('Please enter a username');
+        return;
+      }
+      if (cdomain == '') {        
+        alert('Please enter a cluster domain');
+        return;
+      }
+
+      console.info('INFO - setting user, cluster and git to :', uname, cdomain, gitserver);
+      localStorage.setItem('USER_NAME', uname);
+      localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+      // gitserver is not nullable
+      if (gitserver !== '') {
+        localStorage.setItem('GIT_SERVER', gitserver);
+      } else {
+        // Default GitLab Server
+        localStorage.setItem('GIT_SERVER', 'gitea-gitea.' + cdomain);
+      }
+      location.reload();
+    }
+
+    function clearStorage () {
+      console.info('INFO - clearing user and cluster');
+      localStorage.removeItem('USER_NAME');
+      localStorage.removeItem('CLUSTER_DOMAIN');
+      localStorage.removeItem('GIT_SERVER');
+      document.getElementById('uname').value = '';
+      document.getElementById('cdomain').value = '';
+      document.getElementById('gitserver').value = '';
+      location.reload();
+    }
+
+    window.$docsify = {
+      auto2top: true,
+      executeScript: true,
+      name: 'MLOps Lab Exercises',
+      repo: 'https://github.com/rhoai-mlops/lab-instructions',
+      loadSidebar: true,
+      subMaxLevel: 0,
+      sidebarDisplayLevel: 0,
+      alias: {
+      '/.*/_sidebar.md': '/_sidebar.md'
+      },
+      copyCode: {
+        buttonText : '✂️',
+        errorText  : '😔',
+        successText: '💚 copied'
+      },
+      pagination: {
+        crossChapter: true
+    },
+      plugins: [
+        function(hook) {
+          hook.beforeEach(function(content) {
+
+            fetch('config/all.json')
+            .then(function(response) {
+              return response.json();
+            }).then(function(jsonData) {
+              console.info("🥳 YAY! Found the config file 🥳", jsonData);
+              document.getElementById('crw_dev_filelocation').setAttribute('href', jsonData.devfile);
+              document.getElementById('crw_dev_filelocation').innerHTML = jsonData.devfile;
+              document.getElementById('crw_dev_filelocation_4.11').setAttribute('href', jsonData.devfile411);
+              document.getElementById('crw_dev_filelocation_4.11').innerHTML = jsonData.devfile411;
+            }).catch(function(err) {
+              console.warn("😭 Opps, Cannot find the config file 😭", err);
+            })
+
+            // Invoked each time before parsing the Markdown file.
+            const userName = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '<USER_NAME>';
+            const clusterDomain = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '<CLUSTER_DOMAIN>';
+            const gitServer = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '<GIT_SERVER>';
+            return content.replaceAll('<USER_NAME>', userName)
+                    .replaceAll('<CLUSTER_DOMAIN>', clusterDomain)
+                    .replaceAll('<GIT_SERVER>', gitServer);
+          });
+
+
+
+          const footer = `<hr/>
+            <footer>
+            <span><a href="https://ai-on-openshift.io/"> 🤖 AI on OpenShift</a> </span>
+            </footer>
+            `;
+
+          hook.afterEach(function(html) {
+            return html + footer;
+          });
+        }
+      ],
+      search: 'auto', // default
+      vueComponents: { }
+    }    
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>  
+  <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-yaml.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-groovy.min.js"></script>
+  <script src="//unpkg.com/prismjs/components/prism-go.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-prism@latest/dist/docsify-prism.min.js"></script>
