@@ -3,30 +3,48 @@
 :!sectids:
 
 [.text-center.strong]
-== BLAH, BLAH INTRO
+== BLAH, BLAH SHORT INTRO
 
-BLAH BLAH INTRO
+You are in a company that.......BLAH BLAH INTRO
+
+Three different "paths" (choose or do them all):
+
+* AI Specialist / MLOps Engineer
+* APP Developer / DevOps Engineer
+* Platform Specialist  / Site Reliability Engineer (SRE)
+
+
 
 [.tiles.browse]
 == Browse modules
 
 [.tile]
-.xref:00-intro.adoc[Intro]
-* xref:00-intro.adoc#background[Background]
-* xref:00-intro.adoc#environment[Environment]
+.xref:00-intro.adoc[Lab Introduction]
 * xref:00-intro.adoc#prerequisites[Prerequisites]
+* xref:00-intro.adoc#environment[Environment]
 
 [.tile]
-.xref:01-training.adoc[1. Training]
-* xref:00-intro.adoc#background[Background]
+.Path: AI Specialist Path
+* xref:ai-specialist-00-intro.adoc[0. Introduction]
+** xref:ai-specialist-00-intro.adoc#background[Background]
+** xref:ai-specialist-00-intro.adoc#toolset[Toolset used]
+** xref:ai-specialist-00-intro.adoc#workflow[Workflow overview]
+* xref:ai-specialist-01-data.adoc[1. Data Management]
+** xref:ai-specialist-01-data.adoc[1. Data Management]
+* xref:ai-specialist-02-build.adoc[2. Model Building]
+* xref:ai-specialist-03-deploy.adoc[3. Model deployment]
 
 [.tile]
-.xref:02-building.adoc[2. Building]
+.xref:app-developer-00-intro.adoc[Path: APP Developer]
 * xref:00-intro.adoc#background[Background]
+* xref:00-intro.adoc#background[Toolset used]
+* xref:00-intro.adoc#background[Workflow overview]
 
 [.tile]
-.xref:03-deploying.adoc[3. Deploying]
+.xref:03-deploying.adoc[Path: Platform Specialist]
 * xref:00-intro.adoc#background[Background]
+* xref:00-intro.adoc#background[Toolset used]
+* xref:00-intro.adoc#background[Workflow overview]
 
 [.tile]
 .xref:99-summary.adoc[Summary]
