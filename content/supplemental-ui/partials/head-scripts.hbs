@@ -48,12 +48,12 @@
   }
 
   function updateMessage() {
-      const username = localStorage.getItem('USER_NAME') || 'Not set';
+      const username = localStorage.getItem('USER_NAME') || '';
       console.info('INFO - setting user :', username);
-      document.getElementById('uname').value = `USERNAME= ${username}`;
+      document.getElementById('uname').value = `${username}`;
 
-      const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || 'Not set';
-      document.getElementById('cdomain').value = `CLUSTER= ${cdomain}`;
+      const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '';
+      document.getElementById('cdomain').value = `${cdomain}`;
   }
 
 
