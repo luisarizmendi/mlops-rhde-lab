@@ -19,7 +19,7 @@ BLAH, BLAH
 
 ==== GitHub Pages
 
-You can take a view to the static content by simply visiting [GitHub Pages for this repo in `https://luisarizmendi.github.io/guide-object-detection/modules/index.html`](https://luisarizmendi.github.io/guide-object-detection/modules/index.html)
+You can take a view to the static content by simply visiting GitHub Pages for this repo in `https://luisarizmendi.github.io/guide-object-detection/modules/index.html`
 
 ==== Using Antora Viewer
 
