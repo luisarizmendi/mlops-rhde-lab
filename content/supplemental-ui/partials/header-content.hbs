@@ -12,22 +12,33 @@
             <label for="uname">User Name</label><br/>
             <input type="text" id="uname" name="username" placeholder="Your username..">
           </div>
-          <div ></div>
+          <p></p>
           <div >
             <label for="cdomain">Cluster Domain</label><br/>
             <input type="text" id="cdomain" name="clusterdomain" placeholder="Your cluster domain..">
           </div>
-          <div ></div>
+          <p></p>
           <div >
             <label for="gitserver">Git Server (optional)</label><br/>
             <input type="text" id="gitserver" name="gitserver" placeholder="Your git server..">
           </div>
-          <div ></div>
+          <p></p>
           <div >
             <button class="storage-btns" onclick="setNamesInStorage()">Save</button>
-            <div ></div>
+             <p></p>
             <button class="storage-btns" onclick="clearStorage()">Clear</button>
+
+            :username: <span id="uname"></span>
+
+            Hola :username: <span id="cdomain"></span>
+
           </div>
+
+
+
+
+
+
 
       <div class="navbar-end">
         {{#if page.attributes.links}}
