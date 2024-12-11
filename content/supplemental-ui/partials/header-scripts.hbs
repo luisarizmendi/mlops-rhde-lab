@@ -33,7 +33,8 @@
         // Default GitLab Server
         localStorage.setItem('GIT_SERVER', 'gitea-gitea.' + cdomain);
       }
-      location.reload();
+      //location.reload();
+      updateMessage(); // Update the message display
     }
 
     function clearStorage () {
@@ -44,9 +45,19 @@
       document.getElementById('uname').value = '';
       document.getElementById('cdomain').value = '';
       document.getElementById('gitserver').value = '';
-      location.reload();
+      //location.reload();
+      updateMessage(); // Update the message display
     }
 
+    // Function to update the message
+    function updateMessage() {
+      const username = localStorage.getItem('USER_NAME') || 'Not set';
+      document.getElementById('usernameDisplay').textContent = `USERNAME= ${username}`;
+    }
+
+    // Update the message display on page load
+    window.onload = updateMessage;
+    
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
