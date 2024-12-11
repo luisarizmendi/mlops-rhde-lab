@@ -1,40 +1,5 @@
 
 <script>
-    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
-    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
-    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
-
-  function setNamesInStorage() {
-    let uname = (document.getElementById('uname').value.toLowerCase());
-    let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
-                  ? document.getElementById('cdomain').value.toLowerCase().substring(8) 
-                  : document.getElementById('cdomain').value.toLowerCase();
-    let gitserver = (document.getElementById('gitserver').value.toLowerCase().indexOf('https://') > -1) 
-                  ? document.getElementById('gitserver').value.toLowerCase().substring(8) 
-                  : document.getElementById('gitserver').value.toLowerCase();
-
-    // Check inputs
-    if (uname == '') {        
-      alert('Please enter a username');
-      return;
-    }
-    if (cdomain == '') {        
-      alert('Please enter a cluster domain');
-      return;
-    }
-
-    console.info('INFO - setting user, cluster and git to :', uname, cdomain, gitserver);
-    localStorage.setItem('USER_NAME', uname);
-    localStorage.setItem('CLUSTER_DOMAIN', cdomain);
-    // gitserver is not nullable
-    if (gitserver !== '') {
-      localStorage.setItem('GIT_SERVER', gitserver);
-    } else {
-      // Default GitLab Server
-      localStorage.setItem('GIT_SERVER', 'gitea-gitea.' + cdomain);
-    }
-    updateMessage(); // Update the message display
-  }
 
   function clearStorage() {
     console.info('INFO - clearing user and cluster');
@@ -47,13 +12,44 @@
     updateMessage(); // Update the message display
   }
 
+  function setNamesInStorage() {
+      let uname = (document.getElementById('uname').value).toLowerCase();
+      let cdomain = (document.getElementById('cdomain').value).toLowerCase().includes('https://')
+          ? document.getElementById('cdomain').value.toLowerCase().substring(8)
+          : document.getElementById('cdomain').value.toLowerCase();
+
+      if (uname === '') {
+          alert('Please enter a username');
+          return;
+      }
+
+      if (cdomain === '') {
+          alert('Please enter a cluster domain');
+          return;
+      }
+
+      localStorage.setItem('USER_NAME', uname);
+      localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+      updateMessage();
+  }
+
+  function clearStorage() {
+      localStorage.removeItem('USER_NAME');
+      localStorage.removeItem('CLUSTER_DOMAIN');
+
+      // Clean input fields
+      document.getElementById('uname').value = '';
+      document.getElementById('cdomain').value = '';
+      
+      updateMessage();
+  }
+
   function updateMessage() {
       const username = localStorage.getItem('USER_NAME') || '';
-      console.info('INFO - setting user :', username);
-      document.getElementById('uname').value = `${username}`;
+      document.getElementById('unameVal').innerText = username;
 
       const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '';
-      document.getElementById('cdomain').value = `${cdomain}`;
+      document.getElementById('cdomainVal').innerText = cdomain;
   }
 
 
