@@ -1,6 +1,6 @@
 ---
 site:
-  title: MLOps workshop with RHDE and OpenShift AI
+  title: Object Detection with RHDE
   url: https://luisarizmendi.github.io/guide-object-detection
   start_page: modules::index.adoc
 
