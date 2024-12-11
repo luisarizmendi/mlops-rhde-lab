@@ -47,67 +47,6 @@
       location.reload();
     }
 
-    window.$docsify = {
-      auto2top: true,
-      executeScript: true,
-      name: 'MLOps Lab Exercises',
-      repo: 'https://github.com/rhoai-mlops/lab-instructions',
-      loadSidebar: true,
-      subMaxLevel: 0,
-      sidebarDisplayLevel: 0,
-      alias: {
-      '/.*/_sidebar.md': '/_sidebar.md'
-      },
-      copyCode: {
-        buttonText : '✂️',
-        errorText  : '😔',
-        successText: '💚 copied'
-      },
-      pagination: {
-        crossChapter: true
-    },
-      plugins: [
-        function(hook) {
-          hook.beforeEach(function(content) {
-
-            fetch('config/all.json')
-            .then(function(response) {
-              return response.json();
-            }).then(function(jsonData) {
-              console.info("🥳 YAY! Found the config file 🥳", jsonData);
-              document.getElementById('crw_dev_filelocation').setAttribute('href', jsonData.devfile);
-              document.getElementById('crw_dev_filelocation').innerHTML = jsonData.devfile;
-              document.getElementById('crw_dev_filelocation_4.11').setAttribute('href', jsonData.devfile411);
-              document.getElementById('crw_dev_filelocation_4.11').innerHTML = jsonData.devfile411;
-            }).catch(function(err) {
-              console.warn("😭 Opps, Cannot find the config file 😭", err);
-            })
-
-            // Invoked each time before parsing the Markdown file.
-            const userName = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '<USER_NAME>';
-            const clusterDomain = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '<CLUSTER_DOMAIN>';
-            const gitServer = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '<GIT_SERVER>';
-            return content.replaceAll('<USER_NAME>', userName)
-                    .replaceAll('<CLUSTER_DOMAIN>', clusterDomain)
-                    .replaceAll('<GIT_SERVER>', gitServer);
-          });
-
-
-
-          const footer = `<hr/>
-            <footer>
-            <span><a href="https://ai-on-openshift.io/"> 🤖 AI on OpenShift</a> </span>
-            </footer>
-            `;
-
-          hook.afterEach(function(html) {
-            return html + footer;
-          });
-        }
-      ],
-      search: 'auto', // default
-      vueComponents: { }
-    }    
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
