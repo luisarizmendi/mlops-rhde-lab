@@ -7,30 +7,25 @@
       <a class="navbar-item" style="color:white;font-size: 1.5rem" href="{{{or site.url (or siteRootUrl siteRootPath)}}}">{{site.title}}</a>
     </div>
     <div id="topbar-nav" class="navbar-menu">
-
-          <div class="user-inputs">
+          <div class="navbar-item">
             <label for="uname">User Name</label><br/>
             <input type="text" id="uname" name="username" placeholder="Your username..">
           </div>
-          <p></p>
-          <div >
+          <div class="navbar-item">
             <label for="cdomain">Cluster Domain</label><br/>
             <input type="text" id="cdomain" name="clusterdomain" placeholder="Your cluster domain..">
           </div>
-          <p></p>
-          <div >
+          <div class="navbar-item">
             <label for="gitserver">Git Server (optional)</label><br/>
             <input type="text" id="gitserver" name="gitserver" placeholder="Your git server..">
           </div>
-          <p></p>
-          <div >
+          <div class="navbar-item">
             <button class="storage-btns" onclick="setNamesInStorage()">Save</button>
-             <p></p>
             <button class="storage-btns" onclick="clearStorage()">Clear</button>
 
-            :username: <span id="uname"></span>
+            :username: <p id="uname"></p>
 
-            Hola :username: <span id="cdomain"></span>
+            Hola :username: <p id="cdomain"></p>
 
           </div>
 
