@@ -52,12 +52,12 @@
     // Function to update the message
     function updateMessage() {
       const username = localStorage.getItem('USER_NAME') || 'Not set';
-      document.getElementById('usernameDisplay').textContent = `USERNAME= ${username}`;
+      document.getElementById('uname').textContent = `USERNAME= ${username}`;
     }
 
     // Update the message display on page load
     window.onload = updateMessage;
-    
+
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
