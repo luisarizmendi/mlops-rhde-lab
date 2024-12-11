@@ -1,12 +1,31 @@
 == Guide for Object Detection with RHDE LAB
 
+=== About this Guide
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+SHORT INTRO TO THE LAB. IT MIGHT BE COPY/PASTED FROM THE DOCS INTRO 
+
+BLAH, BLAH
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
 === Accessing the Guide
+
+
+
+==== GitHub Pages
+
+You can take a view to the static content by simply visiting [GitHub Pages for this repo in `https://luisarizmendi.github.io/guide-object-detection/modules/index.html`](https://luisarizmendi.github.io/guide-object-detection/modules/index.html)
+
+==== Using Antora Viewer
 
 You can access the content by using an antora-viewer container image:
 
-. Create a git repo from this template
-.. Suggested naming: `showroom_<lab-name>`
-. Clone your new repo and `cd` into it
+. Clone the repo and `cd` into it
 . When you make changes to the content, all you need is to kill the container and run it again.
 +
 [source,sh]
@@ -22,11 +41,10 @@ podman run --rm --name antora -v $PWD:/antora:z -p 8080:8080 -i -t ghcr.io/julia
 
 Live-reload is not supported.
 
-=== Accessing the Guide using local file scripts
+==== Using local file scripts
 
 You can also
 
-. Create a git repo from this template
 . Clone the repo and `cd` into it
 . Run ./utilities/lab-serve
 . Open http://localhost:8080 in your browser
@@ -35,22 +53,4 @@ You can also
 To rebuild your html, run `./utilites/build`.
 
 
-=== Understanding the Basic Template Directory Structure
-
-[source,sh]
-----
-./content/modules/ROOT/
-├── assets
-│   └── images                       # Images used in your content
-│       └── example-image.png
-├── examples                         # You can add downloadable assets here
-│   └── example-bash-script.sh       # e.g. an example bash script
-├── nav.adoc                         # Navigation for your lab
-├── pages                            # Your content goes here
-│   ├── index.adoc                   # First page of your lab, e.g. overview etc
-│   ├── module-01.adoc
-│   └── module-02.adoc               # Sample lab has 2 modules including index.adoc
-└── partials                         # You can add partials here, reusable content inserted inline into your modules
-    └── example_partial.adoc
-----
 
