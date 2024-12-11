@@ -1,6 +1,6 @@
 
 <script>
-    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
+    document.getElementById("uname").value = localStorage.getItem('username') ? localStorage.getItem('username') : '';
     document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
     document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
 
@@ -24,7 +24,7 @@
     }
 
     console.info('INFO - setting user, cluster and git to :', uname, cdomain, gitserver);
-    localStorage.setItem('USER_NAME', uname);
+    localStorage.setItem('username', uname);
     localStorage.setItem('CLUSTER_DOMAIN', cdomain);
     // gitserver is not nullable
     if (gitserver !== '') {
@@ -38,7 +38,7 @@
 
   function clearStorage() {
     console.info('INFO - clearing user and cluster');
-    localStorage.removeItem('USER_NAME');
+    localStorage.removeItem('username');
     localStorage.removeItem('CLUSTER_DOMAIN');
     localStorage.removeItem('GIT_SERVER');
     document.getElementById('uname').value = '';
@@ -48,7 +48,7 @@
   }
 
   function updateMessage() {
-    const username = localStorage.getItem('USER_NAME') || 'Not set';
+    const username = localStorage.getItem('username') || 'Not set';
     console.info('INFO - setting user :', username);
     document.getElementById('uname').textContent = `USERNAME= ${username}`;
 
