@@ -1,40 +1,37 @@
 
 <script>
-    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
-    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
-    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
+  // Add the functions before they are referenced in the HTML
+  function setNamesInStorage() {
+    let uname = document.getElementById('uname').value.toLowerCase();
+    let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
+                  ? document.getElementById('cdomain').value.toLowerCase().substring(8) 
+                  : document.getElementById('cdomain').value.toLowerCase();
+    let gitserver = (document.getElementById('gitserver').value.toLowerCase().indexOf('https://') > -1) 
+                  ? document.getElementById('gitserver').value.toLowerCase().substring(8) 
+                  : document.getElementById('gitserver').value.toLowerCase();
 
-    function setNamesInStorage () {
-      let uname = document.getElementById('uname').value.toLowerCase();
-      let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
-                    ? document.getElementById('cdomain').value.toLowerCase().substring(8) 
-                    : document.getElementById('cdomain').value.toLowerCase();
-      let gitserver = (document.getElementById('gitserver').value.toLowerCase().indexOf('https://') > -1) 
-                    ? document.getElementById('gitserver').value.toLowerCase().substring(8) 
-                    : document.getElementById('gitserver').value.toLowerCase();
-
-      // Check inputs
-      if (uname == '') {        
-        alert('Please enter a username');
-        return;
-      }
-      if (cdomain == '') {        
-        alert('Please enter a cluster domain');
-        return;
-      }
-
-      console.info('INFO - setting user, cluster and git to :', uname, cdomain, gitserver);
-      localStorage.setItem('USER_NAME', uname);
-      localStorage.setItem('CLUSTER_DOMAIN', cdomain);
-      // gitserver is not nullable
-      if (gitserver !== '') {
-        localStorage.setItem('GIT_SERVER', gitserver);
-      } else {
-        // Default GitLab Server
-        localStorage.setItem('GIT_SERVER', 'gitea-gitea.' + cdomain);
-      }
-      updateMessage(); // Update the message display
+    // Check inputs
+    if (uname == '') {        
+      alert('Please enter a username');
+      return;
     }
+    if (cdomain == '') {        
+      alert('Please enter a cluster domain');
+      return;
+    }
+
+    console.info('INFO - setting user, cluster and git to :', uname, cdomain, gitserver);
+    localStorage.setItem('USER_NAME', uname);
+    localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+    // gitserver is not nullable
+    if (gitserver !== '') {
+      localStorage.setItem('GIT_SERVER', gitserver);
+    } else {
+      // Default GitLab Server
+      localStorage.setItem('GIT_SERVER', 'gitea-gitea.' + cdomain);
+    }
+    updateMessage(); // Update the message display
+  }
 
   function clearStorage() {
     console.info('INFO - clearing user and cluster');
