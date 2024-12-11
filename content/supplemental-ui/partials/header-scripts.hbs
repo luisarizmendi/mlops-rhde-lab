@@ -1,8 +1,8 @@
 
   <script>
-    document.getElementById("uname").value = localStorage.getItem('USER_NAME') ? localStorage.getItem('USER_NAME') : '';
-    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') ? localStorage.getItem('CLUSTER_DOMAIN') : '';
-    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') ? localStorage.getItem('GIT_SERVER') : '';
+    document.getElementById("uname").value = localStorage.getItem('USER_NAME') || 'Not set';
+    document.getElementById("cdomain").value = localStorage.getItem('CLUSTER_DOMAIN') || 'Not set';
+    document.getElementById("gitserver").value = localStorage.getItem('GIT_SERVER') || 'Not set';
 
     function setNamesInStorage () {
       let uname = document.getElementById('uname').value.toLowerCase();
