@@ -9,7 +9,7 @@
     document.getElementById('uname').value = '';
     document.getElementById('cdomain').value = '';
     document.getElementById('gitserver').value = '';
-    updateMessage(); // Update the message display
+    updateMessage(); 
   }
 
   function setNamesInStorage() {
@@ -56,6 +56,9 @@
 
       const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '';
       document.getElementById('cdomainVal').innerText = cdomain;
+
+      const gitserver = localStorage.getItem('GIT_SERVER') || '';
+      document.getElementById('gitserver').innerText = gitserver;
   }
 
 
