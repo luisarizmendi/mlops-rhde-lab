@@ -1,4 +1,4 @@
-= Welcome to MLOps workshop with RHDE and OpenShift AI
+= Welcome to Object Detection with RHDE
 :page-layout: home
 :!sectids:
 
