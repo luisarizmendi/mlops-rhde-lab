@@ -9,7 +9,6 @@ asciidoc:
     lab_name: "Object detection with RHDE"
     release-version: master
     page-pagination: true
-    user: 'User X'
     my_var: "foo"
     guid: my-guid
     ssh_user: devops
