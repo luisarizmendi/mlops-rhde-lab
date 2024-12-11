@@ -2,7 +2,7 @@
 <script>
   // Add the functions before they are referenced in the HTML
   function setNamesInStorage() {
-    let uname = document.getElementById('uname').value.toLowerCase();
+    let uname = (document.getElementById('uname').value.toLowerCase());
     let cdomain = (document.getElementById('cdomain').value.toLowerCase().indexOf('https://') > -1) 
                   ? document.getElementById('cdomain').value.toLowerCase().substring(8) 
                   : document.getElementById('cdomain').value.toLowerCase();
