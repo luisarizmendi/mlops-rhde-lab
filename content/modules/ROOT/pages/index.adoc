@@ -7,6 +7,8 @@
 
 You are in a company that.......BLAH BLAH INTRO
 
+
+
 BLAH, BLAH 
 BLAH, BLAH 
 BLAH, BLAH 
@@ -20,6 +22,18 @@ Three different "paths" (choose or do them all):
 BLAH, BLAH 
 BLAH, BLAH 
 BLAH, BLAH 
+
+
+:username: <span id="uname"></span>
+
+Hola :username: <span id="cdomain"></span>
+
+
+BLAH, BLAH 
+BLAH, BLAH 
+BLAH, BLAH 
+
+
 
 
 [.tiles.browse]
