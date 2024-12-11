@@ -8,20 +8,20 @@
     </div>
     <div> <span id="uname">:username:</span>  </div>
     <div id="topbar-nav" class="navbar-menu">
-          <div >
+          <div class="user-inputs">
             <label for="uname">User Name: </label><br/>
             <input type="text" id="uname" name="username" placeholder="Your username..">
           </div>
-          <div >
+          <div class="user-inputs">
             <label for="cdomain">Cluster Domain: </label><br/>
             <input type="text" id="cdomain" name="clusterdomain" placeholder="Your cluster domain..">
           </div>
-          <div >
+          <div class="user-inputs">
             <label for="gitserver">Git Server (optional): </label><br/>
             <input type="text" id="gitserver" name="gitserver" placeholder="Your git server..">
           </div>
           <div >
-            <button class="storage-btns" onclick="setNamesInStorage()">Save</button>
+            <button class="storage-btns" onclick="setNamesInStorage()">Save</button></div><div >
             <button class="storage-btns" onclick="clearStorage()">Clear</button>
           </div>
       </div>
