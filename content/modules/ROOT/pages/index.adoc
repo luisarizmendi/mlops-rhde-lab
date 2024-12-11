@@ -24,9 +24,9 @@ BLAH, BLAH
 BLAH, BLAH 
 
 
-<span id="uname">:username:</span>
+<html><span id="uname">:username:</span></html>
 
-Hola <span id="cdomain">:username:</span>
+<html>Hola <span id="cdomain">:username:</span></html>
 
 
 BLAH, BLAH 
