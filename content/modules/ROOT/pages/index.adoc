@@ -26,7 +26,7 @@ BLAH, BLAH
 == Browse modules
 
 [.tile]
-.xref:00-intro.adoc[Lab Introduction]
+xref:00-intro.adoc[Lab Introduction]
 
 [.tile]
 .*Path: AI Specialist Path*
@@ -64,6 +64,6 @@ BLAH, BLAH
 * xref:00-intro.adoc#background[Workflow overview]
 
 [.tile]
-.xref:99-summary.adoc[Summary]
+xref:99-summary.adoc[Summary]
 
 
