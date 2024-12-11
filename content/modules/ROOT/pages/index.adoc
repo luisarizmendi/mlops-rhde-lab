@@ -7,12 +7,19 @@
 
 You are in a company that.......BLAH BLAH INTRO
 
+BLAH, BLAH 
+BLAH, BLAH 
+BLAH, BLAH 
+
 Three different "paths" (choose or do them all):
 
 * AI Specialist / MLOps Engineer
 * APP Developer / DevOps Engineer
 * Platform Specialist  / Site Reliability Engineer (SRE)
 
+BLAH, BLAH 
+BLAH, BLAH 
+BLAH, BLAH 
 
 
 [.tiles.browse]
@@ -20,33 +27,43 @@ Three different "paths" (choose or do them all):
 
 [.tile]
 .xref:00-intro.adoc[Lab Introduction]
-* xref:00-intro.adoc#prerequisites[Prerequisites]
-* xref:00-intro.adoc#environment[Environment]
 
 [.tile]
-.Path: AI Specialist Path
+.*Path: AI Specialist Path*
 * xref:ai-specialist-00-intro.adoc[0. Introduction]
 ** xref:ai-specialist-00-intro.adoc#background[Background]
 ** xref:ai-specialist-00-intro.adoc#toolset[Toolset used]
 ** xref:ai-specialist-00-intro.adoc#workflow[Workflow overview]
 * xref:ai-specialist-01-data.adoc[1. Data Management]
-** xref:ai-specialist-01-data.adoc[1. Data Management]
+** xref:ai-specialist-01-data.adoc#collection[Collection]
+** xref:ai-specialist-01-data.adoc#inspection[Inspection]
+** xref:ai-specialist-01-data.adoc#preparation[Preparation]
 * xref:ai-specialist-02-build.adoc[2. Model Building]
+** xref:ai-specialist-02-build.adoc#tuning[Engineering]
+** xref:ai-specialist-02-build.adoc#training[Training]
+** xref:ai-specialist-02-build.adoc#evaluation[Evaluation]
 * xref:ai-specialist-03-deploy.adoc[3. Model deployment]
+** xref:ai-specialist-03-deploy.adoc#packaging[Packaging]
+** xref:ai-specialist-03-deploy.adoc#packaging[Serving]
+* xref:ai-specialist-03-deploy.adoc[4. Model Updating]
+** xref:ai-specialist-03-deploy.adoc#monitoring[Monitoring]
+** xref:ai-specialist-03-deploy.adoc#monitoring[Dataset update]
+** xref:ai-specialist-03-deploy.adoc#updating[Re-training]
+
 
 [.tile]
-.xref:app-developer-00-intro.adoc[Path: APP Developer]
+.*Path: APP Developer*
 * xref:00-intro.adoc#background[Background]
 * xref:00-intro.adoc#background[Toolset used]
 * xref:00-intro.adoc#background[Workflow overview]
 
 [.tile]
-.xref:03-deploying.adoc[Path: Platform Specialist]
+.*Path: Platform Specialist*
 * xref:00-intro.adoc#background[Background]
 * xref:00-intro.adoc#background[Toolset used]
 * xref:00-intro.adoc#background[Workflow overview]
 
 [.tile]
 .xref:99-summary.adoc[Summary]
-* xref:00-intro.adoc#background[Background]
+
 
