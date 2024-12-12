@@ -35,12 +35,20 @@ Git Repo: pass:[<span id="gitserverVal"><GIT REPO></span>]
 
 With Code:
 
+:username-span: <span id="unameVal"><USER></span>
+
+User: pass:[{username-span}]
 
 [source,sh,role=execute,subs="attributes"]
 ----
 cd ~/mydir
-echo "Hello <span id="unameVal"><USER></span>"
+echo "Hello \"{username-span}\""
 ----
+
+
+
+
+
 
 
 [subs=quotes]
