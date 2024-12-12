@@ -39,13 +39,13 @@ With Code:
 [source,sh,role=execute,subs="attributes"]
 ----
 cd ~/mydir
-echo "Hello {username}"
+echo "Hello <span id="unameVal"><USER></span>"
 ----
 
 
 [subs=quotes]
 ----
-echo "Hello pass:[<span id="unameVal"><USER></span>]"
+echo "Hello <span id="unameVal"><USER></span>"
 ----
 
 
