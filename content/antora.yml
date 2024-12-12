@@ -6,7 +6,7 @@ nav:
 
 asciidoc:
   attributes:
-    lab_name: "Object detection with RHDE"
+    lab_name: "Object detection with Red Hat Device Edge"
     release-version: master
     page-pagination: true
     my_var: "foo"
