@@ -26,14 +26,17 @@ BLAH, BLAH
 How to pass the dynamic variables (from the header):
 
 
-User: <span id="unameVal">USER</span>
-
-User: pass:[<span id="unameVal">USER</span>]
-
-User: pass:[<span id="unameVal">USER</span>]
 
 
-more -----
+[subs=quotes]
+[source,sh,role=execute]
+----
+cd ~/mydir
+echo "Hello <span id="unameVal">USER</span>"
+----
+
+
+
 
 
 User: pass:[<span id="unameVal">USER</span>]
@@ -46,14 +49,13 @@ Git Repo: pass:[<span id="gitserverVal">GIT REPO</span>]
 
 With Code:
 
-User: pass:[<span id="unameVal">USER</span>]
-
-[subs=quotes]
-[source,sh,role=execute]
+[source,sh,role=execute,subs="attributes"]
 ----
 cd ~/mydir
 echo "Hello <span id="unameVal">USER</span>"
 ----
+
+
 
 
 
