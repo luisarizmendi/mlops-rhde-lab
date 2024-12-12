@@ -1,4 +1,4 @@
-== Guide for Object Detection with RHDE LAB
+== Guide for Object Detection with Red Hat Device Edge LAB
 
 === About this Guide
 
