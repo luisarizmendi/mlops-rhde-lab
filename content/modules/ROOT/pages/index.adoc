@@ -36,8 +36,6 @@ Git Repo: pass:[<span id="gitserverVal"><GIT REPO></span>]
 With Code:
 
 
-:user: pass:[<span id="cdomainVal"><CLUSTER></span>]
-
 [source,sh,role=execute,subs="attributes"]
 ----
 cd ~/mydir
@@ -47,18 +45,14 @@ echo "Hello {username}"
 
 [subs=quotes]
 ----
-echo "Hello pass:q[<span id="unameVal">{user}</span>]"
+echo "Hello pass:[<span id="unameVal"><USER></span>]"
 ----
 
 
 
 
-User: pass:[<span id="unameVal">{user}</span>]
+otro pass:[<span id="unameVal"><USER></span>]
 
-[source,shell,subs="attributes+"]
-----
-echo "Hello pass:[<span id=\"unameVal\">{user}</span>]"
-----
 
 
 
