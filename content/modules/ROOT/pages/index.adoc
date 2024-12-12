@@ -25,15 +25,11 @@ BLAH, BLAH
 
 How to pass the dynamic variables (from the header):
 
-
-
-
 User: pass:[<span id="unameVal"></span>]
 
 Cluster: pass:[<span id="cdomainVal"></span>]
 
 Git Repo: pass:[<span id="gitserverVal"></span>]
-
 
 
 With Code:
@@ -44,10 +40,6 @@ cd ~/mydir
 echo "Hello <span id="unameVal"></span>"
 ----
 
-
-
-
-
 [subs=quotes]
 ----
 cd ~/mydir
@@ -55,16 +47,17 @@ echo "Hello <span id="unameVal"></span>"
 ----
 
 
-
-
-
-
-
-
 Usage of global variables from `antora.yml`:
 
 - SSH Username: {ssh_user}
 - SSH Command: {ssh_command}
+
+With code block:
+
+[source,sh,role=execute,subs="attributes"]
+----
+cd ~/mydir/{my_var}
+----
 
 
 BLAH, BLAH 
