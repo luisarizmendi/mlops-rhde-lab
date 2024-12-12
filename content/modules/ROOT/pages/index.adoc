@@ -24,8 +24,7 @@ BLAH, BLAH
 BLAH, BLAH 
 
 pass:[<span id="unameVal"></span>]
-HOLA <span id="dynamic-username">{username}</span>
-
+HOLA pass:[<span id="unameVal">{username}</span>]
 
 BLAH, BLAH 
 BLAH, BLAH 
