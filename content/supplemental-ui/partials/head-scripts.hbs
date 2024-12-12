@@ -52,26 +52,11 @@
 
     function updateMessage() {
         const username = localStorage.getItem('USER_NAME') || '';
-        const unameVals = document.getElementsByClassName('unameVal');
+        const unameVals = document.querySelectorAll('#unameVal');
 
-        // Update all occurrences
-        for (let i = 0; i < unameVals.length; i++) {
-            unameVals[i].innerText = username;
-        }
-
-        const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '';
-        const cdomainVals = document.getElementsByClassName('cdomainVal');
-
-        for (let i = 0; i < cdomainVals.length; i++) {
-            cdomainVals[i].innerText = cdomain;
-        }
-
-        const gitserver = localStorage.getItem('GIT_SERVER') || '';
-        const gitserverVals = document.getElementsByClassName('gitserverVal');
-
-        for (let i = 0; i < gitserverVals.length; i++) {
-            gitserverVals[i].innerText = gitserver;
-        }
+        unameVals.forEach(element => {
+            element.innerText = username;
+        });
     }
 
 

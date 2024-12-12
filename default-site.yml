@@ -1,6 +1,6 @@
 ---
 site:
-  title: Object Detection with RHDE
+  title: Object Detection with Red Hat Device Edge
   url: https://luisarizmendi.github.io/guide-object-detection
   start_page: modules::index.adoc
 
