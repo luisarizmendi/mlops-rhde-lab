@@ -41,15 +41,21 @@ Git Repo: {git_server}
 
 With Code:
 
-[source,shell]
-----    
-echo "Hello pass:[<span id="unameVal"><USER></span>]"
+
+:user: pass:[<span id="cdomainVal"><CLUSTER></span>]
+
+[source,sh,role=execute,subs="attributes"]
+----
+cd ~/mydir
+echo "Hello {user}"
 ----
 
-[source,shell]
-----    
-echo "Hello {username}"
+
+[subs=quotes]
 ----
+echo "Hello pass:q[<span id="unameVal">{user}</span>]"
+----
+
 
 
 
