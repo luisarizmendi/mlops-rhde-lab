@@ -1,11 +1,11 @@
-== How to use variables in the documents
+# How to use variables in the documents
 
 You can use two types of variables:
 - Antora Static Variables
 - JS Dynamic Variables
 
 
-=== Antora Static Variables
+## Antora Static Variables
 
 There is a file in [content/antora.yml](content/antora.yml) where the variables used by Antora are defined. You can use them in the `adoc` documents that you create under `content/modules/ROOT` by referencing the variable name inside `{ }`, for example: 
 
@@ -60,7 +60,7 @@ cd ~/mydir/foo
 These variables can only be changed during the documentation build time, so you cannot dynamically change them without building the guide again.
 
 
-=== JS Dynamic Variables
+## JS Dynamic Variables
 
 Besides the Antora varaibles, a dynamic variable injection method was included in this guide. There is a script in [content/supplemental-ui/partials/head-scripts.hbs](content/supplemental-ui/partials/head-scripts.hbs) that get user input for some variables and then the value is reflected instantanelly in the document files.
 
