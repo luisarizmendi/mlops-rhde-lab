@@ -6,9 +6,9 @@ nav:
 
 asciidoc:
   attributes:
-    username: "<span id="unameVal"><USER></span>"
-    cluster: "<span id="cdomainVal"><CLUSTER></span>"
-    git_server: "<span id="gitserverVal"><GIT REPO></span>"
+    username: "<span id="unameVal">USER</span>"
+    cluster: "<span id="cdomainVal">CLUSTER</span>"
+    git_server: "<span id="gitserverVal">GIT REPO</span>"
     lab_name: "Object detection with RHDE"
     release-version: master
     page-pagination: true
