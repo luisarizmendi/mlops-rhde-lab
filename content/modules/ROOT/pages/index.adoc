@@ -25,26 +25,32 @@ BLAH, BLAH
 
 How to pass the dynamic variables (from the header):
 
-User: pass:[<span id="unameVal"><USER></span>]
+User: pass:[<span id="unameVal">USER</span>]
 
-Cluster: pass:[<span id="cdomainVal"><CLUSTER></span>]
+Cluster: pass:[<span id="cdomainVal">CLUSTER</span>]
 
-Git Repo: pass:[<span id="gitserverVal"><GIT REPO></span>]
+Git Repo: pass:[<span id="gitserverVal">GIT REPO</span>]
 
 
 
 With Code:
 
-User: pass:[<span id="unameVal"><USER></span>]
+User: pass:[<span id="unameVal">USER</span>]
 
 [subs=quotes]
 [source,sh,role=execute]
 ----
 cd ~/mydir
-echo "Hello <span id=\"unameVal\">{USER}</span>"
+echo "Hello <span id="unameVal">USER</span>"
 ----
 
 
+
+User: pass:[<span id="unameVal">USER</span>]
+
+Cluster: pass:[<span id="cdomainVal">CLUSTER</span>]
+
+Git Repo: pass:[<span id="gitserverVal">GIT REPO</span>]
 
 
 
