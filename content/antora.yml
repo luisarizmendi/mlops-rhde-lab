@@ -1,12 +1,12 @@
 name: modules
-title: Object detection with Red Hat Device Edge
+title: Object detection with RHDE
 version: master
 nav:
   - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    lab_name: "Object detection with Red Hat Device Edge"
+    lab_name: "Object detection with RHDE"
     release-version: master
     page-pagination: true
     my_var: "foo"

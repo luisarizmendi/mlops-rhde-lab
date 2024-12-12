@@ -1,4 +1,4 @@
-= Welcome to Object Detection with Red Hat Device Edge
+= Welcome to Object Detection with RHDE
 :page-layout: home
 :!sectids:
 
