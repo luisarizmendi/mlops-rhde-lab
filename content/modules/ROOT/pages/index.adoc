@@ -25,6 +25,17 @@ BLAH, BLAH
 
 How to pass the dynamic variables (from the header):
 
+
+User: <span id="unameVal">USER</span>
+
+User: pass:[<span id="unameVal">USER</span>]
+
+User: pass:[<span id="unameVal">USER</span>]
+
+
+more -----
+
+
 User: pass:[<span id="unameVal">USER</span>]
 
 Cluster: pass:[<span id="cdomainVal">CLUSTER</span>]
