@@ -51,19 +51,19 @@
   }
 
     function updateMessage() {
-        const username = localStorage.getItem('USER_NAME') || '';
+        const username = localStorage.getItem('USER_NAME') || '{USER_NAME}';
         const unameVals = document.querySelectorAll('#unameVal');
         unameVals.forEach(element => {
             element.innerText = username;
         });
 
-        const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '';
+        const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '{CLUSTER_DOMAIN}';
         const cdomainVals = document.querySelectorAll('#cdomainVal');
         cdomainVals.forEach(element => {
             element.innerText = cdomain;
         });
 
-        const gitserver = localStorage.getItem('GIT_SERVER') || '';
+        const gitserver = localStorage.getItem('GIT_SERVER') || '{GIT_SERVER}';
         const gitserverVals = document.querySelectorAll('#gitserverVal');
         gitserverVals.forEach(element => {
             element.innerText = gitserver;
