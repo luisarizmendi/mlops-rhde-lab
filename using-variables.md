@@ -122,7 +122,6 @@ and just a code without the copy option:
 cd ~/mydir
 echo "Hello <span id="unameVal"></span>"
 ----
-
 ```
 
 Then, if you use the header input box to assign the value `myuser`, and click "Save", then the output will be:
@@ -143,44 +142,5 @@ and just a code without the copy option:
 cd ~/mydir
 echo "Hello myuser"
 ----
-
-
 ```
-
-
-
-
-
-
-
-
-
-User: pass:[<span id="unameVal"></span>]
-
-Cluster: pass:[<span id="cdomainVal"></span>]
-
-Git Repo: pass:[<span id="gitserverVal"></span>]
-
-
-
-With Code:
-
-[source,sh,role=execute,subs="attributes"]
-----
-cd ~/mydir
-echo "Hello <span id="unameVal"></span>"
-----
-
-
-
-
-
-[subs=quotes]
-----
-cd ~/mydir
-echo "Hello <span id="unameVal"></span>"
-----
-
-
-
 
