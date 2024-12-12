@@ -54,3 +54,13 @@ To rebuild your html, run `./utilites/build`.
 
 
 
+
+=== Showroom
+
+This guide can be embeded into [Showroom](https://github.com/luisarizmendi/showroom-deployer) to get the content along with Terminals with specific tooling/access (Katacoda style) if needed:
+
+
+image::content/modules/ROOT/images/showroom.png[]
+
+
+
