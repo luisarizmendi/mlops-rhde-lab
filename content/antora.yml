@@ -6,6 +6,9 @@ nav:
 
 asciidoc:
   attributes:
+    username: "<span id="unameVal"><USER></span>"
+    cluster: "<span id="cdomainVal"><CLUSTER></span>"
+    git_server: "<span id="gitserverVal"><GIT REPO></span>"
     lab_name: "Object detection with RHDE"
     release-version: master
     page-pagination: true
@@ -20,3 +23,10 @@ asciidoc:
     - url: https://www.nvidia.com
       text: NVIDIA
 
+
+
+User: pass:[<span id="unameVal"><USER></span>]
+
+Cluster: pass:[<span id="cdomainVal"><CLUSTER></span>]
+
+Git Repo: pass:[<span id="gitserverVal"><GIT REPO></span>]
