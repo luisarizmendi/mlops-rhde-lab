@@ -1,12 +1,14 @@
 
   <nav class="navbar">
-    <div >
+    <div class="navbar-brand">
       <a class="navbar-item" href="https://www.redhat.com/en/technologies/device-edge" target="_blank">
         <img src="{{uiRootPath}}/img/header_logo.png" height="50px" alt="Red Hat Device Edge">
       </a>
       <a class="navbar-item" style="color:white;font-size: 1.5rem" href="{{{or site.url (or siteRootUrl siteRootPath)}}}">{{site.title}}</a>
     </div>
     <div id="topbar-nav" class="navbar-item">
+    </div>
+      <div class="navbar-end">
           <div class="user-inputs">
             <label for="uname">User Name: </label><br/>
             <input type="text" id="uname" name="username" placeholder="Your username..">
@@ -26,8 +28,7 @@
           <div >
             <button class="storage-btns" onclick="clearStorage()">Clear</button>
           </div>
-      </div>
-      <div class="navbar-end">
+
         {{#if page.attributes.links}}
         <div class="navbar-item navbar-item-right-dropdown has-dropdown is-hoverable">
           <a class="navbar-link" href="#">Links</a>
