@@ -23,8 +23,25 @@ BLAH, BLAH
 BLAH, BLAH 
 BLAH, BLAH 
 
-pass:[<span id="unameVal"></span>]
-HOLA pass:[<span id="unameVal">{username}</span>]
+How to pass the dynamic variables (from the header):
+
+User: pass:[<span id="unameVal"><USER></span>]
+Cluster: pass:[<span id="cdomainVal"><CLUSTER></span>]
+Git Repo: pass:[<span id="gitserverVal"><GIT REPO></span>]
+
+With Code:
+
+[source,shell]
+----    
+echo "Hello pass:[<span id="unameVal"><USER></span>]"
+----
+
+
+Usage of global variables from `antora.yml`:
+
+- SSH Username: {ssh_user}
+- SSH Password: {ssh_password}
+
 
 BLAH, BLAH 
 BLAH, BLAH 
