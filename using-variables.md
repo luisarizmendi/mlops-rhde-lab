@@ -1,7 +1,7 @@
 # How to use variables in the documents
 
 You can use two types of variables:
-- Antora Static Variables
+- [Antora](https://docs.antora.org/antora/latest/) Static Variables
 - JS Dynamic Variables
 
 
@@ -62,7 +62,7 @@ These variables can only be changed during the documentation build time, so you 
 
 ## JS Dynamic Variables
 
-Besides the Antora varaibles, a dynamic variable injection method was included in this guide. There is a script in [content/supplemental-ui/partials/head-scripts.hbs](content/supplemental-ui/partials/head-scripts.hbs) that get user input for some variables and then the value is reflected instantanelly in the document files.
+Besides the [Antora](https://docs.antora.org/antora/latest/) varaibles, a dynamic variable injection method was included in this guide. There is a script in [content/supplemental-ui/partials/head-scripts.hbs](content/supplemental-ui/partials/head-scripts.hbs) that get user input for some variables and then the value is reflected instantanelly in the document files.
 
 In this case, the input of those variables is gathered in the Guide's header by using the file [content/supplemental-ui/partials/header-content.hbs](content/supplemental-ui/partials/header-content.hbs).
 
