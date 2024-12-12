@@ -23,10 +23,8 @@ BLAH, BLAH
 BLAH, BLAH 
 BLAH, BLAH 
 
-
-<html><span id="uname">:username:</span></html>
-
-<html>Hola <span id="cdomain">:username:</span></html>
+pass:[<span id="unameVal"></span>]
+HOLA pass:[<span id="cdomainVal"></span>]
 
 
 BLAH, BLAH 
