@@ -28,6 +28,10 @@ How to pass the dynamic variables (from the header):
 
 
 
+
+
+
+
 [subs=quotes]
 [source,sh,role=execute]
 ----
@@ -54,16 +58,6 @@ With Code:
 cd ~/mydir
 echo "Hello <span id="unameVal">USER</span>"
 ----
-
-
-
-
-
-User: pass:[<span id="unameVal">USER</span>]
-
-Cluster: pass:[<span id="cdomainVal">CLUSTER</span>]
-
-Git Repo: pass:[<span id="gitserverVal">GIT REPO</span>]
 
 
 
