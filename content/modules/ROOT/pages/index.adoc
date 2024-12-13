@@ -1,17 +1,39 @@
-= Welcome to Object Detection with RHDE
+= Welcome to Personal Protection Equipment with RHDE on Nvidia
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== BLAH, BLAH SHORT INTRO
+== Use case summary
+You are the recently appointed plant manager at ACME co. +
+The company, which produces plastic bottles, just after hiring you, received some news coverage (and not for any good reason). +
+During the last 3 months 3 major accidents happened, which resulted in serious injuries to machinery operators (and 2 of those happened in the plant you are now managing). +
 
-You are in a company that.......BLAH BLAH INTRO
 
+Of course your task, beside as always improving efficiency and reducing cost of production, is preventing this from ever happening again.  +
+Identifying manufacturing hazards is critical as: +
 
+* Improves Workplace Safety: By accurately identifying hazards, employers can implement appropriate preventive measures to reduce the risk of accidents or injuries in the workplace. +
+* Reduces Costs: Workplace accidents can result in costly medical expenses, compensation claims, and decreased productivity. Identifying hazards early on can prevent such incidents, saving companies time and money. +
+* Ensures Compliance With Regulations: The Occupational Safety and Health Administration (OSHA) has strict guidelines and regulations for workplace safety. Properly identifying hazards helps companies comply with these regulations and avoid penalties. +
+* Enhances Productivity: Companies can maintain productivity by minimizing workplace accidents and injuries. A safe working environment also promotes employee morale, increasing efficiency and motivation. +
+* Protects Workers’ Health: Manufacturing hazards pose physical risks and impact employees’ long-term health. Proper identification allows for implementing measures to protect workers from exposure to harmful substances or environments. +
+* Builds a Positive Company Image: Employers who prioritize workplace safety by identifying and managing hazards demonstrate their commitment to their employees’ well-being. This helps attract top talent and improves the company’s overall reputation. +
 
-BLAH, BLAH 
-BLAH, BLAH 
-BLAH, BLAH 
+You decide to propose a new initiative focused on reducing and preventing accident in the factory by leveraging Machine Learning and to test it in the plant before submitting the Business Case to HQ. +
+You are going to build a ML model to detect PPE (Personal Protection Equipment) and alert worker not wearing equipment in real time. +
+Luckily most of the hardware needed for this project is already available onsite: +
+
+* some spare usb cameras to analyze video feed of workers getting closer to the machineries +
+* some spare IPC (Industrial PC) equipped with Nvidia GPUs to perform inferencing on the images +
+
+You now just need to hire your team! +
+
+* borrowing some time from the local *Data Scientist / ML Engineer* to build and fine tune the model
+* asking the remote *DevOps* team to help you build the Application and a way to deploy and update it easily
+* asking the local *IT Platform Specialist* to help you monitor and automate this new Application
+* you will also take part in it as *OT Specialist* and will configure the available Alerm Management System
+
+=== Lab instructions
 
 Three different "paths" (choose or do them all):
 
@@ -19,9 +41,6 @@ Three different "paths" (choose or do them all):
 * APP Developer / DevOps Engineer
 * Platform Specialist  / Site Reliability Engineer (SRE)
 
-BLAH, BLAH 
-BLAH, BLAH 
-BLAH, BLAH 
 
 How to pass the dynamic variables (from the header):
 
