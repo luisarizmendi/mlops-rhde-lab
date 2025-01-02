@@ -12,7 +12,7 @@ content:
 ui:
   bundle:
     url: https://github.com/luisarizmendi/showroom_theme/releases/download/v0.0.2/ui-bundle.zip
-    snapshot: true
+    snapshot: false
   supplemental_files: ./content/supplemental-ui
 
 runtime:
