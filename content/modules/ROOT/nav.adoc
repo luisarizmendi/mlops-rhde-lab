@@ -1,23 +1,23 @@
 * xref:00-lab-intro.adoc[Lab Introduction]
 
 * Path: AI Specialist
-** xref:ai-specialist-00-intro.adoc[0. Introduction]
+** xref:ai-specialist-00-intro.adoc[0. AI Specialist Introduction]
 ** xref:ai-specialist-01-data.adoc[1. Data Management]
 ** xref:ai-specialist-02-build.adoc[2. Model Building]
 ** xref:ai-specialist-03-deploy.adoc[3. Model Release]
 ** xref:ai-specialist-04-update.adoc[4. Day-2 Operations]
 
 * Path: APP Developer
-** xref:app-developer-00-intro.adoc[0. Introduction]
+** xref:app-developer-00-intro.adoc[0. APP Developer Introduction]
 ** xref:app-developer-01-arch.adoc[1. App Planning]
 ** xref:app-developer-02-dev.adoc[2. App Development]
 ** xref:app-developer-03-deploy.adoc[3. App Release]
 ** xref:app-developer-04-update.adoc[4. Day-2 Operations]
 
 * Path: Platform Specialist
-** xref:platform-specialist-00-intro.adoc[0. Introduction]ew]
+** xref:platform-specialist-00-intro.adoc[0. Platform Specialist Introduction]
 ** xref:platform-specialist-01-image.adoc[1. Device Image]
-** xref:platform-specialist-02-onboarding.adoc[2. Onboarding]n]
+** xref:platform-specialist-02-onboarding.adoc[2. Onboarding]
 ** xref:platform-specialist-03-update.adoc[3. Day-2 Operations]
 
 * xref:99-summary.adoc[Summary]
