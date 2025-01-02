@@ -1,4 +1,4 @@
-= Lab Introduction
+= Lab Description
 
 The workshop requires several components, but there are multiple architectures to consider for assembling these components effectively.
 

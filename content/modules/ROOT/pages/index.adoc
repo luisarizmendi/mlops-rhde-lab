@@ -63,7 +63,7 @@ Now that you have the background, it's time to step into action. You will take o
 
 Each role plays a critical part in delivering the overall solution. The AI Specialist crafts the intelligence behind the system, the App Developer ensures smooth user interaction and integration, and the Platform Specialist guarantees the application runs efficiently in a production environment.
 
-Start from the xref:00-lab-intro.adoc[*Lab Introduction*] and then choose your role... or try all of them if time allows!
+Start from the xref:00-lab-intro.adoc[*Lab Description*] and then choose your role... or try all of them if time allows!
 
 Good luck on your mission to create a safer, smarter workplace!
 
@@ -72,7 +72,7 @@ Good luck on your mission to create a safer, smarter workplace!
 == Browse modules
 
 [.tile]
-xref:00-lab-intro.adoc[*Lab Introduction*]
+xref:00-lab-intro.adoc[*Lab Description*]
 
 [.tile]
 .*Path: AI Specialist*
