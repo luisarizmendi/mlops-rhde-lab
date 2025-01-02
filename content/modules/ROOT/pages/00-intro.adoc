@@ -1,1 +1,5 @@
+= Lab Introduction
 
+
+
+image::../images/labintro-arch.png[]
