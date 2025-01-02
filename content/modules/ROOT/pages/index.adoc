@@ -33,50 +33,18 @@ You now just need to hire your team! +
 * asking the local *IT Platform Specialist* to help you monitor and automate this new Application
 * you will also take part in it as *OT Specialist* and will configure the available Alerm Management System
 
-=== Lab instructions
+=== About the workshop
+
+
+!!!!!!!!!! Include short description of the "three path" approach of this lab and point the student to start from "Lab Introduction"
+
+
 
 Three different "paths" (choose or do them all):
 
 * AI Specialist / MLOps Engineer
 * APP Developer / DevOps Engineer
 * Platform Specialist  / Site Reliability Engineer (SRE)
-
-
-How to pass the dynamic variables (from the header):
-
-User: pass:[<span id="unameVal"></span>]
-
-Cluster: pass:[<span id="cdomainVal"></span>]
-
-Git Repo: pass:[<span id="gitserverVal"></span>]
-
-
-With Code:
-
-[source,sh,role=execute,subs="attributes"]
-----
-cd ~/mydir
-echo "Hello <span id="unameVal"></span>"
-----
-
-[subs=quotes]
-----
-cd ~/mydir
-echo "Hello <span id="unameVal"></span>"
-----
-
-
-Usage of global variables from `antora.yml`:
-
-- SSH Username: {ssh_user}
-- SSH Command: {ssh_command}
-
-With code block:
-
-[source,sh,role=execute,subs="attributes"]
-----
-cd ~/mydir/{my_var}
-----
 
 
 BLAH, BLAH 
