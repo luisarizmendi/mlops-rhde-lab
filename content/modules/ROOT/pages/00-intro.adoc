@@ -11,5 +11,5 @@ image::labintro-arch.png[]
 
 
 
-== Get started! 
+== Getting started! 
 
