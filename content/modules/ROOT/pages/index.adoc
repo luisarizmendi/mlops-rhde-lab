@@ -1,4 +1,4 @@
-= Welcome to Personal Protection Equipment with RHDE on Nvidia
+= Welcome to Personal Protection Equipment detection with RHDE
 :page-layout: home
 :!sectids:
 
