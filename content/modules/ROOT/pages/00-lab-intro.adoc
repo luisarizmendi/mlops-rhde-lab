@@ -64,7 +64,6 @@ Running Locally:
 Automatic mirroring is not configured. If you build new container images using pipelines, push them manually to the local registry. Alternatively, configure pipelines to use external registries, though expect longer wait times during image pulls.
 
 
-
 Running in the Cloud:
 
 * Source Code Repository: GitHub.
