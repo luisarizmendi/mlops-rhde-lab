@@ -25,3 +25,4 @@ antora:
 
 output:
   dir: ./www
+
