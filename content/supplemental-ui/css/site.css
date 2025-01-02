@@ -1,7 +1,7 @@
 @import "typeface-redhat-display.css";
 @import "typeface-redhat-text.css";
 @import "typeface-jetbrains-mono.css";
-@import "custom_vars.css";
+@import "vars.css";
 @import "base.css";
 @import "body.css";
 @import "nav.css";
