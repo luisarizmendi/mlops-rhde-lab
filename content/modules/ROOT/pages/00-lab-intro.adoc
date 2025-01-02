@@ -2,41 +2,41 @@
 
 The workshop requires several components, but there are multiple architectures to consider for assembling these components effectively.
 
-Let's outline the necessary components and then explore the potential architectures.
+Let's outline the necessary components and then explore the architecture used for this workshop.
 
 == Workshop Requirements
 
 Local (Edge) Components:
 
-Edge Devices: Devices where the application and AI model will run. It is recommended that these devices have a GPU to accelerate AI inference.
+* Edge Devices: Devices where the application and AI model will run. It is recommended that these devices have a GPU to accelerate AI inference.
 
-Webcams: Since this workshop focuses on image recognition, connecting a webcam to edge devices is essential.
+* Webcams: Since this workshop focuses on image recognition, connecting a webcam to edge devices is essential.
 
-Workstation/Laptop: This is your main system for following the workshop instructions.
+* Workstation/Laptop: This is your main system for following the workshop instructions.
 
-Network Infrastructure: Switches and routers (with additional services such as DNS and DHCP) to ensure communication between all components. Internet connectivity may be required depending on the final lab architecture.
+* Network Infrastructure: Switches and routers (with additional services such as DNS and DHCP) to ensure communication between all components. Internet connectivity may be required depending on the final lab architecture.
 
 Additional Services:
 
-Source Code Repository: Hosts the workshop guide, application, AI model code, infrastructure descriptors, and scripts.
+* Source Code Repository: Hosts the workshop guide, application, AI model code, infrastructure descriptors, and scripts.
 
-Container Image Registry: Containerized workloads require a registry to store container images.
+* Container Image Registry: Containerized workloads require a registry to store container images.
 
-Edge Device Image Builder: Building image-based operating systems simplifies edge computing deployment and enhances consistency. A dedicated image-building system is necessary.
+* Edge Device Image Builder: Building image-based operating systems simplifies edge computing deployment and enhances consistency. A dedicated image-building system is necessary.
 
-AI Model Development Environment: A platform to train and refine AI models.
+* AI Model Development Environment: A platform to train and refine AI models.
 
-APP Development Environment: A system to develop and build containerized applications.
+* APP Development Environment: A system to develop and build containerized applications.
 
 Other Essentials:
 
-Props: Since this workshop focuses on object detection, you need physical objects to test AI inferencing.
+* Props: Since this workshop focuses on object detection, you need physical objects to test AI inferencing.
 
-You can run the entire lab locally. This requires not only edge devices, webcams, and a laptop but also an additional server to manage services such as the container registry, source code repository, image builder, and development environments. This can be a standalone server or an OpenShift cluster.
+You can run the entire lab locally. This requires not only edge devices, webcams, and a laptop but also an additional server to manage services such as the container registry, source code repository, image builder, and development environments. This could be a standalone server running RHEL or one or multiple systems running an OpenShift cluster.
 
 Deploying OpenShift can enhance the lab by providing tools like OpenShift AI for AI model training and OpenShift Pipelines for application development. If you opt to train AI models from scratch (instead of using pre-trained models), ensure you have GPU resources.
 
-Alternatively, some services can be hosted in the cloud to reduce local hardware requirements.
+Alternatively to the local lab, some or all additional services can be hosted in the cloud to reduce local hardware requirements.
 
 == Lab Architecture Overview
 
@@ -46,73 +46,60 @@ image::labintro-arch.png[]
 
 Running Locally:
 
-Edge Devices: Jetson Orin NANO Development Board (8GB RAM) powered by NVIDIA for AI deep learning.
+* Edge Devices: Jetson Orin NANO Development Board (8GB RAM) powered by NVIDIA for AI deep learning.
 
-Webcams: Arducam 16MP Autofocus USB Camera.
+* Webcams: Arducam 16MP Autofocus USB Camera.
 
-Network Infrastructure: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+* Network Infrastructure: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-Local Server: OnLogic Helix 500 with XXXXXXXXXX cores, XXXXXXXXXXXX GB memory, and XXXXXXXXXXX disk capacity.
-
-The local server will run the following services:
-
-Container Image Registry mirror (to save bandwidth).
+* Local Server: OnLogic Helix 500 with XXXXXXXXXX cores, XXXXXXXXXXXX GB memory, and XXXXXXXXXXX disk capacity. The local server will run the following services:
+    - Container Image Registry mirror (to save bandwidth).
 
 [NOTE]
 
 Automatic mirroring is not configured. If you build new container images using pipelines, push them manually to the local registry. Alternatively, configure pipelines to use external registries, though expect longer wait times during image pulls.
 
+
+
 Running in the Cloud:
 
-Source Code Repository: GitHub.
+* Source Code Repository: GitHub.
 
-Container Image Registry: Quay.io.
+* Container Image Registry: Quay.io.
 
-AI Model Development Environment: OpenShift AI.
+* AI Model Development Environment: OpenShift AI.
 
-APP Development Environment: OpenShift Dev Spaces + OpenShift Pipelines.
+* APP Development Environment: OpenShift Dev Spaces + OpenShift Pipelines.
 
-Edge Device Image Builder: ???????????????????????????????????????????????????????????????????????????
+* Edge Device Image Builder: ???????????????????????????????????????????????????????????????????????????
 
 [NOTE]
 
 OpenShift services will run on AWS.
 
+
 Additional Items:
 
-Props: Hardhats and hats for object detection.
+* Props: Hardhats and hats for object detection.
+
 
 For details on how the lab environment was deployed, refer to the xref:00-how_to_deploy_lab.adoc[Deployment Guide].
+
 
 == Workstation/Laptop Requirements
 
 The only requirements are:
 
-SSH Client – to connect to remote services.
+* SSH Client – to connect to remote services.
 
-Web Browser – to access workshop materials and cloud platforms.
+* Web Browser – to access workshop materials and cloud platforms.
 
-== About the Workshop
-
-Now that you have an understanding of the lab environment, it’s time to dive in and take on a role within a project team. Think of this as a "choose your own adventure" scenario—pick a role and contribute to solving the challenge.
-
-You can assume one of the following roles:
-
-AI Specialist / MLOps Engineer: Focus on developing and maintaining AI models.
-
-APP Developer / DevOps Engineer: Develop and deploy applications that leverage AI models.
-
-Platform Specialist / Site Reliability Engineer (SRE): Ensure infrastructure and applications are reliably deployed and operational.
-
-Each role plays a crucial part in delivering the solution. AI Specialists will create the AI models, APP Developers will build the applications, and Platform Specialists will ensure everything is deployed and working on edge devices.
-
-Choose a path—or explore them all if you have the time!
 
 == Getting Started
 
-Before beginning the workshop steps, ensure you have the necessary environment details (e.g., URLs). Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml file]. These variables will automatically populate in the workshop guide.
+Before beginning the workshop steps, you will need some necessary environment details (e.g., URLs, usernames, passwords, etc). Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide.
 
 However, there is user-specific information that must be entered manually. Your instructor will provide these values. Use the input boxes in the guide’s header to fill them in. If not entered, placeholders (e.g., USER_NAME) will appear in the guide.
 
-Now you're ready to begin—choose your path in the navigation menu and let's get started!
+Now you're ready to choose your path in the navigation menu and let's get started!
 
