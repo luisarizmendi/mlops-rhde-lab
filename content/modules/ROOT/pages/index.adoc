@@ -1,4 +1,4 @@
-= Welcome to Personal Protection Equipment detection with RHDE
+= Welcome to Personal Protection Equipment detection with Red Hat Device Edge
 :page-layout: home
 :!sectids:
 
