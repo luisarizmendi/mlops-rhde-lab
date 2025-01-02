@@ -4,6 +4,7 @@ The workshop requires several components, but there are multiple architectures t
 
 Let's outline the necessary components and then explore the architecture used for this workshop.
 
+
 == Workshop Building Blocks
 
 Local (Edge) Components:
@@ -39,6 +40,7 @@ You can run the entire lab locally. This requires not only edge devices, webcams
 Deploying OpenShift can enhance the lab by providing tools like OpenShift AI for AI model training and OpenShift Pipelines for application development. If you opt to train AI models from scratch (instead of using pre-trained models), ensure you have GPU resources.
 
 Alternatively to the local lab, some or all additional services can be hosted in the cloud to reduce local hardware requirements.
+
 
 == Lab Architecture Overview
 
