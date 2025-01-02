@@ -112,7 +112,7 @@ xref:00-intro.adoc[*Lab Introduction*]
 * xref:ai-specialist-04-update.adoc[4. Day-2 Operations]
 ** xref:ai-specialist-04-update.adoc#monitoring[Monitoring]
 ** xref:ai-specialist-04-update.adoc#dataset[Dataset Update]
-** xref:ai-specialist-04-update.adoc#retrain[Re-training]
+** xref:ai-specialist-04-update.adoc#retrain[Retraining]
 
 [.tile]
 .*Path: APP Developer*
