@@ -1,5 +1,15 @@
 = Lab Introduction
 
+== Architecture
 
 
 image::../images/labintro-arch.png[]
+
+
+
+== Lab guide variables
+
+
+
+== Get started! 
+
