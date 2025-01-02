@@ -1,21 +1,70 @@
-== Object Detection with Red Hat Device Edge
+= Object Detection with Red Hat Device Edge
 
-=== About this workshop
+== Welcome to the Challenge
+
+Congratulations! You are the newly appointed plant manager at ACME Co., a company specializing in plastic bottle manufacturing. However, your appointment comes at a turbulent time. In the past three months, the company has experienced three major accidents, resulting in serious injuries to machine operators. Two of these incidents occurred in the very plant you now oversee.
+
+Your primary mission is clear: improve efficiency and reduce production costs while ensuring that such accidents never happen again. The key to achieving this lies in identifying and mitigating manufacturing hazards. This initiative is not just about compliance—it’s about creating a safer, more productive workplace.
+
+=== Why Hazard Identification Matters
+Identifying hazards in manufacturing is crucial for multiple reasons:
+
+* Enhances Workplace Safety: Proactively identifying hazards enables preventive measures, reducing the likelihood of accidents or injuries.
+
+* Cost Reduction: Preventing workplace incidents lowers medical expenses, compensation claims, and downtime, resulting in significant cost savings.
+
+* Regulatory Compliance: Meeting OSHA (Occupational Safety and Health Administration) safety standards helps avoid penalties and legal issues.
+
+* Boosts Productivity: A safer environment minimizes disruptions, improving employee morale and operational efficiency.
+
+* Protects Long-term Health: Proper hazard identification reduces exposure to harmful substances and environments, safeguarding employees’ health.
+
+* Strengthens Reputation: Demonstrating a commitment to safety enhances the company’s image, attracting top talent and fostering trust.
+
+=== The Initiative: Leveraging Machine Learning for Accident Prevention
+To address these challenges, you propose a forward-thinking initiative to reduce and prevent accidents using Machine Learning (ML). The goal is to develop and deploy an ML model capable of detecting PPE (Personal Protective Equipment) in real-time, issuing alerts when workers approach machinery without proper equipment.
+
+Why ML? Machine Learning offers unparalleled capabilities in analyzing large volumes of data, detecting patterns, and generating real-time insights, making it ideal for enhancing workplace safety.
+
+=== Available Resources
+Fortunately, much of the hardware required to kickstart this project is already available on-site:
+
+* Spare USB Cameras: Ready to capture and analyze video feeds of workers near machinery.
+
+* Industrial PCs (IPCs) with NVIDIA GPUs: Ideal for image inference and processing, providing the computational power necessary for ML applications.
+
+=== Building Your Team
+To successfully implement this initiative, you need to assemble a cross-functional team. Collaboration across departments will be essential:
+
+* Data Scientist / ML Engineer: Responsible for building and fine-tuning the ML model.
+
+* DevOps Team: Develops the application, ensuring seamless deployment and updates.
+
+* IT/OT Platform Specialist: Assists in monitoring and automating the application. OT Specialist configure the Alarm Management System and ensures proper integration with existing plant operations.
+
+=== The Path Forward
+With the right team and tools in place, this initiative has the potential to transform workplace safety at ACME Co. Not only will it mitigate risks, but it will also position the company as a leader in innovative and responsible manufacturing practices.
+
+Let’s get started and start building the future of safety!
+
+== About the workshop
+
+Now that you have the background, it's time to step into action. You will take on an active role within one of the team groups established to develop a working solution for this challenge. Think of this as a "choose your own adventure" experience, where you can adopt one of the following roles:
+
+* AI Specialist / MLOps Engineer 
+
+* App Developer / DevOps Engineer
+
+* Platform Specialist / Site Reliability Engineer (SRE)
+
+Each role plays a critical part in delivering the overall solution. The AI Specialist crafts the intelligence behind the system, the App Developer ensures smooth user interaction and integration, and the Platform Specialist guarantees the application runs efficiently in a production environment.
+
+Choose your role—or try all of them if time allows!
+
+Good luck on your mission to create a safer, smarter workplace!
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-SHORT INTRO TO THE LAB. IT MIGHT BE COPY/PASTED FROM THE DOCS INTRO 
-
-BLAH, BLAH
-!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-=== Accessing the workshop
-
-
+== Accessing the workshop
 
 ==== GitHub Pages
 
