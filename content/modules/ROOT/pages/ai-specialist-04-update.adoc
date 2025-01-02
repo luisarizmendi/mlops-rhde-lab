@@ -1,0 +1,16 @@
+= Day-2 Operations
+
+
+blah, blah
+
+== Monitoring
+
+blah, blah
+
+== Dataset Update
+
+blah, blah
+
+== Retraining
+
+blah, blah
