@@ -87,9 +87,15 @@
     --heading-font-weight: normal;
     --alt-heading-font-weight: var(--body-font-weight-bold);
     --section-divider-color: var(--panel-border-color);
-    --link-font-color: #666;
-    --link_hover-font-color: rgb(66, 0, 0);
+/*
+    --link-font-color: #e00;
+    --link_hover-font-color: rgb(238, 0, 0);
     --link_unresolved-font-color: var(--important-color);
+*/
+    --link-font-color: #41af46;
+    --link_hover-font-color: rgb(66, 222, 20);
+    --link_unresolved-font-color: #41af46;
+
     --abstract-background: var(--color-smoke-70);
     --abstract-font-color: var(--color-jet-20);
     --abstract-border-color: var(--panel-border-color);
