@@ -1,4 +1,4 @@
-== Workshop about Object Detection with Red Hat Device Edge LAB
+== Object Detection with Red Hat Device Edge
 
 === About this workshop
 
