@@ -1,6 +1,6 @@
-== Guide for Object Detection with Red Hat Device Edge LAB
+== Workshop about Object Detection with Red Hat Device Edge LAB
 
-=== About this Guide
+=== About this workshop
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -13,13 +13,13 @@ BLAH, BLAH
 
 
 
-=== Accessing the Guide
+=== Accessing the workshop
 
 
 
 ==== GitHub Pages
 
-You can take a view to the content by simply visiting GitHub Pages for this repo in `https://luisarizmendi.github.io/guide-object-detection/modules/index.html`
+You can take a view to the content by simply visiting GitHub Pages for this repo in `https://luisarizmendi.github.io/workshop-object-detection/modules/index.html`
 
 ==== Using Antora Viewer
 
@@ -57,7 +57,7 @@ To rebuild your html, run `./utilites/build`.
 
 === Showroom
 
-This guide can be embeded into [Showroom](https://github.com/luisarizmendi/showroom-deployer) to get the content along with Terminals with specific tooling/access (Katacoda style) if needed:
+This workshop can be embeded into [Showroom](https://github.com/luisarizmendi/showroom-deployer) to get the content along with Terminals with specific tooling/access (Katacoda style) if needed:
 
 
 image::content/modules/ROOT/images/showroom.png[]

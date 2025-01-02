@@ -57,14 +57,14 @@ cd ~/mydir/foo
 ``` 
 
 
-These variables can only be changed during the documentation build time, so you cannot dynamically change them without building the guide again.
+These variables can only be changed during the documentation build time, so you cannot dynamically change them without building the workshop again.
 
 
 ## JS Dynamic Variables
 
-Besides the [Antora](https://docs.antora.org/antora/latest/) variables, a dynamic variable injection method was included in this guide. There is a script in [content/supplemental-ui/partials/head-scripts.hbs](content/supplemental-ui/partials/head-scripts.hbs) that get user input for some variables and then the value is reflected instantaneously in the document files.
+Besides the [Antora](https://docs.antora.org/antora/latest/) variables, a dynamic variable injection method was included in this workshop. There is a script in [content/supplemental-ui/partials/head-scripts.hbs](content/supplemental-ui/partials/head-scripts.hbs) that get user input for some variables and then the value is reflected instantaneously in the document files.
 
-In this case, the input of those variables is gathered in the Guide's header by using the file [content/supplemental-ui/partials/header-content.hbs](content/supplemental-ui/partials/header-content.hbs).
+In this case, the input of those variables is gathered in the workshop's header by using the file [content/supplemental-ui/partials/header-content.hbs](content/supplemental-ui/partials/header-content.hbs).
 
 Imagine that we have this code in `content/supplemental-ui/partials/header-content.hbs` asking for an `username` variable:
 
