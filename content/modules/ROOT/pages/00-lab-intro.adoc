@@ -4,7 +4,7 @@ The workshop requires several components, but there are multiple architectures t
 
 Let's outline the necessary components and then explore the architecture used for this workshop.
 
-== Workshop Requirements
+== Workshop Elements
 
 Local (Edge) Components:
 
