@@ -3,37 +3,62 @@
 :!sectids:
 
 [.text-center.strong]
-== Use case summary
-You are the recently appointed plant manager at ACME co. +
-The company, which produces plastic bottles, just after hiring you, received some news coverage (and not for any good reason). +
-During the last 3 months 3 major accidents happened, which resulted in serious injuries to machinery operators (and 2 of those happened in the plant you are now managing). +
+
+== Welcome to the Challenge
+
+Congratulations! You are the newly appointed plant manager at ACME Co., a company specializing in plastic bottle manufacturing. However, your appointment comes at a turbulent time. In the past three months, the company has experienced three major accidents, resulting in serious injuries to machine operators. Two of these incidents occurred in the very plant you now oversee.
+
+Your primary mission is clear: improve efficiency and reduce production costs while ensuring that such accidents never happen again. The key to achieving this lies in identifying and mitigating manufacturing hazards. This initiative is not just about compliance—it’s about creating a safer, more productive workplace.
+
+=== Why Hazard Identification Matters
+Identifying hazards in manufacturing is crucial for multiple reasons:
+
+* Enhances Workplace Safety: Proactively identifying hazards enables preventive measures, reducing the likelihood of accidents or injuries.
+
+* Cost Reduction: Preventing workplace incidents lowers medical expenses, compensation claims, and downtime, resulting in significant cost savings.
+
+* Regulatory Compliance: Meeting OSHA (Occupational Safety and Health Administration) safety standards helps avoid penalties and legal issues.
+
+* Boosts Productivity: A safer environment minimizes disruptions, improving employee morale and operational efficiency.
+
+* Protects Long-term Health: Proper hazard identification reduces exposure to harmful substances and environments, safeguarding employees’ health.
+
+* Strengthens Reputation: Demonstrating a commitment to safety enhances the company’s image, attracting top talent and fostering trust.
+
+=== The Initiative: Leveraging Machine Learning for Accident Prevention
+To address these challenges, you propose a forward-thinking initiative to reduce and prevent accidents using Machine Learning (ML). The goal is to develop and deploy an ML model capable of detecting PPE (Personal Protective Equipment) in real-time, issuing alerts when workers approach machinery without proper equipment.
+
+Why ML? Machine Learning offers unparalleled capabilities in analyzing large volumes of data, detecting patterns, and generating real-time insights, making it ideal for enhancing workplace safety.
+
+=== Available Resources
+Fortunately, much of the hardware required to kickstart this project is already available on-site:
+
+* Spare USB Cameras: Ready to capture and analyze video feeds of workers near machinery.
+
+* Industrial PCs (IPCs) with NVIDIA GPUs: Ideal for image inference and processing, providing the computational power necessary for ML applications.
+
+=== Building Your Team
+To successfully implement this initiative, you need to assemble a cross-functional team. Collaboration across departments will be essential:
+
+* Data Scientist / ML Engineer: Responsible for building and fine-tuning the ML model.
+
+* DevOps Team: Develops the application, ensuring seamless deployment and updates.
+
+* IT Platform Specialist: Assists in monitoring and automating the application.
+
+* OT Specialist: Configures the Alarm Management System and ensures proper integration with existing plant operations.
+
+=== The Path Forward
+With the right team and tools in place, this initiative has the potential to transform workplace safety at ACME Co. Not only will it mitigate risks, but it will also position the company as a leader in innovative and responsible manufacturing practices.
+
+Let’s get started—your team is ready to build the future of safety!
 
 
-Of course your task, beside as always improving efficiency and reducing cost of production, is preventing this from ever happening again.  +
-Identifying manufacturing hazards is critical as: +
 
-* Improves Workplace Safety: By accurately identifying hazards, employers can implement appropriate preventive measures to reduce the risk of accidents or injuries in the workplace. +
-* Reduces Costs: Workplace accidents can result in costly medical expenses, compensation claims, and decreased productivity. Identifying hazards early on can prevent such incidents, saving companies time and money. +
-* Ensures Compliance With Regulations: The Occupational Safety and Health Administration (OSHA) has strict guidelines and regulations for workplace safety. Properly identifying hazards helps companies comply with these regulations and avoid penalties. +
-* Enhances Productivity: Companies can maintain productivity by minimizing workplace accidents and injuries. A safe working environment also promotes employee morale, increasing efficiency and motivation. +
-* Protects Workers’ Health: Manufacturing hazards pose physical risks and impact employees’ long-term health. Proper identification allows for implementing measures to protect workers from exposure to harmful substances or environments. +
-* Builds a Positive Company Image: Employers who prioritize workplace safety by identifying and managing hazards demonstrate their commitment to their employees’ well-being. This helps attract top talent and improves the company’s overall reputation. +
 
-You decide to propose a new initiative focused on reducing and preventing accident in the factory by leveraging Machine Learning and to test it in the plant before submitting the Business Case to HQ. +
-You are going to build a ML model to detect PPE (Personal Protection Equipment) and alert worker not wearing equipment in real time. +
-Luckily most of the hardware needed for this project is already available onsite: +
 
-* some spare usb cameras to analyze video feed of workers getting closer to the machineries +
-* some spare IPC (Industrial PC) equipped with Nvidia GPUs to perform inferencing on the images +
 
-You now just need to hire your team! +
-
-* borrowing some time from the local *Data Scientist / ML Engineer* to build and fine tune the model
-* asking the remote *DevOps* team to help you build the Application and a way to deploy and update it easily
-* asking the local *IT Platform Specialist* to help you monitor and automate this new Application
-* you will also take part in it as *OT Specialist* and will configure the available Alerm Management System
-
-=== About the workshop
+== About the workshop
 
 
 !!!!!!!!!! Include short description of the "three path" approach of this lab and point the student to start from "Lab Introduction"
