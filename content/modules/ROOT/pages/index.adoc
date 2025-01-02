@@ -72,7 +72,7 @@ Good luck on your mission to create a safer, smarter workplace!
 == Browse modules
 
 [.tile]
-xref:00-intro.adoc[*Lab Introduction*]
+xref:00-lab-intro.adoc[*Lab Introduction*]
 
 [.tile]
 .*Path: AI Specialist*

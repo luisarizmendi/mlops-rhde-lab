@@ -64,6 +64,28 @@ Start from the xref:https://luisarizmendi.github.io/workshop-object-detection-rh
 Good luck on your mission to create a safer, smarter workplace!
 
 
+
+
+
+
+== Using this repository
+
+
+
+XXXXXXXXXXXXXXXXXXXXXx
+
+clone + script to change repo references + what to change (ie. lab intro, how to deploy the lab)?
+
+antora vars 
+
+
+
+XXXXXXXXXXXXXXXXXXXXXX
+
+
+
+
+
 == Accessing the workshop
 
 ==== GitHub Pages
