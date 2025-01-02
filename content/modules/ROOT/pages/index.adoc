@@ -51,32 +51,23 @@ To successfully implement this initiative, you need to assemble a cross-function
 === The Path Forward
 With the right team and tools in place, this initiative has the potential to transform workplace safety at ACME Co. Not only will it mitigate risks, but it will also position the company as a leader in innovative and responsible manufacturing practices.
 
-Let’s get started—your team is ready to build the future of safety!
-
-
-
+Let’s get started and start building the future of safety!
 
 
 
 == About the workshop
 
-
-!!!!!!!!!! Include short description of the "three path" approach of this lab and point the student to start from "Lab Introduction"
-
-
-
-Three different "paths" (choose or do them all):
+Now that you have background you need to act as an active member of one of the team groups that have been created to provide a working solution for the challenge. This will be like reading a "choose your own adventure" book, you can choose to play as one of the following roles:  
 
 * AI Specialist / MLOps Engineer
 * APP Developer / DevOps Engineer
 * Platform Specialist  / Site Reliability Engineer (SRE)
 
+Each role will provide an exectial piece of the overall solution. The AI Specialist will create and maintain the AI model, the APP Developers will do the same thing for the applications that will use that model, and the Platform specialist will be the ones that will make sure that the app+model is deployed and working properly in the provided devices.
 
-BLAH, BLAH 
-BLAH, BLAH 
-BLAH, BLAH 
+Pick your choice or play as all of them if you have time!
 
-
+Good luck in your mission!
 
 
 [.tiles.browse]
