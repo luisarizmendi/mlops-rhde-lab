@@ -79,7 +79,7 @@ Running in the Cloud:
 
 [NOTE]
 
-OpenShift services will run on AWS.
+OpenShift services runs on AWS.
 
 
 Additional Items:
