@@ -44,30 +44,28 @@ To successfully implement this initiative, you need to assemble a cross-function
 
 * DevOps Team: Develops the application, ensuring seamless deployment and updates.
 
-* IT Platform Specialist: Assists in monitoring and automating the application.
-
-* OT Specialist: Configures the Alarm Management System and ensures proper integration with existing plant operations.
+* IT/OT Platform Specialist: Assists in monitoring and automating the application. OT Specialist configure the Alarm Management System and ensures proper integration with existing plant operations.
 
 === The Path Forward
 With the right team and tools in place, this initiative has the potential to transform workplace safety at ACME Co. Not only will it mitigate risks, but it will also position the company as a leader in innovative and responsible manufacturing practices.
 
 Let’s get started and start building the future of safety!
 
-
-
 == About the workshop
 
-Now that you have background you need to act as an active member of one of the team groups that have been created to provide a working solution for the challenge. This will be like reading a "choose your own adventure" book, you can choose to play as one of the following roles:  
+Now that you have the background, it's time to step into action. You will take on an active role within one of the team groups established to develop a working solution for this challenge. Think of this as a "choose your own adventure" experience, where you can adopt one of the following roles:
 
-* AI Specialist / MLOps Engineer
-* APP Developer / DevOps Engineer
-* Platform Specialist  / Site Reliability Engineer (SRE)
+* AI Specialist / MLOps Engineer 
 
-Each role will provide an exectial piece of the overall solution. The AI Specialist will create and maintain the AI model, the APP Developers will do the same thing for the applications that will use that model, and the Platform specialist will be the ones that will make sure that the app+model is deployed and working properly in the provided devices.
+* App Developer / DevOps Engineer
 
-Pick your choice or play as all of them if you have time!
+* Platform Specialist / Site Reliability Engineer (SRE)
 
-Good luck in your mission!
+Each role plays a critical part in delivering the overall solution. The AI Specialist crafts the intelligence behind the system, the App Developer ensures smooth user interaction and integration, and the Platform Specialist guarantees the application runs efficiently in a production environment.
+
+Start from the xref:00-intro.adoc[*Lab Introduction*] and then choose your role or try all of them if time allows!
+
+Good luck on your mission to create a safer, smarter workplace!
 
 
 [.tiles.browse]
