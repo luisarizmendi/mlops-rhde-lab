@@ -1,4 +1,4 @@
-= Object Detection with Red Hat Device Edge
+= Personal Protection Equipment detection with Red Hat Device Edge
 
 == Welcome to the Challenge
 
