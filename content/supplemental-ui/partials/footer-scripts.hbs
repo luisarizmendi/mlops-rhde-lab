@@ -15,7 +15,7 @@
   }
 
   function setNamesInStorage() {
-      let gnumber = (document.getElementById('gnumber').value).toLowerCase();
+      let gnumber = document.getElementById('gnumber').value;
 /*
       let cdomain = (document.getElementById('cdomain').value).toLowerCase().includes('https://')
           ? document.getElementById('cdomain').value.toLowerCase().substring(8)
@@ -28,6 +28,11 @@
           alert('Please enter a Group Number');
           return;
       }
+      if (isNaN(gnumber)) {
+          alert('Group Number must be a valid number');
+          return;
+      }
+
 /*
       if (cdomain === '') {
           alert('Please enter a cluster domain');
