@@ -115,11 +115,17 @@ Part of the required information is pre-configured as global variables in the xr
 * Username: {device-username}
 * Password: {device-password}
 
+=== Edge Management (Flight Control)
+
+* UI URL: {flightctl-ui}
+* Username: {flightctl-user-basename}pass:[<span id="gnumberVal"></span>]
+* Password: {flightctl-password}
+
 === OpenShift Cluster
 
 * Web Console URL: {openshift-console}
 * API URL: {openshift-api}
-* Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>] 
+* Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]
 * Password: {openshift-password}
 
 === Additional Services
