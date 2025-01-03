@@ -3,60 +3,61 @@
 
   function clearStorage() {
     console.info('INFO - clearing user and cluster');
-    localStorage.removeItem('USER_NAME');
-    localStorage.removeItem('CLUSTER_DOMAIN');
-    localStorage.removeItem('GIT_SERVER');
-    document.getElementById('uname').value = '';
-    document.getElementById('cdomain').value = '';
-    document.getElementById('gitserver').value = '';
+    document.getElementById('gnumber').value = '';
+    localStorage.removeItem('GROUP_NUMBER');
+    //localStorage.removeItem('CLUSTER_DOMAIN');
+    //document.getElementById('cdomain').value = '';
+    //localStorage.removeItem('GIT_SERVER');
+    //document.getElementById('gitserver').value = '';
     updateMessage(); 
   }
 
   function setNamesInStorage() {
-      let uname = (document.getElementById('uname').value).toLowerCase();
+      let gnumber = (document.getElementById('gnumber').value).toLowerCase();
+/*
       let cdomain = (document.getElementById('cdomain').value).toLowerCase().includes('https://')
           ? document.getElementById('cdomain').value.toLowerCase().substring(8)
           : document.getElementById('cdomain').value.toLowerCase();
       let gitserver = (document.getElementById('gitserver').value).toLowerCase().includes('https://')
           ? document.getElementById('gitserver').value.toLowerCase().substring(8)
           : document.getElementById('gitserver').value.toLowerCase();
-
-      if (uname === '') {
-          alert('Please enter a username');
+*/
+      if (gnumber === '') {
+          alert('Please enter a Group Number');
           return;
       }
-
+/*
       if (cdomain === '') {
           alert('Please enter a cluster domain');
           return;
       }
-
-      localStorage.setItem('USER_NAME', uname);
-      localStorage.setItem('CLUSTER_DOMAIN', cdomain);
-      localStorage.setItem('GIT_SERVER', gitserver);
+*/
+      localStorage.setItem('GROUP_NUMBER', gnumber);
+      //localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+      //localStorage.setItem('GIT_SERVER', gitserver);
       updateMessage();
   }
 
   function clearStorage() {
-      localStorage.removeItem('USER_NAME');
-      localStorage.removeItem('CLUSTER_DOMAIN');
-      localStorage.removeItem('GIT_SERVER');
+      localStorage.removeItem('GROUP_NUMBER');
+      //localStorage.removeItem('CLUSTER_DOMAIN');
+      //localStorage.removeItem('GIT_SERVER');
 
       // Clean input fields
-      document.getElementById('uname').value = '';
-      document.getElementById('cdomain').value = '';
-      document.getElementById('gitserver').value = '';
+      document.getElementById('gnumber').value = '';
+      //document.getElementById('cdomain').value = '';
+      //document.getElementById('gitserver').value = '';
       
       updateMessage();
   }
 
     function updateMessage() {
-        const username = localStorage.getItem('USER_NAME') || '{USER_NAME}';
-        const unameVals = document.querySelectorAll('#unameVal');
-        unameVals.forEach(element => {
+        const username = localStorage.getItem('GROUP_NUMBER') || '{GROUP_NUMBER}';
+        const gnumberVals = document.querySelectorAll('#gnumberVal');
+        gnumberVals.forEach(element => {
             element.innerText = username;
         });
-
+/*
         const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '{CLUSTER_DOMAIN}';
         const cdomainVals = document.querySelectorAll('#cdomainVal');
         cdomainVals.forEach(element => {
@@ -68,7 +69,7 @@
         gitserverVals.forEach(element => {
             element.innerText = gitserver;
         });
-
+*/
         
     }
 
