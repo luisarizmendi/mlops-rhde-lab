@@ -1,4 +1,6 @@
 <footer class="footer">
+    </div>
+      <div class="navbar-end">
           <div class="user-inputs">
             <label for="gnumber">Group Number: </label><br/>
             <input type="text" id="gnumber" name="gnumber" placeholder="Number..">
@@ -20,21 +22,9 @@
           <div >
             <button class="storage-btns" onclick="clearStorage()">Clear</button>
           </div>
-
-        {{#if page.attributes.links}}
-        <div class="navbar-item navbar-item-right-dropdown has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">Links</a>
-          <div class="navbar-dropdown navbar-dropdown-right">
-            {{#each page.attributes.links}}
-            <a class="navbar-item navbar-item-right-content" href="{{this.url}}" target="_blank">{{this.text}}</a>
-            {{/each}}
-          </div>
-        </div>
-        {{/if}}
-        {{#if page.attributes.user}}
-        <div class="navbar-item">You are {{page.attributes.user}}</div>
-        {{/if}}
       </div>
+    </div>
+  </nav>
 </footer>
   <style>
     input[type=text] {
@@ -66,7 +56,6 @@
     .user-inputs:input,label {
       font-size: 12px;
       display: block;
-      width: 70px
     }
     .storage-btns {
       font-size: 12px;
