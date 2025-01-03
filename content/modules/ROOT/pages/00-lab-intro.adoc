@@ -6,20 +6,20 @@ Part of the required information is pre-configured as global variables in the xr
 
 image::labintro-arch.png[]
 
-== Edge Device
+=== Edge Device
 
 * IP Address: {device-ip-base}pass:[<span id="gnumberVal"></span>] 
 * Username: {device-username}
 * Password: {device-password}
 
-== OpenShift Cluster
+=== OpenShift Cluster
 
 * Web Console URL: {openshift-console}
 * API URL: {openshift-api}
 * Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>] 
 * Password: {openshift-password}
 
-== Additional Services
+=== Additional Services
 
 * Workshop GitHub repository: {git-workshop-url}
 * External Container Image Registry: {registry-url}
