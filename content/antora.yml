@@ -18,6 +18,7 @@ asciidoc:
     openshift-password: secret
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
     registry-url: https://quay.io/user/luisarizmendi/
+    registry-local-url: http://192.168.100.200/workshop/
     page-links:
     - url: https://redhat.com
       text: Red Hat
