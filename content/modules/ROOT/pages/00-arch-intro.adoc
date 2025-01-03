@@ -109,8 +109,6 @@ Before beginning the workshop steps, you will need some necessary environment de
 
 Part of the required information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide. However, there is user-specific information that must be entered manually so *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
 
-image::labintro-arch.png[]
-
 === Edge Device
 
 * IP Address: {device-ip-base}pass:[<span id="gnumberVal"></span>] 
