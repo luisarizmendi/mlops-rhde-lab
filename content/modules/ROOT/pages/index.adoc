@@ -77,7 +77,7 @@ Good luck on your mission to create a safer, smarter workplace!
 xref:00-arch-intro.adoc[*Architecture*]
 
 [.tile]
-.*Path: AI Specialist*
+.*`_AI Specialist_`*
 * xref:ai-specialist-00-intro.adoc[0. AI Specialist Introduction]
 ** xref:ai-specialist-00-intro.adoc#_background[Background]
 ** xref:ai-specialist-00-intro.adoc#_toolset[Toolset]
@@ -99,7 +99,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 ** xref:ai-specialist-04-update.adoc#_retrain[Retraining]
 
 [.tile]
-.*Path: APP Developer*
+.*`_APP Developer_`*
 * xref:app-developer-00-intro.adoc[0. APP Developer Introduction]
 ** xref:app-developer-00-intro.adoc#_background[Background]
 ** xref:app-developer-00-intro.adoc#_toolset[Toolset]
@@ -118,7 +118,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 ** xref:app-developer-04-update.adoc#_update[4. App Update]
 
 [.tile]
-.*Path: Platform Specialist*
+.*`_Platform Specialist_`*
 * xref:platform-specialist-00-intro.adoc[0. Platform Specialist Introduction]
 ** xref:platform-specialist-00-intro.adoc#_background[Background]
 ** xref:platform-specialist-00-intro.adoc#_toolset[Toolset]
