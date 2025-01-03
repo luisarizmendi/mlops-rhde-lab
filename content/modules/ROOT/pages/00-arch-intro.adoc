@@ -1,4 +1,4 @@
-= Architecture
+= Workshop Architecture
 
 The workshop requires several components, but there are multiple architectures to consider for assembling these components effectively.
 
@@ -100,6 +100,38 @@ The only requirements are:
 * Web Browser – to access workshop materials and cloud platforms.
 
 
+== Lab Details
+
+Before beginning the workshop steps, you will need some necessary environment details (e.g., URLs, usernames, passwords, etc) that you will find in this section.
+
+
+[IMPORTANT]
+
+Part of the required information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide. However, there is user-specific information that must be entered manually so *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
+
+image::labintro-arch.png[]
+
+=== Edge Device
+
+* IP Address: {device-ip-base}pass:[<span id="gnumberVal"></span>] 
+* Username: {device-username}
+* Password: {device-password}
+
+=== OpenShift Cluster
+
+* Web Console URL: {openshift-console}
+* API URL: {openshift-api}
+* Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>] 
+* Password: {openshift-password}
+
+=== Additional Services
+
+* Workshop GitHub repository: {git-workshop-url}
+* External Container Image Registry: {registry-url}
+* Local Container Image Registry: {registry-local-url}
+
+
 == Next
 
-Before beginning the workshop steps, you will need some necessary environment details (e.g., URLs, usernames, passwords, etc) that are provided in the xref:00-lab-intro.adoc[Lab Details] section.
+Now you're ready to choose your path in the navigation menu and let's get started!
+
