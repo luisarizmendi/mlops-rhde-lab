@@ -1,110 +1,220 @@
-= Lab Description
+= Lab Details
 
-The workshop requires several components, but there are multiple architectures to consider for assembling these components effectively.
-
-Let's outline the necessary components and then explore the architecture used for this workshop.
-
-
-== Workshop Building Blocks
-
-Local (Edge) Components:
-
-* Edge Devices: Devices where the application and AI model will run. It is recommended that these devices have a GPU to accelerate AI inference.
-
-* Webcams: Since this workshop focuses on image recognition, connecting a webcam to edge devices is essential.
-
-* Workstation/Laptop: This is your main system for following the workshop instructions.
-
-* Network Infrastructure: Switches and routers (with additional services such as DNS and DHCP) to ensure communication between all components. Internet connectivity may be required depending on the final lab architecture.
-
-Additional Services:
-
-* Source Code Repository: Hosts the workshop guide, application, AI model code, infrastructure descriptors, and scripts.
-
-* Container Image Registry: Containerized workloads require a registry to store container images.
-
-* Edge Device Image Builder: Building image-based operating systems simplifies edge computing deployment and enhances consistency. A dedicated image-building system is necessary.
-
-* AI Model Development Environment: A platform to train and refine AI models.
-
-* APP Development Environment: A system to develop and build containerized applications.
-
-* Edge Device Manager: A system used to manage the Edge Devices.
-
-Other Essentials:
-
-* Props: Since this workshop focuses on object detection, you need physical objects to test AI inferencing.
-
-You can run the entire lab locally. This requires not only edge devices, webcams, and a laptop but also an additional server to manage services such as the container registry, source code repository, image builder, and development environments. This could be a standalone server running RHEL or one or multiple systems running an OpenShift cluster.
-
-Deploying OpenShift can enhance the lab by providing tools like OpenShift AI for AI model training and OpenShift Pipelines for application development. If you opt to train AI models from scratch (instead of using pre-trained models), ensure you have GPU resources.
-
-Alternatively to the local lab, some or all additional services can be hosted in the cloud to reduce local hardware requirements.
-
-
-== Lab Architecture Overview
-
-For this lab, the following architecture will be used:
-
-image::labintro-arch.png[]
-
-Running Locally:
-
-* Edge Devices: Jetson Orin NANO Development Board (8GB RAM) powered by NVIDIA for AI deep learning.
-
-* Webcams: Arducam 16MP Autofocus USB Camera.
-
-* Network Infrastructure: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-* Local Server: OnLogic Helix 500 with XXXXXXXXXX cores, XXXXXXXXXXXX GB memory, and XXXXXXXXXXX disk capacity. The local server will run the following services:
-    - Container Image Registry mirror (to save bandwidth).
-
-[NOTE]
-
-Automatic mirroring is not configured. If you build new container images using pipelines, push them manually to the local registry. Alternatively, configure pipelines to use external registries, though expect longer wait times during image pulls.
-
-
-Running in the Cloud:
-
-* Source Code Repository: GitHub.
-
-* Container Image Registry: Quay.io.
-
-* AI Model Development Environment: OpenShift AI.
-
-* APP Development Environment: OpenShift Dev Spaces + OpenShift Pipelines.
-
-* Edge Device Image Builder: ???????????????????????????????????????????????????????????????????????????
-
-* Edge Device Manager: xref:https://github.com/flightctl/flightctl[Flight Control] running on top of OpenShift.
-
-[NOTE]
-
-OpenShift services runs on AWS.
-
-
-Additional Items:
-
-* Props: Hardhats and hats for object detection.
-
-
-For details on how the lab environment was deployed, refer to the xref:00-how_to_deploy_lab.adoc[Deployment Guide].
-
-
-== Workstation/Laptop Requirements
-
-The only requirements are:
-
-* SSH Client – to connect to remote services.
-
-* Web Browser – to access workshop materials and cloud platforms.
-
-
-== Getting Started
-
-Before beginning the workshop steps, you will need some necessary environment details (e.g., URLs, usernames, passwords, etc). Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide.
+Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide.
 
 However, there is user-specific information that must be entered manually. Your instructor will provide these values. Use the input boxes in the guide’s header to fill them in. If not entered, placeholders (e.g., USER_NAME) will appear in the guide.
+
+
+
+
+
+++++
+    <script>
+
+    function clearStorage() {
+        console.info('INFO - clearing user and cluster');
+        localStorage.removeItem('USER_NAME');
+        localStorage.removeItem('CLUSTER_DOMAIN');
+        localStorage.removeItem('GIT_SERVER');
+        document.getElementById('uname').value = '';
+        document.getElementById('cdomain').value = '';
+        document.getElementById('gitserver').value = '';
+        updateMessage(); 
+    }
+
+    function setNamesInStorage() {
+        let uname = (document.getElementById('uname').value).toLowerCase();
+        let cdomain = (document.getElementById('cdomain').value).toLowerCase().includes('https://')
+            ? document.getElementById('cdomain').value.toLowerCase().substring(8)
+            : document.getElementById('cdomain').value.toLowerCase();
+        let gitserver = (document.getElementById('gitserver').value).toLowerCase().includes('https://')
+            ? document.getElementById('gitserver').value.toLowerCase().substring(8)
+            : document.getElementById('gitserver').value.toLowerCase();
+
+        if (uname === '') {
+            alert('Please enter a username');
+            return;
+        }
+
+        if (cdomain === '') {
+            alert('Please enter a cluster domain');
+            return;
+        }
+
+        localStorage.setItem('USER_NAME', uname);
+        localStorage.setItem('CLUSTER_DOMAIN', cdomain);
+        localStorage.setItem('GIT_SERVER', gitserver);
+        updateMessage();
+    }
+
+    function clearStorage() {
+        localStorage.removeItem('USER_NAME');
+        localStorage.removeItem('CLUSTER_DOMAIN');
+        localStorage.removeItem('GIT_SERVER');
+
+        // Clean input fields
+        document.getElementById('uname').value = '';
+        document.getElementById('cdomain').value = '';
+        document.getElementById('gitserver').value = '';
+        
+        updateMessage();
+    }
+
+        function updateMessage() {
+            const username = localStorage.getItem('USER_NAME') || '{USER_NAME}';
+            const unameVals = document.querySelectorAll('#unameVal');
+            unameVals.forEach(element => {
+                element.innerText = username;
+            });
+
+            const cdomain = localStorage.getItem('CLUSTER_DOMAIN') || '{CLUSTER_DOMAIN}';
+            const cdomainVals = document.querySelectorAll('#cdomainVal');
+            cdomainVals.forEach(element => {
+                element.innerText = cdomain;
+            });
+
+            const gitserver = localStorage.getItem('GIT_SERVER') || '{GIT_SERVER}';
+            const gitserverVals = document.querySelectorAll('#gitserverVal');
+            gitserverVals.forEach(element => {
+                element.innerText = gitserver;
+            });
+
+            
+        }
+
+
+    // Update the message display on page load
+    window.onload = updateMessage;
+    </script>
+    <nav class="navbar">
+        <div class="navbar-brand">
+        <a class="navbar-item" href="https://www.redhat.com/en/products/edge" target="_blank">
+            <img src="{{uiRootPath}}/img/header_logo.png" height="50px" alt="Red Hat Device Edge">
+        </a>
+        <a class="navbar-item" style="color:white;font-size: 1.5rem" href="{{{or site.url (or siteRootUrl siteRootPath)}}}">{{site.title}}</a>
+        </div>
+        <div id="topbar-nav" class="navbar-item">
+        </div>
+        <div class="navbar-end">
+            <div class="user-inputs">
+                <label for="uname">User Name: </label><br/>
+                <input type="text" id="uname" name="username" placeholder="Your username..">
+            </div>
+            <div class="user-inputs">
+                <label for="cdomain">Cluster Domain: </label><br/>
+                <input type="text" id="cdomain" name="clusterdomain" placeholder="Your cluster domain..">
+            </div>
+            <div class="user-inputs">
+                <label for="gitserver">Git Server (optional): </label><br/>
+                <input type="text" id="gitserver" name="gitserver" placeholder="Your git server..">
+            </div>
+            <div >
+                <button class="storage-btns" onclick="setNamesInStorage()">Save</button>
+            </div>
+            <div class="user-inputs"></div>
+            <div >
+                <button class="storage-btns" onclick="clearStorage()">Clear</button>
+            </div>
+
+            {{#if page.attributes.links}}
+            <div class="navbar-item navbar-item-right-dropdown has-dropdown is-hoverable">
+            <a class="navbar-link" href="#">Links</a>
+            <div class="navbar-dropdown navbar-dropdown-right">
+                {{#each page.attributes.links}}
+                <a class="navbar-item navbar-item-right-content" href="{{this.url}}" target="_blank">{{this.text}}</a>
+                {{/each}}
+            </div>
+            </div>
+            {{/if}}
+            {{#if page.attributes.user}}
+            <div class="navbar-item">You are {{page.attributes.user}}</div>
+            {{/if}}
+        </div>
+        </div>
+    </nav>
+    <style>
+        input[type=text] {
+        padding: 8px 12px;
+        /* display: inline-block; */
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        }
+        input[type=text]:focus {
+        outline: none !important;
+        border: 2px solid #F5606D;
+        }
+        .user-name-form {
+        margin-left: 0%;
+        background-color: #f3f3f3;
+        padding-left: 20%;
+        padding-right: 20%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        }
+        .user-inputs {
+        flex: 1;
+        }
+        .user-inputs:first-child {
+        /* margin-right: 30%; */
+        }
+        .user-inputs:input,label {
+        font-size: 12px;
+        display: block;
+        }
+        .storage-btns {
+        font-size: 12px;
+        margin: 10px;
+        padding: 10px;
+        cursor: pointer;
+        background-color: #FAB6B6;
+        color: black;
+        border: 2px solid #FAB6B6; 
+        width: 70px; 
+        text-align: center;
+        }
+        p.tip {
+        border-left-color: #4D4D4D;
+        }
+        p.tip:before {
+        content: "!";
+        background-color: #4D4D4D;
+        }
+        .sidebar {
+        background-color: #f3f3f3;
+        }
+
+        .slider {
+        width: 67em;
+        height: 250px;
+        display: flex;
+        overflow-x: auto;
+        }
+        .slide {
+        width: 67em;
+        flex-shrink: 0;
+        height: 100%;
+        }
+        :root {
+        --base-font-size: 14px;
+        --base-font-family: "RedHatText",Overpass,"Open Sans",Helvetica,Arial,sans-serif;
+        --theme-color: #CC0000;
+        --content-max-width: 75em;
+        --sidebar-width: 22rem;
+        --sidebar-nav-pagelink-background-image             : ;
+        --sidebar-nav-pagelink-background-image--active     : ;
+        --sidebar-nav-pagelink-background-image--collapse   : ;
+        --sidebar-nav-pagelink-background-image--loaded     : ;
+        }
+    </style>
+++++
+
+
+
+
+
+== Next
 
 Now you're ready to choose your path in the navigation menu and let's get started!
 

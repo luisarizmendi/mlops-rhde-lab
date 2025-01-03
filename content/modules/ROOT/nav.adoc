@@ -1,4 +1,6 @@
-* xref:00-lab-intro.adoc[Lab Description]
+* xref:00-arch-intro.adoc[Architecture]
+
+* xref:00-lab-intro.adoc[Lab Details]
 
 * Path: AI Specialist
 ** xref:ai-specialist-00-intro.adoc[0. AI Specialist Intro]
