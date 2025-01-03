@@ -18,7 +18,7 @@ However, there is user-specific information that must be entered manually. Your 
 
 XXXXXXXXXX
 
-Hello Group Number [<span id="gnumberVal"></span>] 
+Hello Group Number pass:[<span id="gnumberVal"></span>] 
 
 I will show you a code line that you can copy: 
 
