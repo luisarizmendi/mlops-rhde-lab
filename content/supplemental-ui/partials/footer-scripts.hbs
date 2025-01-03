@@ -28,10 +28,13 @@
           alert('Please enter a Group Number');
           return;
       }
-      if (isNaN(gnumber)) {
-          alert('Group Number must be a valid number');
+      if (isNaN(gnumber) || gnumber < 1 || gnumber > 99) {
+          alert('Group Number must be a number between 01 and 99');
           return;
       }
+
+      // Ensure two-digit format (01, 02, ..., 99)
+      gnumber = gnumber.padStart(2, '0');
 
 /*
       if (cdomain === '') {
