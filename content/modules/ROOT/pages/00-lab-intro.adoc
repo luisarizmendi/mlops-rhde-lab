@@ -1,17 +1,10 @@
 = Lab Details
 
-Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide.
+[IMPORTANT]
 
-However, there is user-specific information that must be entered manually. Your instructor will provide these values. Use the input boxes in the guide’s header to fill them in. If not entered, placeholders (e.g., USER_NAME) will appear in the guide.
+Some of this information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide. However, there is user-specific information that must be entered manually. Your instructor will provide these values. Use the input boxes in the guide’s footer (scroll down the page to the buttom) to fill them in. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
 
-
-
-
-
-
-
-
-
+image::labintro-arch.png[]
 
 
 
