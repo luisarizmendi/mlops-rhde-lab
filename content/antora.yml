@@ -9,11 +9,15 @@ asciidoc:
     lab_name: "Object detection with Red Hat Device Edge"
     release-version: master
     page-pagination: true
-    my_var: "foo"
-    guid: my-guid
-    ssh_user: devops
-    ssh_password: devops
-    ssh_command: ssh someone@example.com
+    device-ip-base: 192.168.100.
+    device-username: admin
+    device-password: secret
+    openshift-console: https://xxxxxxxxxxxxxxxxxxxxxxxxx
+    openshift-api: https://xxxxxxxxxxxxxxxxxxxxxxxxx:6443
+    openshift-user-basename: openshiftuser
+    openshift-password: secret
+    git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
+    registry-url: https://quay.io/user/luisarizmendi/
     page-links:
     - url: https://redhat.com
       text: Red Hat
