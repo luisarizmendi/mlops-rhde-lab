@@ -39,6 +39,8 @@ You will find later that each section of this workshop outlines details about ou
 
 Find below the workflow that you will follow as AI specialist during the workshop (each of those will be a different "section").
 
+image::ai-workflow.png[]
+
 1. *Data Management*: Data Collection and Cleaning: This is the foundational step where raw data is gathered, cleaned, and pre-processed to ensure quality and consistency. It serves as the input for downstream processes.
 
 2. *Model Building*: Which includes the following steps:
@@ -52,11 +54,13 @@ Find below the workflow that you will follow as AI specialist during the worksho
 
 4. *Day-2 Operations*: Monitoring and Validation: Post-deployment, the model's performance is continuously monitored. This step ensures that the model maintains accuracy and adapts to data drift or operational changes. Monitoring may lead to re-initiating data collection, feature engineering, or retraining cycles to refine the model.
 
+This won't be a pure lineal workflow, you could find the need to step back to a previous step (feedback loops) in order to drive continuous improvement into the AI model creation, for example:
 
+* From monitoring directly back to data collection, ensuring updated datasets reflect operational realities.
+* From model validation to earlier phases (feature engineering and data collection) for iterative improvements.
+* From model serving back to model building for retraining based on performance metrics.
 
-
-image::ai-workflow.png[]
-
+Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first section: xref:ai-specialist-01-data.adoc[Data Management].
 
 == Section video recording
 
