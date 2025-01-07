@@ -1,0 +1,21 @@
+= Platform Specialist
+
+== Background
+
+
+== Toolset
+
+
+
+== Workflow Overview
+
+<diagram>
+
+TBD
+
+
+
+== Section video recording
+
+TBD
+

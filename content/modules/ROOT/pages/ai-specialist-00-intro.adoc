@@ -1,6 +1,10 @@
-= Background
+= AI Specialist
 
-As the AI specialist at ACME Co., you've been tasked with solving a critical safety issue that has plagued the plant—workers neglecting to wear hardhats. Hardhats are the frontline defense against head injuries, yet too often, employees bypass this essential safety measure. The stakes are high, and the company is counting on your expertise to prevent the next accident.
+== Background
+
+As the AI specialist at ACME Co., you've been tasked with solving the first critical safety issue: workers neglecting to wear hardhats. 
+
+Hardhats are the frontline defense against head injuries, yet too often, employees bypass this essential safety measure. The stakes are high, and the company is counting on your expertise to prevent the next accident.
 
 Your mission is clear: develop an AI-driven solution to ensure every worker approaching machinery is wearing a hardhat. The plan? Leverage existing USB webcams and create an object detection model capable of identifying hardhats in real time. This will form a digital safety net, alerting supervisors the moment a worker steps into a hazardous area without proper protection.
 
@@ -56,7 +60,9 @@ To successfully develop and deploy the hardhat detection AI system, the workshop
 
 == Workflow Overview
 
-blah, blah
+<diagram>
+
+TBD
 
 
 
