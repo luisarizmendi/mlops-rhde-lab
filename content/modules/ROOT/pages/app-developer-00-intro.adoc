@@ -2,7 +2,7 @@
 
 == Background
 
-Congratulations! You have been chosen as the lead application developer for a critical safety initiative at ACME Your role is pivotal in building a suite of modern applications that will integrate cutting edge AI models developed by your colleagues to prevent accidents on the factory floor. As you step into this role, the challenge ahead is not just about coding, it’s about designing and deploying software that will safeguard lives and transform workplace safety.
+You have been chosen as the lead application developer for a critical safety initiative at ACME Your role is pivotal in building a suite of modern applications that will integrate cutting edge AI models developed by your colleagues to prevent accidents on the factory floor. As you step into this role, the challenge ahead is not just about coding, it’s about designing and deploying software that will safeguard lives and transform workplace safety.
 
 ACME is embracing a "modern application development" approach, signaling a shift towards technologies and architectures that enable greater scalability, flexibility, and resilience. This translates to creating containerized microservices that can be deployed and scaled across different environments, ensuring the applications evolve as fast as the company’s needs. By adopting this approach, you’ll accelerate development cycles, improve reliability, and pave the way for continuous innovation.
 
@@ -28,7 +28,7 @@ You will find later that each section of this workshop outlines details about ou
 
 * *GitHub Source Code Repository*: GitHub serves as the version control system, providing a collaborative space for developers to track code changes, manage branches, and facilitate peer reviews. This fosters teamwork and ensures the codebase evolves securely and efficiently.
 
-* *Container Image Registry*: A secure container image registry stores and manages application images, ensuring that developers can reliably push, pull, and deploy containers to different environments. It supports versioning and helps enforce security and compliance policies.
+* *Quay Container Image Registry*: A secure container image registry stores and manages application images, ensuring that developers can reliably push, pull, and deploy containers to different environments. It supports versioning and helps enforce security and compliance policies.
 
 
 == Workflow Overview
