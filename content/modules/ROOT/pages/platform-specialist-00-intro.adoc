@@ -2,27 +2,34 @@
 
 == Background
 
+As the new platform specialist at ACME Co., you step into a role that will shape the foundation of the company’s next-generation safety initiative. The applications developed by the AI and app development teams need a robust, scalable infrastructure, and it's your responsibility to make that a reality. With incidents rising on the factory floor, the need for reliable, real-time AI inference at the edge has never been more critical.
 
+ACME Co. is pushing to modernize its operations while keeping costs in check. By leveraging edge computing, you can deploy AI models directly onto industrial PCs, reducing the load on cloud services and ensuring rapid, localized responses. This approach not only saves money but also enhances performance, as alarms and detections can happen without latency, directly on the factory floor.
 
-+ The platform will host the applications using the ai model created by the ai specialist and the app development teams
-+ company wants to minimize costs while improving user experience (solution performance). The usage of Edge Computing solutions will help here
-+ Solution must be easy to manage at scale (a lot of devices will be deployed and onsite people does not always have IT knowledge)
-+ usage of the best most secure operating system
-+ Aligment with the app dev team is needed (ie. which applications are prepared for RHEL and which ones in OpenShift)
+However, this initiative isn’t limited to one or two sites. ACME’s factories span the globe, and managing systems at such scale requires careful planning. The solution must be easy to deploy and maintain, even by on-site personnel with limited IT expertise. With tools like Red Hat Advanced Cluster Management and Ansible Automation, you’ll ensure that updates and configurations can be rolled out seamlessly, keeping all edge devices secure and up-to-date.
 
+Security is at the heart of your mission. Every edge device will run on RHEL, chosen for its reputation as the most secure and reliable operating system available. In the cloud, OpenShift will provide the flexibility and scalability needed to host dashboards and centralized applications. This combination of technologies ensures that ACME’s platform is not just powerful, but also resilient against potential threats.
+
+Collaboration will be key to success. The development team is building applications designed to operate across both RHEL and OpenShift environments. As the platform specialist, it’s up to you to ensure their work integrates smoothly into the larger ecosystem. The alignment between teams will drive innovation and reinforce ACME’s position as a leader in intelligent, safe manufacturing.
 
 
 == Toolset
 
+To build and manage the platform supporting ACME Co.’s safety solution, the workshop will leverage a set of robust tools designed to ensure scalability, automation, and seamless deployment across both edge and cloud environments. These tools include:
 
+[NOTE]
 
-+ Red Hat Enterprise Linux
-+ OpenShift
-+ ArgoCD
-+ Ansible Automation Platform
-+ Flight Control (edge device management)
+You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
+* *Red Hat Enterprise Linux (RHEL)*: RHEL serves as the operating system for edge devices, providing a secure, stable, and performance-optimized environment to run AI inference models on industrial PCs. Its long-term support and hardened security make it the preferred choice for mission-critical workloads.
 
+* *OpenShift*: OpenShift is the Kubernetes-based platform used to host cloud applications such as the dashboard and backend services. Its integrated developer and operational tools simplify the deployment and management of containerized microservices, enabling automated scaling, self-healing, and seamless edge-cloud integration.
+
+* *ArgoCD*: ArgoCD implements GitOps workflows to automate the deployment and synchronization of applications across environments. This ensures that infrastructure and application states are always aligned with the latest configurations stored in version control, reducing drift and enabling fast, consistent rollouts.
+
+* * Ansible Automation Platform*: Ansible automates the provisioning, configuration, and management of both cloud and edge environments. Its agentless architecture simplifies scaling, making it easy to deploy and manage large numbers of devices while maintaining consistent configurations.
+
+* *Flight Control*: Flight Control streamlines the management of edge devices, allowing the platform team to deploy updates, monitor device health, and orchestrate workloads across distributed environments. This tool plays a key role in ensuring operational efficiency at scale.
 
 == Workflow Overview
 

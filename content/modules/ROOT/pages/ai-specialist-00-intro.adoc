@@ -2,42 +2,17 @@
 
 == Background
 
-As the AI specialist at ACME Co., you've been tasked with solving the first critical safety issue: workers neglecting to wear hardhats. 
+Congratulations! You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI-driven solution that could prevent the next accident.
 
-Hardhats are the frontline defense against head injuries, yet too often, employees bypass this essential safety measure. The stakes are high, and the company is counting on your expertise to prevent the next accident.
+Your mission is to develop an object detection system that monitors workers in real time, identifying whether they’re wearing hardhats as they approach machinery. The system will rely on existing USB webcams across the factory floor, feeding video streams into AI models deployed on industrial PCs (IPCs) equipped with NVIDIA GPUs. When someone enters a hazardous area without a hardhat, the model will trigger instant alerts—creating a digital safety net that supervisors can rely on.
 
-Your mission is clear: develop an AI-driven solution to ensure every worker approaching machinery is wearing a hardhat. The plan? Leverage existing USB webcams and create an object detection model capable of identifying hardhats in real time. This will form a digital safety net, alerting supervisors the moment a worker steps into a hazardous area without proper protection.
+To bring this vision to life, you’ll lead the entire AI development pipeline. From gathering raw video footage and labeling datasets to building and refining the object detection model, your work will shape the core of this safety solution. Fine-tuning the model for accuracy and ensuring smooth deployment will require close collaboration with the DevOps and application development teams, aligning the AI model with the broader infrastructure ACME Co. is deploying.
 
-As you dive into this project, your responsibilities will span the entire AI pipeline. You'll collect and label video footage, train a robust object detection model, and fine-tune its accuracy for real-world deployment. Working closely with the DevOps team, you'll integrate the model into the existing infrastructure, ensuring smooth deployment on the plant's industrial PCs (IPCs) equipped with NVIDIA GPUs.
+As you chart the path forward, you’re faced with key decisions about the best approach to object detection. Building a model from scratch is possible using frameworks like TensorFlow or PyTorch, but that route comes with significant demands extensive data collection, complex architecture design, and lengthy training cycles. While custom models offer flexibility, the potential for delays and increased costs makes this a less practical option for the project's tight timelines.
 
-Your tasks will include:
+Instead, you opt for a faster, more effective solution—leveraging pre-trained models. Models like Faster R-CNN, SSD, and EfficientDet all offer compelling benefits, but for ACME’s real-time monitoring needs, YOLO (You Only Look Once) stands out. Known for its unmatched speed and efficiency, YOLO delivers the performance necessary to detect workers on the move without missing critical details.
 
-* Gathering and preparing datasets using video feeds from the plant floor.
-
-* Building and training the object detection model focused on hardhat identification.
-
-* Testing the model to refine accuracy and reduce false positives.
-
-As an AI specialist, you have several options when developing an object detection model. You could build the model entirely from scratch, leveraging frameworks like TensorFlow or PyTorch to design and train a custom neural network. This approach offers maximum flexibility and control but comes with significant challenges.
-
-Starting from scratch requires extensive data collection, careful model architecture design, and a long training period. Additionally, achieving high accuracy often involves substantial trial and error, which can delay deployment and increase costs.
-
-To overcome these drawbacks, many AI specialists turn to pre-trained models as a starting point. Pre-trained models offer a solid foundation for object detection tasks. By fine-tuning these models with specific datasets, you can dramatically reduce development time while maintaining high accuracy.
-
-Some of the most popular object detection models include:
-
-* YOLO (You Only Look Once): Known for its speed and efficiency in real-time detection.
-
-* Faster R-CNN: Renowned for high accuracy, though slower than YOLO.
-
-* SSD (Single Shot Multibox Detector): Balances speed and accuracy, making it suitable for various applications.
-
-* EfficientDet: A newer model optimized for both performance and resource efficiency.
-
-For this project, YOLO has been selected as the model of choice. Its real-time detection capabilities align perfectly with the need to monitor workers continuously and issue immediate alerts. YOLO's balance of speed and accuracy makes it ideal for deployment on the industrial PCs already available at ACME Co.
-
-With this foundation established, the next step is to begin preparing data and fine-tuning the YOLO model to detect hardhats with precision.
-
+Now, with YOLO selected as the foundation, the next steps are clear. You'll begin collecting and curating the training data, refining the model, and preparing it for deployment on-site. Each step you take will help safeguard the workforce, ensuring that AI becomes a cornerstone of ACME Co.'s commitment to safety.
 
 == Toolset
 
