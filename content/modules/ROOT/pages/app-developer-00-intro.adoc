@@ -1,4 +1,25 @@
-= Background
+= Application Developer
+
+== Background
+
+Congratulations! You have been chosen as the lead application developer for a critical safety initiative at ACME Co. Your role is pivotal in building a suite of modern applications that will integrate cutting-edge AI models developed by your colleagues to prevent accidents on the factory floor. As part of this initiative, you will lead the design and deployment of software that ensures real-time monitoring and response to workplace hazards.
+
+ACME Co. is embracing a "modern application development" approach. This means adopting architectural patterns and technologies that prioritize scalability, flexibility, and resilience. In practical terms, all services you create will follow a microservices architecture and be fully containerized to enable seamless deployment and scaling across different environments. This modernization will drive faster development cycles, improve reliability, and allow for continuous improvement of the applications.
+
+Collaboration at the Core
+
+Your task is to develop the core applications that will leverage the AI model created by the AI specialist. Developing modern applications is not a solitary task. This project will require close collaboration with data scientists, operations engineers, and the AI specialist. You will leverage collaboration tools such as Git for source code management, Jira or other task management platforms for project tracking, and communication tools to ensure that progress is shared and coordinated across the entire development team.
+
+Your development work must align with the broader objectives of the software development group at ACME Co. These objectives include:
+
+* Minimizing Time to Deploy: By implementing Continuous Integration/Continuous Deployment (CI/CD) pipelines, your applications will be rapidly tested and deployed to ensure minimal downtime and faster delivery of new features.
+
+* Ensuring Application Resilience: Applications will need robust error handling, automated recovery mechanisms, and health checks to ensure they can recover from failures and operate continuously.
+
+* Security and Compliance: The applications must adhere to corporate security guidelines, ensuring that data is encrypted in transit and at rest, and that sensitive information is protected.
+
+* Scalable and Modular Design: Microservices must be loosely coupled, allowing individual services to scale independently as demand changes.
+
 
 
 == Toolset
