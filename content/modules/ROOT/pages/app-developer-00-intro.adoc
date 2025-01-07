@@ -2,9 +2,9 @@
 
 == Background
 
-es through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME Co.’s software development group.
+es through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME’s software development group.
 
-As you begin this journey, your work will not only shape the future of ACME Co.’s safety measures but also redefine how modern applications can drive transformative change in industrial environments.
+As you begin this journey, your work will not only shape the future of ACME’s safety measures but also redefine how modern applications can drive transformative change in industrial environments.
 
 == Toolset
 

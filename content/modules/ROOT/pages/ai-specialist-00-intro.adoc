@@ -2,17 +2,17 @@
 
 == Background
 
-Congratulations! You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI-driven solution that could prevent the next accident.
+Congratulations! You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI driven solution that could prevent the next accident.
 
 Your mission is to develop an object detection system that monitors workers in real time, identifying whether they’re wearing hardhats as they approach machinery. The system will rely on existing USB webcams across the factory floor, feeding video streams into AI models deployed on industrial PCs (IPCs) equipped with NVIDIA GPUs. When someone enters a hazardous area without a hardhat, the model will trigger instant alerts—creating a digital safety net that supervisors can rely on.
 
-To bring this vision to life, you’ll lead the entire AI development pipeline. From gathering raw video footage and labeling datasets to building and refining the object detection model, your work will shape the core of this safety solution. Fine-tuning the model for accuracy and ensuring smooth deployment will require close collaboration with the DevOps and application development teams, aligning the AI model with the broader infrastructure ACME Co. is deploying.
+To bring this vision to life, you’ll lead the entire AI development pipeline. From gathering raw video footage and labeling datasets to building and refining the object detection model, your work will shape the core of this safety solution. Fine tuning the model for accuracy and ensuring smooth deployment will require close collaboration with the DevOps and application development teams, aligning the AI model with the broader infrastructure ACME is deploying.
 
 As you chart the path forward, you’re faced with key decisions about the best approach to object detection. Building a model from scratch is possible using frameworks like TensorFlow or PyTorch, but that route comes with significant demands extensive data collection, complex architecture design, and lengthy training cycles. While custom models offer flexibility, the potential for delays and increased costs makes this a less practical option for the project's tight timelines.
 
-Instead, you opt for a faster, more effective solution—leveraging pre-trained models. Models like Faster R-CNN, SSD, and EfficientDet all offer compelling benefits, but for ACME’s real-time monitoring needs, YOLO (You Only Look Once) stands out. Known for its unmatched speed and efficiency, YOLO delivers the performance necessary to detect workers on the move without missing critical details.
+Instead, you opt for a faster, more effective solution leveraging pre-trained models. Models like Faster R-CNN, SSD, and EfficientDet all offer compelling benefits, but for ACME’s needs, YOLO (You Only Look Once) stands out. Known for its unmatched speed and efficiency, YOLO delivers the performance necessary to detect workers on the move without missing critical details.
 
-Now, with YOLO selected as the foundation, the next steps are clear. You'll begin collecting and curating the training data, refining the model, and preparing it for deployment on-site. Each step you take will help safeguard the workforce, ensuring that AI becomes a cornerstone of ACME Co.'s commitment to safety.
+Now, with YOLO selected as the foundation, the next steps are clear. You'll begin collecting and curating the training data, refining the model, and preparing it for deployment on-site. Each step you take will help safeguard the workforce, ensuring that AI becomes a cornerstone of ACME's commitment to safety.
 
 == Toolset
 
@@ -28,7 +28,7 @@ You will find later that each section of this workshop outlines details about ou
 
 * *Jupyter Notebook with Python*: Jupyter Notebooks provide an interactive development environment, allowing participants to write and execute Python code seamlessly. This environment is essential for model experimentation, visualization, and iterative development.
 
-* *YOLO Libraries*: The workshop will leverage YOLO libraries (such as YOLOv11) to implement object detection. These libraries provide pre-trained models and tools to customize and fine-tune the model for hardhat detection.
+* *YOLO Libraries*: The workshop will leverage YOLO libraries (such as YOLOv11) to implement object detection. These libraries provide pre-trained models and tools to customize and fine tune the model for hardhat detection.
 
 * *PyTorch Libraries*:  PyTorch provides the foundation for training and fine-tuning YOLO models. Its GPU acceleration and extensive ecosystem make it indispensable for building AI solutions.
 
@@ -37,7 +37,23 @@ You will find later that each section of this workshop outlines details about ou
 
 == Workflow Overview
 
-Find below the workflow that you will follow as AI specialist during the workshop:
+Find below the workflow that you will follow as AI specialist during the workshop (each of those will be a different "section").
+
+1. *Data Management*: Data Collection and Cleaning: This is the foundational step where raw data is gathered, cleaned, and pre-processed to ensure quality and consistency. It serves as the input for downstream processes.
+
+2. *Model Building*: Which includes the following steps:
+
+    * Feature Engineering: Refined data is transformed into meaningful features that improve model performance. This phase often involves iterating back to the data collection step to enhance data quality.
+    * Model Development: The core algorithms are designed and developed. This involves selecting and testing different model architectures. Iterations may occur, feeding back into feature engineering.
+    * Model Training Pipeline: The model is trained using the engineered features and developed algorithms, refining the weights and parameters based on the data.
+    * Model Validation: The trained model is evaluated to ensure accuracy and robustness. If necessary, adjustments are made by looping back to the model development phase.
+
+3. *Model Release*: Model Serving Pipeline: After successful validation, the model is packaged and deployed into production environments, ready to handle stream or batch predictions.
+
+4. *Day-2 Operations*: Monitoring and Validation: Post-deployment, the model's performance is continuously monitored. This step ensures that the model maintains accuracy and adapts to data drift or operational changes. Monitoring may lead to re-initiating data collection, feature engineering, or retraining cycles to refine the model.
+
+
+
 
 image::ai-workflow.png[]
 

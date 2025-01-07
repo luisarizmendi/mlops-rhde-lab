@@ -2,9 +2,9 @@
 
 == Background
 
-As the new platform specialist at ACME Co., you step into a role that will shape the foundation of the company’s next-generation safety initiative. The applications developed by the AI and app development teams need a robust, scalable infrastructure, and it's your responsibility to make that a reality. With incidents rising on the factory floor, the need for reliable, real-time AI inference at the edge has never been more critical.
+As the new platform specialist at ACME, you step into a role that will shape the foundation of the company’s next-generation safety initiative. The applications developed by the AI and app development teams need a robust, scalable infrastructure, and it's your responsibility to make that a reality. With incidents rising on the factory floor, the need for reliable, real-time AI inference at the edge has never been more critical.
 
-ACME Co. is pushing to modernize its operations while keeping costs in check. By leveraging edge computing, you can deploy AI models directly onto industrial PCs, reducing the load on cloud services and ensuring rapid, localized responses. This approach not only saves money but also enhances performance, as alarms and detections can happen without latency, directly on the factory floor.
+ACME is pushing to modernize its operations while keeping costs in check. By leveraging edge computing, you can deploy AI models directly onto industrial PCs, reducing the load on cloud services and ensuring rapid, localized responses. This approach not only saves money but also enhances performance, as alarms and detections can happen without latency, directly on the factory floor.
 
 However, this initiative isn’t limited to one or two sites. ACME’s factories span the globe, and managing systems at such scale requires careful planning. The solution must be easy to deploy and maintain, even by on-site personnel with limited IT expertise. With tools like Red Hat Advanced Cluster Management and Ansible Automation, you’ll ensure that updates and configurations can be rolled out seamlessly, keeping all edge devices secure and up-to-date.
 
@@ -15,7 +15,7 @@ Collaboration will be key to success. The development team is building applicati
 
 == Toolset
 
-To build and manage the platform supporting ACME Co.’s safety solution, the workshop will leverage a set of robust tools designed to ensure scalability, automation, and seamless deployment across both edge and cloud environments. These tools include:
+To build and manage the platform supporting ACME’s safety solution, the workshop will leverage a set of robust tools designed to ensure scalability, automation, and seamless deployment across both edge and cloud environments. These tools include:
 
 [NOTE]
 
