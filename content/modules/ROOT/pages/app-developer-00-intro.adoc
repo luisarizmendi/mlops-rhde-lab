@@ -6,9 +6,7 @@ Congratulations! You have been chosen as the lead application developer for a cr
 
 ACME Co. is embracing a "modern application development" approach. This means adopting architectural patterns and technologies that prioritize scalability, flexibility, and resilience. In practical terms, all services you create will follow a microservices architecture and be fully containerized to enable seamless deployment and scaling across different environments. This modernization will drive faster development cycles, improve reliability, and allow for continuous improvement of the applications.
 
-Collaboration at the Core
-
-Your task is to develop the core applications that will leverage the AI model created by the AI specialist. Developing modern applications is not a solitary task. This project will require close collaboration with data scientists, operations engineers, and the AI specialist. You will leverage collaboration tools such as Git for source code management, Jira or other task management platforms for project tracking, and communication tools to ensure that progress is shared and coordinated across the entire development team.
+Your task is to develop the core applications that will leverage the AI model created by the AI specialist.
 
 Your development work must align with the broader objectives of the software development group at ACME Co. These objectives include:
 
@@ -23,6 +21,27 @@ Your development work must align with the broader objectives of the software dev
 
 
 == Toolset
+
+
+
+
+
+
+ This project will require close collaboration with data scientists, operations engineers, and the AI specialist. You will leverage collaboration tools to ensure that progress is shared and coordinated across the entire development team.
+
+
+xx
+xrefxx
+xrefxxx
+xrefxxx
+x
+
+xrefxx
+
+
+
+
+
 
 
 
