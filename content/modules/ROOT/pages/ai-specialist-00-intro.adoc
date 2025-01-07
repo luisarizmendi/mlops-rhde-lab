@@ -60,14 +60,11 @@ You will find later that each section of this workshop outlines details about ou
 * *GitHub Source Code Repository*: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
 
 
-
-
 == Workflow Overview
 
-<diagram>
+Find below the workflow that you will follow as AI specialist during the workshop:
 
-TBD
-
+image::ai-workflow.png[]
 
 
 == Section video recording

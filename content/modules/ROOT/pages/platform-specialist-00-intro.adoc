@@ -3,7 +3,24 @@
 == Background
 
 
+
++ The platform will host the applications using the ai model created by the ai specialist and the app development teams
++ company wants to minimize costs while improving user experience (solution performance). The usage of Edge Computing solutions will help here
++ Solution must be easy to manage at scale (a lot of devices will be deployed and onsite people does not always have IT knowledge)
++ usage of the best most secure operating system
++ Aligment with the app dev team is needed (ie. which applications are prepared for RHEL and which ones in OpenShift)
+
+
+
 == Toolset
+
+
+
++ Red Hat Enterprise Linux
++ OpenShift
++ ArgoCD
++ Ansible Automation Platform
++ Flight Control (edge device management)
 
 
 
