@@ -1,4 +1,4 @@
-= Introduction
+= Background
 
 As the AI specialist at ACME Co., you've been tasked with solving a critical safety issue that has plagued the plant—workers neglecting to wear hardhats. Hardhats are the frontline defense against head injuries, yet too often, employees bypass this essential safety measure. The stakes are high, and the company is counting on your expertise to prevent the next accident.
 
@@ -13,30 +13,6 @@ Your tasks will include:
 * Building and training the object detection model focused on hardhat identification.
 
 * Testing the model to refine accuracy and reduce false positives.
-
-
-== Background
-
-As an AI specialist, you have several options when developing an object detection model. You could build the model entirely from scratch, leveraging frameworks like TensorFlow or PyTorch to design and train a custom neural network. This approach offers maximum flexibility and control but comes with significant challenges.
-
-Starting from scratch requires extensive data collection, careful model architecture design, and a long training period. Additionally, achieving high accuracy often involves substantial trial and error, which can delay deployment and increase costs.
-
-To overcome these drawbacks, many AI specialists turn to pre-trained models as a starting point. Pre-trained models, developed by the AI community, offer a solid foundation for object detection tasks. By fine-tuning these models with specific datasets, you can dramatically reduce development time while maintaining high accuracy.
-
-Some of the most popular object detection models include:
-
-YOLO (You Only Look Once): Known for its speed and efficiency in real-time detection.
-
-Faster R-CNN: Renowned for high accuracy, though slower than YOLO.
-
-SSD (Single Shot Multibox Detector): Balances speed and accuracy, making it suitable for various applications.
-
-EfficientDet: A newer model optimized for both performance and resource efficiency.
-
-For this project, YOLO has been selected as the model of choice. Its real-time detection capabilities align perfectly with the need to monitor workers continuously and issue immediate alerts. YOLO's balance of speed and accuracy makes it ideal for deployment on the industrial PCs already available at ACME Co.
-
-With this foundation established, the next step is to begin preparing data and fine-tuning the YOLO model to detect hardhats with precision.
-
 
 
 == Toolset

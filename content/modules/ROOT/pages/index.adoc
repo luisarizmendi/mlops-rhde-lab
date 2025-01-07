@@ -83,7 +83,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 
 [.tile]
 .*`_AI Specialist_`*
-* xref:ai-specialist-00-intro.adoc[0. AI Specialist Introduction]
+* xref:ai-specialist-00-intro.adoc[0. AI Specialist]
 ** xref:ai-specialist-00-intro.adoc#_background[Background]
 ** xref:ai-specialist-00-intro.adoc#_toolset[Toolset]
 ** xref:ai-specialist-00-intro.adoc#_workflow_overview[Workflow Overview]
@@ -106,7 +106,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 
 [.tile]
 .*`_APP Developer_`*
-* xref:app-developer-00-intro.adoc[0. APP Developer Introduction]
+* xref:app-developer-00-intro.adoc[0. APP Developer]
 ** xref:app-developer-00-intro.adoc#_background[Background]
 ** xref:app-developer-00-intro.adoc#_toolset[Toolset]
 ** xref:app-developer-00-intro.adoc#_workflow_overview[Workflow Overview]
@@ -126,7 +126,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 
 [.tile]
 .*`_Platform Specialist_`*
-* xref:platform-specialist-00-intro.adoc[0. Platform Specialist Introduction]
+* xref:platform-specialist-00-intro.adoc[0. Platform Specialist]
 ** xref:platform-specialist-00-intro.adoc#_background[Background]
 ** xref:platform-specialist-00-intro.adoc#_toolset[Toolset]
 ** xref:platform-specialist-00-intro.adoc#_workflow_overview[Workflow Overview]
