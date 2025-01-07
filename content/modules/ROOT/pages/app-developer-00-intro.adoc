@@ -28,8 +28,8 @@ To ensure seamless development, you'll need collaboration tools, complemented by
 
 You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
-* OpenShift Developer Hub
-* OpenShift Dev Spaces
+* OpenShift Developer Hub ???
+* OpenShift Dev Spaces ??
 * OpenShift Pipelines
 * GitHub Source Code Repository
 * Container Image Registry
