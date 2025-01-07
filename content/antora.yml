@@ -24,11 +24,17 @@ asciidoc:
     registry-local-url: http://192.168.100.200/workshop/
     page-links:
     - url: https://redhat.com
-      text: AI Specialist Video
+      text: Video - AI Specialist Video
     - url: https://www.nvidia.com
-      text: APP Developer Video
+      text: Solution - Model
     - url: https://www.nvidia.com
-      text: Platform Specialist Video
+      text: Video - APP Developer Video
+    - url: https://www.nvidia.com
+      text: Solution - Applications
+    - url: https://www.nvidia.com
+      text: Video - Platform Specialist Video
+    - url: https://www.nvidia.com
+      text: Solution - Device Image and Config
 
 
 
