@@ -45,9 +45,9 @@ To successfully develop and deploy the hardhat detection AI system, the workshop
 
 [NOTE]
 
-In each section you will find details about why this workshop is using these specific tools along other possible toolset options that you could use instead.
+You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
-* *OpenShift and OpenShift AI*: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
+* *OpenShift AI*: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
 
 * *Roboflow*: A vital tool for dataset management, image annotation, preprocessing, and augmentation. This accelerates dataset preparation, ensuring high-quality input for model training.
 
@@ -57,7 +57,7 @@ In each section you will find details about why this workshop is using these spe
 
 * *PyTorch Libraries*:  PyTorch provides the foundation for training and fine-tuning YOLO models. Its GPU acceleration and extensive ecosystem make it indispensable for building AI solutions.
 
-* *Git Source Code Repository*: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
+* *GitHub Source Code Repository*: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
 
 
 
