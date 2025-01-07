@@ -50,7 +50,7 @@ image::labintro-arch.png[]
 
 Running Locally:
 
-* Edge Devices: Jetson Orin NANO Development Board (8GB RAM) powered by NVIDIA for AI deep learning.
+* Edge Devices: NVIDIA Jetson Orin NANO Development Board (8GB RAM).
 
 * Webcams: Arducam 16MP Autofocus USB Camera.
 
