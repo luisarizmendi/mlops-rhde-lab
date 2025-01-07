@@ -24,7 +24,12 @@ asciidoc:
     registry-local-url: http://192.168.100.200/workshop/
     page-links:
     - url: https://redhat.com
-      text: Red Hat
+      text: AI Specialist Video
     - url: https://www.nvidia.com
-      text: NVIDIA
+      text: APP Developer Video
+    - url: https://www.nvidia.com
+      text: Platform Specialist Video
+
+
+
 

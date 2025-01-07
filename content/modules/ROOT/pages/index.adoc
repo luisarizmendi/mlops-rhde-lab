@@ -69,8 +69,16 @@ Start reviewing the xref:00-arch-intro.adoc[*Architecture*] and then choose your
 Good luck on your mission to create a safer, smarter workplace!
 
 
-== Workshop video recording
+== Workshop Video Recording
 
+
+===AI Specialist
+TBD
+
+===APP Developer
+TBD
+
+===Platform Specialist
 TBD
 
 
