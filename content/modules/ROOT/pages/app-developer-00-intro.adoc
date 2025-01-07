@@ -2,23 +2,9 @@
 
 == Background
 
-Congratulations! You have been chosen as the lead application developer for a critical safety initiative at ACME Co. Your role is pivotal in building a suite of modern applications that will integrate cutting-edge AI models developed by your colleagues to prevent accidents on the factory floor. As part of this initiative, you will lead the design and deployment of software that ensures real-time monitoring and response to workplace hazards.
+es through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME Co.’s software development group.
 
-ACME Co. is embracing a "modern application development" approach. This means adopting architectural patterns and technologies that prioritize scalability, flexibility, and resilience. In practical terms, all services you create will follow a microservices architecture and be fully containerized to enable seamless deployment and scaling across different environments. This modernization will drive faster development cycles, improve reliability, and allow for continuous improvement of the applications.
-
-Your task is to develop the core applications that will leverage the AI model created by the AI specialist. This project will require close collaboration with data scientists, operations engineers, and the AI specialist.
-
-Your development work must align with the broader objectives of the software development group at ACME Co. These objectives include:
-
-* Minimizing Time to Deploy: By implementing Continuous Integration/Continuous Deployment (CI/CD) pipelines, your applications will be rapidly tested and deployed to ensure minimal downtime and faster delivery of new features.
-
-* Ensuring Application Resilience: Applications will need robust error handling, automated recovery mechanisms, and health checks to ensure they can recover from failures and operate continuously.
-
-* Security and Compliance: The applications must adhere to corporate security guidelines, ensuring that data is encrypted in transit and at rest, and that sensitive information is protected.
-
-* Scalable and Modular Design: Microservices must be loosely coupled, allowing individual services to scale independently as demand changes.
-
-
+As you begin this journey, your work will not only shape the future of ACME Co.’s safety measures but also redefine how modern applications can drive transformative change in industrial environments.
 
 == Toolset
 
@@ -28,11 +14,15 @@ To ensure seamless development, you'll need collaboration tools, complemented by
 
 You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
-* OpenShift Developer Hub ???
-* OpenShift Dev Spaces ??
-* OpenShift Pipelines
-* GitHub Source Code Repository
-* Container Image Registry
+* *OpenShift Developer Hub*: This internal developer portal centralizes access to resources, templates, and documentation, accelerating the onboarding process and standardizing application development across teams. It ensures consistency and visibility into microservices and APIs.
+
+* *OpenShift Dev Spaces*: OpenShift Dev Spaces provides cloud-based development environments accessible directly from the browser. It offers pre-configured, containerized workspaces that mirror production, ensuring developers can write, test, and debug code in an environment that reflects the final deployment conditions.
+
+* *OpenShift Pipelines*: Built on Tekton, OpenShift Pipelines automates CI/CD workflows, enabling fast, consistent builds, tests, and deployments of containerized applications. This tool ensures rapid iteration and integration, reducing downtime and accelerating feature delivery.
+
+* *GitHub Source Code Repository*: GitHub serves as the version control system, providing a collaborative space for developers to track code changes, manage branches, and facilitate peer reviews. This fosters teamwork and ensures the codebase evolves securely and efficiently.
+
+* *Container Image Registry*: A secure container image registry stores and manages application images, ensuring that developers can reliably push, pull, and deploy containers to different environments. It supports versioning and helps enforce security and compliance policies.
 
 
 == Workflow Overview
