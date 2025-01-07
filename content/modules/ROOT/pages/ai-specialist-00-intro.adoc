@@ -20,7 +20,7 @@ To successfully develop and deploy the hardhat detection AI system, the workshop
 
 [NOTE]
 
-You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
+You will find later that each module of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
 * *OpenShift AI*: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
 
@@ -37,7 +37,7 @@ You will find later that each section of this workshop outlines details about ou
 
 == Workflow Overview
 
-Find below the workflow that you will follow as AI specialist during the workshop (each of those will be a different "section").
+Find below the workflow that you will follow as AI specialist during the workshop (each of those will be a different "module").
 
 image::ai-workflow.png[]
 
@@ -60,9 +60,9 @@ This won't be a pure lineal workflow, you could find the need to step back to a 
 * From model validation to earlier phases (feature engineering and data collection) for iterative improvements.
 * From model serving back to model building for retraining based on performance metrics.
 
-Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first section: xref:ai-specialist-01-data.adoc[Data Management].
+Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first module: xref:ai-specialist-01-data.adoc[Data Management].
 
-== Section video recording
+== Section Video Recording
 
 TBD
 
