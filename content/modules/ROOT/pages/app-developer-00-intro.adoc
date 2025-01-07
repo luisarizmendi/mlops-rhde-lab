@@ -2,7 +2,13 @@
 
 == Background
 
-es through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME’s software development group.
+Congratulations! You have been chosen as the lead application developer for a critical safety initiative at ACME Your role is pivotal in building a suite of modern applications that will integrate cutting edge AI models developed by your colleagues to prevent accidents on the factory floor. As you step into this role, the challenge ahead is not just about coding, it’s about designing and deploying software that will safeguard lives and transform workplace safety.
+
+ACME is embracing a "modern application development" approach, signaling a shift towards technologies and architectures that enable greater scalability, flexibility, and resilience. This translates to creating containerized microservices that can be deployed and scaled across different environments, ensuring the applications evolve as fast as the company’s needs. By adopting this approach, you’ll accelerate development cycles, improve reliability, and pave the way for continuous innovation.
+
+Your mission is clear: develop the core applications that will bring the AI models to life. These applications will gather video feeds from webcams, analyze worker safety in real-time, and trigger alarms when hazards are detected. One application will collect and send images for inference, another will handle predictions and trigger alerts for non-compliance, and a third will provide a web-based dashboard to monitor the system’s health and performance. While the inference and alarm systems will operate on RHEL at the edge, the dashboard will reside in the cloud on OpenShift, bridging the factory floor with centralized oversight.
+
+But this isn’t a solo endeavor. The project demands collaboration – you’ll work alongside data scientists, AI engineers, and operations specialists to ensure the entire solution integrates seamlessly. Development must align with broader goals like minimizing deployment times through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME’s software development group.
 
 As you begin this journey, your work will not only shape the future of ACME’s safety measures but also redefine how modern applications can drive transformative change in industrial environments.
 
