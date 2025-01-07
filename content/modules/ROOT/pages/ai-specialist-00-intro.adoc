@@ -2,7 +2,7 @@
 
 == Background
 
-Congratulations! You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI driven solution that could prevent the next accident.
+You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI driven solution that could prevent the next accident.
 
 Your mission is to develop an object detection system that monitors workers in real time, identifying whether they’re wearing hardhats as they approach machinery. The system will rely on existing USB webcams across the factory floor, feeding video streams into AI models deployed on industrial PCs (IPCs) equipped with NVIDIA GPUs. When someone enters a hazardous area without a hardhat, the model will trigger instant alerts—creating a digital safety net that supervisors can rely on.
 
