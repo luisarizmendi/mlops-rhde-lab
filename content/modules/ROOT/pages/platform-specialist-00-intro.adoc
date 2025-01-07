@@ -10,7 +10,7 @@ However, this initiative isn’t limited to one or two sites. ACME’s factories
 
 Collaboration will be key to success. The development team is building applications designed to operate across both RHEL and OpenShift environments, that means that every edge device will run on RHEL, chosen for its reputation as the most secure and reliable operating system available while in the cloud, OpenShift will provide the flexibility and scalability needed to host dashboards and centralized applications.  As the platform specialist, it’s up to you to ensure their work integrates smoothly into the larger ecosystem. The alignment between teams will drive innovation and reinforce ACME’s position as a leader in intelligent, safe manufacturing.
 
-Lastly, one last note. For the AI inference processing at the edge, ACME has selected the NVIDIA Jetson Orin NANO devices, known for their optimal balance of performance and energy efficiency. This choice introduces an important architectural consideration: the platform must support ARM-based systems, expanding the scope of your infrastructure to handle both x86 and ARM architectures seamlessly.
+Lastly, one additional note. For the AI inference processing at the edge, ACME has selected the NVIDIA Jetson Orin NANO devices, known for their optimal balance of performance and energy efficiency. This choice introduces an important architectural consideration: the platform must support ARM-based systems, expanding the scope of your infrastructure to handle both x86 and ARM architectures seamlessly.
 
 
 == Toolset

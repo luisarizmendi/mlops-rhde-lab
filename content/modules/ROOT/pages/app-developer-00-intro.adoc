@@ -33,10 +33,32 @@ You will find later that each section of this workshop outlines details about ou
 
 == Workflow Overview
 
-<diagram>
 
-TBD
+Find below the workflow that you will follow as Aplication developer during the workshop (each of those will be a different "module").
 
+image::dev-workflow.png[]
+
+1. *App Planning*: Architecture Design: This foundational phase focuses on system design decisions, technology stack selection, and establishing the technical approach. It sets the blueprint for the entire application development lifecycle.
+
+2. *App Development*: This encompasses the core development activities:
+
+    * Code Development: Writing application code following established design patterns and best practices. This involves implementing features and functionality according to requirements.
+    * Testing: Comprehensive testing. This phase often requires iteration back to code development to address identified issues.
+
+3. *App Release*: Integration, Deployment: After successful testing, the application is prepared for production, involving integration with other systems and services, deployment through CI/CD pipelines,final verification in staging environments and production rollout
+
+4. *Day-2 Operations*: Monitoring, Tuning: Post-deployment activities focus on application performance monitoring, resource utilization optimization and performance tuning based on real world usage
+
+This represents a continuous cycle rather than a linear process, with several feedback loops driving ongoing improvement:
+
+    * From operations back to architecture design: Performance metrics and operational insights inform architectural decisions and improvements
+    * From operations to development: Production issues may require code changes or optimizations
+    * From testing back to development: Issues found during testing lead to code refinement
+    * From deployment experiences back to architecture: Real-world deployment challenges might necessitate architectural adjustments
+
+The feedback loops ensure continuous improvement and adaptation to changing requirements, performance needs, and operational realities. For successful application development, it's crucial to understand that you may need to revisit earlier phases as new information or challenges emerge.
+
+Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first module: xref:app-developer-01-arch.adoc[App Planning].
 
 
 == Section video recording
