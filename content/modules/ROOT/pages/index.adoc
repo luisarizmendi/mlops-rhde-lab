@@ -69,6 +69,11 @@ Start reviewing the xref:00-arch-intro.adoc[*Architecture*] and then choose your
 Good luck on your mission to create a safer, smarter workplace!
 
 
+== Workshop video recording
+
+TBD
+
+
 [.tiles.browse]
 == Browse modules
 
@@ -82,6 +87,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 ** xref:ai-specialist-00-intro.adoc#_background[Background]
 ** xref:ai-specialist-00-intro.adoc#_toolset[Toolset]
 ** xref:ai-specialist-00-intro.adoc#_workflow_overview[Workflow Overview]
+** xref:ai-specialist-00-intro.adoc#_section_video_recording[Section Video Recording]
 * xref:ai-specialist-01-data.adoc[1. Data Management]
 ** xref:ai-specialist-01-data.adoc#_collection[Collection]
 ** xref:ai-specialist-01-data.adoc#_inspection[Inspection]
@@ -104,6 +110,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 ** xref:app-developer-00-intro.adoc#_background[Background]
 ** xref:app-developer-00-intro.adoc#_toolset[Toolset]
 ** xref:app-developer-00-intro.adoc#_workflow_overview[Workflow Overview]
+** xref:app-developer-00-intro.adoc#_section_video_recording[Section Video Recording]
 * xref:app-developer-01-arch.adoc[1. App Planning]
 ** xref:app-developer-01-arch.adoc#_architecture[Architecture]
 ** xref:app-developer-01-arch.adoc#_microservices[Microservices]
@@ -123,6 +130,7 @@ xref:00-arch-intro.adoc[*Architecture*]
 ** xref:platform-specialist-00-intro.adoc#_background[Background]
 ** xref:platform-specialist-00-intro.adoc#_toolset[Toolset]
 ** xref:platform-specialist-00-intro.adoc#_workflow_overview[Workflow Overview]
+** xref:platform-specialist-00-intro.adoc#_section_video_recording[Section Video Recording]
 * xref:platform-specialist-01-image.adoc[1. Device Image]
 ** xref:platform-specialist-01-image.adoc#_image_creation[Image Creation]
 ** xref:platform-specialist-01-image.adoc#_image_distribution[Image Distribution]
