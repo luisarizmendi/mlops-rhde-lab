@@ -45,7 +45,7 @@ To successfully develop and deploy the hardhat detection AI system, the workshop
 
 [NOTE]
 
-In each section you will find details about why this workshop is using those tools along other possible toolset options.
+In each section you will find details about why this workshop is using these specific tools along other possible toolset options that you could use instead.
 
 * *OpenShift and OpenShift AI*: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
 
