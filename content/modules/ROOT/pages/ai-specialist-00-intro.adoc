@@ -39,15 +39,17 @@ With this foundation established, the next step is to begin preparing data and f
 
 To successfully develop and deploy the hardhat detection AI system, the workshop will utilize a suite of powerful tools designed to streamline machine learning workflows and ensure efficient deployment. These tools include:
 
-* OpenShift and OpenShift AI: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
+* *OpenShift and OpenShift AI*: OpenShift provides a robust Kubernetes-based platform for deploying containerized applications. OpenShift AI extends this by offering integrated tools for developing, training, and deploying AI models at scale. The platform's GPU support enables high-performance model inference.
 
-* Roboflow: A vital tool for dataset management, Roboflow simplifies image annotation, preprocessing, and augmentation. This accelerates dataset preparation, ensuring high-quality input for model training.
+* *Roboflow*: A vital tool for dataset management, Roboflow simplifies image annotation, preprocessing, and augmentation. This accelerates dataset preparation, ensuring high-quality input for model training.
 
-* Jupyter Notebook with Python: Jupyter Notebooks provide an interactive development environment, allowing participants to write and execute Python code seamlessly. This environment is essential for model experimentation, visualization, and iterative development.
+* *Jupyter Notebook with Python*: Jupyter Notebooks provide an interactive development environment, allowing participants to write and execute Python code seamlessly. This environment is essential for model experimentation, visualization, and iterative development.
 
-* YOLO Libraries: The workshop will leverage YOLO libraries (such as YOLOv5 or YOLOv8) to implement object detection. These libraries provide pre-trained models and tools to customize and fine-tune the model for hardhat detection.
+* *YOLO Libraries*: The workshop will leverage YOLO libraries (such as YOLOv11) to implement object detection. These libraries provide pre-trained models and tools to customize and fine-tune the model for hardhat detection.
 
-* Git Source Code Repository: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
+* *PyTorch Libraries*:  PyTorch provides the foundation for training and fine-tuning YOLO models. Its GPU acceleration and extensive ecosystem make it indispensable for building AI solutions.
+
+* *Git Source Code Repository*: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
 
 
 
