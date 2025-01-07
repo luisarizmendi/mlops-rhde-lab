@@ -16,8 +16,8 @@
 * -------------------------
 * `_Platform Specialist_`
 * xref:platform-specialist-00-intro.adoc[0. Platform Specialist Intro]
-* xref:platform-specialist-01-image.adoc[1. Device Image]
-* xref:platform-specialist-02-onboarding.adoc[2. Onboarding]
+* xref:platform-specialist-01-image.adoc[1. Device Image Preparation]
+* xref:platform-specialist-02-rollout.adoc[2. Device Rollout]
 * xref:platform-specialist-03-update.adoc[3. Day-2 Operations]
 * -------------------------
 * xref:99-summary.adoc[Summary]

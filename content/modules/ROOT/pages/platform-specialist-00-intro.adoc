@@ -36,9 +36,18 @@ You will find later that each section of this workshop outlines details about ou
 
 == Workflow Overview
 
-<diagram>
+Find below the workflow that you will follow as Platform Specialist during the workshop (each of those will be a different "module").
 
-TBD
+image::platform-workflow.png[]
+
+
+
+
+
+
+
+
+
 
 
 
