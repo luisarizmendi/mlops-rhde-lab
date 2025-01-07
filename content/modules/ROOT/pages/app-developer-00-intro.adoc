@@ -33,8 +33,7 @@ You will find later that each section of this workshop outlines details about ou
 
 == Workflow Overview
 
-
-Find below the workflow that you will follow as Aplication developer during the workshop (each of those will be a different "module").
+Find below the workflow that you will follow as Application Developer during the workshop (each of those will be a different "module").
 
 image::dev-workflow.png[]
 
