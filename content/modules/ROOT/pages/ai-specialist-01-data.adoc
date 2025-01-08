@@ -60,7 +60,7 @@ Your first task will be to create a Roboflow account (if you don't have one alre
 
 [IMPORTANT]
 
-Roboflow includes some restrictions to Not-Paid accounts. The most important for us is that the overall number of images in your account must be less than 10000, so we need to mantain the size of the Dataset that we will create in the next point below that number. 
+Roboflow includes some restrictions to Not-Paid accounts. The most important for us is that the overall number of images in your account must be less than 10,000, so we need to mantain the size of the Dataset that we will create in the next point below that number. 
 
 From here, you're ready to start...
 
@@ -116,31 +116,41 @@ Now that you know what to look for, pick the source Datasets that you will be us
 3. Identify one or multiple datasets with relevant labeled data by playing with the btn:[Advanced Filters]. You can add `class:<name>` into the search box to only show datasets that contains data with the 'name' label, for example `class:hardhat`.
 ====
 
+image::ai-data-datasets.png[]
 
 
+Reaching the optimal dataset size of 10,000 images often requires combining multiple datasets from Roboflow Universe. While the platform offers an "Image Count" filter, be cautious when using it as your sole metric. This filter displays the total number of images in a dataset, not the count of images containing your specific labels of interest, which could lead to misleading results.
 
 
+[example]
+====
+To accurately determine the number of relevant images in a specific dataset, follow these steps:
+
+1. Navigate to the dataset's URL
+2. Click the btn:[Images] button
+3. Use the Filter function to select your target Classes (labels)
+4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75)
+====
+
+image::ai-data-image-count.png[]
 
 
+Beyond the image count, it's essential to verify that both images and labels align with your specific use case. For instance, when detecting "helmets" in industrial environments, images of people cycling wearing "helmets" would be inappropriate for your dataset. Dataset image inspection is crucial before implementation, as including irrelevant images could significantly skew your model's predictions.
 
 
-
+Once you have choosen your source Datasets, take note of their Roboflow Universe URLs since you will need them in the next step. 
 
 
 [TIP]
+====
+If you don't find appropiate source Datasets you can use this one:   
 
-If you dont' find datasets .... 
-
-
-
-
-
+https://universe.roboflow.com/pped/pped-batch1
+====
 
 
 
 
-image::ai-data-datasets.png[]
-.Finding the right pre-created datasets
 
 
 
