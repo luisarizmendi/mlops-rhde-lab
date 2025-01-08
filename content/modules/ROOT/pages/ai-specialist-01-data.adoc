@@ -46,11 +46,10 @@ There are multiple available tools that help with the AI data management. Below 
 
 For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow’s ease of use and direct integration with popular object detection models like YOLO make it the optimal choice for this project.
 
-[TASK]
+[example]
+Your first task will be to create a Roboflow account (if you don't have one already):
 
-Yout first task will be to create a Roboflow account (if you don't have one already):
-
-1. Go to https://roboflow.com/ and click "Get Started" in the top-right corner.
+1. Go to https://roboflow.com/ and click  btn:[Get Started] in the top-right corner.
 
 2. Choose your preferred sign-up method (such as email) and enter your name and password.
 
@@ -90,17 +89,19 @@ There are multiple ways to get pre-Labeled image datasets, for example:
 
 In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow.
 
-[TASK]
+
+
+
 
 Create a Dataset containing hardhats labeled images by reusing Datasets that you find in Roboflow Universe.
 
 1. Go to https://universe.roboflow.com/[Roboflow Universe] 
 
-2. Select "*Object Detection*" in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
+2. Select btn:[*Object Detection*] in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
  
 3. Once you get a Dataset list, filter it again by AI model. As already mentioned, in our case we will be using *YOLOv11* base model.
 
-4. 
+4. Find one or multiple datasets with relevant labeled data by playing with the btn:[Advanced Filters]
 
 
 
