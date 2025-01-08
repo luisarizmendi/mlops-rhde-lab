@@ -177,7 +177,7 @@ Probably the Dataset will have more than 50 images that you want to clone. You c
 5. Check that all images are selected and then click "Clone <number> Selected Images" on the top right corner. Select the Workspace and the Project that you created before and click "Clone <number> Images"
 
 [NOTE]
-If the page does not respond or you find errors, try to clone images in batches instead of performing a single clone with a high number of items.
+If the page does not respond or you find errors, try to clone images in batches of 900 images instead of performing a single clone with a high number of items.
 ====
 
 image::ai-data-clone.png[]
@@ -190,20 +190,26 @@ Repeat these steps for each class in each of your selected source Datasets until
 ====
 If you encounter issues while cloning images or prefer to save time, you can simply Fork the following dataset:
 
-https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
+https://universe.roboflow.com/pped/pped-batch1
 
 Forking typically results in fewer issues than cloning in Roboflow. Even if an error appears, the images will still be copied to your account.
 
 After cloning, ensure you remove any images that don't belong to the hardhat or no_hardhat classes. To remove unwanted images:
 
 1. Go to the "Dataset" section in the left menu.
-2. Select the class you want to delete.
+2. Select the class you want to delete and be sure that the your classes are not (click on the `x`, see the image below).
 3. Use the option to display all images.
 4. Select all images by checking the box at the top.
 5. Choose the "Remove from Project" action.
 
 This will help clean the dataset, keeping only the relevant classes.
+
+Lastly, you can rename the project since fork will maintain the source Dataset name.
 ====
+
+
+image::ai-data-removeimages.png[]
+
 
 
 [NOTE]
