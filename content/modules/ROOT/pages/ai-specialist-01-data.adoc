@@ -96,41 +96,18 @@ There are multiple ways to get pre-Labeled image datasets, for example:
 
 In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow.
 
-
-
-
-
-
-
-
-
-Roboflow Universe offers many datasets created from scratch by people  (but also hundreds of copy-pasted ones), so how to select the right datasets for our propuse? Simplifying a lot, in our case you need to look for the right labels and the "right" number of images.
-
-The "right" number of images is always as much as you can, since the AI model performance is most of the time directly proportional to the number of available data.
+Roboflow Universe hosts a vast collection of datasets, including both original contributions and replicated datasets. When selecting the appropriate dataset for your project, the key considerations are finding relevant labels and ensuring sufficient image quantity.
+When it comes to dataset size, the general principle is "the more, the better." AI model performance typically shows a direct correlation with the volume of training data available. The larger and more diverse your dataset, the better your model can learn and generalize patterns.
 
 [CAUTION]
 
-In our case, since we are using a Roboflow not-paid account, we cannot go beyond 10000 per dataset.
+With a free Roboflow account, you're limited to 10,000 images per account.
 
-About the labels, 
+For hardhat detection specifically, you'll want to focus on datasets with labels such as `hardhat` or `helmet`. However, it's crucial to understand that effective safety compliance detection requires a balanced approach. You need to identify both when workers are wearing hardhats and when they're not. This means your dataset should include images labeled with `no-hardhat` or similar tags to identify non-compliance scenarios. This dual approach ensures your model can effectively distinguish between compliant and non-compliant situations, making it more reliable for real-world safety monitoring.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-.Looking for Datasets in Roboflow Universe
 [example]
 ====
-Create a Dataset containing hardhats labeled images by reusing Datasets that you find in Roboflow Universe.
+Now that you know what to look for, pick the source Datasets that you will be using in your project:
 
 1. Go to https://universe.roboflow.com/[Roboflow Universe] 
 
