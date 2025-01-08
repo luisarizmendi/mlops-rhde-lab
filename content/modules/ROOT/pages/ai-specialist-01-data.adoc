@@ -46,7 +46,6 @@ There are multiple available tools that help with the AI data management. Below 
 
 For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow’s ease of use and direct integration with popular object detection models like YOLO make it the optimal choice for this project.
 
-.Task 1 - Roboflow account
 [example]
 ====
 Your first task will be to create a Roboflow account (if you don't have one already):
@@ -105,23 +104,30 @@ In our project, we will be using pre-labeled data from the https://universe.robo
 
 
 
+Roboflow Universe offers many datasets created from scratch by people  (but also hundreds of copy-pasted ones), so how to select the right datasets for our propuse? Simplifying a lot, in our case you need to look for the right labels and the "right" number of images.
 
-How to select the right datasets? You need to think about what you want to 
+The "right" number of images is always as much as you can, since the AI model performance is most of the time directly proportional to the number of available data.
 
+[CAUTION]
 
+In our case, since we are using a Roboflow not-paid account, we cannot go beyond 10000 per dataset.
 
-
-
-
-
-
-
+About the labels, 
 
 
 
 
 
-.Task 2 - Looking for Datasets in Roboflow Universe
+
+
+
+
+
+
+
+
+
+.Looking for Datasets in Roboflow Universe
 [example]
 ====
 Create a Dataset containing hardhats labeled images by reusing Datasets that you find in Roboflow Universe.
@@ -146,14 +152,17 @@ Create a Dataset containing hardhats labeled images by reusing Datasets that you
 
 [TIP]
 
-number 
+If you dont' find datasets .... 
 
 
 
 
 
 
-image::ai-data-datasetsc.png[]
+
+
+
+image::ai-data-datasets.png[]
 .Finding the right pre-created datasets
 
 
