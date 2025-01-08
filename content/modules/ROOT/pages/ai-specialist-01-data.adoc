@@ -1,6 +1,8 @@
 = Data Management
 
-A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system since the AI model learns from data. In the context of AI, data management is a critical foundational phase that determines the overall success of the model and that involves three essential steps:
+In the context of AI, data management is a critical foundational phase that determines the overall success of the model. A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system since the AI model learns from data 
+
+It involves three essential steps:
 
 * Data Collection: Gathering raw data from various sources, such as video feeds, images, or sensor outputs.
 
@@ -8,57 +10,68 @@ A well-executed data management strategy directly impacts the performance, accur
 
 * Data Preparation: Cleaning, augmenting, and labeling data to ensure it's ready for training the AI model.
 
-For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow offers an intuitive interface for uploading, annotating, and augmenting image datasets, making it simple to use even for those with limited experience in data preparation. The simplicity and effectiveness of Roboflow streamline the workflow, allowing us to focus on building the models.
-
-Below is a comparison with other data management tools:
+There are multiple available tools that help with the AI data management. Below you can find a quick comparison of some of the more popular data management tools:
 
 [cols="1,2,2"]
 |===
 | Tool | Benefits | Drawbacks
 
-| Roboflow
-| - Easy to use with a simple interface  
-  - Supports image annotation, augmentation, and preprocessing  
-  - Integrates seamlessly with YOLO models  
-  - Cloud-based, enabling collaboration  
-| - Limited offline functionality  
-  - Subscription costs for advanced features  
+| https://roboflow.com/[*Roboflow*]  
+| - Simple, intuitive interface  
+  - Supports various annotation types (bounding boxes, segmentation, etc.)  
+  - Automated augmentation and preprocessing  
+  - Direct integration with YOLO and other object detection models  
+| - Limited free tier  
+  - Requires internet access for cloud-based processing  
 
-| LabelImg
-| - Open source and free  
-  - Lightweight and works offline  
-| - Manual labeling is time-consuming  
-  - Basic interface with fewer automation options  
+| https://github.com/HumanSignal/label-studio[*Label Studio* ] 
+| - Flexible and supports multiple data types (image, video, audio, text)  
+  - Open-source and self-hosted options available  
+  - Collaborative labeling environment  
+| - Steeper learning curve compared to Roboflow  
+  - Manual setup required for self-hosting  
 
-| VGG Image Annotator (VIA)
-| - Open source and highly customizable  
-  - Lightweight and works in-browser or offline  
-| - Lacks automation for bulk image processing  
-  - UI can feel outdated  
+| https://www.cvat.ai/[*CVAT (Computer Vision Annotation Tool)* ] 
+| - Open-source and highly customizable  
+  - Supports complex annotation tasks (object tracking, polygons, etc.)  
+  - Active community and enterprise support available  
+| - Can be resource-intensive  
+  - More complex interface for beginners  
 
-| CVAT (Computer Vision Annotation Tool)
-| - Scalable for large datasets  
-  - Supports video and image annotation  
-  - Collaborative project management  
-| - Steep learning curve  
-  - Requires more system resources  
-
+| https://www.makesense.ai/[*Makesense.ai*]  
+| - Free and web-based  
+  - Simple to use for quick annotations  
+  - No sign-up required  
+| - Lacks advanced features (e.g., automation, augmentation)  
+  - Export options are limited  
 |===
 
 
-Roboflow’s ease of use and direct integration with popular object detection models like YOLO make it the optimal choice for this project.
+For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow’s ease of use and direct integration with popular object detection models like YOLO make it the optimal choice for this project.
 
-Yout first task will be to create a roboflow account (if you don't have one already):
+Yout first task will be to create a Roboflow account (if you don't have one already):
 
 1. Go to https://roboflow.com/ and click "Get Started" in the top-right corner.
 
 2. Choose your preferred sign-up method (such as email) and enter your name and password.
 
-Once registered, navigate to your personal workspace at https://app.roboflow.com/your-username and you will find a Welcome page where you’ll be prompted to create a new workspace. From here, you're ready to start.
+3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `hardhat-detection`. This will serve as the central hub for organizing datasets and projects.
 
-
+From here, you're ready to start...
 
 == Collection
+
+
+
+
+
+
+
+
+
+
+
+
 
 sitios donde conseguir datos
 
