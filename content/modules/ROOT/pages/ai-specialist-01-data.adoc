@@ -193,19 +193,11 @@ If you find any issue while cloning images or if you don't want to expend time d
 https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
 
 After cloning be sure that you remove images with other classes than `hardhat` or `no_hardhat`. In order to do that you have to go to "Dataset" in the left manu, select the class that you want to delete, perform the trick to show all images and select them all by pressing the box, and choose the "Remove from Project" action
-
-===
-
+====
 
 
-
-
-
-mention how to label data manually
-
-
-
-
+[NOTE]
+If you have time and energy, you can try to load new images and perform the labeling on your own, to experience and have an idea of the effort that it takes to annotate a full Dataset.
 
 
 
