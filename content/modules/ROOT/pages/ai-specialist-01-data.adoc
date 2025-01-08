@@ -1,17 +1,5 @@
 = Data Management
-
-
-
-- introduce data management in athe ai context (mention the steps data collection, data inspection and data preparation)
-- main tool that we will use for data management is Roboflow (please include other tools in a table, with their benefits and drawbacks. also mention how simple is roboflow and that's why we selected)
-- we will using yolo model, that needs labeled data. Explain the tipes of algoriths and explain what is supervised and why we need labels
-- explain the different approaches to visual ai models: object detection, object classification, ....
-- since we will be using object detection, we will need to label data, not only including the name of the object, but also to choose where in the image that object appears
-
-
-
-
-In the context of AI, data management is a critical foundational phase that determines the overall success of the model. This process involves three essential steps:
+A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system since the AI model learns from data. In the context of AI, data management is a critical foundational phase that determines the overall success of the model and that involves three essential steps:
 
 * Data Collection: Gathering raw data from various sources, such as video feeds, images, or sensor outputs.
 
@@ -19,12 +7,9 @@ In the context of AI, data management is a critical foundational phase that dete
 
 * Data Preparation: Cleaning, augmenting, and labeling data to ensure it's ready for training the AI model.
 
-A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system. Since the AI model learns from data, ensuring high-quality, well-labeled datasets is paramount.
-
-For this project, Roboflow will be the primary tool used for managing and preparing data. Roboflow offers an intuitive interface for uploading, annotating, and augmenting image datasets, making it simple to use even for those with limited experience in data preparation. The simplicity and effectiveness of Roboflow streamline the workflow, allowing us to focus on building robust models.
+For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow offers an intuitive interface for uploading, annotating, and augmenting image datasets, making it simple to use even for those with limited experience in data preparation. The simplicity and effectiveness of Roboflow streamline the workflow, allowing us to focus on building the models.
 
 Below is a comparison of Roboflow with other data management tools:
-
 
 [cols="1,2,2"]
 |===
@@ -107,7 +92,7 @@ sitios donde conseguir datos
 mejor si ya tienen labels......
 
 
-For this project, we will be using the YOLO (You Only Look Once) object detection model. YOLO requires labeled data to effectively train and identify objects within an image. This aligns with the principles of supervised learning, where the model learns from labeled datasets to predict outcomes accurately.
+We will be using the YOLO (You Only Look Once) object detection model. YOLO requires labeled data to effectively train and identify objects within an image. This aligns with the principles of supervised learning, where the model learns from labeled datasets to predict outcomes accurately.
 
 Types of AI Algorithms:
 
@@ -161,7 +146,7 @@ Visual AI models can take various approaches depending on the objective:
 
 * Anomaly Detection: Identifies unusual patterns in visual data, often used for defect detection in manufacturing.
 
-For this project, object detection is the focus, as the goal is to identify workers wearing hardhats and detect their locations in the image.
+Since object detection is the focus, as the goal is to identify workers wearing hardhats and detect their locations in the image.
 
 
 
@@ -176,4 +161,3 @@ Unlike object classification, object detection requires detailed annotations tha
 
 * Ensuring consistency and accuracy across the entire dataset.
 
-Proper labeling enables the YOLO model to learn spatial relationships, allowing it to detect and alert supervisors if a worker is not wearing a hardhat in hazardous zones. This meticulous data preparation phase lays the groundwork for a reliable AI safety system.
