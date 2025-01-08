@@ -188,11 +188,21 @@ Repeat these steps for each class in each of your selected source Datasets until
 
 [TIP]
 ====
-If you find any issue while cloning images or if you don't want to expend time doing this work, you can just *Fork* the following Dataset (you will find less issues forking than cloning in Roboflow, even if an error is shown the images are copied into your account):
+If you encounter issues while cloning images or prefer to save time, you can simply Fork the following dataset:
 
 https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
 
-After cloning be sure that you remove images with other classes than `hardhat` or `no_hardhat`. In order to do that you have to go to "Dataset" in the left manu, select the class that you want to delete, perform the trick to show all images and select them all by pressing the box, and choose the "Remove from Project" action
+Forking typically results in fewer issues than cloning in Roboflow. Even if an error appears, the images will still be copied to your account.
+
+After cloning, ensure you remove any images that don't belong to the hardhat or no_hardhat classes. To remove unwanted images:
+
+1. Go to the "Dataset" section in the left menu.
+2. Select the class you want to delete.
+3. Use the option to display all images.
+4. Select all images by checking the box at the top.
+5. Choose the "Remove from Project" action.
+
+This will help clean the dataset, keeping only the relevant classes.
 ====
 
 
