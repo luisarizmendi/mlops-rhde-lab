@@ -54,9 +54,12 @@ Your first task will be to create a Roboflow account (if you don't have one alre
 
 2. Choose your preferred sign-up method (such as email) and enter your name and password.
 
-3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `hardhat-detection`. This will serve as the central hub for organizing datasets and projects.
+3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `workshop`. This will serve as the central hub for organizing datasets and projects.
+
+4. Go to btn:[Projects] on the left menu and click btn:[+New Project]. Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`.
 ====
 
+image::ai-data-roboflow.png[]
 
 [IMPORTANT]
 
@@ -128,9 +131,14 @@ To accurately determine the number of relevant images in a specific dataset, fol
 
 1. Navigate to the dataset's URL
 2. Click the btn:[Images] button
-3. Use the Filter function to select your target Classes (labels)
+3. Use the Filter function to select your target Class (labels)
 4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75)
 ====
+
+[NOTE]
+
+Select just one class at a time, since if you select multiple classes an "AND" operator will be used so only images with both classes will appear in the selection.
+
 
 image::ai-data-image-count.png[]
 
@@ -152,12 +160,41 @@ https://universe.roboflow.com/pped/pped-batch1
 
 
 
+Now you need to create your own Dataset out of the labeled images of the source Dataset/s. In order to do that you have two options: you can fork an entire Dataset in your account, or you can clone only the images with the interesting labels. Cloning the images with the required labels makes more sense than forking the entire Dataset, including images that are not relevant to our use case.
+
+In order to clone a subset of images in a Dataset you have to:
 
 
 
+1. Navigate to the dataset's URL
+2. Click the btn:[Images] button
+3. Use the Filter function to select your target Class (labels)
+4. Click the box right above the first image to select all images
+    [NOTE]
+    Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
+
+5. Check that all images are selected and then click btn:[Clone <number> Selected Images] on the top right corner. Select the Workspace and the Project that you created before and click btn:[Clone <number> Images]
+    [NOTE]
+    If the page does not respond or you find errors, try to clone images in batches instead of performing a single clone with a high number of items.
+
+[example]
+====
+
+image::ai-data-clone.png[]
+
+Repeat these steps for each class in each of your selected source Datasets until you have a balanced dataset with an overall image number close to 7,000 or 8,000 items (leave space to include a new label later)
 
 
-steps 
+
+[TIP]
+====
+If you find any issue while cloning images or if you don't want to expend time doing this work, you can just *Fork* the following Dataset (you will find less issues forking than cloning in Roboflow, even if an error is shown the images are copied into your account):
+
+https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
+
+After cloning be sure that you remove images with other classes than `hardhat` or `no_hardhat`
+
+===
 
 
 
@@ -165,9 +202,6 @@ steps
 
 
 mention how to label data manually
-
-
-
 
 
 
