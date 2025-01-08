@@ -50,13 +50,13 @@ For this project, https://roboflow.com/[Roboflow] will be the primary tool used 
 ====
 Your first task will be to create a Roboflow account (if you don't have one already):
 
-1. Go to https://roboflow.com/ and click  btn:[Get Started] in the top-right corner.
+1. Go to https://roboflow.com/ and click  `Get Started` in the top-right corner.
 
 2. Choose your preferred sign-up method (such as email) and enter your name and password.
 
 3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `workshop`. This will serve as the central hub for organizing datasets and projects.
 
-4. Go to btn:[Projects] on the left menu and click btn:[+New Project]. Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`.
+4. Go to "Projects" on the left menu and click "+New Project". Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`.
 ====
 
 image::ai-data-roboflow.png[]
@@ -114,9 +114,9 @@ Now that you know what to look for, pick the source Datasets that you will be us
 
 1. Go to https://universe.roboflow.com/[Roboflow Universe] 
 
-2. Select btn:[*Object Detection*] in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
+2. Select "*Object Detection*" in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
  
-3. Identify one or multiple datasets with relevant labeled data by playing with the btn:[Advanced Filters]. You can add `class:<name>` into the search box to only show datasets that contains data with the 'name' label, for example `class:hardhat`.
+3. Identify one or multiple datasets with relevant labeled data by playing with the "Advanced Filters". You can add `class:<name>` into the search box to only show datasets that contains data with the 'name' label, for example `class:hardhat`.
 ====
 
 image::ai-data-datasets.png[]
@@ -130,7 +130,7 @@ Reaching the optimal dataset size of 10,000 images often requires combining mult
 To accurately determine the number of relevant images in a specific dataset, follow these steps:
 
 1. Navigate to the dataset's URL
-2. Click the btn:[Images] button
+2. Click the "Images" button
 3. Use the Filter function to select your target Class (labels)
 4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75)
 ====
@@ -167,14 +167,14 @@ To clone a subset of images in a Dataset you have to:
 
 
 1. Navigate to the dataset's URL
-2. Click the btn:[Images] button
+2. Click the "Images" button
 3. Use the Filter function to select your target Class (labels)
 4. Click the box right above the first image to select all images
 
 [NOTE]
 Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
 
-5. Check that all images are selected and then click btn:[Clone <number> Selected Images] on the top right corner. Select the Workspace and the Project that you created before and click btn:[Clone <number> Images]
+5. Check that all images are selected and then click "Clone <number> Selected Images" on the top right corner. Select the Workspace and the Project that you created before and click "Clone <number> Images"
 
 [NOTE]
 If the page does not respond or you find errors, try to clone images in batches instead of performing a single clone with a high number of items.
