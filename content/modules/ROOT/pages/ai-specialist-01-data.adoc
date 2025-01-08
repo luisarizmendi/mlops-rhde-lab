@@ -46,6 +46,7 @@ There are multiple available tools that help with the AI data management. Below 
 
 For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data. Roboflow’s ease of use and direct integration with popular object detection models like YOLO make it the optimal choice for this project.
 
+.Task 1 - Roboflow account
 [example]
 ====
 Your first task will be to create a Roboflow account (if you don't have one already):
@@ -56,6 +57,11 @@ Your first task will be to create a Roboflow account (if you don't have one alre
 
 3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `hardhat-detection`. This will serve as the central hub for organizing datasets and projects.
 ====
+
+
+[IMPORTANT]
+
+Roboflow includes some restrictions to Not-Paid accounts. The most important for us is that the overall number of images in your account must be less than 10000, so we need to mantain the size of the Dataset that we will create in the next point below that number. 
 
 From here, you're ready to start...
 
@@ -94,6 +100,28 @@ In our project, we will be using pre-labeled data from the https://universe.robo
 
 
 
+
+
+
+
+
+
+How to select the right datasets? You need to think about what you want to 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Task 2 - Looking for Datasets in Roboflow Universe
 [example]
 ====
 Create a Dataset containing hardhats labeled images by reusing Datasets that you find in Roboflow Universe.
@@ -102,9 +130,7 @@ Create a Dataset containing hardhats labeled images by reusing Datasets that you
 
 2. Select btn:[*Object Detection*] in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
  
-3. Once you get a Dataset list, filter it again by AI model. As already mentioned, in our case we will be using *YOLOv11* base model.
-
-4. Find one or multiple datasets with relevant labeled data by playing with the btn:[Advanced Filters]
+3. Identify one or multiple datasets with relevant labeled data by playing with the btn:[Advanced Filters]. You can add `class:<name>` into the search box to only show datasets that contains data with the 'name' label, for example `class:hardhat`.
 ====
 
 
@@ -114,7 +140,23 @@ Create a Dataset containing hardhats labeled images by reusing Datasets that you
 
 
 
- Try to find images relevant for our use case. You can 
+
+
+
+
+[TIP]
+
+number 
+
+
+
+
+
+
+image::ai-data-datasetsc.png[]
+.Finding the right pre-created datasets
+
+
 
 
 
