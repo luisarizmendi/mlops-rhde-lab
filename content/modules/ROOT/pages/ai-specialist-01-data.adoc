@@ -157,12 +157,12 @@ https://universe.roboflow.com/pped/pped-batch1
 ====
 
 
-
-
-
 Now you need to create your own Dataset out of the labeled images of the source Dataset/s. In order to do that you have two options: you can fork an entire Dataset in your account, or you can clone only the images with the interesting labels. Cloning the images with the required labels makes more sense than forking the entire Dataset, including images that are not relevant to our use case.
 
-In order to clone a subset of images in a Dataset you have to:
+
+[example]
+====
+To clone a subset of images in a Dataset you have to:
 
 
 
@@ -170,14 +170,14 @@ In order to clone a subset of images in a Dataset you have to:
 2. Click the btn:[Images] button
 3. Use the Filter function to select your target Class (labels)
 4. Click the box right above the first image to select all images
-    [NOTE]
-    Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
+
+[NOTE]
+Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
 
 5. Check that all images are selected and then click btn:[Clone <number> Selected Images] on the top right corner. Select the Workspace and the Project that you created before and click btn:[Clone <number> Images]
-    [NOTE]
-    If the page does not respond or you find errors, try to clone images in batches instead of performing a single clone with a high number of items.
 
-[example]
+[NOTE]
+If the page does not respond or you find errors, try to clone images in batches instead of performing a single clone with a high number of items.
 ====
 
 image::ai-data-clone.png[]
@@ -192,7 +192,7 @@ If you find any issue while cloning images or if you don't want to expend time d
 
 https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
 
-After cloning be sure that you remove images with other classes than `hardhat` or `no_hardhat`
+After cloning be sure that you remove images with other classes than `hardhat` or `no_hardhat`. In order to do that you have to go to "Dataset" in the left manu, select the class that you want to delete, perform the trick to show all images and select them all by pressing the box, and choose the "Remove from Project" action
 
 ===
 
