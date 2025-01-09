@@ -508,7 +508,7 @@ TBD when we have details about the storage to be used
 
 == Solution and Next Steps
 
-If you want to take a look to double-check what you did or if you need an already prepared Dataset that you can just clone in order to continue with the next section, you can use the following Roboflow Project:
+If you want to take a look to the Section solution to double-check what you did or if you need an already prepared Dataset that you can just clone in order to continue with the next section, you can use the following Roboflow Project:
 
 https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
 
