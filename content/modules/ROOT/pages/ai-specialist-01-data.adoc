@@ -217,10 +217,11 @@ image::ai-data-clone.png[]
 Repeat these steps for each class in each of your selected source Datasets until you have a balanced dataset with an overall image number close to 7,000 or 8,000 items (leave space to include a new label later)
 
 
-=== Manual inputs 
+=== Manual Image Upload 
 
 If you have time and energy, you can try to load new images and perform the labeling on your own, to experience and have an idea of the effort that it takes to annotate a full Dataset.
 
+Before starting with the labeling, you will need to upload new images (although you can also add/modify labels in the already available images)
 
 [example]
 ====
@@ -233,7 +234,26 @@ In order to upload new images you have to:
 4. Click "Save and Continue"
 ====
 
-Once the images are uploaded Roboflow gives you three options to annotate (add labels) your images: Auto Label (Roboflow automation), Maunal Labeling and Roboflow Labeling (hire Roboflow people to label your images). In our case we will proceed with Manual Labeling.
+[NOTE]
+
+Right after the upload Roboflow will show a menu to start annotating the image. Hold that page if you want since you can continue from this point in the next step (Preparation > Labeling).
+
+== Preparation
+
+Data preparation is a critical phase in the AI development process, serving as the bridge between raw data collection and model training. This step ensures that data is cleaned, organized, and optimized for analysis, directly influencing the quality and performance of AI models.
+
+The process typically includes three main subtasks: cleaning, augmenting, and labeling data. Cleaning involves removing noise, inconsistencies, or irrelevant elements from the dataset to ensure its reliability. Data augmentation expands the dataset by applying transformations like rotations, flips, and color adjustments, which helps models generalize better to unseen scenarios. Labeling data, especially in supervised learning, assigns meaningful annotations to input data, such as bounding boxes for object detection or class names for classification.
+
+Effective data preparation is essential because high quality data leads to more accurate predictions and reduces the risk of bias in AI models. Without this step, even the most sophisticated algorithms may underperform, highlighting the importance of investing time and effort in this foundational stage.
+
+
+=== Labeling
+
+Labeling assigns the necessary annotations to raw data, making it usable for supervised learning tasks.  In the case of object detection (our case), labels include both class names and spatial coordinates. Accurate labeling is crucial because mislabeled data can lead to poor model performance. 
+
+Data management tools, including Roboglow, usually provide a way to add and label images. We re-used images from other Datasets that are already labeled but you can re-lable some of them or just manually upload new images and perform the annotation on them.
+
+If you upload new images manually, once the images are uploaded, Roboflow gives you three options to annotate (add labels) your images: Auto Label (Roboflow automation), Maunal Labeling and Roboflow Labeling (hire Roboflow people to label your images). In our case we will proceed with Manual Labeling.
 
 [example]
 ====
@@ -257,9 +277,27 @@ image::ai-data-annotate.png[]
 
 
 
-== Preparation
+=== Cleaning
 
-blah, blah
+Cleaning data involves identifying and correcting errors, inconsistencies, and irrelevant elements in the dataset. This step ensures the data is accurate and meaningful for training. Common cleaning tasks include removing duplicates, addressing missing values, and standardizing formats. Clean datasets reduce noise, improving the reliability of the AI model and preventing it from learning spurious correlations.
+
+=== Augmenting
+
+Data augmentation artificially increases the size of the dataset by applying transformations such as cropping, rotating, flipping, or changing brightness. These variations simulate diverse conditions that the model may encounter in real-world scenarios. Augmentation not only reduces the likelihood of overfitting but also enhances the model's ability to generalize to new, unseen data.
+
+
+
+
+== Next
+
+XXXXXXXXXXXXXXXXXXXXx
+
+[TIP]
+
+if you had problems.. use......
+
+
+
 
 
 
