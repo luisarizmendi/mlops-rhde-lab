@@ -136,11 +136,11 @@ Reaching the optimal dataset size of 10,000 images often requires combining mult
 ====
 To accurately determine the number of relevant tags in images in a specific dataset, follow these steps:
 
-1. Navigate to the dataset's URL in Roboflow Universe
-2. Click the "Images" button
-3. Use the Filter function to select a single target Class (label)
-4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75)
-5. Repeat for other classes
+1. Navigate to the dataset's URL in Roboflow Universe.
+2. Click the "Images" button.
+3. Use the Filter function to select a single target Class (label).
+4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75).
+5. Repeat for other classes.
 ====
 
 [NOTE]
@@ -183,10 +183,10 @@ Also forking is useful if you encounter issues while cloning images since forkin
 ====
 If you want to fork a Dataset follow these steps:
 
-1. Navigate to the dataset's URL in Roboflow Universe
-2. Click the "Images" button
-3. Click the "Fork Dataset" button
-4. Confirm and wait until fork is done
+1. Navigate to the dataset's URL in Roboflow Universe.
+2. Click the "Images" button.
+3. Click the "Fork Dataset" button.
+4. Confirm and wait until fork is done.
 5. Optionally, rename the Project in your account (Fork keeps the original name) by selecting the option when you clik on the three dots.
 
 ====
@@ -200,10 +200,10 @@ Sometimes cloning the images with the required labels makes more sense than fork
 ====
 To clone a subset of images in a Dataset you have to:
 
-1. Navigate to the dataset's URL in Roboflow Universe
-2. Click the "Images" button
-3. Use the Filter function to select your target Class (labels)
-4. Click the box right above the first image to select all images
+1. Navigate to the dataset's URL in Roboflow Universe.
+2. Click the "Images" button.
+3. Use the Filter function to select your target Class (labels).
+4. Click the box right above the first image to select all images.
 
 [NOTE]
 Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
@@ -229,10 +229,10 @@ Before starting with the labeling, you will need to upload new images (although 
 ====
 In order to upload new images you have to: 
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Upload Data" on the left menu
-3. Select your images
-4. Click "Save and Continue"
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Upload Data" on the left menu.
+3. Select your images.
+4. Click "Save and Continue".
 ====
 
 [NOTE]
@@ -286,16 +286,16 @@ If you upload new images manually, once the images are uploaded, Roboflow gives 
 Once you have assigned images to be annotated, you can follow these steps:
 
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Annotate" on the left menu
-3. Click "Start Annotating" in the top right corner
-4. Make a selection in the image and assign a class
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Annotate" on the left menu.
+3. Click "Start Annotating" in the top right corner.
+4. Make a selection in the image and assign a class.
 5. Repeat for each label on each image...
-6. Go back to the "Annotate" page and click "Submit for Review" on top right corner
-7. Since you are the only one in your Project, you can click on the "Review" column where the new images will appear
-8. Select images and start Approving or Rejecting the labeling
-9. Once done, go back to the Annotate page and click "Add Appoved to Dataset" on top right
-10. Click "Add Images"
+6. Go back to the "Annotate" page and click "Submit for Review" on top right corner.
+7. Since you are the only one in your Project, you can click on the "Review" column where the new images will appear.
+8. Select images and start Approving or Rejecting the labeling.
+9. Once done, go back to the Annotate page and click "Add Appoved to Dataset" on top right.
+10. Click "Add Images".
 ====
 
 
@@ -322,13 +322,13 @@ To maintain consistency with the applications we've developed  (xref:app-develop
 ====
 You can modify or remove classes in your Roboflow Project:
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Classes & Tags" on the left menu
-3. Click "Modify Classes" on the top right corner
-4. Introduce a new name in the "Rename" box of the classes that you want to modify
-5. Select the "Delete" box in the classes that you want to Delete
-6. Click "Apply Changes"
-7. Confirm Changes
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Classes & Tags" on the left menu.
+3. Click "Modify Classes" on the top right corner.
+4. Introduce a new name in the "Rename" box of the classes that you want to modify.
+5. Select the "Delete" box in the classes that you want to Delete.
+6. Click "Apply Changes".
+7. Confirm Changes.
 ====
 
 image::ai-data-modifyclass.png[]
@@ -340,13 +340,13 @@ It’s important to note that when you delete a class, you are only removing the
 ====
 You need to look for images with no labels in your Dataset and remove them: 
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Dataset" on the left menu
-3. Filter by Class null"
-4. (optional) Change the `pageSize` on the URL line as explained before to show all images in a single page
-5. Click the box above the first image to select all images
-6. Cick "Actions" and select "Remove from Project"
-7. Confirm deletion
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Dataset" on the left menu.
+3. Filter by Class null".
+4. (optional) Change the `pageSize` on the URL line as explained before to show all images in a single page.
+5. Click the box above the first image to select all images.
+6. Cick "Actions" and select "Remove from Project".
+7. Confirm deletion.
 ====
 
 [NOTE]
@@ -372,11 +372,11 @@ These are the most common splits:
 ====
 In order to assigning the split sizes in your Project do the following:
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Analytics" on the left menu
-3. Besides reviewing information about your images and your current splits, you can click "Rebalance Splits"
-4. Pick your values moving the dots accross the line
-5. Click on the disclaimer box and click "Rebalance Splits"
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Analytics" on the left menu.
+3. Besides reviewing information about your images and your current splits, you can click "Rebalance Splits".
+4. Pick your values moving the dots accross the line.
+5. Click on the disclaimer box and click "Rebalance Splits".
 ====
 
 image::ai-data-splits.png[]
@@ -443,18 +443,68 @@ As mentioned, we will proceed with the Download insted.
 ====
 To format and download the Dataset you have to:
 
-1. Navigate to the Project's URL in your Roboflow account
-2. Click the "Analytics" on the left menu
+1. Navigate to the Project's URL in your Roboflow account.
+2. Click the "Versions" on the left menu.
+3. Click on "Download Dataset" on top right corner.
+4. Select the format. We will be using a YOLOv11 based model.
+5. Select "Download zip" radio button.
+6. Unselect "Also train" option.
+7. Click "Continue".
 
 ====
 
 image::ai-data-download.png[]
 
+Once downloaded, you can uncompress the zip file and take a look at the file structure for `YOLOv11` format. You will see the images in three different directories and YAML and TXT files.
+
+----
+.
+├── data.yaml
+├── README.roboflow.txt
+├── test
+├── train
+└── valid
+----
 
 
 
 
-see metadata
+
+dirs 
+
+
+
+
+
+
+
+
+
+If you open the YAML file you will see the Dataset metadata, including the class names
+
+. data.yaml
+[source,yaml]
+----
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['helmet', 'no_helmet', 'undefined']
+
+roboflow:
+  workspace: workshop-igjqz
+  project: group-99-hardhat-detection
+  version: 1
+  license: CC BY 4.0
+  url: https://app.roboflow.com/workshop-igjqz/group-99-hardhat-detection/1
+----
+
+
+
+
+
+
 
 
 
