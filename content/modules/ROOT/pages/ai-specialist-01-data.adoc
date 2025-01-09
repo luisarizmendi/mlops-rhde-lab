@@ -227,7 +227,6 @@ Before starting with the labeling, you will need to upload new images (although 
 ====
 In order to upload new images you have to: 
 
-
 1. Navigate to the Project's URL in your Roboflow account
 2. Click the "Upload Data" on the left menu
 3. Select your images
@@ -242,9 +241,9 @@ Right after the upload Roboflow will show a menu to start annotating the image. 
 
 Data preparation is a critical phase in the AI development process, serving as the bridge between raw data collection and model training. This step ensures that data is cleaned, organized, and optimized for analysis, directly influencing the quality and performance of AI models.
 
-The process typically includes three main subtasks: cleaning, augmenting, and labeling data. Cleaning involves removing noise, inconsistencies, or irrelevant elements from the dataset to ensure its reliability. Data augmentation expands the dataset by applying transformations like rotations, flips, and color adjustments, which helps models generalize better to unseen scenarios. Labeling data, especially in supervised learning, assigns meaningful annotations to input data, such as bounding boxes for object detection or class names for classification.
+The process typically includes four main subtasks: cleaning, augmenting, labeling data, and splitting datasets. Cleaning involves removing noise, inconsistencies, or irrelevant elements from the dataset to ensure its reliability. As part of this step, datasets are also split into training, validation, and test sets, ensuring proper organization and evaluation during the AI workflow. Data augmentation expands the dataset by applying transformations like rotations, flips, and color adjustments, which helps models generalize better to unseen scenarios. Labeling data, especially in supervised learning, assigns meaningful annotations to input data, such as bounding boxes for object detection or class names for classification.
 
-Effective data preparation is essential because high quality data leads to more accurate predictions and reduces the risk of bias in AI models. Without this step, even the most sophisticated algorithms may underperform, highlighting the importance of investing time and effort in this foundational stage.
+Effective data preparation is essential because high-quality, well-prepared data leads to more accurate predictions and reduces the risk of bias in AI models. Without this step, even the most sophisticated algorithms may underperform, highlighting the importance of investing time and effort in this foundational stage.
 
 
 === Labeling
@@ -279,11 +278,80 @@ image::ai-data-annotate.png[]
 
 === Cleaning
 
-Cleaning data involves identifying and correcting errors, inconsistencies, and irrelevant elements in the dataset. This step ensures the data is accurate and meaningful for training. Common cleaning tasks include removing duplicates, addressing missing values, and standardizing formats. Clean datasets reduce noise, improving the reliability of the AI model and preventing it from learning spurious correlations.
+Cleaning data involves identifying and correcting errors, inconsistencies, and irrelevant elements in the dataset. This step ensures the data is accurate and meaningful for training. Common cleaning tasks include removing duplicates, addressing missing values, and standardizing formats. Clean datasets reduce noise, improving the reliability of the AI model and preventing it from learning unreal correlations.
 
+For object detection projects, cleaning involves verifying annotations, removing irrelevant or mislabeled images, resolving overlaps, and balancing class representation to ensure dataset accuracy and relevance.
+
+In our scenario, it’s possible that during the previous step we forked a Dataset, and as a result, it may contain more classes (labels) than needed. In this case, you would need to remove the unnecessary ones. Alternatively, if we’ve added additional images from a different Dataset with a different naming convention for the classes, you might want to standardize them by unifying all the class names under a consistent naming scheme, like in the example below where you have `head` and `no hardhat` classes for labeling people without hardhats:
+
+image::ai-data-classes.png[]
+
+
+[IMPORTANT]
+
+To maintain consistency with the applications we've developed  (xref:app-developer-00-intro.adoc[APP Developer Module]), we will be using two labels: `helmet` and `no_helmet`. Please adjust your class names accordingly to align with this naming convention.
+
+[example]
+====
+You can modify or remove classes in your Roboflow Project:
+
+1. Navigate to the Project's URL in your Roboflow account
+2. Click the "Classes & Tags" on the left menu
+3. Click "Modify Classes" on the top right corner
+4. Introduce a new name in the "Rename" box of the classes that you want to modify
+5. Select the "Delete" box in the classes that you want to Delete
+6. Click "Apply Changes"
+7. Confirm Changes
+====
+
+image::ai-data-modifyclass.png[]
+
+It’s important to note that when you delete a class, you are only removing the labels associated with that class, not the images that contain it. As a result, you may now have images without any labels in your Dataset. To reduce noise and minimize the size of your Dataset, it’s recommended to remove these unlabeled images.
+
+
+[example]
+====
+You need to look for images with no labels in your Dataset and remove them: 
+
+1. Navigate to the Project's URL in your Roboflow account
+2. Click the "Dataset" on the left menu
+3. Filter by Class null"
+4. (optional) Change the `pageSize` on the URL line as explained before to show all images in a single page
+5. Click the box above the first image to select all images
+6. Cick "Actions" and select "Remove from Project"
+7. Confirm deletion
+====
+
+[NOTE]
+
+Deletion of a high number of images could take some time.
+
+
+Now is a good time to review the number of images in your Dataset (the more images you have, the better, but keep in mind the 10,000-image limit for our free account) and the distribution of labels per class. By navigating to "Classes & Tags," you can check how many labels exist for each class. Ideally, you should aim for a balanced distribution between both classes.
+
+If you find that you have few labels of one class or those are unbalalanced and you are under the 10,000 image limit, it is recommended that you go back to the xref:ai-specialist-01-data.adoc#_collection[Data Collection] step.
+ 
 === Augmenting
 
 Data augmentation artificially increases the size of the dataset by applying transformations such as cropping, rotating, flipping, or changing brightness. These variations simulate diverse conditions that the model may encounter in real-world scenarios. Augmentation not only reduces the likelihood of overfitting but also enhances the model's ability to generalize to new, unseen data.
+
+
+
+
+=== Splitting
+
+Splitting data refers to dividing a dataset into separate subsets for training, validation, and testing, ensuring the AI model is built and evaluated on independent data segments. This practice prevents overfitting and ensures reliable performance metrics.
+
+* Training Set: This subset is used to teach the model by iteratively adjusting parameters to minimize errors.
+* Validation Set: During training, this subset helps tune hyperparameters and monitor performance to avoid overfitting.
+* Test Set: Held out until the end, this subset provides an unbiased evaluation of the model's generalization to unseen data.
+
+Careful allocation of data across these splits ensures a robust and credible AI development pipeline.
+
+
+
+
+
 
 
 
