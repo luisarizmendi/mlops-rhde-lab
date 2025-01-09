@@ -1,7 +1,26 @@
 = Model Building
 
+The process of AI model building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation.
 
-blah, blah
+While these three stages (Engineering, Training, and Evaluation) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+environment that we will use (EXPLAIN THEM)
+
++ openshift ai 
+
++ github repo that hey need to create
 
 
 
@@ -12,13 +31,113 @@ blah, blah
 
 == Engineering
 
-blah, blah
+
+Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms, designing architectures, and preparing the training scripts.
+
+
+
+
+explain YOLO 
+
+YOLOv11 (You Only Look Once, version 11) is the latest evolution in the YOLO family of object detection models, building on its predecessors to achieve faster and more accurate results. This cutting-edge model is designed to meet the growing demands of real-time object detection applications in fields such as autonomous vehicles, video surveillance, robotics, and more.
+
+Key Features of YOLOv11
+
+1. Improved Speed and Efficiency:
+YOLOv11 introduces a streamlined architecture with optimized layers that reduce computational complexity, making it suitable for deployment on edge devices and low-power hardware.
+
+2. Enhanced Accuracy:
+The model leverages advancements in feature extraction and multi-scale detection, improving precision in identifying smaller or overlapping objects within complex scenes.
+
+3. Adaptive Anchor-Free Design:
+YOLOv11 adopts an anchor-free approach, reducing the need for manual tuning and enabling better generalization across diverse datasets.
+
+4. Advanced Training Techniques:
+Incorporating techniques like self-distillation, label smoothing, and advanced augmentation, YOLOv11 ensures faster convergence and robust performance.
+
+5. Compatibility with Modern Frameworks:
+Designed to integrate seamlessly with popular machine learning libraries and platforms, YOLOv11 supports TensorFlow, PyTorch, and ONNX, simplifying deployment in production environments.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+explain knowledge transfer
+
+
+
+explain jupyter notebook
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 == Training
 
-blah, blah
+Training is the next phase, where the prepared data is fed into the model, and the model's parameters are iteratively adjusted to minimize errors and improve performance. This step requires careful attention to hyperparameter tuning, managing computational resources, and monitoring the training process to avoid issues like overfitting or underfitting.
+
+
+
+explain variables notebook 
+
+
+
+run 
+
+
+
+
+
 
 == Evaluation
 
+Evaluation is crucial in determining how well the model has learned from the training data and how effectively it can generalize to unseen data. Metrics such as accuracy, precision, recall, and F1 score are used to assess the model's performance. Rigorous evaluation helps identify potential areas for improvement and ensures that the model meets the desired standards before deployment.
+
+
+
+explain evaluation methods
+
+explain graphs
+
+
+
+
 blah, blah
 
+
+
+
+== Solution and Next Steps
