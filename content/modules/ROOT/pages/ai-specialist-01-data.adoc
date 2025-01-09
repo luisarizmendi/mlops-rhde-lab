@@ -70,7 +70,7 @@ Your first task will be to create a Roboflow account (if you don't have one alre
 
 3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `workshop`. This will serve as the central hub for organizing datasets and projects.
 
-4. Go to "Projects" on the left menu and click "+New Project". Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`.
+4. (Optional) Go to "Projects" on the left menu and click "+New Project". Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`. This step is optional because if you fork a Dataset (explain later) it will create a new Project for you. 
 ====
 
 image::ai-data-roboflow.png[]
@@ -111,7 +111,7 @@ There are multiple ways to get pre-Labeled image datasets, for example:
 
 * Synthetic Data: Using AI or simulation tools to generate artificial but realistic datasets. This approach is useful when real-world data is scarce or expensive to obtain.
 
-In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow.
+In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow. We will use the Datasets that you find in Roboflow Universe to add images to your own "Project" in your Roboflow account.
 
 
 === Dataset Search 
@@ -144,17 +144,18 @@ Reaching the optimal dataset size of 10,000 images often requires combining mult
 
 [example]
 ====
-To accurately determine the number of relevant images in a specific dataset, follow these steps:
+To accurately determine the number of relevant tags in images in a specific dataset, follow these steps:
 
-1. Navigate to the dataset's URL
+1. Navigate to the dataset's URL in Roboflow Universe
 2. Click the "Images" button
-3. Use the Filter function to select your target Class (labels)
+3. Use the Filter function to select a single target Class (label)
 4. Check the pagination counter at the bottom of the page, which displays the total count (for example, 1 - 50 of 75)
+5. Repeat for other classes
 ====
 
 [NOTE]
 
-Select just one class at a time, since if you select multiple classes an "AND" operator will be used so only images with both classes will appear in the selection.
+When you select multiple classes you will be applying an "AND" operator so the result will show only images where both classes appear at the same time.
 
 
 image::ai-data-image-count.png[]
@@ -174,7 +175,6 @@ https://universe.roboflow.com/pped/pped-batch1
 ====
 
 
-
 === Image Gathering 
 
 Now you need to create your own Dataset out of the labeled images of the source Dataset/s. In order to do that you have two options: you can fork an entire Dataset in your account, or you can clone certain specific images only. 
@@ -182,37 +182,35 @@ Now you need to create your own Dataset out of the labeled images of the source 
 
 ==== Fork Dataset 
 
+When you fork a Dataset you "copy" it into your account. This is useful if you found a single Dataset that is similar to what you are looking for and you don't need to choose few images from multiple different Datasets.
 
+If you selected multiple Datasets in your search, you start by forking the one that is closer to what you need and then Clone images from additional Datasets later.
+
+Also forking is useful if you encounter issues while cloning images since forking typically results in fewer issues than cloning in Roboflow. Even if an error appears, the images will still be copied to your account.
+
+
+[example]
+====
+If you want to fork a Dataset follow these steps:
+
+1. Navigate to the dataset's URL in Roboflow Universe
+2. Click the "Images" button
+3. Click the "Fork Dataset" button
+4. Confirm and wait until fork is done
+5. Optionally, rename the Project in your account (Fork keeps the original name) by selecting the option when you clik on the three dots.
+
+====
 
 
 ==== Cloning Images 
 
-Sometimes cloning the images with the required labels makes more sense than forking the entire Dataset, including images that are not relevant to our use case.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Sometimes cloning the images with the required labels makes more sense than forking an entire Dataset, or you want to add more images into your already forked Dataset.
 
 [example]
 ====
 To clone a subset of images in a Dataset you have to:
 
-
-
-1. Navigate to the dataset's URL
+1. Navigate to the dataset's URL in Roboflow Universe
 2. Click the "Images" button
 3. Use the Filter function to select your target Class (labels)
 4. Click the box right above the first image to select all images
@@ -231,16 +229,58 @@ image::ai-data-clone.png[]
 Repeat these steps for each class in each of your selected source Datasets until you have a balanced dataset with an overall image number close to 7,000 or 8,000 items (leave space to include a new label later)
 
 
+=== Manual inputs 
 
-[TIP]
+If you have time and energy, you can try to load new images and perform the labeling on your own, to experience and have an idea of the effort that it takes to annotate a full Dataset.
+
+
+[example]
 ====
-If you encounter issues while cloning images or prefer to save time, you can simply Fork the following dataset:
+In order to upload new images you have to: 
 
-https://universe.roboflow.com/pped/pped-batch1
 
-Forking typically results in fewer issues than cloning in Roboflow. Even if an error appears, the images will still be copied to your account.
+1. Navigate to the Project's URL in your Roboflow account
+2. Click the "Upload Data" on the left menu
+3. Select your images
+4. Click "Save and Continue"
+====
 
-After cloning, ensure you remove any images that don't belong to the hardhat or no_hardhat classes. To remove unwanted images:
+Once the images are uploaded Roboflow gives you three options to annotate (add labels) your images: Auto Label (Roboflow automation), Maunal Labeling and Roboflow Labeling (hire Roboflow people to label your images). In our case we will proceed with Manual Labeling.
+
+[example]
+====
+Once you have assigned images to be annotated, you can follow these steps:
+
+
+1. Navigate to the Project's URL in your Roboflow account
+2. Click the "Annotate" on the left menu
+3. Click "Start Annotating" in the top right corner
+4. Make a selection in the image and assign a label
+5. Repeat for each label on each image...
+====
+
+
+image::ai-data-annotate.png[]
+
+
+
+== Preparation
+
+blah, blah
+
+
+
+
+
+
+
+
+
+As mentioned, when you fork you copy all images. Probably the source Dataset had labels that you don't need in your Project, so it's better to remove those labels and images.
+
+[example]
+====
+After forking, ensure you remove any images that don't belong to the hardhat or no_hardhat classes. To remove unwanted images:
 
 1. Go to the "Dataset" section in the left menu.
 2. Select the class you want to delete and be sure that the your classes are not (click on the `x`, see the image below).
@@ -249,23 +289,26 @@ After cloning, ensure you remove any images that don't belong to the hardhat or 
 5. Choose the "Remove from Project" action.
 
 This will help clean the dataset, keeping only the relevant classes.
-
-Lastly, you can rename the project since fork will maintain the source Dataset name.
 ====
-
 
 image::ai-data-removeimages.png[]
 
 
 
-[NOTE]
-If you have time and energy, you can try to load new images and perform the labeling on your own, to experience and have an idea of the effort that it takes to annotate a full Dataset.
 
 
 
-== Preparation
 
-blah, blah
+
+
+
+
+
+
+
+
+
+
 
 
 
