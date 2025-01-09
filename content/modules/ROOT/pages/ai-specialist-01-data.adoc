@@ -248,7 +248,32 @@ Effective data preparation is essential because high-quality, well-prepared data
 
 === Labeling
 
-Labeling assigns the necessary annotations to raw data, making it usable for supervised learning tasks.  In the case of object detection (our case), labels include both class names and spatial coordinates. Accurate labeling is crucial because mislabeled data can lead to poor model performance. 
+Labeling assigns the necessary annotations to raw data, making it usable for supervised learning tasks, but annotation could be different things, from just a name to location in the image. It will depend on what's the goal of your AI model.
+
+Visual AI models can take various approaches depending on the objective:
+
+* Object Classification: Determines the type of object in an image but does not specify its location.
+
+* Object Detection: Identifies and localizes objects within an image.
+
+* Segmentation: Divides the image into segments, classifying each pixel into different object categories.
+
+* Pose Estimation: Tracks and identifies the key points or joints of objects (typically used for human posture recognition).
+
+* Object Tracking: Follows objects across frames in a video, maintaining their identity over time. Useful for surveillance or autonomous driving.
+
+* Action Recognition: Classifies actions happening in videos by analyzing sequences of frames, widely used in video surveillance and human activity recognition.
+
+* Anomaly Detection: Identifies unusual patterns in visual data, often used for defect detection in manufacturing.
+
+Object detection is our focus, as the goal is to identify workers wearing hardhats and detect their locations in the image. Unlike object classification, object detection requires detailed annotations that highlight the exact location of the object within the image. This involves:
+
+* Drawing bounding boxes around the target objects (e.g., hardhats).
+
+* Assigning labels to each box (e.g., 'hardhat' or 'no hardhat').
+
+
+That means that in the case of object detection (our case), labels include both class names and spatial coordinates. Accurate labeling is crucial because mislabeled data can lead to poor model performance. 
 
 Data management tools, including Roboglow, usually provide a way to add and label images. We re-used images from other Datasets that are already labeled but you can re-lable some of them or just manually upload new images and perform the annotation on them.
 
@@ -329,13 +354,14 @@ Deletion of a high number of images could take some time.
 
 Now is a good time to review the number of images in your Dataset (the more images you have, the better, but keep in mind the 10,000-image limit for our free account) and the distribution of labels per class. By navigating to "Classes & Tags," you can check how many labels exist for each class. Ideally, you should aim for a balanced distribution between both classes.
 
-If you find that you have few labels of one class or those are unbalalanced and you are under the 10,000 image limit, it is recommended that you go back to the xref:ai-specialist-01-data.adoc#_collection[Data Collection] step.
- 
+If you find that you have few labels of one class or those are unbalalanced and you are under the 10,000 image limit, it is recommended (but not required) that you go back to the xref:ai-specialist-01-data.adoc#_collection[Data Collection] step.
+
+
 === Augmenting
 
 Data augmentation artificially increases the size of the dataset by applying transformations such as cropping, rotating, flipping, or changing brightness. These variations simulate diverse conditions that the model may encounter in real-world scenarios. Augmentation not only reduces the likelihood of overfitting but also enhances the model's ability to generalize to new, unseen data.
 
-
+In our case, Roboflow offers a feature to perform data augmentation when creating your Dataset from the images in your Project. Since the Dataset split is also handled during the same step, we will cover data augmentation in the following section as well.
 
 
 === Splitting
@@ -356,7 +382,7 @@ Careful allocation of data across these splits ensures a robust and credible AI 
 
 
 
-== Next
+== Solution and Next Steps
 
 XXXXXXXXXXXXXXXXXXXXx
 
@@ -375,73 +401,10 @@ if you had problems.. use......
 
 
 
-As mentioned, when you fork you copy all images. Probably the source Dataset had labels that you don't need in your Project, so it's better to remove those labels and images.
-
-[example]
-====
-After forking, ensure you remove any images that don't belong to the hardhat or no_hardhat classes. To remove unwanted images:
-
-1. Go to the "Dataset" section in the left menu.
-2. Select the class you want to delete and be sure that the your classes are not (click on the `x`, see the image below).
-3. Use the option to display all images.
-4. Select all images by checking the box at the top.
-5. Choose the "Remove from Project" action.
-
-This will help clean the dataset, keeping only the relevant classes.
-====
-
-image::ai-data-removeimages.png[]
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Visual AI models can take various approaches depending on the objective:
-
-* Object Classification: Determines the type of object in an image but does not specify its location.
-
-* Object Detection: Identifies and localizes objects within an image.
-
-* Segmentation: Divides the image into segments, classifying each pixel into different object categories.
-
-* Pose Estimation: Tracks and identifies the key points or joints of objects (typically used for human posture recognition).
-
-* Object Tracking: Follows objects across frames in a video, maintaining their identity over time. Useful for surveillance or autonomous driving.
-
-* Action Recognition: Classifies actions happening in videos by analyzing sequences of frames, widely used in video surveillance and human activity recognition.
-
-* Anomaly Detection: Identifies unusual patterns in visual data, often used for defect detection in manufacturing.
-
-Since object detection is the focus, as the goal is to identify workers wearing hardhats and detect their locations in the image.
-
-
-
-
-
-
-Unlike object classification, object detection requires detailed annotations that highlight the exact location of the object within the image. This involves:
-
-* Drawing bounding boxes around the target objects (e.g., hardhats).
-
-* Assigning labels to each box (e.g., 'hardhat' or 'no hardhat').
-
-* Ensuring consistency and accuracy across the entire dataset.
 
