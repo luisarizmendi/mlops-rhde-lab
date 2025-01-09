@@ -482,8 +482,8 @@ dirs
 
 If you open the YAML file you will see the Dataset metadata, including the class names
 
-. data.yaml
-[source,yaml]
+.data.yaml
+[,yaml]
 ----
 train: ../train/images
 val: ../valid/images
@@ -504,7 +504,7 @@ roboflow:
 
 
 
-
+f
 
 
 
