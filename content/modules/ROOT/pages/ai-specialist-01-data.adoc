@@ -423,11 +423,7 @@ Dataset Publication and Formatting is a critical step that bridges the gap betwe
 
 === Formatting
 
-Roboflow performs the formatting automatically when you Download/Access the Dataset. 
-
-[NOTE]
-====
-In this workshop we will maintain the Data Management and the Model Building sections as independent as possible, so we will download the Dataset, but bear in mind that you can also use Roboflow Python libraries to directly accessing the data from Roboflow instead from a downloaded file. See below an example.
+Roboflow performs the formatting automatically when you Download/Access the Dataset. In this workshop we will maintain the Data Management and the Model Building sections as independent as possible, so we will download the Dataset, but bear in mind that you can also use Roboflow Python libraries to directly accessing the data from Roboflow instead from a downloaded file. See below an example about how to access directly Roboflow Datasets.
 
 [,python]
 ----
@@ -439,7 +435,7 @@ project = rf.workspace("workshop-igjqz").project("group-99-hardhat-detection")
 version = project.version(1)
 dataset = version.download("yolov11")
 ----
-====
+
 
 
 
