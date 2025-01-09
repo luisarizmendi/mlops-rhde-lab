@@ -425,7 +425,7 @@ Dataset Publication and Formatting is a critical step that bridges the gap betwe
 
 Roboflow performs the formatting automatically when you Download/Access the Dataset. In this workshop we will maintain the Data Management and the Model Building sections as independent as possible, so we will download the Dataset, but bear in mind that you can also use Roboflow Python libraries to directly accessing the data from Roboflow instead from a downloaded file. See below an example about how to access directly Roboflow Datasets.
 
-[,python]
+[source,python]
 ----
 !pip install roboflow
 
@@ -436,7 +436,7 @@ version = project.version(1)
 dataset = version.download("yolov11")
 ----
 
-
+As mentioned, we will proceed with the Download insted.
 
 
 [example]
