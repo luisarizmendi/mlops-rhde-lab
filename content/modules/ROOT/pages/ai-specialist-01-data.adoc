@@ -255,8 +255,13 @@ Once you have assigned images to be annotated, you can follow these steps:
 1. Navigate to the Project's URL in your Roboflow account
 2. Click the "Annotate" on the left menu
 3. Click "Start Annotating" in the top right corner
-4. Make a selection in the image and assign a label
+4. Make a selection in the image and assign a class
 5. Repeat for each label on each image...
+6. Go back to the "Annotate" page and click "Submit for Review" on top right corner
+7. Since you are the only one in your Project, you can click on the "Review" column where the new images will appear
+8. Select images and start Approving or Rejecting the labeling
+9. Once done, go back to the Annotate page and click "Add Appoved to Dataset" on top right
+10. Click "Add Images"
 ====
 
 
