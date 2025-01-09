@@ -455,32 +455,26 @@ To format and download the Dataset you have to:
 
 image::ai-data-download.png[]
 
-Once downloaded, you can uncompress the zip file and take a look at the file structure for `YOLOv11` format. You will see the images in three different directories and YAML and TXT files.
+Once downloaded, you can uncompress the zip file and take a look at the file structure for `YOLOv11` format. You will see the images in three different directories, one per split, and YAML and TXT files.
 
 ----
 .
 ├── data.yaml
 ├── README.roboflow.txt
 ├── test
+│   ├── images
+│   └── labels
 ├── train
+│   ├── images
+│   └── labels
 └── valid
+    ├── images
+    └── labels
 ----
 
+Each split directory has two subdirectories, one where you find the images and another with txt files (but same name than the image) where the label metadata (class number and location) is contained.
 
-
-
-
-dirs 
-
-
-
-
-
-
-
-
-
-If you open the YAML file you will see the Dataset metadata, including the class names
+If you open the YAML file you will see the Dataset metadata, including the class names (instead of numbers) and location of the directories with the splitted data.
 
 .data.yaml
 [,yaml]
@@ -501,15 +495,6 @@ roboflow:
 ----
 
 
-
-
-
-f
-
-
-
-
-
 === Dataset Publication
 
 
@@ -523,18 +508,15 @@ TBD when we have details about the storage to be used
 
 == Solution and Next Steps
 
+If you want to take a look to double-check what you did or if you need an already prepared Dataset that you can just clone in order to continue with the next section, you can use the following Roboflow Project:
 
-download 
+https://universe.roboflow.com/luisarizmendi/hardhat-or-hat
 
+[NOTE]
 
+If you want to directly use it, please remove the images labeled with `hat`, as indicated above, since this annotation will be addressed in a later section. Additionally, you will need to delete Dataset Version `v2`, which includes the dataset with those extra images and labels.
 
-XXXXXXXXXXXXXXXXXXXXx
-
-[TIP]
-
-if you had problems.. use......
-
-
+Now you are ready to move into the xref:ai-specialist-02-build.adoc[Model Building] section.
 
 
 
