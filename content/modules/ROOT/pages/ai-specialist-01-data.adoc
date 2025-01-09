@@ -1,3 +1,17 @@
+
+
+mention paid datasets 
+
+
+split clone and fork options in roboflow
+
+
+
+
+
+
+
+
 = Data Management
 
 In the context of AI, data management is a critical foundational phase that determines the overall success of the model. A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system since the AI model learns from data 
@@ -99,6 +113,9 @@ There are multiple ways to get pre-Labeled image datasets, for example:
 
 In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow.
 
+
+=== Dataset Search 
+
 Roboflow Universe hosts a vast collection of datasets, including both original contributions and replicated datasets. When selecting the appropriate dataset for your project, the key considerations are finding relevant labels and ensuring sufficient image quantity.
 When it comes to dataset size, the general principle is "the more, the better." AI model performance typically shows a direct correlation with the volume of training data available. The larger and more diverse your dataset, the better your model can learn and generalize patterns.
 
@@ -157,7 +174,36 @@ https://universe.roboflow.com/pped/pped-batch1
 ====
 
 
-Now you need to create your own Dataset out of the labeled images of the source Dataset/s. In order to do that you have two options: you can fork an entire Dataset in your account, or you can clone only the images with the interesting labels. Cloning the images with the required labels makes more sense than forking the entire Dataset, including images that are not relevant to our use case.
+
+=== Image Gathering 
+
+Now you need to create your own Dataset out of the labeled images of the source Dataset/s. In order to do that you have two options: you can fork an entire Dataset in your account, or you can clone certain specific images only. 
+
+
+==== Fork Dataset 
+
+
+
+
+==== Cloning Images 
+
+Sometimes cloning the images with the required labels makes more sense than forking the entire Dataset, including images that are not relevant to our use case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 [example]
