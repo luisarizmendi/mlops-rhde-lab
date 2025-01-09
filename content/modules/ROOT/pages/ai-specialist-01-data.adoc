@@ -1,17 +1,3 @@
-
-
-mention paid datasets 
-
-
-split clone and fork options in roboflow
-
-
-
-
-
-
-
-
 = Data Management
 
 In the context of AI, data management is a critical foundational phase that determines the overall success of the model. A well-executed data management strategy directly impacts the performance, accuracy, and reliability of the AI system since the AI model learns from data 
@@ -104,6 +90,8 @@ We will be using the YOLO (You Only Look Once) object detection model. YOLO requ
 When collecting data you can perform a manual data gathering, by capturing new images/videos of the objects that you want to detect, but that's often only done when no suitable datasets are publicly available. While gathering raw data is essential, labeling data is often the most time-consuming part of the process. Annotating thousands of images manually can introduce bottlenecks and require significant human effort. Already created pre-labeled datasets streamline the model development process by providing ready-to-use data, allowing you to focus on model tuning and experimentation. That's why, when possible (not special data is needed), you should prioritize gathering data from datasets that are already annotated to accelerate the AI development lifecycle. 
 
 There are multiple ways to get pre-Labeled image datasets, for example:
+
+* Private Datasets: You can pay to be allowed to use certain private Datasets already created or you can hire a 3rd party to create your own specific Dataset
 
 * Public Datasets: Many datasets are freely available for computer vision tasks. Examples include https://cocodataset.org/#home[COCO] (Common Objects in Context) or the https://storage.googleapis.com/openimages/web/index.html[Open Images Dataset].
 
