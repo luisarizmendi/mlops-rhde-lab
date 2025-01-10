@@ -62,14 +62,14 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: bootstrap-environment
+  name: bootstrap-lab
   namespace: openshift-gitops
 spec:
   template:
     spec:
       serviceAccountName: openshift-gitops-argocd-application-controller
       containers:
-      - name: bootstrap-environment
+      - name: bootstrap-lab
         image: quay.io/openshift/origin-cli:latest  
         command: ["/bin/sh", "-c"]
         args:
@@ -84,24 +84,24 @@ spec:
           apiVersion: argoproj.io/v1alpha1
           kind: ApplicationSet
           metadata:
-            name: bootstrap-environment
+            name: bootstrap-lab
             namespace: openshift-gitops
           spec:
             goTemplate: true
             goTemplateOptions: ["missingkey=error"]
             generators:
             - git:
-                repoURL: https://github.com/luisarizmendi/openshift-edge-demos.git
+                repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
                 revision: main
                 directories:
-                  - path: bootstrap-environment/resources/*
+                  - path: deployment/openshift/bootstrap-lab/manifests/*
             template:
               metadata:
                 name: '{{.path.basename}}'
               spec:
                 project: default
                 source:
-                  repoURL: https://github.com/luisarizmendi/openshift-edge-demos.git
+                  repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhdec.git
                   targetRevision: main
                   path: '{{.path.path}}'
                 destination:

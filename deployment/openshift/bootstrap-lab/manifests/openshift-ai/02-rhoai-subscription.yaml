@@ -5,11 +5,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  name: advanced-cluster-management
-  namespace: open-cluster-management
+  name: rhods-operator
+  namespace: redhat-ods-operator
 spec:
-  channel: release-2.11
+  channel: stable
   installPlanApproval: Automatic
-  name: advanced-cluster-management
+  name: rhods-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  startingCSV: rhods-operator.2.16.0
