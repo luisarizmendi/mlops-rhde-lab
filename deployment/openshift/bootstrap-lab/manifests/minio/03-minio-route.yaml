@@ -4,37 +4,31 @@ apiVersion: route.openshift.io/v1
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: minio-api
-  namespace: minio
+  namespace: minio-tenant
 spec:
+  path: /
   to:
     kind: Service
-    name: minio-service
+    name: minio
     weight: 100
   port:
-    targetPort: api
+    targetPort: http-minio
   wildcardPolicy: None
-  tls:
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
 ---
-kind: Route
 apiVersion: route.openshift.io/v1
+kind: Route
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: minio-ui
-  namespace: minio
+  namespace: minio-tenant
 spec:
+  path: /
   to:
     kind: Service
-    name: minio-service
+    name: minio-console
     weight: 100
   port:
-    targetPort: ui
+    targetPort: http-console
   wildcardPolicy: None
-  tls:
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
