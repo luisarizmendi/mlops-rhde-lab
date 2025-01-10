@@ -1,0 +1,40 @@
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: minio-charts
+spec:
+  connectionConfig:
+    url: 'https://operator.min.io'
+  description: MinIO Helm Charts
+  name: MinIO Operator Helm Charts
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: helm-chart-creator
+  namespace: openshift-gitops
+spec:
+  template:
+    spec:
+      serviceAccountName: openshift-gitops-argocd-application-controller
+      containers:
+      - name: helm-chart-creator
+        image: quay.io/luisarizmendi/helm-cli:latest 
+        command: ["/bin/sh", "-c"]
+        env:
+          - name: HELM_CACHE_HOME
+            value: /tmp/.helm-cache
+          - name: HELM_CONFIG_HOME
+            value: /tmp/.helm-config
+          - name: HELM_DATA_HOME
+            value: /tmp/.helm-data
+        args:
+        - |
+          mkdir -p /tmp/.helm-cache /tmp/.helm-config /tmp/.helm-data
+          helm repo add minio-operator https://operator.min.io
+          helm install \
+                --namespace minio-operator \
+                --create-namespace \
+                operator minio-operator/operator --debug
+      restartPolicy: Never
+  backoffLimit: 1

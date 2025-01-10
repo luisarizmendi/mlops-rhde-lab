@@ -4,5 +4,7 @@ kind: Namespace
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  name: minio
+    openshift.io/sa.scc.mcs: 's0:c30,c0'
+    openshift.io/sa.scc.supplemental-groups: 1000870000/10000
+    openshift.io/sa.scc.uid-range: 1000870000/10000
+  name: minio-tenant

@@ -1,0 +1,157 @@
+---
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    prometheus.io/path: /minio/v2/metrics/cluster
+    prometheus.io/port: "9000"
+    prometheus.io/scrape: "true"
+  labels:
+    app: minio
+  name: minio
+  namespace: minio-tenant
+spec:
+  certConfig: {}
+  configuration:
+    name: storage-configuration
+  env: []
+  externalCaCertSecret: []
+  externalCertSecret: []
+  externalClientCertSecrets: []
+  features:
+    bucketDNS: false
+    domains: {}
+  image: quay.io/minio/minio:RELEASE.2024-10-02T17-50-41Z
+  imagePullSecret: {}
+  mountPath: /export
+  podManagementPolicy: Parallel
+  pools:
+  - affinity:
+      nodeAffinity: {}
+      podAffinity: {}
+      podAntiAffinity: {}
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsGroup: 1000870000
+      runAsNonRoot: true
+      runAsUser: 1000870000
+      seccompProfile:
+        type: RuntimeDefault
+    name: pool-0
+    nodeSelector: {}
+    resources: {}
+    securityContext:
+      fsGroup: 1000870000
+      fsGroupChangePolicy: OnRootMismatch
+      runAsGroup: 1000870000
+      runAsNonRoot: true
+      runAsUser: 1000870000
+    servers: 3
+    tolerations: []
+    topologySpreadConstraints: []
+    volumeClaimTemplate:
+      apiVersion: v1
+      kind: persistentvolumeclaims
+      metadata: {}
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+      status: {}
+    volumesPerServer: 3
+  priorityClassName: ""
+  requestAutoCert: false
+  serviceAccountName: ""
+  serviceMetadata:
+    consoleServiceAnnotations: {}
+    consoleServiceLabels: {}
+    minioServiceAnnotations: {}
+    minioServiceLabels: {}
+  subPath: ""
+  users:
+    - name: storage-user99
+    - name: storage-user01
+    - name: storage-user02
+    - name: storage-user03
+    - name: storage-user04
+    - name: storage-user05
+    - name: storage-user06
+    - name: storage-user07
+    - name: storage-user08
+    - name: storage-user09
+    - name: storage-user10
+    - name: storage-user1
+    - name: storage-user12
+    - name: storage-user13
+    - name: storage-user14
+    - name: storage-user15
+    - name: storage-user16
+    - name: storage-user17
+    - name: storage-user18
+    - name: storage-user19
+    - name: storage-user20
+    - name: storage-user21
+    - name: storage-user22
+    - name: storage-user23
+    - name: storage-user24
+    - name: storage-user25
+  buckets:
+    - name: bucket-user99
+      objectLock: false
+    - name: bucket-user01
+      objectLock: false
+    - name: bucket-user02
+      objectLock: false
+    - name: bucket-user03
+      objectLock: false
+    - name: bucket-user04
+      objectLock: false
+    - name: bucket-user05
+      objectLock: false
+    - name: bucket-user06
+      objectLock: false
+    - name: bucket-user07
+      objectLock: false
+    - name: bucket-user08
+      objectLock: false
+    - name: bucket-user09
+      objectLock: false
+    - name: bucket-user10
+      objectLock: false
+    - name: bucket-user11
+      objectLock: false
+    - name: bucket-user12
+      objectLock: false
+    - name: bucket-user13
+      objectLock: false
+    - name: bucket-user14
+      objectLock: false
+    - name: bucket-user15
+      objectLock: false
+    - name: bucket-user16
+      objectLock: false
+    - name: bucket-user17
+      objectLock: false
+    - name: bucket-user18
+      objectLock: false
+    - name: bucket-user19
+      objectLock: false
+    - name: bucket-user20
+      objectLock: false
+    - name: bucket-user21
+      objectLock: false
+    - name: bucket-user22
+      objectLock: false
+    - name: bucket-user23
+      objectLock: false
+    - name: bucket-user24
+      objectLock: false
+    - name: bucket-user25
+      objectLock: false
