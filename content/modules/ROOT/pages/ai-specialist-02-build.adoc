@@ -122,6 +122,14 @@ run
 
 
 
+
+https://ai-on-openshift.io/tools-and-applications/minio/minio/#uninstall-instructions
+
+
+
+
+
+
 == Evaluation
 
 Evaluation is crucial in determining how well the model has learned from the training data and how effectively it can generalize to unseen data. Metrics such as accuracy, precision, recall, and F1 score are used to assess the model's performance. Rigorous evaluation helps identify potential areas for improvement and ensures that the model meets the desired standards before deployment.
