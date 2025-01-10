@@ -6,6 +6,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: minio-api
+  namespace: minio
 spec:
   to:
     kind: Service
@@ -25,6 +26,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: minio-ui
+  namespace: minio
 spec:
   to:
     kind: Service
