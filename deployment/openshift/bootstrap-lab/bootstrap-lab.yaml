@@ -101,7 +101,7 @@ spec:
               spec:
                 project: default
                 source:
-                  repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhdec.git
+                  repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
                   targetRevision: main
                   path: '{{.path.path}}'
                 destination:

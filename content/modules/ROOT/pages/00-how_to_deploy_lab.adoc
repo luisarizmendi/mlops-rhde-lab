@@ -6,14 +6,13 @@
 
 == OpenShift
 
+- create users in ocp
 
+
+
+
+INSTALL:
 gitops
-
-
-minio storage
-
-
-
-
-
+minio storage  + create buckets
+pipelines
 flightctl
