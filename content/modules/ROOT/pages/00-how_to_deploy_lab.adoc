@@ -1,2 +1,19 @@
 = How to deploy the lab
 
+
+
+
+
+== OpenShift
+
+
+gitops
+
+
+minio storage
+
+
+
+
+
+flightctl

@@ -1,4 +1,3 @@
-# ACM hub cluster namespace
 ---
 apiVersion: v1
 kind: Namespace
@@ -6,4 +5,4 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  name: open-cluster-management
+  name: redhat-ods-operator
