@@ -6,6 +6,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: minio-service
+  namespace: minio
 spec:
   ipFamilies:
     - IPv4
