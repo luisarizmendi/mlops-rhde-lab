@@ -5,7 +5,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  generateName: redhat-ods-operator
+  name: redhat-ods-operator
   namespace: redhat-ods-operator
 spec:
   upgradeStrategy: Default
