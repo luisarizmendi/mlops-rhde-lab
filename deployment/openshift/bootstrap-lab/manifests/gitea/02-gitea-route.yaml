@@ -1,0 +1,17 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  name: gitea
+  namespace: gitea
+spec:
+  path: /
+  to:
+    name: gitea-http
+    weight: 100
+    kind: Service
+  host: ''
+  port:
+    targetPort: http
+  alternateBackends: []
