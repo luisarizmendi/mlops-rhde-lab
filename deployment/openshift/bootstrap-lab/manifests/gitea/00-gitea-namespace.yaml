@@ -1,0 +1,10 @@
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: gitea
+  labels:
+    kubernetes.io/metadata.name: gitea
+spec: {}

@@ -17,6 +17,10 @@ In this section we will be using the following tools:
 
 
 
+* note taht openshift ai was setup with:
+   - gpu enabled
+   - 
+
 
 
 
@@ -76,9 +80,11 @@ preparation
 
 
 
+Data Science Project create 
+
+
 Create Storage Connection
 
-Data Science Project create 
 
 Create workbench
 

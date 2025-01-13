@@ -2,20 +2,20 @@ apiVersion: helm.openshift.io/v1beta1
 kind: HelmChartRepository
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
-  name: minio-charts
+    argocd.argoproj.io/sync-wave: "2"
+  name: gitea-charts
 spec:
   connectionConfig:
-    url: 'https://operator.min.io'
-  description: MinIO Helm Charts
-  name: MinIO Operator Helm Charts
+    url: 'https://dl.gitea.com/charts/'
+  description: Gitea Helm Charts
+  name: Gitea Helm Charts
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "0"
-  name: minio-helm-chart-creator
+    argocd.argoproj.io/sync-wave: "1"
+  name: gitea-helm-chart-creator
   namespace: openshift-gitops
 spec:
   template:
@@ -35,11 +35,13 @@ spec:
         args:
         - |
           mkdir -p /tmp/.helm-cache /tmp/.helm-config /tmp/.helm-data
-          helm repo add minio-operator https://operator.min.io
+          helm repo add gitea-charts https://dl.gitea.com/charts/
           helm install \
-                --create-namespace \
                 --debug \
-                --namespace minio-operator \
-                operator minio-operator/operator
+                --namespace gitea \
+                --set serviceAccount.name=gitea-sa \
+                --set gitea.admin.username="admin" \
+                --set gitea.admin.password="R3dh4t1!" \
+                gitea gitea-charts/gitea \
       restartPolicy: Never
   backoffLimit: 1
