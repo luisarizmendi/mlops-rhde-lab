@@ -5,6 +5,13 @@ The process of AI model building is a multistep journey that transforms raw data
 While these three stages (Engineering, Training, and Evaluation) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 
 
+=== Tools and preparations
+
+In this section we will be using the following tools: 
+
+* OpenShift AI
+
+* GitHub
 
 
 
@@ -16,11 +23,52 @@ While these three stages (Engineering, Training, and Evaluation) are commonly us
 
 
 
-environment that we will use (EXPLAIN THEM)
 
-+ openshift ai 
 
-+ github repo that hey need to create
+******************** OpenShift AI for build with RHEL
+
+
+
+
+In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL.
+
+When adopting this hybrid approach, you need to bear in mind the following:
+
+* Model Compatibility: Ensure the model format is supported by the serving runtime you plan to use on RHEL.
+
+* Artifact Retrieval: Models stored in the OpenShift AI Model Registry must be exported and transferred to the RHEL environment.
+
+* Monitoring Integration: Set up a feedback loop to forward inference metrics and logs from RHEL to OpenShift AI for analysis is not a built-in feature when performing inference in RHEL.
+
+* Security Considerations: Implement secure communication between RHEL and OpenShift AI.
+
+Some features of OpenShift AI will be easier to use when performing inference in RHEL, as they do not require adaptation. For example, using Jupyter Notebooks for model training and export is the same process regardless of the deployment target. However, features such as monitoring or serving will require adjustments to accommodate their use in a RHEL environment, such as setting up Prometheus endpoints or deploying containerized models locally.
+
+In this section Model Building we will be using OpenShift AI capabilities with some adaptations detailed in the respective points below.
+
+
+[NOTE]
+
+In the next section xref:ai-specialist-03-deploy.adoc[Model Release] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
+
+* Data Science Projects and Jupyter Notebooks: OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
+
+No real addaptation is needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Release] section).
+
+* OpenShift Pipelines: OpenShift Pipelines is a CI/CD solution for automating workflows, including model training, serving, and monitoring. In the building context, this feature will be used to automate the retrieval, training and containerization of then model. Pipelines are also useful to help with model serving (when deploying on OpenShift) and to periodically update models based on feedback or retraining needs (explained in xref:ai-specialist-04-update.adoc[Day-2 Operations] section).
+
+
+
+
+
+
+
+
+preparation
+
+
+
+
 
 
 

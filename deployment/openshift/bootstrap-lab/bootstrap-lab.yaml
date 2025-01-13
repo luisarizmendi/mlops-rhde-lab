@@ -95,6 +95,8 @@ spec:
                 revision: main
                 directories:
                   - path: deployment/openshift/bootstrap-lab/manifests/*
+                filters:
+                  - pathsDoNotExist: openshift-ai
             template:
               metadata:
                 name: '{{.path.basename}}'
