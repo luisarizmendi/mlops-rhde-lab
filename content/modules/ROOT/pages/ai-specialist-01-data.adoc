@@ -448,7 +448,7 @@ You will get something similar to this:
 
 from roboflow import Roboflow
 rf = Roboflow(api_key="xxxxxxxxxxxxxxxxxxxxx")
-project = rf.workspace("workshop-igjqz").project("group-99-hardhat-detection")
+project = rf.workspace("yyyyyyyyyyyyyyy").project("zzzzzzzzzzzzzzzzz")
 version = project.version(1)
 dataset = version.download("yolov11")
 ----
