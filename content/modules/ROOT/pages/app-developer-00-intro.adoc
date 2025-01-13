@@ -28,7 +28,7 @@ To ensure seamless development, you'll need collaboration tools, complemented by
 
 You will find later that each section of this workshop outlines details about our tool selection rationale and explores alternative options you may consider.
 
-* *OpenShift Developer Hub*: This internal developer portal centralizes access to resources, templates, and documentation, accelerating the onboarding process and standardizing application development across teams. It ensures consistency and visibility into microservices and APIs.
+//* *OpenShift Developer Hub*: This internal developer portal centralizes access to resources, templates, and documentation, accelerating the onboarding process and standardizing application development across teams. It ensures consistency and visibility into microservices and APIs.
 
 * *OpenShift Dev Spaces*: OpenShift Dev Spaces provides cloud-based development environments accessible directly from the browser. It offers pre-configured, containerized workspaces that mirror production, ensuring developers can write, test, and debug code in an environment that reflects the final deployment conditions.
 
