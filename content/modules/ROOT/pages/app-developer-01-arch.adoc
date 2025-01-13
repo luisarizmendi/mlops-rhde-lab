@@ -4,11 +4,11 @@
 
 
 
-* Image Capture and Inference Application: This application will run on the factory floor, interfacing directly with USB webcams to capture real-time video feeds. Captured frames will be sent to the AI model for inference to detect workers who are not wearing hardhats. This application will run at the edge on RHEL industrial PCs equipped with NVIDIA GPUs.
+* *Image Capture and Inference Application*: This application will run on the factory floor, interfacing directly with USB webcams to capture real-time video feeds. Captured frames will be sent to the AI model for inference to detect workers who are not wearing hardhats. This application will run on the Edge Device RHEL-based industrial PCs equipped with NVIDIA GPUs.
 
-* Alarm Management Service: This microservice will analyze predictions made by the AI model. If workers are detected without the proper safety gear, alarms will be triggered. The service will log incidents and initiate notifications to appropriate staff. The APP will be also running on RHEL at the edge, ensuring low-latency alarm handling and real-time response.
+* *Alarm Management Service*: This microservice will analyze predictions made by the AI model. If workers are detected without the proper safety gear, alarms will be triggered. The service will log incidents and initiate notifications to appropriate staff. The APP will be also running on the Edge Device, ensuring low-latency alert raising and real-time response.
 
-* Dashboard and Monitoring Application: This cloud-based application will provide a centralized interface to monitor the status of edge devices, display AI detection logs, and show real-time alarm statuses. It will aggregate data from factory floor systems and present it in a user-friendly web dashboard. This component will be deployed on OpenShift in the cloud, ensuring high availability and accessibility from any location.
+* *Dashboard and Monitoring Application*: This cloud-based application will provide a centralized interface to monitor the status of edge devices, display AI detection logs, and show real-time alarm statuses. It will aggregate data from factory floor edge devices and present it in a user-friendly web dashboard. This component will be deployed on OpenShift in the cloud, ensuring high availability and accessibility from any location.
 
 
 
