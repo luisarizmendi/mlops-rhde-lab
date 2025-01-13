@@ -59,6 +59,15 @@ spec:
   sourceNamespace: openshift-marketplace 
 
 ---
+apiVersion: user.openshift.io/v1
+kind: Group
+metadata:
+  name: cluster-admins
+users:
+  - admin
+
+
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -95,8 +104,8 @@ spec:
                 revision: main
                 directories:
                   - path: deployment/openshift/bootstrap-lab/manifests/*
-                filters:
-                  - pathsDoNotExist: openshift-ai
+                  - path: deployment/openshift/bootstrap-lab/manifests/openshift-ai
+                    exclude: true
             template:
               metadata:
                 name: '{{.path.basename}}'

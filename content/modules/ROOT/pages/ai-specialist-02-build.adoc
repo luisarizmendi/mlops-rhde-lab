@@ -58,6 +58,13 @@ No real addaptation is needed when inference in performed in RHEL, you need to d
 * OpenShift Pipelines: OpenShift Pipelines is a CI/CD solution for automating workflows, including model training, serving, and monitoring. In the building context, this feature will be used to automate the retrieval, training and containerization of then model. Pipelines are also useful to help with model serving (when deploying on OpenShift) and to periodically update models based on feedback or retraining needs (explained in xref:ai-specialist-04-update.adoc[Day-2 Operations] section).
 
 
+[NOTE]
+
+There are other interesting features such as Distributed Training that are not covered in this workshop.
+
+
+
+
 
 
 
@@ -65,6 +72,22 @@ No real addaptation is needed when inference in performed in RHEL, you need to d
 
 
 preparation
+----------------------------
+
+
+
+Create Storage Connection
+
+Data Science Project create 
+
+Create workbench
+
+
+
+create github repo
+
+
+
 
 
 
@@ -153,6 +176,15 @@ explain jupyter notebook
 
 
 
+
+
+
+
+
+
+
+
+
 == Training
 
 Training is the next phase, where the prepared data is fed into the model, and the model's parameters are iteratively adjusted to minimize errors and improve performance. This step requires careful attention to hyperparameter tuning, managing computational resources, and monitoring the training process to avoid issues like overfitting or underfitting.
@@ -164,6 +196,24 @@ explain variables notebook
 
 
 run 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
