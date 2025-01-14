@@ -167,9 +167,16 @@ import yaml
 
 
 
+[source,python subs=quotes]
+----
+from roboflow import Roboflow
 
+rf = Roboflow(api_key="xxxxxxxxxxxxxxxxx")  # Replace with your API key
+project = rf.workspace("yyyyyyyyyyyyyy").project("zzzzzzzzzzzzzzzzzzz") # Replace with your workspace and project names
 
-
+version = project.version(1111111111111111111111111111) # Replace with your version number
+dataset = version.download("yolov11")
+----
 
 
 
