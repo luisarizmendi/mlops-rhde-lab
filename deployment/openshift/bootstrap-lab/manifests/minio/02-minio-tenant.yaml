@@ -102,3 +102,56 @@ spec:
     - name: user23
     - name: user24
     - name: user25
+  buckets:
+    - name: user99-ai-prototyping
+      objectLock: false
+    - name: user01-ai-prototyping
+      objectLock: false
+    - name: user02-ai-prototyping
+      objectLock: false
+    - name: user03-ai-prototyping
+      objectLock: false
+    - name: user04-ai-prototyping
+      objectLock: false
+    - name: user05-ai-prototyping
+      objectLock: false
+    - name: user06-ai-prototyping
+      objectLock: false
+    - name: user07-ai-prototyping
+      objectLock: false
+    - name: user08-ai-prototyping
+      objectLock: false
+    - name: user09-ai-prototyping
+      objectLock: false
+    - name: user10-ai-prototyping
+      objectLock: false
+    - name: user11-ai-prototyping
+      objectLock: false
+    - name: user12-ai-prototyping
+      objectLock: false
+    - name: user13-ai-prototyping
+      objectLock: false
+    - name: user14-ai-prototyping
+      objectLock: false
+    - name: user15-ai-prototyping
+      objectLock: false
+    - name: user16-ai-prototyping
+      objectLock: false
+    - name: user17-ai-prototyping
+      objectLock: false
+    - name: user18-ai-prototyping
+      objectLock: false
+    - name: user19-ai-prototyping
+      objectLock: false
+    - name: user20-ai-prototyping
+      objectLock: false
+    - name: user21-ai-prototyping
+      objectLock: false
+    - name: user22-ai-prototyping
+      objectLock: false
+    - name: user23-ai-prototyping
+      objectLock: false
+    - name: user24-ai-prototyping
+      objectLock: false
+    - name: user25-ai-prototyping
+      objectLock: false
