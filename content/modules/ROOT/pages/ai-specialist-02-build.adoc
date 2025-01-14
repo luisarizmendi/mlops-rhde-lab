@@ -110,47 +110,26 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
 
-2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai-prototyping"
+2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
 3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket that you created ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping"). 
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbenc named ""
+4- Create a new Workbench named "userpass:[<span id="gnumberVal"></span>]-ai-prototyping". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured.
 
 image::ai-build-workbench.png[]
 
 5- Once started, open the Workbench (it could take time the first time)
 
-6- Clone the source code repository where you plan to store the Notebook
+6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping") using the left menu.
 
 image::ai-build-gitclone.png[]
 
-7- Create a `userpass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
+7- Create a `userpass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping")
 ====
 
-It's time to start working on your new Jupyter Notebook, Feel free to add additional Markdown cells or to change the provided code below. 
-
-
-
-
-
-
-
-
-
-
-
-EXPLICAR C´OMO CREAR BLOQUES
-
-
-ejecutar cada bloque
-
-
-
-
-
-
+It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
 
 
 === Dependencies
