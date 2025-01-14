@@ -233,19 +233,26 @@ It's time to prepare our first model prototype, and for that, you'll need to con
 
 Model hyperparameters are key configuration settings that define how a machine learning model will be trained. These settings are chosen before training begins and significantly affect the model's performance and efficiency during the training process.
 
-Here are the main hyperparameters you'll need to tune for your YOLO model, along with brief explanations and approximate values to help guide you through the setup:
+Here are the main hyperparameters you can tune for your YOLO model, along with brief explanations and approximate values to help guide you through the setup:
 
-* Batch size (`batch`): The batch size is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients but requires more memory.
 
-* Epochs (`epochs`): The number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting.
+*Training Settings*
 
-* Base YOLO Model (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements.
+* Batch size (`batch`): The batch size is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (main memory) that you have available in your CPU/GPU, typical values are 16, 32 or 64. You can try higher values if your GPU allows it.
 
-* Image Size (`imgsz`): The resolution of the images fed into the model during training. Higher resolutions improve accuracy but increase training time and memory usage.
+* Epochs (`epochs`): The number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: 50, 100, 300. Start with 50 and increase if needed (or just configure `1` epoch if you are running the "Plan B").
 
-* Patience (`patience`): The number of epochs with no improvement in validation performance before the early stopping mechanism kicks in to stop training.
+* Base YOLO Model (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements. In our project we will base our model in YOLOv11 so you will need to configure `yolo11m.pt`.
 
-* Optimized (`optimizer`): The algorithm used to minimize the loss function during training. Common optimizers include Adam and SGD (Stochastic Gradient Descent).
+* Image Size (`imgsz`): The resolution of the images fed into the model during training. Higher resolutions improve accuracy but increase training time and memory usage. Typical values: 640, 1280. Start with 640 and increase if your system can handle larger images.
+
+* Patience (`patience`): The number of epochs with no improvement in validation performance before the early stopping mechanism kicks in to stop training. This helps prevent overfitting by stopping training early. Typical value is 10 but try to increase the value if you hit the early stopping, to be sure that you are not preventing the training to make your model improve in later epochs.
+
+
+
+*Optimization Parameters*
+
+* Optimized (`optimizer`): The algorithm used to minimize the loss function during training. Common optimizers include https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e[Adam] and https://mohitmishra786687.medium.com/stochastic-gradient-descent-a-basic-explanation-cbddc63f08e0[SGD (Stochastic Gradient Descent)] being Adam the default. You never know which one could be better so configure either `Adam` or `SGD` and check the results in each case.
 
 * Learning rate (`lr0` and `lrf`): The learning rate controls how quickly the model updates weights during training. lr0 is the initial learning rate, while lrf adjusts the learning rate during training (learning rate scheduler).
 
@@ -258,14 +265,22 @@ Here are the main hyperparameters you'll need to tune for your YOLO model, along
 * Automatic Mixed Precision (`amp`): Enables mixed-precision training, which uses 16-bit floating point precision to speed up training without significantly affecting model accuracy. It's useful for saving memory and speeding up computations.
 
 
-Additionally, you will need to provide other data, such as:
+
+
+*Additional Model Configuration*
 
 * Name (`name`): The name of the experiment or model version. It helps to track and differentiate between different training runs.
 
 * Dataset path (`data`): The path to the dataset used for training. This includes both training and validation datasets.
 
 * Device used (`device`): The device used for training. Specify whether you are using a CPU or GPU. If using GPU, make sure it's set to cuda.
-c
+
+
+
+
+
+
+
 
 [source,python,role=execute,subs="attributes"]
 ----
