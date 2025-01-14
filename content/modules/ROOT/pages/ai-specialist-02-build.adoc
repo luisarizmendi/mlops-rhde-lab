@@ -79,10 +79,9 @@ In this workshop MinIO, an Open Source High Performance Object Storage, is deplo
 To store the model that you will create during this prototyping phase, you need to create a new Object Bucket
 
 1. Navegate to {minio-ui}
-
-
-XXXXXXXXXXXXXXXXXXXx
-
+2. Log in with {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>]
+3. Go to "Buckets" in the left menu and then click on "Create Bucket" on the top right corner
+4. Create a new Bucket with the name "userpass:[<span id="gnumberVal"></span>]-ai-prototyping"
 ====
 
 [CAUTION]
