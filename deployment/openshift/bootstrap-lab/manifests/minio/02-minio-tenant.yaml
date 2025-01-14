@@ -112,7 +112,7 @@ metadata:
 apiVersion: sts.min.io/v1alpha1
 kind: PolicyBinding
 metadata:
-  name: mc-job-bingding
+  name: mc-job
   namespace: minio-tenant
 spec:
   application:

@@ -17,8 +17,3 @@ spec:
   giteaAdminPassword: "R3dh4t1!"
   giteaAdminPasswordLength: 32
   giteaAdminEmail: gitea@acme.com
-
-  giteaCreateUsers: true
-  giteaGenerateUserFormat: "user%d"
-  giteaUserNumber: 25
-  giteaUserPassword: redhat
