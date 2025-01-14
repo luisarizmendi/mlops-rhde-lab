@@ -109,7 +109,9 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
 1- Navegate to {openshift-ai} . Log intousing your OpenShift credentials: userpass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
+
 2- Create a new Data Science Project (userpass:[<span id="gnumberVal"></span>]-ai-prototyping)
+
 3- Create a new Storage Connection
 
 image::ai-build-dataconnection.png[]
