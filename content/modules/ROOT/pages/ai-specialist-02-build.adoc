@@ -9,11 +9,9 @@ While these three stages (Engineering, Training, and Evaluation) are commonly us
 
 In this section we will be using the following tools: 
 
-* Source Code Repository: We will use GitHub or Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
+* OpenShift AI
 
-* Object Storage: Object storage provides a scalable and accessible solution for persisting large files. Once our model is trained, we will leverage object storage to securely store and manage the model artifacts, ensuring they remain accessible for deployment and further iterations.
-
-* OpenShift AI: OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the Jupyter Notebooks for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
+OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the Jupyter Notebooks for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
 
 In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL.
 
@@ -42,58 +40,62 @@ No real addaptation is needed when inference in performed in RHEL, you need to d
 
 * OpenShift Pipelines: OpenShift Pipelines is a CI/CD solution for automating workflows, including model training, serving, and monitoring. In the building context, this feature will be used to automate the retrieval, training and containerization of then model. Pipelines are also useful to help with model serving (when deploying on OpenShift) and to periodically update models based on feedback or retraining needs (explained in xref:ai-specialist-04-update.adoc[Day-2 Operations] section).
 
-
 [NOTE]
 
 There are other interesting features such as Distributed Training that are not covered in this workshop.
 
 
+[example]
+====
+
+NVIDIA USAGE IN OPENSHIFT AI
+====
 
 
 
 
 
 
+* Source Code Repository
 
-
-The OpenShift AI platform is already preconfigured (OpenShift AI infrastructure configuration is out of the scope of this workshop)
-
-
-
-
-
-
-
-
-preparation
-----------------------------
-
-
-
-
- since we will be using a source code repository to store the notebook and ensure version control, you first need to create a new repository.
+We will use Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training, but any other source code repository such as GitHub could be used. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
 
 [example]
 ====
-If you plan to use Gitea (or any other accessible source code repository such as GitHub), you can create a new repository by following these steps:
+If you plan to use Gitea you can create a new repository by following these steps:
 
 1. Navegate to {gitea}
-2. Register (top right button)
+2. Register (top right button) and fill-in required fields (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]" as user name)
 3. Click + in "Repositories" to create a new repository
-4. Fill-in repository data (you might want to use `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping` as name)
+4. Fill-in repository data (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
 
 ====
 
 
 
+* Object Storage
+
+Object storage provides a scalable and accessible solution for persisting large files. Once our model is trained, we will leverage object storage to securely store and manage the model artifacts, ensuring they remain accessible for deployment and further iterations.
+
+In this workshop 
+
+
+MinIO
 
 
 
-Create object storage buckets
 
+[example]
+====
+You need to create a new Object Bucket
 
+xxxxxxxxxxxxxxxxxxxx
 
+====
 
+[CAUTION]
+
+admin privileges everyone
 
 
 
@@ -116,34 +118,34 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1. Navegate to {openshift-ai}  
+1. Navegate to {openshift-ai} . Log intousing your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
 2. Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
 3. Create a new Storage Connection
+
+image::ai-build-dataconnection.png[]
+
 4. Create a new Workbench
+
+image::ai-build-workbench.png[]
+
 5. Once started, open the Workbench (it could take time the first time)
+
+6. Clone the source code repository where you plan to store the Notebook
+
+image::ai-build-gitclone.png[]
+
+7. Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 ====
 
-[NOTE]
-
-Log in using your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password}
 
 
 
 
 
-ai-build-dataconnection.png  -> vover a cogerla sin el http
-
-
-ai-build-workbench.png
-
-
-ai-build-gitclone.png
 
 
 
 
-1. Clone the source code repository
-2. Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 
 
 
@@ -162,7 +164,7 @@ rebalance train split to reduce to num images = batch size, create new version a
 
 
 
-ai-build-protomodels.png
+image::ai-build-protomodels.png[]
 
 
 
@@ -217,7 +219,7 @@ TEST DATA SPLIT !!!!!A
 
 
 
-== Training
+== Training with Pipelines
 
 Training is the next phase, where the prepared data is fed into the model, and the model's parameters are iteratively adjusted to minimize errors and improve performance. This step requires careful attention to hyperparameter tuning, managing computational resources, and monitoring the training process to avoid issues like overfitting or underfitting.
 
