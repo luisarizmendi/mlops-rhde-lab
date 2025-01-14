@@ -11,6 +11,5 @@ spec:
     name: gitea-http
     weight: 100
     kind: Service
-  host: ''
   port:
     targetPort: http
