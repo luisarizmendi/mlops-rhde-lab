@@ -27,18 +27,13 @@ When adopting this hybrid approach, you need to bear in mind the following:
 
 Some features of OpenShift AI will be easier to use when performing inference in RHEL, as they do not require adaptation. For example, using Jupyter Notebooks for model training and export is the same process regardless of the deployment target. However, features such as monitoring or serving will require adjustments to accommodate their use in a RHEL environment, such as setting up Prometheus endpoints or deploying containerized models locally.
 
-In this section Model Building we will be using OpenShift AI capabilities with some adaptations detailed in the respective points below.
+In this section Model Building we will be using Data Science Projects and Jupyter Notebooks. OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
 
+No real addaptation for these componentes are needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Release] section).
 
 [NOTE]
 
 In the next section xref:ai-specialist-03-deploy.adoc[Model Release] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
-
-* Data Science Projects and Jupyter Notebooks: OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
-
-No real addaptation is needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Release] section).
-
-* OpenShift Pipelines: OpenShift Pipelines is a CI/CD solution for automating workflows, including model training, serving, and monitoring. In the building context, this feature will be used to automate the retrieval, training and containerization of then model. Pipelines are also useful to help with model serving (when deploying on OpenShift) and to periodically update models based on feedback or retraining needs (explained in xref:ai-specialist-04-update.adoc[Day-2 Operations] section).
 
 [NOTE]
 
@@ -65,9 +60,9 @@ We will use Gitea to store and version-control the Jupyter Notebooks developed f
 If you plan to use Gitea you can create a new repository by following these steps:
 
 1. Navegate to {gitea}
-2. Register (top right button) and fill-in required fields (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]" as username)
-3. Click + in "Repositories" to create a new repository
-4. Fill-in repository data (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
+2. Click "Register" (top right button) and fill in required fields (use "userpass:[<span id="gnumberVal"></span>]" as username)
+3. After registering, click + in "Repositories" to create a new repository
+4. Fill in repository data (use "userpass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
 
 ====
 
@@ -114,8 +109,8 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai} . Log intousing your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
-2- Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
+1- Navegate to {openshift-ai} . Log intousing your OpenShift credentials: userpass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
+2- Create a new Data Science Project (userpass:[<span id="gnumberVal"></span>]-ai-prototyping)
 3- Create a new Storage Connection
 
 image::ai-build-dataconnection.png[]
@@ -130,7 +125,7 @@ image::ai-build-workbench.png[]
 
 image::ai-build-gitclone.png[]
 
-7- Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
+7- Create a `userpass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 ====
 
 It's time to start working on your new Jupyter Notebook, Feel free to add additional Markdown cells or to change the provided code below. 
@@ -238,7 +233,7 @@ Here are the main hyperparameters you can tune for your YOLO model, along with b
 
 *Training Settings*
 
-* Batch size (`batch`): The batch size is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (main memory) that you have available in your CPU/GPU, typical values are 16, 32 or 64. You can try higher values if your GPU allows it.
+* Batch size (`batch`): The batch size is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are 16, 32 or 64. You can try higher values if your GPU allows it.
 
 * Epochs (`epochs`): The number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: 50, 100, 300. Start with 50 and increase if needed (or just configure `1` epoch if you are running the "Plan B").
 
