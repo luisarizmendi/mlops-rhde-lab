@@ -136,45 +136,92 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 It's time to start working on your new Jupyter Notebook, Feel free to add additional Markdown cells or to change the provided code below. 
 
 
-=== Dependencies and Libraries
 
 
 
 
 
-[source,sh,role=execute,subs="attributes"]
-----
-!pip install torch torchvision torchaudio
-!pip install ultralytics roboflow
-----
 
 
+
+
+EXPLICAR C´OMO CREAR BLOQUES
+
+
+ejecutar cada bloque
+
+
+
+
+
+
+
+
+=== Dependencies
+
+Here’s an enhanced version of your text:
+
+When setting up the Workbench to run your Jupyter Notebook, you were required to select one of the available base container images (e.g., `Pytorch`). The Jupyter Notebook will execute within this environment, which means all the pre-installed packages and tools in that container image will be readily available.
+
+In our case, however, we will need additional packages, such as the one that allows accessing the dataset directly from Roboflow. These packages may not be included in the selected base image, so it’s essential to install them manually. You can do this by running the following `pip install` command:
 
 [source,python,role=execute,subs="attributes"]
 ----
+# For Training
+!pip install ultralytics roboflow 
+
+# For Storage
+!pip install minio
+----
+
+[IMPORTANT]
+
+Once you have identified all the required packages, consider creating a custom base image that includes these dependencies. This optimized image will streamline not only the prototyping phase but also regular training workflows performed through Pipelines.
+
+=== Python Libraries
+
+Import all necessary libraries for training and analysis. Basically you will need:
+
+* Libraries for training: 
+
+This block will be dependant on your Python code, but probably you will need the following imports:
+
+[source,python,role=execute,subs="attributes"]
+----
+# Common
+import  os
+
+# For Dataset manipulation
+import yaml
+from roboflow import Roboflow
+
+# For training
 import torch
 from ultralytics import YOLO
-import os
-from pathlib import Path
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import yaml
+
+# For Storage
+from minio import Minio
+from minio.error import S3Error
 ----
 
 
 === Roboflow Dataset download
 
+The next step is to download the dataset prepared in the xref:ai-specialist-01-data.adoc[Data Management] section. Instead of manually downloading the ZIP file, we will access the dataset directly from Roboflow for a more streamlined process. When you created the "Roboflow Version" of the dataset, you received a unique code to access it. Now, it's time to put that code to use.
 
+Double check that you're using the correct API Key, Workspace name, Project name, and Version number to ensure a seamless connection to the dataset.
 
-[source,python subs=quotes]
+[CAUTION]
+If you have multiple versions of your dataset, make sure you are using the correct version number under project.version. For example, if you created a new version as part of the "Plan B" (training the model with a smaller dataset), verify that the version matches the intended dataset. 
+
+[source,python,role=execute,subs="attributes"]
 ----
 from roboflow import Roboflow
 
 rf = Roboflow(api_key="xxxxxxxxxxxxxxxxx")  # Replace with your API key
-project = rf.workspace("yyyyyyyyyyyyyy").project("zzzzzzzzzzzzzzzzzzz") # Replace with your workspace and project names
+project = rf.workspace("workspace").project("user-pass:[<span id="gnumberVal"></span>]-hardhat-detection") # Replace with your workspace and project names
 
-version = project.version(1111111111111111111111111111) # Replace with your version number
+version = project.version(1) # Replace with your version number
 dataset = version.download("yolov11")
 ----
 
@@ -182,10 +229,46 @@ dataset = version.download("yolov11")
 
 === Hyperparameter configuration
 
+It's time to prepare our first model prototype, and for that, you'll need to configure the hyperparameters for the first iteration of training.
+
+Model hyperparameters are key configuration settings that define how a machine learning model will be trained. These settings are chosen before training begins and significantly affect the model's performance and efficiency during the training process.
+
+Here are the main hyperparameters you'll need to tune for your YOLO model, along with brief explanations and approximate values to help guide you through the setup:
+
+* Batch size (`batch`): The batch size is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients but requires more memory.
+
+* Epochs (`epochs`): The number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting.
+
+* Base YOLO Model (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements.
+
+* Image Size (`imgsz`): The resolution of the images fed into the model during training. Higher resolutions improve accuracy but increase training time and memory usage.
+
+* Patience (`patience`): The number of epochs with no improvement in validation performance before the early stopping mechanism kicks in to stop training.
+
+* Optimized (`optimizer`): The algorithm used to minimize the loss function during training. Common optimizers include Adam and SGD (Stochastic Gradient Descent).
+
+* Learning rate (`lr0` and `lrf`): The learning rate controls how quickly the model updates weights during training. lr0 is the initial learning rate, while lrf adjusts the learning rate during training (learning rate scheduler).
+
+* Momentum (`momentum`): Momentum helps the model move faster through relevant regions of the loss surface and prevents oscillation.
+
+* Weight Decay (`weight_decay`): A regularization technique that adds a penalty to the loss to prevent overfitting by discouraging large weights.
+
+* Warmups (`warmup_epochs`, `warmup_bias_lr`, `warmup_momentum`): Warmups gradually increase the learning rate during the first few epochs to help the model stabilize before it starts learning aggressively.
+
+* Automatic Mixed Precision (`amp`): Enables mixed-precision training, which uses 16-bit floating point precision to speed up training without significantly affecting model accuracy. It's useful for saving memory and speeding up computations.
 
 
+Additionally, you will need to provide other data, such as:
 
+* Name (`name`): The name of the experiment or model version. It helps to track and differentiate between different training runs.
 
+* Dataset path (`data`): The path to the dataset used for training. This includes both training and validation datasets.
+
+* Device used (`device`): The device used for training. Specify whether you are using a CPU or GPU. If using GPU, make sure it's set to cuda.
+c
+
+[source,python,role=execute,subs="attributes"]
+----
 CONFIG = {
     'name': 'yolo_hardhat',
     'model': 'yolo11m.pt',  # Model size options: n, s, m, l, x
@@ -209,11 +292,12 @@ CONFIG = {
     
 
 }
+----
 
 
 
-
-
+[source,python,role=execute,subs="attributes"]
+----
 
     # Data augmentation settings
     'augment': True,
@@ -229,7 +313,7 @@ CONFIG = {
     'fliplr': 0.1,   # Flip left-right
     'mosaic': 1.0,   # Mosaic augmentation
     'mixup': 0.0,    # Mixup augmentation
-
+----
 
 
 
