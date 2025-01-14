@@ -58,9 +58,9 @@ Your first task will be to create a https://roboflow.com/[Roboflow account] (if 
 
 2. Choose your preferred sign-up method (such as email) and enter your name and password.
 
-3. You’ll be prompted to create a new workspace, you can choose your preferred name, for example `workshop`. This will serve as the central hub for organizing datasets and projects.
+3. You’ll be prompted to create a new workspace, use "workshop" as name. This will serve as the central hub for organizing datasets and projects.
 
-4. (Optional) Go to "Projects" on the left menu and click "+New Project". Give it a name (ie. "group-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`. This step is optional because if you fork a Dataset (explain later) it will create a new Project for you. 
+4. (Optional) Go to "Projects" on the left menu and click "+New Project". Give it a name (ie. "user-pass:[<span id="gnumberVal"></span>]-hardhat-detection"), include an annotation group (ie. "hardhats") and select "Object Detection" as `Project Type`. This step is optional because if you fork a Dataset (explain later) it will create a new Project for you. 
 ====
 
 image::ai-data-roboflow.png[]
@@ -442,13 +442,13 @@ If you want to access directly the Dataset for model training you will need a sp
 You will get something similar to this:
 
 
-[source,python subs=quotes]
+[source,python,role=execute,subs="attributes"]
 ----
 !pip install roboflow
 
 from roboflow import Roboflow
 rf = Roboflow(api_key="xxxxxxxxxxxxxxxxxxxxx")
-project = rf.workspace("yyyyyyyyyyyyyyy").project("zzzzzzzzzzzzzzzzz")
+project = rf.workspace("workspace").project("user-pass:[<span id="gnumberVal"></span>]-hardhat-detection")
 version = project.version(1)
 dataset = version.download("yolov11")
 ----
@@ -509,10 +509,10 @@ names: ['helmet', 'no_helmet', 'undefined']
 
 roboflow:
   workspace: workshop-igjqz
-  project: group-99-hardhat-detection
+  project: user-99-hardhat-detection
   version: 1
   license: CC BY 4.0
-  url: https://app.roboflow.com/workshop-igjqz/group-99-hardhat-detection/1
+  url: https://app.roboflow.com/workshop-igjqz/user-99-hardhat-detection/1
 ----
 
 
