@@ -102,36 +102,56 @@ spec:
     - name: user23
     - name: user24
     - name: user25
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: mc-job-sa
-  namespace: minio-tenant
----
-apiVersion: sts.min.io/v1alpha1
-kind: PolicyBinding
-metadata:
-  name: mc-job
-  namespace: minio-tenant
-spec:
-  application:
-    serviceaccount: mc-job-sa
-    namespace: minio-tenant
-  policies:
-    - consoleAdmin
----
-apiVersion: job.min.io/v1alpha1
-kind: MinIOJob
-metadata:
-  name: minio-test-job
-  namespace: minio-tenant
-spec:
-  serviceAccountName: mc-job-sa
-  tenant:
-    name: minio
-    namespace: minio-tenant
-  commands:
-    - op: make-bucket
-      args:
-        name: memes
+  buckets:
+    - name: user99-ai-prototyping
+      objectLock: false
+    - name: user01-ai-prototyping
+      objectLock: false
+    - name: user02-ai-prototyping
+      objectLock: false
+    - name: user03-ai-prototyping
+      objectLock: false
+    - name: user04-ai-prototyping
+      objectLock: false
+    - name: user05-ai-prototyping
+      objectLock: false
+    - name: user06-ai-prototyping
+      objectLock: false
+    - name: user07-ai-prototyping
+      objectLock: false
+    - name: user08-ai-prototyping
+      objectLock: false
+    - name: user09-ai-prototyping
+      objectLock: false
+    - name: user10-ai-prototyping
+      objectLock: false
+    - name: user11-ai-prototyping
+      objectLock: false
+    - name: user12-ai-prototyping
+      objectLock: false
+    - name: user13-ai-prototyping
+      objectLock: false
+    - name: user14-ai-prototyping
+      objectLock: false
+    - name: user15-ai-prototyping
+      objectLock: false
+    - name: user16-ai-prototyping
+      objectLock: false
+    - name: user17-ai-prototyping
+      objectLock: false
+    - name: user18-ai-prototyping
+      objectLock: false
+    - name: user19-ai-prototyping
+      objectLock: false
+    - name: user20-ai-prototyping
+      objectLock: false
+    - name: user21-ai-prototyping
+      objectLock: false
+    - name: user22-ai-prototyping
+      objectLock: false
+    - name: user23-ai-prototyping
+      objectLock: false
+    - name: user24-ai-prototyping
+      objectLock: false
+    - name: user25-ai-prototyping
+      objectLock: false
