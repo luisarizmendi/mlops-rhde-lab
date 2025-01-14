@@ -65,7 +65,7 @@ We will use Gitea to store and version-control the Jupyter Notebooks developed f
 If you plan to use Gitea you can create a new repository by following these steps:
 
 1. Navegate to {gitea}
-2. Register (top right button) and fill-in required fields (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]" as user name)
+2. Register (top right button) and fill-in required fields (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]" as username)
 3. Click + in "Repositories" to create a new repository
 4. Fill-in repository data (use "{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
 
@@ -77,26 +77,22 @@ If you plan to use Gitea you can create a new repository by following these step
 
 Object storage provides a scalable and accessible solution for persisting large files. Once our model is trained, we will leverage object storage to securely store and manage the model artifacts, ensuring they remain accessible for deployment and further iterations.
 
-In this workshop 
-
-
-MinIO
-
-
-
+In this workshop MinIO, an Open Source High Performance Object Storage, is deployed in the environment, and user "{minio-user-base}pass:[<span id="gnumberVal"></span>]" has been created for you with password "{minio-password-base}pass:[<span id="gnumberVal"></span>]".
 
 [example]
 ====
-You need to create a new Object Bucket
+To store the model that you will create during this prototyping phase, you need to create a new Object Bucket
 
-xxxxxxxxxxxxxxxxxxxx
+1. Navegate to {minio-ui}
+
+
+XXXXXXXXXXXXXXXXXXXx
 
 ====
 
 [CAUTION]
 
-admin privileges everyone
-
+The MinIO users provided for this workshop have administrative privileges, allowing you to fully explore and experiment with the platform without any restrictions. However, please exercise caution to avoid inadvertently modifying other users' buckets or altering user privileges.
 
 
 
@@ -122,21 +118,86 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 2. Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
 3. Create a new Storage Connection
 
-image::ai-build-dataconnection.png[]
+    image::ai-build-dataconnection.png[]
 
 4. Create a new Workbench
 
-image::ai-build-workbench.png[]
+    image::ai-build-workbench.png[]
 
 5. Once started, open the Workbench (it could take time the first time)
 
 6. Clone the source code repository where you plan to store the Notebook
 
-image::ai-build-gitclone.png[]
+    image::ai-build-gitclone.png[]
 
 7. Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 ====
 
+It's time to start working on your new Jupyter Notebook, Feel free to add additional Markdown cells or to change the provided code below. 
+
+
+=== Dependencies and Libraries
+
+
+
+
+
+[subs=quotes]
+----
+!pip install torch torchvision torchaudio
+!pip install ultralytics roboflow
+----
+
+
+
+[source,python subs=quotes]
+----
+import torch
+from ultralytics import YOLO
+import os
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import yaml
+----
+
+
+=== Roboflow Dataset download
+
+
+
+
+
+
+
+
+
+=== Hyperparameter configuration
+
+
+
+
+
+=== Model Training
+
+
+
+
+
+=== Model Evaluation
+
+
+
+
+
+=== (optional) Model Export
+
+
+
+
+
+=== Store the Model
 
 
 

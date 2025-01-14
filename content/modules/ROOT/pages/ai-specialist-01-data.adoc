@@ -442,7 +442,7 @@ If you want to access directly the Dataset for model training you will need a sp
 You will get something similar to this:
 
 
-[source,python subs=quotes]]
+[source,python subs=quotes]
 ----
 !pip install roboflow
 
