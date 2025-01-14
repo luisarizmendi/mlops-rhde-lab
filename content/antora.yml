@@ -16,9 +16,11 @@ asciidoc:
     openshift-api: https://xxxxxxxxxxxxxxxxxxxxxxxxx:6443
     openshift-user-basename: openshiftuser
     openshift-password: secretocp
+    openshift-ai: https://UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUu
     flightctl-ui: https://yyyyyyyyyyyyyy
     flightctl-user-basename: flightctluser
     flightctl-password: secretflightctl
+    gitea: http://nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
     registry-url: https://quay.io/user/luisarizmendi/
     registry-local-url: http://192.168.100.200/workshop/

@@ -76,82 +76,82 @@ spec:
     minioServiceLabels: {}
   subPath: ""
   users:
-    - name: storage-user99
-    - name: storage-user01
-    - name: storage-user02
-    - name: storage-user03
-    - name: storage-user04
-    - name: storage-user05
-    - name: storage-user06
-    - name: storage-user07
-    - name: storage-user08
-    - name: storage-user09
-    - name: storage-user10
-    - name: storage-user1
-    - name: storage-user12
-    - name: storage-user13
-    - name: storage-user14
-    - name: storage-user15
-    - name: storage-user16
-    - name: storage-user17
-    - name: storage-user18
-    - name: storage-user19
-    - name: storage-user20
-    - name: storage-user21
-    - name: storage-user22
-    - name: storage-user23
-    - name: storage-user24
-    - name: storage-user25
+    - name: user99
+    - name: user01
+    - name: user02
+    - name: user03
+    - name: user04
+    - name: user05
+    - name: user06
+    - name: user07
+    - name: user08
+    - name: user09
+    - name: user10
+    - name: user1
+    - name: user12
+    - name: user13
+    - name: user14
+    - name: user15
+    - name: user16
+    - name: user17
+    - name: user18
+    - name: user19
+    - name: user20
+    - name: user21
+    - name: user22
+    - name: user23
+    - name: user24
+    - name: user25
   buckets:
-    - name: bucket-user99
+    - name: user99-ai-prototyping
       objectLock: false
-    - name: bucket-user01
+    - name: user01-ai-prototyping
       objectLock: false
-    - name: bucket-user02
+    - name: user02-ai-prototyping
       objectLock: false
-    - name: bucket-user03
+    - name: user03-ai-prototyping
       objectLock: false
-    - name: bucket-user04
+    - name: user04-ai-prototyping
       objectLock: false
-    - name: bucket-user05
+    - name: user05-ai-prototyping
       objectLock: false
-    - name: bucket-user06
+    - name: user06-ai-prototyping
       objectLock: false
-    - name: bucket-user07
+    - name: user07-ai-prototyping
       objectLock: false
-    - name: bucket-user08
+    - name: user08-ai-prototyping
       objectLock: false
-    - name: bucket-user09
+    - name: user09-ai-prototyping
       objectLock: false
-    - name: bucket-user10
+    - name: user10-ai-prototyping
       objectLock: false
-    - name: bucket-user11
+    - name: user11-ai-prototyping
       objectLock: false
-    - name: bucket-user12
+    - name: user12-ai-prototyping
       objectLock: false
-    - name: bucket-user13
+    - name: user13-ai-prototyping
       objectLock: false
-    - name: bucket-user14
+    - name: user14-ai-prototyping
       objectLock: false
-    - name: bucket-user15
+    - name: user15-ai-prototyping
       objectLock: false
-    - name: bucket-user16
+    - name: user16-ai-prototyping
       objectLock: false
-    - name: bucket-user17
+    - name: user17-ai-prototyping
       objectLock: false
-    - name: bucket-user18
+    - name: user18-ai-prototyping
       objectLock: false
-    - name: bucket-user19
+    - name: user19-ai-prototyping
       objectLock: false
-    - name: bucket-user20
+    - name: user20-ai-prototyping
       objectLock: false
-    - name: bucket-user21
+    - name: user21-ai-prototyping
       objectLock: false
-    - name: bucket-user22
+    - name: user22-ai-prototyping
       objectLock: false
-    - name: bucket-user23
+    - name: user23-ai-prototyping
       objectLock: false
-    - name: bucket-user24
+    - name: user24-ai-prototyping
       objectLock: false
-    - name: bucket-user25
+    - name: user25-ai-prototyping
       objectLock: false
