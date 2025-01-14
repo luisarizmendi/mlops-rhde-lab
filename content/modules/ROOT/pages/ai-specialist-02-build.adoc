@@ -109,23 +109,23 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1. Navegate to {openshift-ai} . Log intousing your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
-2. Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
-3. Create a new Storage Connection
+1- Navegate to {openshift-ai} . Log intousing your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
+2- Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
+3- Create a new Storage Connection
 
-    image::ai-build-dataconnection.png[]
+image::ai-build-dataconnection.png[]
 
-4. Create a new Workbench
+4- Create a new Workbench
 
-    image::ai-build-workbench.png[]
+image::ai-build-workbench.png[]
 
-5. Once started, open the Workbench (it could take time the first time)
+5- Once started, open the Workbench (it could take time the first time)
 
-6. Clone the source code repository where you plan to store the Notebook
+6- Clone the source code repository where you plan to store the Notebook
 
-    image::ai-build-gitclone.png[]
+image::ai-build-gitclone.png[]
 
-7. Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
+7- Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 ====
 
 It's time to start working on your new Jupyter Notebook, Feel free to add additional Markdown cells or to change the provided code below. 
