@@ -142,7 +142,7 @@ It's time to start working on your new Jupyter Notebook, Feel free to add additi
 
 
 
-[subs=quotes]
+[source,sh,role=execute,subs="attributes"]
 ----
 !pip install torch torchvision torchaudio
 !pip install ultralytics roboflow
@@ -150,7 +150,7 @@ It's time to start working on your new Jupyter Notebook, Feel free to add additi
 
 
 
-[source,python subs=quotes]
+[source,python,role=execute,subs="attributes"]
 ----
 import torch
 from ultralytics import YOLO
@@ -181,6 +181,63 @@ dataset = version.download("yolov11")
 
 
 === Hyperparameter configuration
+
+
+
+
+
+CONFIG = {
+    'name': 'yolo_hardhat',
+    'model': 'yolo11m.pt',  # Model size options: n, s, m, l, x
+    'data': dataset.location + "/data.yaml",
+    'epochs': 50,
+    'batch': 16 if device != 'cpu' else 4,  # Adjust batch size based on device
+    'imgsz': 640,
+    'patience': 15,
+    'device': device,
+    
+    # Optimizer settings
+    'optimizer': 'SGD',
+    'lr0': 0.001,
+    'lrf': 0.005,
+    'momentum': 0.9,
+    'weight_decay': 0.0005,
+    'warmup_epochs': 3,
+    'warmup_bias_lr': 0.01,
+    'warmup_momentum': 0.8,
+    'amp': False,
+    
+
+}
+
+
+
+
+
+
+    # Data augmentation settings
+    'augment': True,
+    'hsv_h': 0.015,  # HSV-Hue augmentation
+    'hsv_s': 0.7,    # HSV-Saturation augmentation
+    'hsv_v': 0.4,    # HSV-Value augmentation
+    'degrees': 10,    # Image rotation (+/- deg)
+    'translate': 0.1, # Image translation
+    'scale': 0.3,    # Image scale
+    'shear': 0.0,    # Image shear
+    'perspective': 0.0,  # Image perspective
+    'flipud': 0.1,   # Flip up-down
+    'fliplr': 0.1,   # Flip left-right
+    'mosaic': 1.0,   # Mosaic augmentation
+    'mixup': 0.0,    # Mixup augmentation
+
+
+
+
+
+
+
+
+
 
 
 
