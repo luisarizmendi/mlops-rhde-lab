@@ -61,7 +61,7 @@ If you plan to use Gitea you can create a new repository by following these step
 
 1. Navegate to {gitea}
 2. Click "Register" (top right button) and fill in required fields (use "userpass:[<span id="gnumberVal"></span>]" as username)
-3. After registering, click + in "Repositories" to create a new repository
+3. After registering, click `+` in "Repositories" to create a new repository
 4. Fill in repository data (use "userpass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
 
 ====
@@ -108,15 +108,15 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai} . Log intousing your OpenShift credentials: userpass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
+1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
 
-2- Create a new Data Science Project (userpass:[<span id="gnumberVal"></span>]-ai-prototyping)
+2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai-prototyping"
 
-3- Create a new Storage Connection
+3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket that you created ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping"). 
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench
+4- Create a new Workbenc named ""
 
 image::ai-build-workbench.png[]
 

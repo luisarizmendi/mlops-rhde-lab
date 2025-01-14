@@ -14,7 +14,7 @@ asciidoc:
     device-password: secret
     openshift-console: https://xxxxxxxxxxxxxxxxxxxxxxxxx
     openshift-api: https://xxxxxxxxxxxxxxxxxxxxxxxxx:6443
-    openshift-user-basename: openshiftuser
+    openshift-user-base: user
     openshift-password: secretocp
     openshift-ai: https://UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUu
     flightctl-ui: https://yyyyyyyyyyyyyy
@@ -22,6 +22,7 @@ asciidoc:
     flightctl-password: secretflightctl
     gitea: http://nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
     minio-ui: http://eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    minio-api: http://fffffffffffffffff
     minio-user-base: user
     minio-password-base: redhat
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
