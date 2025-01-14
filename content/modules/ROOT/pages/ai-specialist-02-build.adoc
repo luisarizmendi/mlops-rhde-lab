@@ -9,30 +9,11 @@ While these three stages (Engineering, Training, and Evaluation) are commonly us
 
 In this section we will be using the following tools: 
 
-* OpenShift AI
+* Source Code Repository: We will use GitHub or Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
 
-* GitHub
+* Object Storage: Object storage provides a scalable and accessible solution for persisting large files. Once our model is trained, we will leverage object storage to securely store and manage the model artifacts, ensuring they remain accessible for deployment and further iterations.
 
-
-
-
-
-* note taht openshift ai was setup with:
-   - gpu enabled
-   - 
-
-
-
-
-
-
-
-
-
-******************** OpenShift AI for build with RHEL
-
-
-
+* OpenShift AI: OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the Jupyter Notebooks for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
 
 In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL.
 
@@ -75,28 +56,40 @@ There are other interesting features such as Distributed Training that are not c
 
 
 
+The OpenShift AI platform is already preconfigured (OpenShift AI infrastructure configuration is out of the scope of this workshop)
+
+
+
+
+
+
+
+
 preparation
 ----------------------------
 
 
 
-Data Science Project create 
+
+ since we will be using a source code repository to store the notebook and ensure version control, you first need to create a new repository.
+
+[example]
+====
+If you plan to use Gitea (or any other accessible source code repository such as GitHub), you can create a new repository by following these steps:
+
+1. Navegate to {gitea}
+2. Register (top right button)
+3. Click + in "Repositories" to create a new repository
+4. Fill-in repository data (you might want to use `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping` as name)
+
+====
 
 
-Create Storage Connection
-
-
-Create workbench
-
-
-
-create github repo
 
 
 
 
-
-
+Create object storage buckets
 
 
 
@@ -109,40 +102,48 @@ create github repo
 == Engineering
 
 
-Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms, designing architectures, and preparing the training scripts.
+Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms and designing architectures.
 
+Selecting appropriate algorithms involves analyzing the problem type, such as classification or regression, and understanding the data's characteristics to identify the best-fit solution. This process requires balancing performance metrics like accuracy, interpretability, and computational efficiency through experimentation. Designing architectures focuses on defining the structure of the model by choosing the right combination of layers, activation functions, and hyperparameters to capture the complexity of the data. 
 
+We already explained that our project involves a classification problem, and that the pre-selected algorithm is YOLO on its version 11. YOLOv11 (You Only Look Once, version 11) is the latest evolution in the https://docs.ultralytics.com/es/models/[YOLO family] of object detection models, building on its predecessors to achieve faster and more accurate results. This model is designed to meet the growing demands of near real-time object detection applications in fields such as autonomous vehicles, video surveillance, robotics, and more.
 
+At this stage, it is essential to focus on choosing the right parameters during training, such as the learning rate, batch size, input image size, number of epochs, optimizer, etc. These parameters significantly impact the model performance, and fine tuning them is critical for achieving optimal results. Prototyping plays a crucial role in this process, allowing you to experiment with various configurations and refine model architectures iteratively. A common and effective way to perform this experimentation is by using https://jupyter.org/[Jupyter Notebooks].
 
-explain YOLO 
+Jupyter Notebooks are an interactive computing environment that combines live code, visualizations, and narrative text in a single document. They are ideal for prototyping machine learning models because they allow you to quickly test, debug, and document your workflows in a user-friendly interface.
 
-YOLOv11 (You Only Look Once, version 11) is the latest evolution in the YOLO family of object detection models, building on its predecessors to achieve faster and more accurate results. This cutting-edge model is designed to meet the growing demands of real-time object detection applications in fields such as autonomous vehicles, video surveillance, robotics, and more.
+[example]
+====
+To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-Key Features of YOLOv11
+1. Navegate to {openshift-ai}  
+2. Create a new Data Science Project ({openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping)
+3. Create a new Storage Connection
+4. Create a new Workbench
+5. Once started, open the Workbench (it could take time the first time)
+====
 
-1. Improved Speed and Efficiency:
-YOLOv11 introduces a streamlined architecture with optimized layers that reduce computational complexity, making it suitable for deployment on edge devices and low-power hardware.
+[NOTE]
 
-2. Enhanced Accuracy:
-The model leverages advancements in feature extraction and multi-scale detection, improving precision in identifying smaller or overlapping objects within complex scenes.
-
-3. Adaptive Anchor-Free Design:
-YOLOv11 adopts an anchor-free approach, reducing the need for manual tuning and enabling better generalization across diverse datasets.
-
-4. Advanced Training Techniques:
-Incorporating techniques like self-distillation, label smoothing, and advanced augmentation, YOLOv11 ensures faster convergence and robust performance.
-
-5. Compatibility with Modern Frameworks:
-Designed to integrate seamlessly with popular machine learning libraries and platforms, YOLOv11 supports TensorFlow, PyTorch, and ONNX, simplifying deployment in production environments.
-
-
-
-
+Log in using your OpenShift credentials: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]  /  {openshift-password}
 
 
 
 
 
+ai-build-dataconnection.png  -> vover a cogerla sin el http
+
+
+ai-build-workbench.png
+
+
+ai-build-gitclone.png
+
+
+
+
+1. Clone the source code repository
+2. Create a `{openshift-user-basename}pass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file on the cloned directory
 
 
 
@@ -151,6 +152,31 @@ Designed to integrate seamlessly with popular machine learning libraries and pla
 
 
 
+
+tip:
+rebalance train split to reduce to num images = batch size, create new version and use it 
+
+
+
+
+
+
+
+ai-build-protomodels.png
+
+
+
+
+
+
+
+kernel crash when playing iwth batch sizec
+
+
+
+
+
+EACH EPOCH LAST xxxxx
 
 
 
@@ -194,6 +220,18 @@ explain jupyter notebook
 == Training
 
 Training is the next phase, where the prepared data is fed into the model, and the model's parameters are iteratively adjusted to minimize errors and improve performance. This step requires careful attention to hyperparameter tuning, managing computational resources, and monitoring the training process to avoid issues like overfitting or underfitting.
+
+
+
+
+
+
+
+
+Preparing the training scripts involves creating a pipeline for data preprocessing, defining the loss function and optimization algorithm, writing training loops to iteratively improve the model, and incorporating logging tools like TensorBoard to monitor and fine-tune progress while ensuring robustness through error handling mechanisms.
+
+
+
 
 
 
