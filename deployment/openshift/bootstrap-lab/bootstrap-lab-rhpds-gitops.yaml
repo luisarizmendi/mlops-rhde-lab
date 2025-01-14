@@ -1,58 +1,41 @@
+
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: user.openshift.io/v1
+kind: Group
+metadata:
+  name: cluster-admins
+users:
+  - admin
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
 metadata:
   name: bootstrap-lab
   namespace: openshift-gitops
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
+      revision: main
+      directories:
+        - path: deployment/openshift/bootstrap-lab/manifests/*
+        - path: deployment/openshift/bootstrap-lab/manifests/openshift-ai
+          exclude: true
   template:
+    metadata:
+      name: '{{.path.basename}}'
     spec:
-      serviceAccountName: openshift-gitops-argocd-application-controller
-      containers:
-      - name: bootstrap-lab
-        image: quay.io/openshift/origin-cli:latest  
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          # Wait for the GitOps Server to be ready
-          until oc get pods -n openshift-gitops | grep 'openshift-gitops-server' | grep 'Running' | grep '1/1'; do
-            echo "Waiting for GitOps Server pod to be in Running state..."
-            sleep 10
-          done
-
-          oc apply -f - <<EOF
-          apiVersion: argoproj.io/v1alpha1
-          kind: ApplicationSet
-          metadata:
-            name: bootstrap-lab
-            namespace: openshift-gitops
-          spec:
-            goTemplate: true
-            goTemplateOptions: ["missingkey=error"]
-            generators:
-            - git:
-                repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
-                revision: main
-                directories:
-                  - path: deployment/openshift/bootstrap-lab/manifests/*
-            template:
-              metadata:
-                name: '{{.path.basename}}'
-              spec:
-                project: default
-                source:
-                  repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
-                  targetRevision: main
-                  path: '{{.path.path}}'
-                destination:
-                  server: https://kubernetes.default.svc
-                syncPolicy:
-                  automated:
-                    prune: true
-                    selfHeal: true
-          EOF
-
-          echo "Environment ready!"
-      restartPolicy: Never
-  backoffLimit: 1
+      project: default
+      source:
+        repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
+        targetRevision: main
+        path: '{{.path.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
 
