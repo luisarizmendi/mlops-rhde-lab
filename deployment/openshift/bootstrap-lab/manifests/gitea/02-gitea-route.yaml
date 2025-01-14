@@ -14,4 +14,3 @@ spec:
   host: ''
   port:
     targetPort: http
-  alternateBackends: []
