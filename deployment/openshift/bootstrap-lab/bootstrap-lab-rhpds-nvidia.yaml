@@ -30,6 +30,10 @@ spec:
           exclude: true
         - path: deployment/openshift/bootstrap-lab/manifests/gitea
           exclude: true
+        - path: deployment/openshift/bootstrap-lab/manifests/nvidia-operator
+          exclude: true
+        - path: deployment/openshift/bootstrap-lab/manifests/nfd
+          exclude: true
   template:
     metadata:
       name: '{{.path.basename}}'
