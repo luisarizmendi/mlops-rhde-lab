@@ -434,9 +434,6 @@ model.export(format='onnx', imgsz=CONFIG['imgsz'])
 
 Once that's done, you can review again the `weights` directory and you will see the new `onnx` file.
 
-image::ai-build-protomodels.png[]
-
-
 === Store the Model
 
 The last code block example that we will see is the one used to store the results (models and metrics) of this prototyping run. 
@@ -492,27 +489,13 @@ for file_path_test in files_test:
         print("Error occurred: ", e)
 ----
 
-
-
-
-
-
-
-review files
-
-
-
+You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 
 
 == Solution and Next Steps
 
+In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now download and utilize a pretrained model. This pretrained model is available for you to access from this point onward, and can serve as a more efficient starting point for further improvements. You can find it here:
 
+https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/object-detection-hardhat-v1-m.pt
 
-
-push changes
-
-
-
-
-
-discard model if plan b used
+You can now also push to the Git Source repository the files that you created before jumping into the xref:ai-specialist-03-training.adoc[Model Training] section.
