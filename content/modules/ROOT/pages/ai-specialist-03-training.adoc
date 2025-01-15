@@ -6,6 +6,22 @@
 
 
 
+
+
+
+
+
+https://github.com/opendatahub-io/ai-edge
+
+
+
+
+
+
+
+
+
+
 === Tools and preparations
 
 In this section we will be using the following tools: 

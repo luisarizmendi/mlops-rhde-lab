@@ -4,8 +4,9 @@
 * xref:ai-specialist-00-intro.adoc[0. AI Specialist Intro]
 * xref:ai-specialist-01-data.adoc[1. Data Management]
 * xref:ai-specialist-02-build.adoc[2. Model Building]
-* xref:ai-specialist-03-deploy.adoc[3. Model Release]
-* xref:ai-specialist-04-update.adoc[4. Day-2 Operations]
+* xref:ai-specialist-03-training.adoc[3. Model Training]
+* xref:ai-specialist-04-deploy.adoc[4. Model Release]
+* xref:ai-specialist-05-update.adoc[5. Day-2 Operations]
 * -------------------------
 * `_APP Developer_`
 * xref:app-developer-00-intro.adoc[0. APP Developer Intro]
