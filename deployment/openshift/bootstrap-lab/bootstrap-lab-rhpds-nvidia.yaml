@@ -1,4 +1,7 @@
 
+#
+# Deployed in the "RHOAI on OCP on AWS with NVIDIA GPUs" lab
+#
 ---
 apiVersion: user.openshift.io/v1
 kind: Group

@@ -1,3 +1,7 @@
+
+#
+# Deployed in an empty OpenShift cluster or in the "Red Hat OpenShift Container Platform Cluster GITOPS" lab
+#
 ---
 kind: Project
 apiVersion: project.openshift.io/v1
