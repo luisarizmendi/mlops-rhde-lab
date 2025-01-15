@@ -13,19 +13,22 @@ In this section we will be using the following tools:
 
 OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the Jupyter Notebooks for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
 
-In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL.
+In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL, or more generic, when inference is performed at the Edge.
 
 When adopting this hybrid approach, you need to bear in mind the following:
 
 * Model Compatibility: Ensure the model format is supported by the serving runtime you plan to use on RHEL.
 
-* Artifact Retrieval: Models stored in the OpenShift AI Model Registry must be exported and transferred to the RHEL environment.
+* Artifact Retrieval: Models stored in the OpenShift AI Model Registry must be exported and transferred to the Edge environment.
 
-* Monitoring Integration: Set up a feedback loop to forward inference metrics and logs from RHEL to OpenShift AI for analysis is not a built-in feature when performing inference in RHEL.
+* Monitoring Integration: Set up a feedback loop to forward inference metrics and logs from RHEL or OpenShift at the Edge to OpenShift AI at the Core/Cloud for analysis is not a built-in feature when performing inference in RHEL.
 
-* Security Considerations: Implement secure communication between RHEL and OpenShift AI.
+* Security Considerations: Implement secure communication between the Edge and OpenShift AI.
 
-Some features of OpenShift AI will be easier to use when performing inference in RHEL, as they do not require adaptation. For example, using Jupyter Notebooks for model training and export is the same process regardless of the deployment target. However, features such as monitoring or serving will require adjustments to accommodate their use in a RHEL environment, such as setting up Prometheus endpoints or deploying containerized models locally.
+Some features of OpenShift AI will be easier to use when performing inference at the Edge, as they do not require adaptation. For example, using Jupyter Notebooks for model training and export is the same process regardless of the deployment target. However, features such as monitoring or serving will require adjustments to accommodate their use in a RHEL environment, such as setting up Prometheus endpoints or deploying containerized models locally.
+
+image::ai-build-rhoai-features.png[]
+
 
 In this section Model Building we will be using Data Science Projects and Jupyter Notebooks. OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
 
