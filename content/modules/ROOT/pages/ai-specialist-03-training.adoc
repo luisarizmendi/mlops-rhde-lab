@@ -11,6 +11,18 @@
 
 
 
+
+
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html/managing_openshift_ai/creating-custom-workbench-images#creating-a-custom-image-from-default-image_custom-images
+
+
+
+
+
+
+
+
+
 https://github.com/opendatahub-io/ai-edge
 
 

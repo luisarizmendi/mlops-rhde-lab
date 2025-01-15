@@ -16,3 +16,16 @@ gitops
 minio storage  + create buckets
 pipelines
 flightctl
+
+
+
+
+
+
+
+
+
+
+
+
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/working_with_accelerators/index#enabling-nvidia-gpus_accelerators

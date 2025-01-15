@@ -42,18 +42,6 @@ In the next section xref:ai-specialist-03-deploy.adoc[Model Release] we will exp
 
 There are other interesting features such as Distributed Training that are not covered in this workshop.
 
-
-[example]
-====
-
-NVIDIA USAGE IN OPENSHIFT AI
-====
-
-
-
-
-
-
 *Source Code Repository (Gitea)*
 
 We will use Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training, but any other source code repository such as GitHub could be used. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
@@ -129,7 +117,7 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Jupyter-prototyping". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured.
+4- Create a new Workbench named "Notebooks-Pytorch". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `AcceleratorProfiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
@@ -494,8 +482,8 @@ You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 
 == Solution and Next Steps
 
-In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now download and utilize a pretrained model. This pretrained model is available for you to access from this point onward, and can serve as a more efficient starting point for further improvements. You can find it here:
+In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/object-detection-hardhat-v1-m.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/prototyping.ipynb[trained used this Jupyter Notebook].
 
-https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/object-detection-hardhat-v1-m.pt
+
 
 You can now also push to the Git Source repository the files that you created before jumping into the xref:ai-specialist-03-training.adoc[Model Training] section.
