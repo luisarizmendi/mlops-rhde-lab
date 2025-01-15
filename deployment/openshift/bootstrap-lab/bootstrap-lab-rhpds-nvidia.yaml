@@ -24,7 +24,7 @@ spec:
       revision: main
       directories:
         - path: deployment/openshift/bootstrap-lab/manifests/*
-        - path: deployment/openshift/bootstrap-lab/manifests/openshift-ai
+        - path: deployment/openshift/bootstrap-lab/manifests/openshift-ai-base
           exclude: true
         - path: deployment/openshift/bootstrap-lab/manifests/pipelines
           exclude: true

@@ -1,0 +1,12 @@
+apiVersion: dashboard.opendatahub.io/v1
+kind: AcceleratorProfile
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  name: nvidia
+  namespace: redhat-ods-applications
+spec:
+  displayName: nvidia
+  enabled: true
+  identifier: nvidia.com/gpu
+  tolerations: []
