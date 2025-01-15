@@ -219,17 +219,34 @@ version = project.version(1) # Replace with your version number
 dataset = version.download("yolov11")
 ----
 
+This code downloads the Dataset, but you'll need to explicitly specify the paths to each data split (training, validation, and test) in the Dataset metadata. This ensures YOLO can correctly locate and utilize your dataset files.
+
+This is done in the data.yaml file. Open that file so you can see the paths that you need to update by removing the dots and completing the path:
+
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+You can reuse this code block to do it automatically if you don't want to open and update the file manually:
+
+
+[source,python,role=execute,subs="attributes"]
+----
+dataset_yaml_path = f"{dataset.location}/data.yaml"
+
+with open(dataset_yaml_path, "r") as file:
+    data_config = yaml.safe_load(file)
+
+data_config["train"] = f"{dataset.location}/train/images"
+data_config["val"] = f"{dataset.location}/valid/images"
+data_config["test"] = f"{dataset.location}/test/images"
+
+with open(dataset_yaml_path, "w") as file:
+    yaml.safe_dump(data_config, file)
+----
 
 
 === Hyperparameter configuration
-
-
-
-
-
-
-
-
 
 It's time to prepare our first model prototype, and for that, you'll need to configure the hyperparameters for the first iteration of training.
 
@@ -313,7 +330,7 @@ CONFIG = {
     ...
     ...
     ...
-    'varn': valuen,
+    'varn': 'valuen',
 }
 ----
 
@@ -322,56 +339,158 @@ Make your initial guesses for the hyperparameter values for the first model trai
 
 === Model Training
 
+Starting the model training with a base model like YOLO is beneficial because it’s pretrained on large datasets, making it faster, more accurate, and less data intensive than training from scratch. Base models provide optimized architectures and learned general features (e.g., edges, shapes) that can be adapted to your specific task thanks to Transfer Learning.
+
+Transfer learning reuses a model trained on one task for another. Early layers retain general features, while later layers are fine tuned for task-specific objects. This approach saves time, requires less data, and leverages pretrained knowledge for better performance.
+
+The first task in this block is to load that base YOLO model. If you remember, you created a variable with the base model name (`CONFIG['model']`) in the previous block, now it is time to use it:
+
+[source,python,role=execute,subs="attributes"]
+----
+model = YOLO(CONFIG['model'])
+----
+
+Now it's time to start the most time consuming task, the model training. You have to use the variables configured in the previous block. In order to save time, you can find below the code block that will do it for you.
+
+[NOTE]
+
+By default, By default, the `train` method of the YOLO library handles both "Training" and "Validation" Data Sets, so you will see results for both in the output.
 
 
+[source,python,role=execute,subs="attributes"]
+----
+results_train = model.train(
+    name=CONFIG['name'],
+    data=CONFIG['data'],
+    epochs=CONFIG['epochs'],
+    batch=CONFIG['batch'],
+    imgsz=CONFIG['imgsz'],
+    patience=CONFIG['patience'],
+    device=CONFIG['device'],
+    verbose=True,
+    
+    # Optimizer parameters
+    optimizer=CONFIG['optimizer'],
+    lr0=CONFIG['lr0'],
+    lrf=CONFIG['lrf'],
+    momentum=CONFIG['momentum'],
+    weight_decay=CONFIG['weight_decay'],
+    warmup_epochs=CONFIG['warmup_epochs'],
+    warmup_bias_lr=CONFIG['warmup_bias_lr'],
+    warmup_momentum=CONFIG['warmup_momentum'],
+    amp=CONFIG['amp'],
+    
+    # Augmentation parameters
+    augment=CONFIG['augment'],
+    hsv_h=CONFIG['hsv_h'],
+    hsv_s=CONFIG['hsv_s'],
+    hsv_v=CONFIG['hsv_v'],
+    degrees=CONFIG['degrees'],
+    translate=CONFIG['translate'],
+    scale=CONFIG['scale'],
+    shear=CONFIG['shear'],
+    perspective=CONFIG['perspective'],
+    flipud=CONFIG['flipud'],
+    fliplr=CONFIG['fliplr'],
+    mosaic=CONFIG['mosaic'],
+    mixup=CONFIG['mixup'],
+)
+----
+
+[TIP]
+
+Remember to use the "Plan B" Dataset if you want to save time while trying this step.
 
 
-explain knowledge transfer
+Once the training is done you can see how a new directory has been created under `./run/detect`. If you open that directory you will find a serie of graphs and schemas with the results of the model training and validation. 
 
-
-
-
-
-
-check number of epoch
-
+You will also find in that directory under `weights` two files (models), one with the best performance obtained (`best.pt`) and another one created as result of the last epoch iteration (`last.pt`).
 
 
 === Model Evaluation
 
+Model evaluation using the test split is the process of assessing a trained model's performance on a subset of data (the test set) that the model has never seen during training or validation. This step provides an unbiased estimate of how well the model will perform on new, unseen data.
 
+[source,python,role=execute,subs="attributes"]
+----
+results_test = model.val(data=CONFIG['data'], split='test', device=CONFIG['device'], imgsz=CONFIG['imgsz'])
+----
 
+After the evaluation with the Test Data Set you will see how a new directory with the results, similar to what you got with the training, has been created. 
 
 
 === (optional) Model Export
 
+Model export is the process of saving or converting a trained machine learning model into a specific format that can be used for inference or deployment in different environments. This is important because it allows the trained model to be shared, deployed to production, or used in different applications without needing the original training code or environment.
 
+For example, ONNX (Open Neural Network Exchange) is a popular open-source format that is designed for the interchange of deep learning models across different frameworks (ie. https://docs.openvino.ai/2024/index.html[OpenVINO]), so in this example we are going to convert the Pytorch `.py` file into the `onnx` format. 
 
+The good news is that the YOLO library provides an `export` method that makes this possible with just one line:
 
+[source,python,role=execute,subs="attributes"]
+----
+model.export(format='onnx', imgsz=CONFIG['imgsz'])
+----
 
-=== Store the Model
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Once that's done, you can review again the `weights` directory and you will see the new `onnx` file.
 
 image::ai-build-protomodels.png[]
 
 
+=== Store the Model
+
+The last code block example that we will see is the one used to store the results (models and metrics) of this prototyping run. 
+
+In order to do that you need to create an Object Storage Client and then use it with the files that you can upload. We are using MinIO as Storage Object and there is a library that creates an Object Storage Client for MinIO:
+
+[source,python,role=execute,subs="attributes"]
+----
+client = Minio(
+    AWS_S3_ENDPOINT,
+    access_key=AWS_ACCESS_KEY_ID,
+    secret_key=AWS_SECRET_ACCESS_KEY,
+    secure=False
+)
+----
+
+But what are those values? Well, when you created the Workbench you configured an "Storage Connection" with details about the Object Storage. These values were injected as Environment variables that now you can use, so *before* the client setup you will need to import them as follows:
+
+[source,python,role=execute,subs="attributes"]
+----
+AWS_S3_ENDPOINT = os.getenv("AWS_S3_ENDPOINT")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+----
+
+Once you have the Client configured, you just need to select the files and upload them using the `client.fput_object` method. If you don't want to expend time investigating https://min.io/docs/minio/linux/developers/python/API.html[how to use client.fput_object] you can copy paste the code below to save time:
+
+[source,python,role=execute,subs="attributes"]
+----
+# File selection
+model_path_train = results_train.save_dir
+files_train = [file for file in model_path_train.rglob('*') if file.is_file()]
+
+model_path_test = results_test.save_dir
+files_test = [file for file in model_path_test.rglob('*') if file.is_file()]
+
+directory_name= os.path.basename(model_path_train)
+
+# File upload
+for file_path_train in files_train:
+    try:
+        client.fput_object(AWS_S3_BUCKET, directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
+        print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+        
+for file_path_test in files_test:
+    try:
+        client.fput_object(AWS_S3_BUCKET, directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
+        print(f"'{os.path.basename(file_path_test)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+----
 
 
 
@@ -379,18 +498,7 @@ image::ai-build-protomodels.png[]
 
 
 
-
-
-
-
-
-TEST DATA SPLIT !!!!!A
-
-
-
-
-
-
+review files
 
 
 
@@ -402,3 +510,9 @@ TEST DATA SPLIT !!!!!A
 
 
 push changes
+
+
+
+
+
+discard model if plan b used
