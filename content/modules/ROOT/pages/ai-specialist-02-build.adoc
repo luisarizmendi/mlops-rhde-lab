@@ -2,7 +2,7 @@
 
 The process of AI model building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation.
 
-While these three stages (Engineering, Training, and Evaluation) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
+While these two stages (Feature Engineering and Model development) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 
 
 === Tools and preparations
@@ -62,7 +62,7 @@ If you plan to use Gitea you can create a new repository by following these step
 1. Navegate to {gitea}
 2. Click "Register" (top right button) and fill in required fields (use "userpass:[<span id="gnumberVal"></span>]" as username)
 3. After registering, click `+` in "Repositories" to create a new repository
-4. Fill in repository data (use "userpass:[<span id="gnumberVal"></span>]-ai-prototyping" as repository name)
+4. Fill in repository data (use "userpass:[<span id="gnumberVal"></span>]-ai" as repository name)
 
 ====
 
@@ -81,7 +81,7 @@ To store the model that you will create during this prototyping phase, you need 
 1. Navegate to {minio-ui}
 2. Log in with {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>]
 3. Go to "Buckets" in the left menu and then click on "Create Bucket" on the top right corner
-4. Create a new Bucket with the name "userpass:[<span id="gnumberVal"></span>]-ai-prototyping"
+4. Create a new Bucket with the name "userpass:[<span id="gnumberVal"></span>]-ai"
 ====
 
 [CAUTION]
@@ -91,16 +91,26 @@ The MinIO users provided for this workshop have administrative privileges, allow
 
 
 
-== Engineering
+== Feature Engineering
 
 
-Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms and designing architectures.
+Feature Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms and designing architectures.
 
 Selecting appropriate algorithms involves analyzing the problem type, such as classification or regression, and understanding the data's characteristics to identify the best-fit solution. This process requires balancing performance metrics like accuracy, interpretability, and computational efficiency through experimentation. Designing architectures focuses on defining the structure of the model by choosing the right combination of layers, activation functions, and hyperparameters to capture the complexity of the data. 
 
 We already explained that our project involves a classification problem, and that the pre-selected algorithm is YOLO on its version 11. YOLOv11 (You Only Look Once, version 11) is the latest evolution in the https://docs.ultralytics.com/es/models/[YOLO family] of object detection models, building on its predecessors to achieve faster and more accurate results. This model is designed to meet the growing demands of near real-time object detection applications in fields such as autonomous vehicles, video surveillance, robotics, and more.
 
-At this stage, it is essential to focus on choosing the right parameters during training, such as the learning rate, batch size, input image size, number of epochs, optimizer, etc. These parameters significantly impact the model performance, and fine tuning them is critical for achieving optimal results. Prototyping plays a crucial role in this process, allowing you to experiment with various configurations and refine model architectures iteratively. A common and effective way to perform this experimentation is by using https://jupyter.org/[Jupyter Notebooks].
+
+During the dataset preparation phase, we incorporated essential feature engineering steps, including balancing the dataset, ensuring high-quality annotations, applying augmentations like flipping, scaling, and mosaic augmentation, and normalizing image sizes. These steps laid a robust foundation for our data.
+
+However, these aspects can also be revisited and refined during feature engineering to further enhance model performance. Additionally, during model development, we can introduce advanced augmentation and preprocessing techniques not included in the data management phase, such as domain-specific augmentations, fine-tuned normalization strategies, or even dynamically generated transformations, tailored to YOLOv11's capabilities.
+
+This step requires no actions in this workshop, as these aspects were reviewed and addressed during the Data Management phase, just bear in mind that you cound need to revisit them as part of the Model Development cycle to obtain a better performance.
+
+
+== Model Development
+
+At this stage, it is essential to focus on choosing the right hyperparameters during training, such as the learning rate, batch size, input image size, number of epochs, optimizer, etc. These parameters significantly impact the model performance, and fine tuning them is critical for achieving optimal results. Prototyping plays a crucial role in this process, allowing you to experiment with various configurations and refine model architectures iteratively. A common and effective way to perform this experimentation is by using https://jupyter.org/[Jupyter Notebooks].
 
 Jupyter Notebooks are an interactive computing environment that combines live code, visualizations, and narrative text in a single document. They are ideal for prototyping machine learning models because they allow you to quickly test, debug, and document your workflows in a user-friendly interface.
 
@@ -112,21 +122,21 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
-3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket that you created ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping"). 
+3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket that you created ("userpass:[<span id="gnumberVal"></span>]-ai"). 
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "userpass:[<span id="gnumberVal"></span>]-ai-prototyping". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured.
+4- Create a new Workbench named "Jupyter-prototyping". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured.
 
 image::ai-build-workbench.png[]
 
 5- Once started, open the Workbench (it could take time the first time)
 
-6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping") using the left menu.
+6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu.
 
 image::ai-build-gitclone.png[]
 
-7- Create a `userpass:[<span id="gnumberVal"></span>]-ai-prototyping.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai-prototyping")
+7- Create a `userpass:[<span id="gnumberVal"></span>]-ai.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
 ====
 
 It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
@@ -230,7 +240,7 @@ The list below is a subset of all the parameters that you can configure. You can
 
 *Training Settings*
 
-* Batch size (`batch`): The https://medium.com/geekculture/how-does-batch-size-impact-your-model-learning-2dd34d9fb1fa[batch size] is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are `16`, `32` or `64`. You can try higher values if your GPU allows it.
+* Batch size (`batch`): The https://medium.com/geekculture/how-does-batch-size-impact-your-model-learning-2dd34d9fb1fa[batch size] is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are `16`, `32` or `64`. You can try higher values if your GPU allows it. Take into account that if you are running the training on your CPU and configure a batch size that your container instance size cannot manage,then the Workbench will launch an error while training the model and will ask if you want to restart it.
 
 * Epochs (`epochs`): The https://medium.com/@saiwadotai/epoch-in-machine-learning-understanding-the-core-of-model-training-bfd64bbd5604[Epochs] are the number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: `50`, `100` (default), `300`. Start with `50` and increase if needed (or just configure `1` epoch if you are running the "Plan B").
 
@@ -320,6 +330,10 @@ explain knowledge transfer
 
 
 
+check number of epoch
+
+
+
 === Model Evaluation
 
 
@@ -379,77 +393,9 @@ TEST DATA SPLIT !!!!!A
 
 
 
-== Training with Pipelines
-
-Training is the next phase, where the prepared data is fed into the model, and the model's parameters are iteratively adjusted to minimize errors and improve performance. This step requires careful attention to hyperparameter tuning, managing computational resources, and monitoring the training process to avoid issues like overfitting or underfitting.
-
-
-
-
-
-
-
-
-Preparing the training scripts involves creating a pipeline for data preprocessing, defining the loss function and optimization algorithm, writing training loops to iteratively improve the model, and incorporating logging tools like TensorBoard to monitor and fine-tune progress while ensuring robustness through error handling mechanisms.
-
-
-
-
-
-
-explain variables notebook 
-
-
-
-run 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://ai-on-openshift.io/tools-and-applications/minio/minio/#uninstall-instructions
-
-
-
-
-
-
-== Evaluation
-
-Evaluation is crucial in determining how well the model has learned from the training data and how effectively it can generalize to unseen data. Metrics such as accuracy, precision, recall, and F1 score are used to assess the model's performance. Rigorous evaluation helps identify potential areas for improvement and ensures that the model meets the desired standards before deployment.
-
-
-
-explain evaluation methods
-
-explain graphs
-
-
-
-
-blah, blah
-
-
-
-
 == Solution and Next Steps
+
+
+
+
+push changes
