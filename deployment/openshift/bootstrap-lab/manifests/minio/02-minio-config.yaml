@@ -1,72 +1,10 @@
-= How to deploy the lab
-
-
-
-
-
-== OpenShift
-
-- create users in ocp
-
-
-
-
-INSTALL:
-gitops
-minio storage  + create buckets
-pipelines
-flightctl
-
-
-
-
-
-
-
-
-remove nvidia operator cluster object and recreate it
-
-
-
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/working_with_accelerators/index#enabling-nvidia-gpus_accelerators
-
-
-
-
-
-
-
-
-
-
-FROM fedora:latest
-
-RUN dnf install -y \
-    curl \
-    && curl -O https://dl.min.io/client/mc/release/linux-amd64/mc \
-    && chmod +x mc \
-    && mv mc /usr/local/bin/ \
-    && dnf clean all
-
-ENTRYPOINT ["mc"]
-
-CMD ["--help"]
-
-
-
-
-
-
-
-
-
 
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: bootstrap-minio
-  namespace: openshift-gitops
+  name: minio-config
+  namespace: minio
 spec:
   template:
     spec:
@@ -152,58 +90,4 @@ spec:
             echo "Environment ready!"
       restartPolicy: Never
   backoffLimit: 1
-
-
-
-
-
-
-
-
-
-
-mc alias set minio http://minio-service.larizmen-dev.svc.cluster.local:9000 admin R3dh4t1!
-
-
-
-
-
-
-
-
-mc admin user add minio user01 redhat01
-
-cat > user01-policy.json << EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::user01-*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:DeleteObject",
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::user01-*/*"
-            ]
-        }
-    ]
-}
-EOF
-
-mc admin policy create myminio user01-policy user01-policy.json
-
-mc admin policy attach minio user01-policy --user=user01
-
-mc mb minio/user01-ai
 
