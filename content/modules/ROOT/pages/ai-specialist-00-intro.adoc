@@ -43,7 +43,7 @@ image::ai-workflow.png[]
 
 1. *Data Management*: Data Collection and Cleaning: This is the foundational step where raw data is gathered, cleaned, and pre-processed to ensure quality and consistency. It serves as the input for downstream processes.
 
-2. *Model Building*: Which includes the following steps:
+2. *Model Development*: Which includes the following steps:
 
     * Feature Engineering: Refined data is transformed into meaningful features that improve model performance. This phase often involves iterating back to the data collection step to enhance data quality.
     * Model Development: The core algorithms are designed and developed. This involves selecting and testing different model architectures. Iterations may occur, feeding back into feature engineering.
