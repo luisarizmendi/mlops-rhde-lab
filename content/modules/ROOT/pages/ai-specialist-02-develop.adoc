@@ -112,7 +112,7 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Notebooks-Pytorch". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+4- Create a new Workbench named "Object Detection Notebooks". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
@@ -429,7 +429,7 @@ client = Minio(
     AWS_S3_ENDPOINT,
     access_key=AWS_ACCESS_KEY_ID,
     secret_key=AWS_SECRET_ACCESS_KEY,
-    secure=False
+    secure=True
 )
 ----
 
@@ -459,14 +459,14 @@ directory_name= os.path.basename(model_path_train)
 # File upload
 for file_path_train in files_train:
     try:
-        client.fput_object(AWS_S3_BUCKET, directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
+        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
         print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)
         
 for file_path_test in files_test:
     try:
-        client.fput_object(AWS_S3_BUCKET, directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
+        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
         print(f"'{os.path.basename(file_path_test)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)

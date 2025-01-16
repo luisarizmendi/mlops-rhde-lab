@@ -13,7 +13,6 @@
 
 
 
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html/managing_openshift_ai/creating-custom-workbench-images#creating-a-custom-image-from-default-image_custom-images
 
 
 
@@ -232,10 +231,61 @@ https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+-------------
+
+
+create base container image
+
+
+
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html/managing_openshift_ai/creating-custom-workbench-images#creating-a-custom-image-from-default-image_custom-images
+
+
+
+podman build -t quay.io/luisarizmendi/pytorch-custom:latest .
+
+
+
+
+
+
+ai-train-custom-image.png
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ----
 
-create pipeline server
+create pipeline server (region none)
 
+
+ai-train-pipeline-server.png
 
 
 
@@ -244,7 +294,7 @@ restart workbench
 
 
 
-
+open workbench
 
 click the gear on the left menu (Runtimes) and then check runtime configuration was loaded automatically
 
@@ -256,19 +306,50 @@ click the gear on the left menu (Runtimes) and then check runtime configuration 
 
 
 
----
+
+
+click on "+" tab on the header (close to protyping.ipynb  "x") 
+
+Select "Pipeline Editor" en the Elyra section
+
+Rename .pipeline file "training.pipeline"
 
 
 
 
 
-right click "New Data Science Pipeline Editor"
-
-Rename .pipeline file "prototyping.pipeline"
 
 
 
 
+
+
+
+
+-----
+
+Prepare step files
+
+
++ remove pip installs
+
+* include environment variables (to get dataset, custom typical hyperparameters), for example 
+    'epochs': os.getenv("MODEL_EPOCHS"),
+    'batch': os.getenv("MODEL_BATCH"), 
+
+
+
+* include imports in each step
+
+
++ cambiar path save en el object store
+
+
+
+
+
+
+----
 
 drag drop and connect 
 
@@ -279,23 +360,29 @@ drag drop and connect
 click top right square to open the pipeline configuration panel on the right (do not close it we will use it)
 
 
+for each node: 
+
++ choose runtime and GPU config (GPU=1 GPU vendor nvidia.com/gpu)
+
++ Add environment variables
 
 
-choose runtime and GPU config (GPU=1 GPU vendor nvidia.com/gpu)
+
+
 
 
 
 save
 
-
-
 run 
 
 
 
-
+------
 
 
 Go to Experiments and se it running 
 
+
+once the tasks are finishing, you can check the logs 
 
