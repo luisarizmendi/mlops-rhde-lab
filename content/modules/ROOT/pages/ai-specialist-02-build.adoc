@@ -479,6 +479,4 @@ You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 
 In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/object-detection-hardhat-v1-m.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/prototyping.ipynb[trained used this Jupyter Notebook].
 
-
-
-You can now also push to the Git Source repository the files that you created before jumping into the xref:ai-specialist-03-training.adoc[Model Training] section.
+You can now also push to the Git Source repository the files that you created (use the `Git` menu in the top bar) before jumping into the xref:ai-specialist-03-training.adoc[Model Training] section.
