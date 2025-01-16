@@ -62,7 +62,6 @@ If you plan to use Gitea you can create a new repository by following these step
 ====
 
 
-
 *Object Storage (MinIO)*
 
 Object storage provides a scalable and accessible solution for persisting large files. Once our model is trained, we will leverage object storage to securely store and manage the model artifacts, ensuring they remain accessible for deployment and further iterations.
@@ -71,19 +70,11 @@ In this workshop MinIO, an Open Source High Performance Object Storage, is deplo
 
 [example]
 ====
-To store the model that you will create during this prototyping phase, you need to create a new Object Bucket
+You can check that you have access and that you have your Object Bucket created:
 
 1. Navegate to {minio-ui}
 2. Log in with {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>]
-3. Go to "Buckets" in the left menu and then click on "Create Bucket" on the top right corner
-4. Create a new Bucket with the name "userpass:[<span id="gnumberVal"></span>]-ai"
 ====
-
-[CAUTION]
-
-The MinIO users provided for this workshop have administrative privileges, allowing you to fully explore and experiment with the platform without any restrictions. However, please exercise caution to avoid inadvertently modifying other users' buckets or altering user privileges.
-
-
 
 
 == Feature Engineering
