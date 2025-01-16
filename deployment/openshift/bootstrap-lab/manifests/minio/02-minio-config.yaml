@@ -17,7 +17,7 @@ spec:
         args:
         - |
             MINIO_ALIAS="minio"
-            MINIO_URL="http://minio-service.larizmen-dev.svc.cluster.local:9000"
+            MINIO_URL="http://minio-service.minio.svc.cluster.local:9000"
             ACCESS_KEY="admin"
             SECRET_KEY="R3dh4t1!"
 
