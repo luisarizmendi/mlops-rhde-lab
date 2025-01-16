@@ -1,4 +1,4 @@
- FROM quay.io/modh/odh-pytorch-notebook@sha256:b68e0…
+ FROM quay.io/modh/odh-pytorch-notebook:v2-2024a-20250116-b42b86c
 
  USER 0
 
