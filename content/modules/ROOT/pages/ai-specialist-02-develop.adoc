@@ -1,6 +1,6 @@
-= Model Building
+= Model Development
 
-The process of AI model building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation.
+The process of AI model prototype building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation.
 
 While these two stages (Feature Engineering and Model development) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 

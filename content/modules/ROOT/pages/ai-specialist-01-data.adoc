@@ -455,7 +455,7 @@ dataset = version.download("yolov11")
 
 [IMPORTANT]
 
-Copy and save this code since you will need it in the next xref:ai-specialist-02-build.adoc[Model Building] section 
+Copy and save this code since you will need it in the next xref:ai-specialist-02-prototype.adoc[Model Development] section 
 
 
 That's all you need to continue to the next section, but if you are curious about the YOLO formating (metadata) and how the Dataset is organized you can Download the Dataset and take a look at that compressed file.
@@ -531,12 +531,12 @@ If you want to directly use it, please remove the images labeled with `hat`, as 
 
 Here’s an enhanced version of the text:
 
-Now you’re ready to proceed to the xref:ai-specialist-02-build.adoc[Model Building] section. However, it’s important to keep in mind that model training is a time-intensive process. Depending on your hardware and hyperparameter configuration, training can take anywhere from several hours to multiple days. If your goal is to complete this workshop in a single session, you’ll need to consider an alternative approach: the "Plan B."
+Now you’re ready to proceed to the xref:ai-specialist-02-prototype.adoc[Model Development] section. However, it’s important to keep in mind that model training is a time-intensive process. Depending on your hardware and hyperparameter configuration, training can take anywhere from several hours to multiple days. If your goal is to complete this workshop in a single session, you’ll need to consider an alternative approach: the "Plan B."
 
 Plan B for model training during this workshop involves significantly reducing the dataset size to shorten the training time. While this means the resulting model won’t be viable for real-world use, it will allow you to complete all the steps in the training phase within the limited timeframe.
 
 [NOTE]
-A pre-trained model will be provided as the solution in the xref:ai-specialist-02-build.adoc[Model Building] section, which you can use to complete the subsequent steps.
+A pre-trained model will be provided as the solution in the xref:ai-specialist-02-prototype.adoc[Model Development] section, which you can use to complete the subsequent steps.
 
 How can you reduce the dataset size for training? The simplest and most effective approach without deleting images is to create a new "Dataset Version" by adjusting the dataset splits. For example, you can reduce the number of images in the training and validation sets to approximately 5–10 images each, while assigning the remaining images to the test set and then use that "Version" during the training phase.
 
