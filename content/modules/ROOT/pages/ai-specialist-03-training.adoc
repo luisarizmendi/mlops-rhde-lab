@@ -240,8 +240,6 @@ https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/
 
 
 
-
-
 -------------
 
 
@@ -266,12 +264,14 @@ ai-train-custom-image.png
 
 
 
+***************************
+add it to custom runtimes
+***************************
+
+ai-train-custom-elyra-image.png
 
 
-
-
-
-
+restart workbench -> maybe not because I do it later
 
 
 
@@ -326,6 +326,10 @@ Rename .pipeline file "training.pipeline"
 
 
 
+
+
+
+
 -----
 
 Prepare step files
@@ -364,7 +368,14 @@ for each node:
 
 + choose runtime and GPU config (GPU=1 GPU vendor nvidia.com/gpu)
 
-+ Add environment variables
++ Add environment variables  (??? maybe better at the pipeline level instead?)
+
+
+
+
+ADD VOLUME 
+* create PVC  (training-pipeline)
+* Config pipeline (/opt/app-root/src)
 
 
 
