@@ -42,6 +42,10 @@ In the next section xref:ai-specialist-03-deploy.adoc[Model Release] we will exp
 
 There are other interesting features such as Distributed Training that are not covered in this workshop.
 
+If you platform has GPUs available, OpenShift and OpenShift AI will be preconfigured to use them. You can double check it by navegating to `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), if you see one entry you will know that you can use GPUs during your training.
+
+
+
 *Source Code Repository (Gitea)*
 
 We will use Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training, but any other source code repository such as GitHub could be used. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
@@ -117,7 +121,7 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Notebooks-Pytorch". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `AcceleratorProfiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+4- Create a new Workbench named "Notebooks-Pytorch". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
