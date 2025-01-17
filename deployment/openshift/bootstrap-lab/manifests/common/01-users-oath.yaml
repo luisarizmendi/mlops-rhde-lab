@@ -13,7 +13,7 @@ spec:
       htpasswd:
         fileData:
           name: htpasswd
-    - name: htpasswd-workshop
+    - name: htpasswd_workshop
       mappingMethod: claim
       type: HTPasswd
       htpasswd:
