@@ -400,6 +400,35 @@ results_test = model.val(data=CONFIG['data'], split='test', device=CONFIG['devic
 After the evaluation with the Test Data Set you will see how a new directory with the results, similar to what you got with the training, has been created. 
 
 
+
+
+
+
+
+
+
+
+
+
+
+test with images 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 === (optional) Model Export
 
 Model export is the process of saving or converting a trained machine learning model into a specific format that can be used for inference or deployment in different environments. This is important because it allows the trained model to be shared, deployed to production, or used in different applications without needing the original training code or environment.
