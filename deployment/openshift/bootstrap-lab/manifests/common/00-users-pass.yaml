@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: htpasswd-config
+  namespace: openshift-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  htpasswd: |
+    user01:$2y$05$7pHOT2KzenxhRu44uhu4XOcA/Uyt/798XJUMFpNgtHmtVPsCVyRBq
+    user02:$2y$05$H7d3TNHPmIp8k3GGkqTNQOUAfcBFGAwV4jGDDyVW21XboGDwZct4i
+    user03:$2y$05$SQu/WYBG3VSjio4z2dkrFeLLI1t/nLSBComXzE3wwml0kPn98tvle
+    user04:$2y$05$I6Q2eolGS0ZqEO/QmqXeROZp38orjIL301MbQVVpD/djEUlT/lRHS
+    user05:$2y$05$fvEegLBaPr.qyo2XJeaxxOuTUvbjfsbrLhxd48wJTgZtGYUSj7CBm
+    user06:$2y$05$iKcngTaZ/6nKUwtJH2Mq2.oWsdvp.ijDnGRozzpaOalpZGq94QFyq
+    user07:$2y$05$sxlfj2W2ldKhGNakaufWaunF/3.lHTM.d6JF27TwHc4gQPKbgjI6u
+    user08:$2y$05$uUarrBqQFVpyTqZZIW1/9uDLPYB6GMRg4pw5t4Zqlcnet5hZ.Aqp.
+    user09:$2y$05$/lGYlJyxG5z6wGO1w.f/Fu.yS7bo1sof6Ktl4A6z3T8.40K27mcLK
+    user10:$2y$05$cl42kwvts0so17uEqkiynO1BL8RR1oD1CdEjVn1kPRKTh.XG273N2
+    user11:$2y$05$g7PsUCUQqiQqX/2NVHHuBOSZ4axsec5VYnQKVUORRj8IZLX8TAlB.
+    user12:$2y$05$4FTXOFH0QTiTeWucad9ZSuEZR6PZpnpdLxYkLKzdvHQpJsV.5dm7.
+    user13:$2y$05$BWjFzFmq5QcSg4ngHsqbl.nQ5gLn7EEvP92nM3odKbS4h0p1l8ULO
+    user14:$2y$05$jUvhmQrooGtjQheIB939yugfds5gN4c.ZagGGw4vRpllc0WLp37wK
+    user15:$2y$05$k7i9n/9ADvbA6/Y1ix1YNO7Q84vi2j34f0SytQPPulEQmkRqhxI0S
+    user16:$2y$05$qrkDQwa2a6.CM8ISALROkuH.bdO7qTQaaqdIzqgp6KLVPOfHt8qWm
+    user17:$2y$05$ytI/UAAEcrrF35DuC.iDN.SHWhmUfzyY.NqmFJIQ/uaelgqAEu/Zu
+    user18:$2y$05$XneHLFnP.DvO0yyh/P0zyuVZm3b6LVt9/38pwzBgX/LADhOIPihgi
+    user19:$2y$05$Qyz7usIlMCMQmP5oLpRBa.BRjJfUDeGLPttFpYzzGXHrpkE6m1VTK
+    user20:$2y$05$OMabdIFxmDv1g/2XzYH.VODeRfjm7e8ra8vINZsSL/7dHvywXpjmK
+    user21:$2y$05$9HYuB8xIK8FBN/E.sAkyuugY3S79dfylYZgiS.YYWHONfN98Wu60K
+    user22:$2y$05$NhAf6.AqMM1vuMxPhHpLOuEgnu55ca4dg90vQanMWu4x65ckrocPO
+    user23:$2y$05$YCN2j8DdVqrtkfPE0OrPae/GmV86HY/.vNYTQ2dLDt/8REXaJMqpi
+    user24:$2y$05$lsEAXQrsyYC/g0XptXKP6OSO1vMXcktiHwvO0z7q2nOdyLwPGz90C
+    user25:$2y$05$DVjLxSMpNFCeg5W3u28nVOabRNHcFrnYyuu0IRsQbelPSlMqGSFne
+    user99:$2y$05$yNztNQbN1IbvgZWAtrBhFuUEHw9Qh.x/Mmlk5nYF2I0lStGPNuGd2
