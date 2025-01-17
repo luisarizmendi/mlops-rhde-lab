@@ -76,6 +76,9 @@ def detect_objects_in_files(model_input, files):
 
     return "Processing completed.", results_images
 
+# Set a custom flagging directory to avoid permission issues
+flagging_dir = "/tmp/flagged"  # Change this path if needed
+
 interface = gr.Interface(
     fn=detect_objects_in_files,
     inputs=[
@@ -87,7 +90,8 @@ interface = gr.Interface(
         gr.Gallery(label="Results")
     ],
     title="Object Detection on Images",
-    description="Upload images to perform object detection. The model will process each image and display the results."
+    description="Upload images to perform object detection. The model will process each image and display the results.",
+    flagging_dir=flagging_dir  # Specify the custom flagging directory
 )
 
 if __name__ == "__main__":
