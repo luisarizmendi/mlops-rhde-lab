@@ -407,7 +407,12 @@ To visually test the performance of your object detection model, you can downloa
 podman run -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
 ----
 
+[NOTE]
+
+The image includes `PyTorch` dependencies, making it quite large. As a result, the pull process may take some time to complete.
+
 Or if you have an NVIDIA GPU:
+
 [source,python,role=execute,subs="attributes"]
 ----
 podman run --device nvidia.com/gpu=all --security-opt=label=disable --privileged -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
