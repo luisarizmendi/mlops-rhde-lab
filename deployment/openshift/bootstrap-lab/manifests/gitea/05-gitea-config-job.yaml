@@ -37,7 +37,8 @@ spec:
               -d '{
                 "username": "'"$USERNAME"'",
                 "password": "'"$PASSWORD"'",
-                "email": "'"$EMAIL"'"
+                "email": "'"$EMAIL"'",
+                "must_change_password": false
               }'
           done
           
