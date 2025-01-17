@@ -414,37 +414,33 @@ After the evaluation with the Test Data Set you will see how a new directory wit
 test with images 
 
 
-export AWS_S3_ENDPOINT=minio-api-minio.apps.cluster-sg2tp.dynamic.redhatworkshops.io
-export AWS_ACCESS_KEY_ID=user01
-export AWS_SECRET_ACCESS_KEY=redhat01
-export AWS_S3_BUCKET=user01-ai-models
-export MODEL_KEY=prototype/yolo_hardhat/train-val/best.pt
+podman run -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
+
+
+with GPU:
+
+podman run --privileged -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
+
+
+
+takes time to start, it will be ready when:
+
+Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/app/.config/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
 
 
 
 
-podman run \
-  -e AWS_S3_ENDPOINT=minio-api-minio.apps.cluster-sg2tp.dynamic.redhatworkshops.io \
-  -e AWS_ACCESS_KEY_ID=user01 \
-  -e AWS_SECRET_ACCESS_KEY=redhat01 \
-  -e AWS_S3_BUCKET=user01-ai-models \
-  -e MODEL_KEY=prototype/yolo_hardhat/train-val/best.pt \
-  -p 7860:7860 \
-  quay.io/luisarizmendi/object-detection-model-test:latest
+http://localhost:8800/
 
 
-takes time to start 
-
-http://localhost:7860/
+IMPORTAT: drag-and-drop does nto work with chrome
 
 
 
 
-
-
-
-
-
+ai-build-test-app.png
 
 
 
