@@ -386,7 +386,7 @@ results_train_save_path = "model_train_results"
 
 try:
     with open(results_train_save_path, "r") as file:
-        results_train_new = file.read().strip()
+        results_train = file.read().strip()
 except FileNotFoundError:
     print(f"File not found: {results_train_save_path}")
 
@@ -397,7 +397,7 @@ results_test_save_path = "model_test_results"
 
 try:
     with open(results_test_save_path, "r") as file:
-        results_test_new = file.read().strip()
+        results_test = file.read().strip()
 except FileNotFoundError:
     print(f"File not found: {results_test_save_path}")
 
