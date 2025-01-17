@@ -423,7 +423,7 @@ export MODEL_KEY=prototype/yolo_hardhat/train-val/best.pt
 
 
 
-podman run -d \
+podman run \
   -e AWS_S3_ENDPOINT=minio-api-minio.apps.cluster-sg2tp.dynamic.redhatworkshops.io \
   -e AWS_ACCESS_KEY_ID=user01 \
   -e AWS_SECRET_ACCESS_KEY=redhat01 \
@@ -431,6 +431,25 @@ podman run -d \
   -e MODEL_KEY=prototype/yolo_hardhat/train-val/best.pt \
   -p 7860:7860 \
   quay.io/luisarizmendi/object-detection-model-test:latest
+
+
+takes time to start 
+
+http://localhost:7860/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -487,21 +506,31 @@ Once you have the Client configured, you just need to select the files and uploa
 ----
 # File selection
 model_path_train = results_train.save_dir
-files_train = [file for file in model_path_train.rglob('*') if file.is_file()]
-
+weights_path = os.path.join(model_path_train, "weights")
 model_path_test = results_test.save_dir
-files_test = [file for file in model_path_test.rglob('*') if file.is_file()]
 
-directory_name= os.path.basename(model_path_train)
+files_train = [os.path.join(model_path_train, f) for f in os.listdir(model_path_train) if os.path.isfile(os.path.join(model_path_train, f))]
+files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path) if os.path.isfile(os.path.join(weights_path, f))]
+files_test = [os.path.join(model_path_test, f) for f in os.listdir(model_path_test) if os.path.isfile(os.path.join(model_path_test, f))]
+
 
 # File upload
+directory_name= os.path.basename(model_path_train)
+
 for file_path_train in files_train:
     try:
         client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
         print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)
-        
+
+for file_path_model in files_models:
+    try:
+        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/" + os.path.basename(file_path_model), file_path_model)
+        print(f"'{os.path.basename(file_path_model)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+
 for file_path_test in files_test:
     try:
         client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)

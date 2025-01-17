@@ -58,7 +58,7 @@
             "label": "",
             "ui_data": {
               "label": "01-train.ipynb",
-              "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
+              "image": "/notebook/user01-ai/object-detection/static/elyra/notebook.svg",
               "x_pos": 641,
               "y_pos": 677,
               "description": "Run notebook file"
@@ -105,19 +105,19 @@
               "env_vars": [
                 {
                   "env_var": "AWS_S3_ENDPOINT",
-                  "value": "minio-api-minio.apps.cluster-88h9g.dynamic.redhatworkshops.io "
+                  "value": "minio-api-minio.apps.cluster-sg2tp.dynamic.redhatworkshops.io"
                 },
                 {
                   "env_var": "AWS_ACCESS_KEY_ID",
-                  "value": "user99"
+                  "value": "user01"
                 },
                 {
                   "env_var": "AWS_SECRET_ACCESS_KEY",
-                  "value": "redhat99"
+                  "value": "redhat01"
                 },
                 {
                   "env_var": "AWS_S3_BUCKET",
-                  "value": "user99-ai"
+                  "value": "user01-ai-models"
                 }
               ],
               "kubernetes_pod_annotations": [],
@@ -132,9 +132,9 @@
             "label": "",
             "ui_data": {
               "label": "02-save.ipynb",
-              "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
+              "image": "/notebook/user01-ai/object-detection/static/elyra/notebook.svg",
               "x_pos": 986,
-              "y_pos": 677,
+              "y_pos": 680,
               "description": "Run notebook file"
             }
           },
@@ -186,7 +186,6 @@
           "runtime": "Data Science Pipelines",
           "pipeline_defaults": {
             "kubernetes_pod_labels": [],
-            "kubernetes_tolerations": [],
             "mounted_volumes": [
               {
                 "path": "/opt/app-root/src",
@@ -194,6 +193,7 @@
                 "read_only": false
               }
             ],
+            "kubernetes_tolerations": [],
             "kubernetes_pod_annotations": [],
             "kubernetes_shared_mem_size": {},
             "kubernetes_secrets": [],
