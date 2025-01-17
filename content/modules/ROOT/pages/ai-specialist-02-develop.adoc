@@ -416,10 +416,7 @@ podman run --device nvidia.com/gpu=all --security-opt=label=disable --privileged
 [NOTE]
 ----
 If you find the following error:
-
-```
 Error: crun: cannot stat `/usr/lib64/libEGL_nvidia.so.565.57.01`: No such file or directory: OCI runtime attempted to invoke a command that was not found
-```
 
 Be sure that you have ran `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`
 ----
@@ -430,11 +427,9 @@ The application takes some time to start.
 ----
 It will be ready when you get this log in the terminal:
 
-```
 Creating new Ultralytics Settings v0.0.6 file ✅ 
 View Ultralytics Settings with 'yolo settings' or at '/app/.config/Ultralytics/settings.json'
 Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
-```
 ----
 
 Once it's up you can navigate to `http://localhost:8800/` and the select the file with the model and all the images where you want to test it (you can download the Dataset from Roboflow as explained in the xref:ai-specialist-01-data.adoc[Data Management] section and use the Test Set)
