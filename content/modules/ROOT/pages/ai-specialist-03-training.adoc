@@ -355,54 +355,54 @@ Prepare step files
 
 TRAIN:
 
-results_train_save_path = "model_train_results"
+results_train_serializable = {
+    "maps": results_train.maps,
+    "names": results_train.names,
+    "save_dir": results_train.save_dir,
+    "results_dict": results_train.results_dict,
+}
 
-# Convert DetMetrics to a string (e.g., by using its __str__ method or relevant attribute)
-results_train_str = str(results_train)
+results_train_save_path = "model_train_results.pth"
 
-# Save the string representation of the object to the file, overwriting it each time
-with open(results_train_save_path, "w") as f:  
-    f.write(f"{results_train_str}\n")
+torch.save(results_train_serializable, results_train_save_path)
 
 
+results_test_serializable = {
+    "maps": results_test.maps,
+    "names": results_test.names,
+    "save_dir": results_test.save_dir,
+    "results_dict": results_test.results_dict,
+}
 
-results_test_save_path = "model_train_results"
+results_test_save_path = "model_test_results.pth"
 
-# Convert DetMetrics to a string (e.g., by using its __str__ method or relevant attribute)
-results_test_str = str(results_test)
-
-# Save the string representation of the object to the file, overwriting it each time
-with open(results_test_save_path, "w") as f:  
-    f.write(f"{results_test_str}\n")
-
+torch.save(results_test_serializable, results_test_save_path)
 
     
 
 
+
+
+
 SVAE:
 
-results_train_save_path = "model_train_results"
+import torch 
 
+results_train_save_path = "model_train_results.pth"
+results_train = torch.load(results_train_save_path)
 
-try:
-    with open(results_train_save_path, "r") as file:
-        results_train = file.read().strip()
-except FileNotFoundError:
-    print(f"File not found: {results_train_save_path}")
-
-
-
-results_test_save_path = "model_test_results"
-
-
-try:
-    with open(results_test_save_path, "r") as file:
-        results_test = file.read().strip()
-except FileNotFoundError:
-    print(f"File not found: {results_test_save_path}")
+results_test_save_path = "model_test_results.pth"
+results_test = torch.load(results_test_save_path)
 
 
 
+y cambiar esto:
+
+model_path_train = results_train[save_dir]
+files_train = [file for file in model_path_train.rglob('*') if file.is_file()]
+
+model_path_test = results_test[save_dir]
+files_test = [file for file in model_path_test.rglob('*') if file.is_file()]
 
 
 
