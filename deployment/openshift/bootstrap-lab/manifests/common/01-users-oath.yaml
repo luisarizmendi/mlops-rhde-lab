@@ -1,5 +1,5 @@
 ---
-apiVersion: operator.openshift.io/v1
+apiVersion: config.openshift.io/v1
 kind: OAuth
 metadata:
   name: cluster
@@ -7,7 +7,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   identityProviders:
-    - name: htpasswd
+    - name: htpasswd_provider
+      mappingMethod: claim
+      type: HTPasswd
+      htpasswd:
+        fileData:
+          name: htpasswd
+    - name: htpasswd-workshop
       mappingMethod: claim
       type: HTPasswd
       htpasswd:
