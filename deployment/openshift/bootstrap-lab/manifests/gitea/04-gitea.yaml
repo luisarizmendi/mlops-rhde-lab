@@ -13,7 +13,7 @@ spec:
   giteaSsl: false
   postgresqlVolumeSize: 4Gi
 
- # giteaAdminUser: gitea
- # giteaAdminPassword: "R3dh4t1!"
- # giteaAdminPasswordLength: 32
- # giteaAdminEmail: gitea@acme.com
+  giteaAdminUser: gitea
+  giteaAdminPassword: "R3dh4t1!"
+  giteaAdminPasswordLength: 32
+  giteaAdminEmail: gitea@acme.com
