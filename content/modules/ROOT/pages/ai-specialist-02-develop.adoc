@@ -48,17 +48,15 @@ If you platform has GPUs available, OpenShift and OpenShift AI will be preconfig
 
 *Source Code Repository (Gitea)*
 
-We will use Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training, but any other source code repository such as GitHub could be used. Additionally, it will house the automated pipelines that streamline and manage the training process as the project evolves.
+We will use Gitea to store and version-control the Jupyter Notebooks developed for preliminary model training, but any other source code repository such as GitHub could be used. 
 
 [example]
 ====
-If you plan to use Gitea you can create a new repository by following these steps:
+If you plan to use Gitea you can take a look and check that the "userpass:[<span id="gnumberVal"></span>]-ai" repository is already created:
 
 1. Navegate to {gitea}
-2. Click "Register" (top right button) and fill in required fields (use "userpass:[<span id="gnumberVal"></span>]" as username)
-3. After registering, click `+` in "Repositories" to create a new repository
-4. Fill in repository data (use "userpass:[<span id="gnumberVal"></span>]-ai" as repository name)
-
+2. Click "Sign In" (top right button) with user "userpass:[<span id="gnumberVal"></span>]" and password "redhatpass:[<span id="gnumberVal"></span>]"
+3. You can see on the right the "userpass:[<span id="gnumberVal"></span>]-ai" repository.
 ====
 
 

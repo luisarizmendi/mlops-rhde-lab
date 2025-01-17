@@ -264,13 +264,13 @@ ai-train-custom-image.png
 
 
 ***************************
-add it to custom runtimes
+add it to custom runtime images
 ***************************
 
+quay.io/luisarizmendi/pytorch-custom:latest
+
+
 ai-train-custom-elyra-image.png
-
-
-restart workbench -> maybe not because I do it later
 
 
 
@@ -357,31 +357,47 @@ TRAIN:
 
 results_train_save_path = "model_train_results"
 
-with open(results_train_save_path, "a") as f:  
-    f.write(f"{results_train}\n")
+# Convert DetMetrics to a string (e.g., by using its __str__ method or relevant attribute)
+results_train_str = str(results_train)
 
-results_test_save_path = "model_test_results"
+# Save the string representation of the object to the file, overwriting it each time
+with open(results_train_save_path, "w") as f:  
+    f.write(f"{results_train_str}\n")
+
+
+
+results_test_save_path = "model_train_results"
+
+# Convert DetMetrics to a string (e.g., by using its __str__ method or relevant attribute)
+results_test_str = str(results_test)
+
+# Save the string representation of the object to the file, overwriting it each time
+with open(results_test_save_path, "w") as f:  
+    f.write(f"{results_test_str}\n")
+
+
     
-    
-with open(results_test_save_path, "a") as f:  
-    f.write(f"{results_test}\n")
 
 
 SVAE:
 
 results_train_save_path = "model_train_results"
 
+
 try:
     with open(results_train_save_path, "r") as file:
-        results_train = file.read()
+        results_train_new = file.read().strip()
 except FileNotFoundError:
     print(f"File not found: {results_train_save_path}")
 
+
+
 results_test_save_path = "model_test_results"
+
 
 try:
     with open(results_test_save_path, "r") as file:
-        results_test = file.read()
+        results_test_new = file.read().strip()
 except FileNotFoundError:
     print(f"File not found: {results_test_save_path}")
 
@@ -411,8 +427,8 @@ for each node:
 
 
 ADD VOLUME 
-* create PVC  (training-pipeline)
-* Config pipeline (/opt/app-root/src)
+* create PVC  (training-pipeline with 5G is enough in the userxx-ai project)
+* Config pipeline volume (/opt/app-root/src)
 
 
 
@@ -441,7 +457,7 @@ you can review live logs by jumping into openshift and see pod logs
 once the tasks are finishing, you can check the logs 
 
 
-
+Check the Object Storage
 
 
 
