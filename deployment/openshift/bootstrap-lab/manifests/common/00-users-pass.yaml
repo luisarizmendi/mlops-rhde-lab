@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-config
   annotations:
     argocd.argoproj.io/sync-wave: "0"
-data:
+stringData:
   htpasswd: |
     user01:$2y$05$7pHOT2KzenxhRu44uhu4XOcA/Uyt/798XJUMFpNgtHmtVPsCVyRBq
     user02:$2y$05$H7d3TNHPmIp8k3GGkqTNQOUAfcBFGAwV4jGDDyVW21XboGDwZct4i
