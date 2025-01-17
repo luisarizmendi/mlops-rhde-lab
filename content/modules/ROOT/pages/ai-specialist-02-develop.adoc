@@ -400,58 +400,51 @@ results_test = model.val(data=CONFIG['data'], split='test', device=CONFIG['devic
 After the evaluation with the Test Data Set you will see how a new directory with the results, similar to what you got with the training, has been created. 
 
 
+To visually test the performance of your object detection model, you can download the model's best.pt file from Object Storage. Then, utilize the following containerized application to perform the test locally: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/model_test_app/object-detection-batch.py[object-detection-batch.py]. This script allows you to seamlessly integrate the model and run the performance evaluation directly on your local machine.
 
-
-
-
-
-
-
-
-
-
-
-test with images 
-
-
+[source,python,role=execute,subs="attributes"]
+----
 podman run -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
+----
 
+Or if you have an NVIDIA GPU:
+[source,python,role=execute,subs="attributes"]
+----
+podman run --device nvidia.com/gpu=all --security-opt=label=disable --privileged -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
+----
 
-with GPU:
+[NOTE]
+----
+If you find the following error:
 
-podman run --privileged -p 8800:8800 quay.io/luisarizmendi/object-detection-model-test:latest
+```
+Error: crun: cannot stat `/usr/lib64/libEGL_nvidia.so.565.57.01`: No such file or directory: OCI runtime attempted to invoke a command that was not found
+```
 
+Be sure that you have ran `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`
+----
 
+The application takes some time to start.
 
-takes time to start, it will be ready when:
+[NOTE]
+----
+It will be ready when you get this log in the terminal:
 
+```
 Creating new Ultralytics Settings v0.0.6 file ✅ 
 View Ultralytics Settings with 'yolo settings' or at '/app/.config/Ultralytics/settings.json'
 Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+```
+----
+
+Once it's up you can navigate to `http://localhost:8800/` and the select the file with the model and all the images where you want to test it (you can download the Dataset from Roboflow as explained in the xref:ai-specialist-01-data.adoc[Data Management] section and use the Test Set)
 
 
+[CAUTION]
 
+Drag-and-drop does not work with Chrome, if you use that browser click on the box and select manaully the files, otherwise you will see them as with a size of `0` bytes.
 
-http://localhost:8800/
-
-
-IMPORTAT: drag-and-drop does nto work with chrome
-
-
-
-
-ai-build-test-app.png
-
-
-
-
-
-
-
-
-
-
-
+image::ai-build-test-app.png[]
 
 
 
