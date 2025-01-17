@@ -16,6 +16,14 @@ spec:
         args:
         - |
           set -e
+
+          # Wait
+          while ! curl -s --head "$GITEA_BASE_URL" | grep "HTTP/1.1 200 OK" > /dev/null; do
+            echo "Waiting for Gitea to be ready..."
+            sleep 5
+          done
+          echo "Gitea is ready!"
+
           AUTH_HEADER="Authorization: Basic $(echo -n "$GITEA_ADMIN_USER:$GITEA_ADMIN_PASS" | base64)"
 
           # Create users
