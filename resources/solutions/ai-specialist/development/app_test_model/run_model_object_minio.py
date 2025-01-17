@@ -12,7 +12,7 @@ AWS_S3_ENDPOINT = os.getenv("AWS_S3_ENDPOINT")
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
-MODEL_KEY = os.getenv("MODEL_KEY")
+MODEL_PATH = os.getenv("MODEL_KEY")
 
 # Initialize Minio client
 client = Minio(
@@ -45,9 +45,9 @@ def detect_objects_in_files(model_input, files):
     # If model path doesn't exist, download it from Minio
     model_path = model_input
     if not os.path.exists(model_path):
-        if AWS_S3_BUCKET and MODEL_KEY:
+        if AWS_S3_BUCKET and MODEL_PATH:
             print("Downloading model from Minio...")
-            model_path = download_model_from_s3(AWS_S3_BUCKET, MODEL_KEY)
+            model_path = download_model_from_s3(AWS_S3_BUCKET, MODEL_PATH)
         else:
             return "Model key or object storage credentials are missing.", []
 

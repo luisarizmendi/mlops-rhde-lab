@@ -1,0 +1,36 @@
+# Use a base image with Python and GPU support (CUDA-enabled)
+FROM nvidia/cuda:11.2.2-runtime-ubuntu20.04
+
+# Set environment variables for Minio (object storage) credentials
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+ENV AWS_S3_ENDPOINT="your-minio-endpoint"
+ENV AWS_ACCESS_KEY_ID="your-access-key-id"
+ENV AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+ENV AWS_S3_BUCKET="your-bucket-name"
+ENV MODEL_KEY="your-model-key"
+
+# Set the working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-dev \
+    python3-setuptools \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy the application code into the container
+COPY run_model_object_minio.py /app/run_model_object_minio.py
+
+# Run the application
+CMD ["python3", "run_model_object_minio.py"]
