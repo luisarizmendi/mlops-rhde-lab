@@ -282,7 +282,7 @@ restart workbench -> maybe not because I do it later
 
 ----
 
-create pipeline server (region none)
+create pipeline server (region none and bucket userxx-ai-pipelines)
 
 
 ai-train-pipeline-server.png
@@ -348,6 +348,44 @@ Prepare step files
 
 + cambiar path save en el object store
 
++ create cleanup to remove local files
+
++ Store the variables from training into a file to pass between pipeline tasks
+
+
+
+TRAIN:
+
+results_train_save_path = "model_train_results"
+
+with open(results_train_save_path, "a") as f:  
+    f.write(f"{results_train}\n")
+
+results_test_save_path = "model_test_results"
+    
+    
+with open(results_test_save_path, "a") as f:  
+    f.write(f"{results_test}\n")
+
+
+SVAE:
+
+results_train_save_path = "model_train_results"
+
+try:
+    with open(results_train_save_path, "r") as file:
+        results_train = file.read()
+except FileNotFoundError:
+    print(f"File not found: {results_train_save_path}")
+
+results_test_save_path = "model_test_results"
+
+try:
+    with open(results_test_save_path, "r") as file:
+        results_test = file.read()
+except FileNotFoundError:
+    print(f"File not found: {results_test_save_path}")
+
 
 
 
@@ -393,6 +431,12 @@ run
 
 
 Go to Experiments and se it running 
+
+
+
+
+tip 
+you can review live logs by jumping into openshift and see pod logs 
 
 
 once the tasks are finishing, you can check the logs 

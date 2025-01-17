@@ -108,7 +108,7 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
-3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket that you created ("userpass:[<span id="gnumberVal"></span>]-ai"). 
+3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket ("userpass:[<span id="gnumberVal"></span>]-ai-models"). 
 
 image::ai-build-dataconnection.png[]
 
@@ -122,7 +122,7 @@ image::ai-build-workbench.png[]
 
 image::ai-build-gitclone.png[]
 
-7- Create a `userpass:[<span id="gnumberVal"></span>]-ai.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
+7- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
 ====
 
 It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
@@ -473,6 +473,8 @@ for file_path_test in files_test:
 ----
 
 You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
+
+Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
 
 == Solution and Next Steps

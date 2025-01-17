@@ -83,8 +83,11 @@ spec:
                 echo "Attaching policy to user: $USER"
                 mc admin policy attach $MINIO_ALIAS ${USER}-policy --user=$USER
 
-                echo "Creating bucket: $BUCKET_NAME"
-                mc mb ${MINIO_ALIAS}/${BUCKET_NAME}
+                echo "Creating bucket: ${USER}-ai-models"
+                mc mb ${MINIO_ALIAS}/${USER}-ai-models
+
+                echo "Creating bucket: ${USER}-ai-pipelines"
+                mc mb ${MINIO_ALIAS}/${USER}-ai-pipelines
 
                 # Clean up policy file
                 rm -f $POLICY_FILE
