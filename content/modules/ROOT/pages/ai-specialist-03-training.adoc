@@ -477,6 +477,10 @@ Check the Object Storage
 KUBEFLOW PIPELINES
 
 
+support: https://access.redhat.com/articles/rhoai-supported-configs
+
+
+
 
 https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/openshift_ai_tutorial_-_fraud_detection_example/index#running-a-pipeline-generated-from-python-code
 
