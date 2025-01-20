@@ -19,22 +19,6 @@
               "outputs": [],
               "env_vars": [
                 {
-                  "env_var": "ROBOFLOW_KEY",
-                  "value": "kZAFZ30ULoBdNjSmyxlK"
-                },
-                {
-                  "env_var": "ROBOFLOW_WORKSPACE",
-                  "value": "workshop-igjqz"
-                },
-                {
-                  "env_var": "ROBOFLOW_PROJECT",
-                  "value": "group-99-hardhat-detection"
-                },
-                {
-                  "env_var": "ROBOFLOW_DATASET_VERSION",
-                  "value": "3"
-                },
-                {
                   "env_var": "MODEL_EPOCHS",
                   "value": "1"
                 },
@@ -43,7 +27,8 @@
                   "value": "4"
                 },
                 {
-                  "env_var": "PYTORCH_CUDA_ALLOC_CONF"
+                  "env_var": "PYTORCH_CUDA_ALLOC_CONF",
+                  "value": "expandable_segments:True"
                 }
               ],
               "kubernetes_pod_annotations": [],
@@ -58,9 +43,9 @@
             "label": "",
             "ui_data": {
               "label": "01-train.ipynb",
-              "image": "/notebook/user01-ai/object-detection/static/elyra/notebook.svg",
-              "x_pos": 641,
-              "y_pos": 677,
+              "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
+              "x_pos": 243,
+              "y_pos": 69,
               "description": "Run notebook file"
             }
           },
@@ -75,7 +60,14 @@
                   },
                   "label": "Input Port"
                 }
-              }
+              },
+              "links": [
+                {
+                  "id": "b3990dbb-534a-42a0-826b-e71c031d36cf",
+                  "node_id_ref": "5f599c07-34fe-4cd5-851e-501bdb4bec06",
+                  "port_id_ref": "outPort"
+                }
+              ]
             }
           ],
           "outputs": [
@@ -132,9 +124,9 @@
             "label": "",
             "ui_data": {
               "label": "02-save.ipynb",
-              "image": "/notebook/user01-ai/object-detection/static/elyra/notebook.svg",
-              "x_pos": 986,
-              "y_pos": 680,
+              "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
+              "x_pos": 463,
+              "y_pos": 70,
               "description": "Run notebook file"
             }
           },
@@ -173,6 +165,80 @@
               }
             }
           ]
+        },
+        {
+          "id": "5f599c07-34fe-4cd5-851e-501bdb4bec06",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [
+                {
+                  "env_var": "ROBOFLOW_KEY",
+                  "value": "kZAFZ30ULoBdNjSmyxlK"
+                },
+                {
+                  "env_var": "ROBOFLOW_WORKSPACE",
+                  "value": "workshop-igjqz"
+                },
+                {
+                  "env_var": "ROBOFLOW_PROJECT",
+                  "value": "group-99-hardhat-detection"
+                },
+                {
+                  "env_var": "ROBOFLOW_DATASET_VERSION",
+                  "value": "4"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "00-get-data.ipynb",
+              "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
+            },
+            "label": "",
+            "ui_data": {
+              "label": "00-get-data.ipynb",
+              "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
+              "x_pos": 24,
+              "y_pos": 70,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
         }
       ],
       "app_data": {
@@ -185,6 +251,9 @@
           "name": "training",
           "runtime": "Data Science Pipelines",
           "pipeline_defaults": {
+            "kubernetes_tolerations": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_shared_mem_size": {},
             "kubernetes_pod_labels": [],
             "mounted_volumes": [
               {
@@ -193,9 +262,6 @@
                 "read_only": false
               }
             ],
-            "kubernetes_tolerations": [],
-            "kubernetes_pod_annotations": [],
-            "kubernetes_shared_mem_size": {},
             "kubernetes_secrets": [],
             "env_vars": [],
             "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
