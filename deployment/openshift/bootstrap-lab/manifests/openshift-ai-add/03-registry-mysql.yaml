@@ -131,6 +131,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-object-recognition-model-registry
+  namespace: rhoai-model-registries
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
@@ -146,6 +147,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
   name: mysql-object-recognition-model-registry
+  namespace: rhoai-model-registries
   labels:
     app: mysql-object-recognition-model-registry
 spec:
