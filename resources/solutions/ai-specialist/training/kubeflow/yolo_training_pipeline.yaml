@@ -1,0 +1,296 @@
+# PIPELINE DEFINITION
+# Name: yolov11-training-pipeline
+# Description: Pipeline for training YOLOv11 model using Roboflow dataset
+# Inputs:
+#    aws_access_key: str
+#    aws_bucket: str
+#    aws_endpoint: str
+#    aws_secret_key: str
+#    model_batch: int
+#    model_epochs: int
+#    roboflow_key: str
+#    roboflow_project: str
+#    roboflow_version: str
+#    roboflow_workspace: str
+components:
+  comp-get-data:
+    executorLabel: exec-get-data
+    inputDefinitions:
+      parameters:
+        roboflow_key:
+          parameterType: STRING
+        roboflow_project:
+          parameterType: STRING
+        roboflow_version:
+          parameterType: STRING
+        roboflow_workspace:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        dataset_path:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-save-model:
+    executorLabel: exec-save-model
+    inputDefinitions:
+      artifacts:
+        trained_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+      parameters:
+        aws_access_key:
+          parameterType: STRING
+        aws_bucket:
+          parameterType: STRING
+        aws_endpoint:
+          parameterType: STRING
+        aws_secret_key:
+          parameterType: STRING
+  comp-train-model:
+    executorLabel: exec-train-model
+    inputDefinitions:
+      artifacts:
+        dataset_path:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        model_batch:
+          parameterType: NUMBER_INTEGER
+        model_epochs:
+          parameterType: NUMBER_INTEGER
+    outputDefinitions:
+      artifacts:
+        trained_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-get-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - get_data
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'kfp==2.11.0'\
+          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&\
+          \  python3 -m pip install --quiet --no-warn-script-location 'roboflow' 'torch'\
+          \ 'ultralytics' 'PyYAML' && \"$0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef get_data(\n    roboflow_key: str,\n    roboflow_workspace: str,\n\
+          \    roboflow_project: str,\n    roboflow_version: str,\n    dataset_path:\
+          \ Output[Dataset]\n):\n    import os\n    import yaml\n    from roboflow\
+          \ import Roboflow\n\n    # Download dataset from Roboflow\n    rf = Roboflow(api_key=roboflow_key)\n\
+          \    project = rf.workspace(roboflow_workspace).project(roboflow_project)\n\
+          \    version = project.version(roboflow_version)\n    dataset = version.download(\"\
+          yolov11\")\n\n    # Update data.yaml paths\n    dataset_yaml_path = f\"\
+          {dataset.location}/data.yaml\"\n    with open(dataset_yaml_path, \"r\")\
+          \ as file:\n        data_config = yaml.safe_load(file)\n\n    data_config[\"\
+          train\"] = f\"{dataset.location}/train/images\"\n    data_config[\"val\"\
+          ] = f\"{dataset.location}/valid/images\"\n    data_config[\"test\"] = f\"\
+          {dataset.location}/test/images\"\n\n    with open(dataset_yaml_path, \"\
+          w\") as file:\n        yaml.safe_dump(data_config, file)\n\n    # Save dataset\
+          \ path\n    with open(dataset_path.path, \"w\") as f:\n        f.write(dataset.location)\n\
+          \n"
+        image: python:3.9
+    exec-save-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - save_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'kfp==2.11.0'\
+          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&\
+          \  python3 -m pip install --quiet --no-warn-script-location 'minio' && \"\
+          $0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef save_model(\n    trained_model: Input[Model],\n    aws_endpoint:\
+          \ str,\n    aws_access_key: str,\n    aws_secret_key: str,\n    aws_bucket:\
+          \ str\n):\n    import os\n    from minio import Minio\n\n    # Read model\
+          \ path\n    with open(trained_model.path, \"r\") as f:\n        model_path\
+          \ = f.read().strip()\n\n    # Initialize Minio client\n    client = Minio(\n\
+          \        aws_endpoint,\n        access_key=aws_access_key,\n        secret_key=aws_secret_key,\n\
+          \        secure=True\n    )\n\n    # Upload model files\n    directory_name\
+          \ = os.path.basename(os.path.dirname(model_path))\n    for file_name in\
+          \ os.listdir(model_path):\n        file_path = os.path.join(model_path,\
+          \ file_name)\n        if os.path.isfile(file_path):\n            object_name\
+          \ = f\"models/{directory_name}/{file_name}\"\n            client.fput_object(aws_bucket,\
+          \ object_name, file_path)\n\n"
+        image: python:3.9
+    exec-train-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - train_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'kfp==2.11.0'\
+          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"'  &&\
+          \  python3 -m pip install --quiet --no-warn-script-location 'torch' 'ultralytics'\
+          \ 'PyYAML' && \"$0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef train_model(\n    dataset_path: Input[Dataset],\n    model_epochs:\
+          \ int,\n    model_batch: int,\n    trained_model: Output[Model]\n):\n  \
+          \  import os\n    import torch\n    from ultralytics import YOLO\n\n   \
+          \ # Configure device\n    device = torch.device(\"cuda:0\" if torch.cuda.is_available()\
+          \ else \"cpu\")\n\n    # Read dataset path\n    with open(dataset_path.path,\
+          \ \"r\") as f:\n        dataset_location = f.read().strip()\n\n    # Configure\
+          \ training parameters\n    config = {\n        'name': 'yolo_hardhat',\n\
+          \        'model': 'yolo11m.pt',\n        'data': f\"{dataset_location}/data.yaml\"\
+          ,\n        'epochs': model_epochs,\n        'batch': model_batch,\n    \
+          \    'imgsz': 640,\n        'patience': 15,\n        'device': device,\n\
+          \        'optimizer': 'SGD',\n        'lr0': 0.001,\n        'lrf': 0.005,\n\
+          \        'momentum': 0.9,\n        'weight_decay': 0.0005,\n        'warmup_epochs':\
+          \ 3,\n        'warmup_bias_lr': 0.01,\n        'warmup_momentum': 0.8,\n\
+          \        'amp': False,\n        'augment': True,\n        'hsv_h': 0.015,\n\
+          \        'hsv_s': 0.7,\n        'hsv_v': 0.4,\n        'degrees': 10,\n\
+          \        'translate': 0.1,\n        'scale': 0.3,\n        'shear': 0.0,\n\
+          \        'perspective': 0.0,\n        'flipud': 0.1,\n        'fliplr':\
+          \ 0.1,\n        'mosaic': 1.0,\n        'mixup': 0.0,\n    }\n\n    # Initialize\
+          \ and train model\n    model = YOLO(config['model'])\n    results = model.train(**config)\n\
+          \n    # Export model\n    model.export(format='onnx', imgsz=config['imgsz'])\n\
+          \n    # Save model path\n    model_path = os.path.join(results.save_dir,\
+          \ \"weights\")\n    with open(trained_model.path, \"w\") as f:\n       \
+          \ f.write(model_path)\n\n"
+        image: python:3.9
+pipelineInfo:
+  description: Pipeline for training YOLOv11 model using Roboflow dataset
+  name: yolov11-training-pipeline
+root:
+  dag:
+    tasks:
+      get-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-get-data
+        inputs:
+          parameters:
+            roboflow_key:
+              componentInputParameter: roboflow_key
+            roboflow_project:
+              componentInputParameter: roboflow_project
+            roboflow_version:
+              componentInputParameter: roboflow_version
+            roboflow_workspace:
+              componentInputParameter: roboflow_workspace
+        taskInfo:
+          name: get-data
+      save-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-save-model
+        dependentTasks:
+        - train-model
+        inputs:
+          artifacts:
+            trained_model:
+              taskOutputArtifact:
+                outputArtifactKey: trained_model
+                producerTask: train-model
+          parameters:
+            aws_access_key:
+              componentInputParameter: aws_access_key
+            aws_bucket:
+              componentInputParameter: aws_bucket
+            aws_endpoint:
+              componentInputParameter: aws_endpoint
+            aws_secret_key:
+              componentInputParameter: aws_secret_key
+        taskInfo:
+          name: save-model
+      train-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-train-model
+        dependentTasks:
+        - get-data
+        inputs:
+          artifacts:
+            dataset_path:
+              taskOutputArtifact:
+                outputArtifactKey: dataset_path
+                producerTask: get-data
+          parameters:
+            model_batch:
+              componentInputParameter: model_batch
+            model_epochs:
+              componentInputParameter: model_epochs
+        taskInfo:
+          name: train-model
+  inputDefinitions:
+    parameters:
+      aws_access_key:
+        parameterType: STRING
+      aws_bucket:
+        parameterType: STRING
+      aws_endpoint:
+        parameterType: STRING
+      aws_secret_key:
+        parameterType: STRING
+      model_batch:
+        parameterType: NUMBER_INTEGER
+      model_epochs:
+        parameterType: NUMBER_INTEGER
+      roboflow_key:
+        parameterType: STRING
+      roboflow_project:
+        parameterType: STRING
+      roboflow_version:
+        parameterType: STRING
+      roboflow_workspace:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.11.0
