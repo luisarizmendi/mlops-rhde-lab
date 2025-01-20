@@ -5,6 +5,7 @@ kind: ModelRegistry
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     openshift.io/description: ''
     openshift.io/display-name: model-registry
   name: model-registry

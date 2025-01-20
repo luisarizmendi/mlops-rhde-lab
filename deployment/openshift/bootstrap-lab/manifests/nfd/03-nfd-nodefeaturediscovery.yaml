@@ -3,6 +3,7 @@ kind: NodeFeatureDiscovery
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: nfd-instance
   namespace: openshift-nfd
 spec:
