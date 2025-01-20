@@ -108,8 +108,6 @@ spec:
                 revision: main
                 directories:
                   - path: deployment/openshift/bootstrap-lab/manifests/*
-                  - path: deployment/openshift/bootstrap-lab/manifests/openshift-ai-add
-                    exclude: true
                   - path: deployment/openshift/bootstrap-lab/manifests/nvidia-operator
                     exclude: true
                   - path: deployment/openshift/bootstrap-lab/manifests/nfd
