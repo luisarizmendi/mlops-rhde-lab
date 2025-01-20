@@ -356,7 +356,7 @@ Prepare step files
 
 + remove pip installs
 
-+ dataset_location from get_data to train 
++ dataset_location from get_data to train (pickle) 
 
 * include environment variables (to get dataset, custom typical hyperparameters), for example 
     'epochs': os.getenv("MODEL_EPOCHS"),
