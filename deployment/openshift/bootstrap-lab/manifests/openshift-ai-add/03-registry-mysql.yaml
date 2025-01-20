@@ -2,6 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: mysql-model-registries
   namespace: rhoai-model-registries
   labels:
@@ -75,6 +77,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-model-registries
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -85,6 +89,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: mysql-model-registries
   labels:
     app: mysql-model-registries
@@ -96,3 +102,17 @@ spec:
     name: mysql-model-registries
   type: ClusterIP
 ---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: model-registry-secret
+  namespace: rhoai-model-registries
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    template.openshift.io/expose-database_name: '{.data[''database-name'']}'
+    template.openshift.io/expose-password: '{.data[''database-password'']}'
+    template.openshift.io/expose-username: '{.data[''database-user'']}'
+stringData:
+  database-name: model_registries
+  database-password: R3dh4t1!
+  database-user: admin
