@@ -196,5 +196,5 @@ def yolo_training_pipeline(
 # Compile the pipeline
 compiler.Compiler().compile(
     pipeline_func=yolo_training_pipeline,
-    package_path='yolo_training_pipeline.yaml'
+    package_path='training-kubeflow.yaml'
 )
