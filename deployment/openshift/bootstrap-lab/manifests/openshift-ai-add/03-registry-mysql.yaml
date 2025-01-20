@@ -1,0 +1,98 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-model-registries
+  namespace: rhoai-model-registries
+  labels:
+    app.openshift.io/runtime: mysql-database
+    template: mysql-persistent-template
+    template.openshift.io/template-instance-owner: e467373b-c60f-40c3-b74e-0ab148b9ccc8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mysql-model-registries
+  template:
+    metadata:
+      labels:
+        name: mysql-model-registries
+    spec:
+      containers:
+        - name: mysql
+          image: registry.redhat.io/rhel9/mysql-80:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_USER
+              value: admin
+            - name: MYSQL_PASSWORD
+              value: R3dh4t1!
+            - name: MYSQL_ROOT_PASSWORD
+              value: R3dh4t1!
+            - name: MYSQL_DATABASE
+              value: model_registries
+          resources:
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: mysql-model-registries-data
+              mountPath: /var/lib/mysql/data
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-i'
+                - '-c'
+                - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin -u $MYSQL_USER ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-i'
+                - '-c'
+                - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin -u $MYSQL_USER ping
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+            successThreshold: 1
+      volumes:
+        - name: mysql-model-registries-data
+          persistentVolumeClaim:
+            claimName: mysql-model-registries
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-model-registries
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-model-registries
+  labels:
+    app: mysql-model-registries
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+  selector:
+    name: mysql-model-registries
+  type: ClusterIP
+---
