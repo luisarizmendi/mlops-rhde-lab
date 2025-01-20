@@ -356,6 +356,8 @@ Prepare step files
 
 + remove pip installs
 
++ dataset_location from get_data to train 
+
 * include environment variables (to get dataset, custom typical hyperparameters), for example 
     'epochs': os.getenv("MODEL_EPOCHS"),
     'batch': os.getenv("MODEL_BATCH"), 
@@ -482,6 +484,19 @@ once the tasks are finishing, you can check the logs
 
 
 Check the Object Storage
+
+
+
+
+
+
+
+
+
+
+
+
+SCHEDULE!!!!!!!
 
 
 
