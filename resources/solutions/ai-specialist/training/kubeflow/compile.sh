@@ -1,5 +1,5 @@
 #!/bin/bash
 
-sudo pip install kfp
+pip install kfp
 
 python kubeflow-pipeline.py

@@ -29,7 +29,7 @@ spec:
     tlsMode: ISTIO_MUTUAL
   mysql:
     database: model_registry
-    host: object-recognition-model-registry.rhoai-model-registries.svc.cluster.local
+    host: object_recognition_model_registry
     passwordSecret:
       key: database-password
       name: model-registry-secret
