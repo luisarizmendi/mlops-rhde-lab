@@ -534,3 +534,32 @@ nuevo workbench code ****
 
 
 
+
+
+ https://github.com/Ark-kun/kfp_samples/blob/65a98da/2019-10%20Kubeflow%20summit/104%20-%20Passing%20data%20for%20python%20components/104%20-%20Passing%20data%20for%20python%20component
+
+
+
+ https://www.kubeflow.org/docs/components/pipelines/legacy-v1/sdk/manipulate-resources/
+
+
+
+
+https://github.com/kubeflow/pipelines/tree/master/samples/core
+
+
+https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/
+
+
+
+
+
+
+Crear un nuevo experiment antes de lanzar el run
+
+
+
+
+
+
+explicar que se crea un objeto "Workflow" con el pipe run
