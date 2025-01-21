@@ -600,9 +600,9 @@ Then you can  build your Container Image using the Containerfile and push it int
 
 [source,shell,subs="attributes"]
 ----
-podman build -t $registry/$namespace$/$image name:$image tag .
+podman build -t $registry/$namespace$/$image-name:$image-tag .
 podman login -u $username $registry
-podman push $registry>/$namespace>/$image name:$image tag
+podman push $registry/$namespace/$image-name:$image-tag
 ----
 
 [TIP]
