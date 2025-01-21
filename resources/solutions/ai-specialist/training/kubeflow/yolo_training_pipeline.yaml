@@ -7,7 +7,7 @@
 #    minio_endpoint: str
 #    minio_secret_key: str
 #    pvc_name_sufix: str [Default: '-kubeflow-pvc']
-#    pvc_size: str [Default: '5Gi']
+#    pvc_size: str [Default: '1Gi']
 #    pvc_storage_class: str [Default: 'ocs-external-storagecluster-ceph-rbd']
 #    roboflow_api_key: str
 #    roboflow_project: str
@@ -429,7 +429,7 @@ root:
         isOptional: true
         parameterType: STRING
       pvc_size:
-        defaultValue: 5Gi
+        defaultValue: 1Gi
         isOptional: true
         parameterType: STRING
       pvc_storage_class:
