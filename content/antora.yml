@@ -15,7 +15,7 @@ asciidoc:
     openshift-console: https://xxxxxxxxxxxxxxxxxxxxxxxxx
     openshift-api: https://xxxxxxxxxxxxxxxxxxxxxxxxx:6443
     openshift-user-base: user
-    openshift-password: secretocp
+    openshift-password-base: redhat
     openshift-ai: https://UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUu
     flightctl-ui: https://yyyyyyyyyyyyyy
     flightctl-user-basename: flightctluser

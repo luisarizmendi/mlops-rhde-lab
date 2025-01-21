@@ -102,28 +102,28 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password} 
+1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]  
 
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
-3- Create a new Storage Connection using your MinIO username and password ( {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) without the `http://`, and the Bucket ("userpass:[<span id="gnumberVal"></span>]-ai-models"). 
+3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Use your MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) (removing `http://`) and the Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" (you can keep the Region empty). 
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Object Detection Notebooks". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook if you don't plan to run a lot of training runs) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+4- Create a new Workbench named "Object Detection Notebooks". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
-5- Once started, open the Workbench (it could take time the first time)
+5- Once started, open the Workbench (it could take time to open)
 
-6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu.
+6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu (you can find the repository clone URL opening the Gitea repository).
 
 image::ai-build-gitclone.png[]
 
 7- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
 ====
 
-It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
+It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided below, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
 
 Let's start with the first code block, the dependencies.
 
@@ -483,7 +483,7 @@ image::ai-build-test-app.png[]
 
 
 
-=== (optional) Model Export
+=== Model Export (optional) 
 
 Model export is the process of saving or converting a trained machine learning model into a specific format that can be used for inference or deployment in different environments. This is important because it allows the trained model to be shared, deployed to production, or used in different applications without needing the original training code or environment.
 
@@ -568,7 +568,7 @@ You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
 
-== (optional) Prototyping Pipeline
+== Prototyping Pipeline (optional) 
 
 So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits even for prototyping, such as ensuring consistency, repeatability, and improved collaboration.
 
@@ -637,32 +637,43 @@ If you want to run Pipelines in OpenShift AI, you will need to add into your AI 
 ====
 To create a Pipeline Server:
 
-1. Navigate to "Data Science Pipelines" in OpenShift AI and add a new pipeline server.
-2. Import the data connection information, but update the bucket to userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to none (as it is not configured in MinIO).
+1. Navigate to "Data Science Pipelines" in OpenShift AI and configure a new pipeline server.
+2. Fill in the Data Connection information but this time use the Bucket userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to `none` (as it is not configured in MinIO).
 3. Save the configuration.
-4. Restart any running workbenches to apply the updates.
+4. Once the configuration is ready, restart any running workbenches to apply the updates.
 ====
 
 image::ai-build-pipeline-server.png[]
+
+[NOTE]
+
+To verify that the Pipeline Server has been successfully loaded into your Jupyter Environment, open the Workbench and navigate to "Runtimes" (represented by a gear icon in the left menu). Here, you can confirm that the runtime configuration has been automatically loaded.
 
 
 
 
 === Create the Pipeline Step Jupyter Notebooks
 
+In order to make it easy, we will use the created Jupyter Notebook that we used to quick prototyping the model, but we cannot use it directly, for example since in a pipeline each step is run independently you will need to include a way to pass the files and the variables from one step into the other.
+
+[NOTE]
+
+This exercice is also useful to be better prepared to implement the training pipeline based on Kubeflow that we will implement in the xref:ai-specialist-03-training.adoc[Model Training] section.
+
+Let's review the changes that you need to introduce:
+
+
+* Remove the `pip install` entries: Since you will be using the custom image that you created, you won't need to install any further dependencies
+
+
+
+
+* 
 
 
 
 
 
-
-
------
-
-Prepare step files
-
-
-+ remove pip installs
 
 + dataset_location from get_data to train (pickle) 
 
