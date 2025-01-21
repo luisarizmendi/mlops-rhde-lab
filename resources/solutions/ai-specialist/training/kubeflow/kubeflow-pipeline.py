@@ -185,7 +185,7 @@ def yolo_training_pipeline(
     train_batch_size: int = 16,
     train_img_size: int = 640,
     pvc_storage_class: str = "ocs-external-storagecluster-ceph-rbd",
-    pvc_size: str = "1Gi",
+    pvc_size: str = "5Gi",
     pvc_name_sufix: str = "-kubeflow-pvc"
 ):
     # Create PV

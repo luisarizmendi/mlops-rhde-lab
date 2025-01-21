@@ -543,21 +543,21 @@ directory_name= os.path.basename(model_path_train)
 
 for file_path_train in files_train:
     try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
+        client.fput_object(AWS_S3_BUCKET, "prototype/notebook/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
         print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)
 
 for file_path_model in files_models:
     try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/" + os.path.basename(file_path_model), file_path_model)
+        client.fput_object(AWS_S3_BUCKET, "prototype/notebook/" + directory_name + "/" + os.path.basename(file_path_model), file_path_model)
         print(f"'{os.path.basename(file_path_model)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)
 
 for file_path_test in files_test:
     try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
+        client.fput_object(AWS_S3_BUCKET, "prototype/notebook/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
         print(f"'{os.path.basename(file_path_test)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
     except S3Error as e:
         print("Error occurred: ", e)
@@ -568,16 +568,21 @@ You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
 
+== (optional) Prototyping Pipeline
+
+So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits, such as ensuring consistency, repeatability, and improved collaboration.
+
+OpenShift AI integrates seamlessly with Elyra Pipelines, an Open Source visual pipeline editor that simplifies the creation, editing, and execution of data science workflows. Elyra allows you to design workflows through an intuitive drag-and-drop interface, standardize your prototyping process to ensure reproducibility, and automate repetitive tasks to reduce manual effort. It also enables you to scale your workflows efficiently using OpenShift AI's powerful infrastructure while making it easier to share and collaborate with your team.
+
+Let's build an Elyra Pipeline to automate the model prototyping process, helping you focus on innovation rather than managing infrastructure and repetitive tasks.
 
 
+=== Custom Container Image
+Using custom container base images in your pipeline tasks is a great idea because it eliminates the need to install dependencies every time the pipeline runs. This approach not only saves time but also reduces bandwidth usage, making your workflows more efficient and reliable.
 
+By creating a custom container base image, you can preconfigure the environment with all the required dependencies for tasks like running Jupyter Notebooks. This means you won’t have to repeatedly set up the environment, ensuring a smoother and faster execution of your pipelines.
 
-== (optional) Create a custom Container Image
-
-You can create a custom Container base image, so for example you can avoid having to install the dependancies each time that you create an environment for the Jupyter Notebook.
-
-The first step is to create a Containerfile prepared to run in OpenShift. In our case we need to start from a base image that is prepared for pytorch and install the ultralytics, roboflow and minio dependancies. Something like this one:
-
+The first step is to create a Containerfile tailored for OpenShift. In this example, we’ll use a base image prepared for PyTorch and install the necessary dependencies such as Ultralytics, Roboflow, and MinIO. The resulting Containerfile would look something like this:
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -591,9 +596,9 @@ RUN INSTALL_PKGS="ultralytics roboflow minio" && \
 USER 1001
 ----
 
-Then build your Container Image and push it into a registry:
+Then you can  build your Container Image using the Containerfile and push it into a registry (ie. https://quay.io[Quay])
 
-[source,python,role=execute,subs="attributes"]
+[source,python,subs="attributes"]
 ----
 podman build -t <registry>/<namespace>/<image name>:<image tag> .
 podman login -u <username> <registry>
@@ -602,45 +607,30 @@ podman push <registry>/<namespace>/<image name>:<image tag>
 
 [TIP]
 
-If you don't want to build the image you can use this one: quay.io/luisarizmendi/pytorch-custom:latest
+If you don’t want to build the image yourself, you can use an existing pre-built image: `quay.io/luisarizmendi/pytorch-custom:latest`.
 
 
+Once you have the container image you want to use for running the code in your pipeline steps, the next step is to "import" it into your Jupyter environment for use with Elyra Pipelines.
 
-Then .....
+[example]
+====
+To add your custom image to the Jupyter Enviroment in order to use it with the Elyra Pipeline:
 
+1. Open the Jupyter Notebook workbench.
+2. Navigate to "Runtime Images" by selecting the icon with squares in the left menu.
+3. Click the "+" button to add a new runtime image.
+4. Provide a name for the image, such as PyTorch Custom, add a tag like pytorch, and specify the image name (e.g., quay.io/luisarizmendi/pytorch-custom:latest).
+5. Click Save.
+====
 
-
-
-
-ai-train-custom-image.png
-
-
-
-
-
-
-
-
-
-== (optional) Prototyping Pipeline
+Once added, your custom container image will be available for use in your pipeline steps.
 
 
-
-
-=== Custom Container Image
+image::ai-build-custom-elyra-image.png[]
 
 
 
 
-
-***************************
-add it to custom runtime images
-***************************
-
-quay.io/luisarizmendi/pytorch-custom:latest
-
-
-ai-train-custom-elyra-image.png
 
 
 
@@ -649,32 +639,35 @@ ai-train-custom-elyra-image.png
 
 === Pipeline Server
 
+If you want to run Pipelines in OpenShift AI, you will need to add into your AI project a Pipeline Server resource definition.
 
+[example]
+====
+To create a Pipeline Server:
 
-----
+1. navigate to "Data Science Pipelines" and add a new server
+2. Import the Data Connection data but change the bucket to "userpass:[<span id="gnumberVal"></span>]-ai-pipelines" and Region `none` (it is not configured in Minio)
+3. Save
+4. Restart the workbenchs that are running
 
-create pipeline server (region none and bucket userxx-ai-pipelines)
-
-
-ai-train-pipeline-server.png
-
-
-
-
-restart workbench
-
-
-
-open workbench
-
-click the gear on the left menu (Runtimes) and then check runtime configuration was loaded automatically
+====
 
 
 
 
 
 
-=== Create the step Jupyter Notebooks
+
+image::ai-build-pipeline-server.png[]
+
+
+[NOTE]
+
+Once you have added your custom container image to the Jupyter environment, you can double-check if the Pipeline Server has been correctly loaded. Open the Jupyter Notebook workbench and navigate to the "Runtimes" section by clicking the gear icon in the left menu. Confirm that the runtime configuration has been automatically loaded. If everything looks correct, your environment is ready for pipeline execution.
+
+
+
+=== Create the Pipeline Step Jupyter Notebooks
 
 
 
@@ -764,6 +757,48 @@ files_test = [os.path.join(model_path_test, f) for f in os.listdir(model_path_te
 
 
 
+
+y esto: 
+
+
+directory_name= os.path.basename(model_path_train)
+
+for file_path_train in files_train:
+    try:
+        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
+        print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+
+for file_path_model in files_models:
+    try:
+        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/" + os.path.basename(file_path_model), file_path_model)
+        print(f"'{os.path.basename(file_path_model)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+
+for file_path_test in files_test:
+    try:
+        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
+        print(f"'{os.path.basename(file_path_test)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
+    except S3Error as e:
+        print("Error occurred: ", e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 === Create an Elyra Pipeline
 
 
@@ -806,7 +841,7 @@ for each node:
 
 
 ADD VOLUME 
-* create PVC  (training-elyra-pipeline with 1G is enough in the userxx-ai project)
+* create PVC  (training-elyra-pipeline with 5G is enough in the userxx-ai project)
 * Config pipeline volume (/opt/app-root/src)
 
 
