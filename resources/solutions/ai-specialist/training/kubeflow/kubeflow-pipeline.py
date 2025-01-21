@@ -1,200 +1,262 @@
-from kfp import dsl, compiler
-from kfp.dsl import Dataset, Model, Input, Output, component
+from kfp import dsl, compiler, kubernetes
 import os
+from typing import NamedTuple
 
-# Define component for data preparation
-@component(
-    base_image="python:3.9",
-    packages_to_install=[
-        "roboflow",
-        "torch",
-        "ultralytics",
-        "PyYAML"
-    ]
+# Component 1: Download Dataset
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["roboflow", "pyyaml"]
 )
-def get_data(
-    roboflow_key: str,
-    roboflow_workspace: str,
-    roboflow_project: str,
-    roboflow_version: str,
-    dataset_path: Output[Dataset]
-):
-    import os
-    import yaml
+def download_dataset(
+    api_key: str,
+    workspace: str,
+    project: str,
+    version: int,
+    dataset_path: dsl.OutputPath(str)
+) -> None:
     from roboflow import Roboflow
-
-    # Download dataset from Roboflow
-    rf = Roboflow(api_key=roboflow_key)
-    project = rf.workspace(roboflow_workspace).project(roboflow_project)
-    version = project.version(roboflow_version)
+    import yaml
+    import os
+    
+    rf = Roboflow(api_key=api_key)
+    project = rf.workspace(workspace).project(project)
+    version = project.version(version)
     dataset = version.download("yolov11")
-
+    
     # Update data.yaml paths
     dataset_yaml_path = f"{dataset.location}/data.yaml"
     with open(dataset_yaml_path, "r") as file:
         data_config = yaml.safe_load(file)
-
+    
     data_config["train"] = f"{dataset.location}/train/images"
     data_config["val"] = f"{dataset.location}/valid/images"
     data_config["test"] = f"{dataset.location}/test/images"
-
-    with open(dataset_yaml_path, "w") as file:
-        yaml.safe_dump(data_config, file)
-
-    # Save dataset path
-    with open(dataset_path.path, "w") as f:
+           
+    with open(dataset_path, "w") as f:
         f.write(dataset.location)
 
-# Define component for model training
-@component(
-    base_image="python:3.9",
-    packages_to_install=[
-        "torch",
-        "ultralytics",
-        "PyYAML"
-    ]
+
+    
+# Component 2: Train Model
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["ultralytics", "torch"]
 )
 def train_model(
-    dataset_path: Input[Dataset],
-    model_epochs: int,
-    model_batch: int,
-    trained_model: Output[Model]
-):
-    import os
+    dataset_path: str,
+    epochs: int = 50,
+    batch_size: int = 16,
+    img_size: int = 640,
+    name: str = "yolo",
+) -> NamedTuple('Outputs', [
+    ('train_dir', str),
+    ('test_dir', str)
+]):
     import torch
     from ultralytics import YOLO
-
-    # Configure device
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    # Read dataset path
-    with open(dataset_path.path, "r") as f:
-        dataset_location = f.read().strip()
-
-    # Configure training parameters
-    config = {
-        'name': 'yolo_hardhat',
-        'model': 'yolo11m.pt',
-        'data': f"{dataset_location}/data.yaml",
-        'epochs': model_epochs,
-        'batch': model_batch,
-        'imgsz': 640,
-        'patience': 15,
-        'device': device,
-        'optimizer': 'SGD',
-        'lr0': 0.001,
-        'lrf': 0.005,
-        'momentum': 0.9,
-        'weight_decay': 0.0005,
-        'warmup_epochs': 3,
-        'warmup_bias_lr': 0.01,
-        'warmup_momentum': 0.8,
-        'amp': False,
-        'augment': True,
-        'hsv_h': 0.015,
-        'hsv_s': 0.7,
-        'hsv_v': 0.4,
-        'degrees': 10,
-        'translate': 0.1,
-        'scale': 0.3,
-        'shear': 0.0,
-        'perspective': 0.0,
-        'flipud': 0.1,
-        'fliplr': 0.1,
-        'mosaic': 1.0,
-        'mixup': 0.0,
-    }
-
-    # Initialize and train model
-    model = YOLO(config['model'])
-    results = model.train(**config)
-
-    # Export model
-    model.export(format='onnx', imgsz=config['imgsz'])
-
-    # Save model path
-    model_path = os.path.join(results.save_dir, "weights")
-    with open(trained_model.path, "w") as f:
-        f.write(model_path)
-
-# Define component for saving model to storage
-@component(
-    base_image="python:3.9",
-    packages_to_install=["minio"]
-)
-def save_model(
-    trained_model: Input[Model],
-    aws_endpoint: str,
-    aws_access_key: str,
-    aws_secret_key: str,
-    aws_bucket: str
-):
+    from typing import NamedTuple
     import os
-    from minio import Minio
-
-    # Read model path
-    with open(trained_model.path, "r") as f:
-        model_path = f.read().strip()
-
-    # Initialize Minio client
-    client = Minio(
-        aws_endpoint,
-        access_key=aws_access_key,
-        secret_key=aws_secret_key,
-        secure=True
+    
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    
+    CONFIG = {
+        'name': name,
+        'model': 'yolo11m.pt',
+        'data': f"{dataset_path}/data.yaml",
+        'epochs': epochs,
+        'batch': batch_size,
+        'imgsz': img_size,
+        'device': device,
+    }
+    
+    # Configure PyTorch
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+    
+    # Initialize and train model
+    model = YOLO(CONFIG['model'])
+    results_train = model.train(
+        name=CONFIG['name'],
+        data=CONFIG['data'],
+        epochs=CONFIG['epochs'],
+        batch=CONFIG['batch'],
+        imgsz=CONFIG['imgsz'],
+        device=CONFIG['device'],
+    )
+    
+    # Evaluate model
+    results_test = model.val(
+        data=CONFIG['data'],
+        split='test',
+        device=CONFIG['device'],
+        imgsz=CONFIG['imgsz']
+    )
+    
+    # Export model
+    model.export(format='onnx', imgsz=CONFIG['imgsz'])
+    
+    return NamedTuple('Outputs', [('train_dir', str), ('test_dir', str)])(
+        train_dir=str(results_train.save_dir),
+        test_dir=str(results_test.save_dir)
     )
 
-    # Upload model files
-    directory_name = os.path.basename(os.path.dirname(model_path))
-    for file_name in os.listdir(model_path):
-        file_path = os.path.join(model_path, file_name)
-        if os.path.isfile(file_path):
-            object_name = f"models/{directory_name}/{file_name}"
-            client.fput_object(aws_bucket, object_name, file_path)
+# Component 3: Upload to MinIO
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["minio"]
+)
+def upload_to_minio(
+    train_dir: str,
+    test_dir: str,
+    endpoint: str,
+    access_key: str,
+    secret_key: str,
+    bucket: str,
+    model_path: dsl.OutputPath(str)
+) -> None:
+    from minio import Minio
+    from minio.error import S3Error
+    import os
+    import datetime
+    
+    client = Minio(
+        endpoint,
+        access_key=access_key,
+        secret_key=secret_key,
+        secure=True
+    )
+    
+    # Get paths for files
+    weights_path = os.path.join(train_dir, "weights")
+    
+    files_train = [os.path.join(train_dir, f) for f in os.listdir(train_dir) 
+                   if os.path.isfile(os.path.join(train_dir, f))]
+    files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path) 
+                    if os.path.isfile(os.path.join(weights_path, f))]
+    files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir) 
+                  if os.path.isfile(os.path.join(test_dir, f))]
+    
+    directory_name = os.path.basename(train_dir) + "-" + datetime.datetime.now().strftime("%Y-%m-%d-%H%M")
+    
+    # Upload files
+    for file_path in files_train:
+        try:
+            client.fput_object(bucket, 
+                             f"models/{directory_name}/train-val/{os.path.basename(file_path)}", 
+                             file_path)
+        except S3Error as e:
+            print(f"Error uploading {file_path}: {e}")
+    
+    for file_path in files_models:
+        try:
+            client.fput_object(bucket, 
+                             f"models/{directory_name}/{os.path.basename(file_path)}", 
+                             file_path)
+        except S3Error as e:
+            print(f"Error uploading {file_path}: {e}")
+    
+    for file_path in files_test:
+        try:
+            client.fput_object(bucket, 
+                             f"models/{directory_name}/test/{os.path.basename(file_path)}", 
+                             file_path)
+        except S3Error as e:
+            print(f"Error uploading {file_path}: {e}")
+
+    with open(model_path, "w") as f:
+        f.write("models/" + directory_name)
+
 
 # Define the pipeline
 @dsl.pipeline(
-    name='YOLOv11 Training Pipeline',
-    description='Pipeline for training YOLOv11 model using Roboflow dataset'
+    name='YOLO Training Pipeline',
+    description='Pipeline to download data, train YOLO model, and upload results to MinIO'
 )
 def yolo_training_pipeline(
-    roboflow_key: str,
+    roboflow_api_key: str,
     roboflow_workspace: str,
     roboflow_project: str,
-    roboflow_version: str,
-    model_epochs: int,
-    model_batch: int,
-    aws_endpoint: str,
-    aws_access_key: str,
-    aws_secret_key: str,
-    aws_bucket: str
+    roboflow_version: int,
+    minio_endpoint: str,
+    minio_access_key: str,
+    minio_secret_key: str,
+    minio_bucket: str,
+    train_name: str = "yolo",
+    train_epochs: int = 50,
+    train_batch_size: int = 16,
+    train_img_size: int = 640,
+    pvc_storage_class: str = "ocs-external-storagecluster-ceph-rbd",
+    pvc_size: str = "5Gi",
+    pvc_name_sufix: str = "-kubeflow-pvc"
 ):
-    # Data preparation step
-    get_data_task = get_data(
-        roboflow_key=roboflow_key,
-        roboflow_workspace=roboflow_workspace,
-        roboflow_project=roboflow_project,
-        roboflow_version=roboflow_version
+    # Create PV
+    pvc = kubernetes.CreatePVC(
+        pvc_name_suffix=pvc_name_sufix,
+        access_modes=['ReadWriteOnce'],
+        size=pvc_size,
+        storage_class_name=pvc_storage_class,
+    )
+        
+    # Download dataset
+    download_task = download_dataset(
+        api_key=roboflow_api_key,
+        workspace=roboflow_workspace,
+        project=roboflow_project,
+        version=roboflow_version
+    )
+    download_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        download_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+    
+    # Train model
+    train_task = train_model(
+        dataset_path=download_task.output,
+        epochs=train_epochs,
+        batch_size=train_batch_size,
+        img_size=train_img_size,
+        name=train_name
+    ).after(download_task)
+    train_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        train_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+    
+    # Upload results
+    upload_task = upload_to_minio(
+        train_dir=train_task.outputs['train_dir'],
+        test_dir=train_task.outputs['test_dir'],
+        endpoint=minio_endpoint,
+        access_key=minio_access_key,
+        secret_key=minio_secret_key,
+        bucket=minio_bucket
+    ).after(train_task)
+    upload_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        upload_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
     )
 
-    # Model training step
-    train_model_task = train_model(
-        dataset_path=get_data_task.outputs["dataset_path"],
-        model_epochs=model_epochs,
-        model_batch=model_batch
-    )
+    delete_pvc = kubernetes.DeletePVC(
+        pvc_name=pvc.outputs['name']
+    ).after(upload_task)
 
-    # Save model step
-    save_model_task = save_model(
-        trained_model=train_model_task.outputs["trained_model"],
-        aws_endpoint=aws_endpoint,
-        aws_access_key=aws_access_key,
-        aws_secret_key=aws_secret_key,
-        aws_bucket=aws_bucket
+if __name__ == "__main__":
+    # Compile the pipeline
+    compiler.Compiler().compile(
+        pipeline_func=yolo_training_pipeline,
+        package_path='yolo_training_pipeline.yaml'
     )
-
-# Compile the pipeline
-compiler.Compiler().compile(
-    pipeline_func=yolo_training_pipeline,
-    package_path='training-kubeflow.yaml'
-)
+    print("Pipeline compiled successfully to yolo_training_pipeline.yaml")
+    
+    
+    
+    
+    
+    
+    
+    
