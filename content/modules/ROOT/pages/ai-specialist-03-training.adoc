@@ -228,6 +228,9 @@ blah, blah
 MODEL REGISTRY
 
 
+https://github.com/opendatahub-io/model-registry-operator
+
+
 
 
 
