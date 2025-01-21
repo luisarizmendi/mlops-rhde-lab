@@ -570,7 +570,7 @@ Finally, I recommend cleaning up the directories created during the training and
 
 == (optional) Prototyping Pipeline
 
-So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits, such as ensuring consistency, repeatability, and improved collaboration.
+So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits even for prototyping, such as ensuring consistency, repeatability, and improved collaboration.
 
 OpenShift AI integrates seamlessly with Elyra Pipelines, an Open Source visual pipeline editor that simplifies the creation, editing, and execution of data science workflows. Elyra allows you to design workflows through an intuitive drag-and-drop interface, standardize your prototyping process to ensure reproducibility, and automate repetitive tasks to reduce manual effort. It also enables you to scale your workflows efficiently using OpenShift AI's powerful infrastructure while making it easier to share and collaborate with your team.
 
@@ -600,9 +600,9 @@ Then you can  build your Container Image using the Containerfile and push it int
 
 [source,python,subs="attributes"]
 ----
-podman build -t <registry>/<namespace>/<image name>:<image tag> .
-podman login -u <username> <registry>
-podman push <registry>/<namespace>/<image name>:<image tag>
+podman build -t `<registry>/<namespace>/<image name>:<image tag>` .
+podman login -u `<username> <registry>`
+podman push `<registry>/<namespace>/<image name>:<image tag>`
 ----
 
 [TIP]
@@ -629,14 +629,6 @@ Once added, your custom container image will be available for use in your pipeli
 image::ai-build-custom-elyra-image.png[]
 
 
-
-
-
-
-
-
-
-
 === Pipeline Server
 
 If you want to run Pipelines in OpenShift AI, you will need to add into your AI project a Pipeline Server resource definition.
@@ -645,29 +637,22 @@ If you want to run Pipelines in OpenShift AI, you will need to add into your AI 
 ====
 To create a Pipeline Server:
 
-1. navigate to "Data Science Pipelines" and add a new server
-2. Import the Data Connection data but change the bucket to "userpass:[<span id="gnumberVal"></span>]-ai-pipelines" and Region `none` (it is not configured in Minio)
-3. Save
-4. Restart the workbenchs that are running
-
+1. Navigate to "Data Science Pipelines" in OpenShift AI and add a new pipeline server.
+2. Import the data connection information, but update the bucket to userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to none (as it is not configured in MinIO).
+3. Save the configuration.
+4. Restart any running workbenches to apply the updates.
 ====
-
-
-
-
-
-
 
 image::ai-build-pipeline-server.png[]
 
 
-[NOTE]
-
-Once you have added your custom container image to the Jupyter environment, you can double-check if the Pipeline Server has been correctly loaded. Open the Jupyter Notebook workbench and navigate to the "Runtimes" section by clicking the gear icon in the left menu. Confirm that the runtime configuration has been automatically loaded. If everything looks correct, your environment is ready for pipeline execution.
-
 
 
 === Create the Pipeline Step Jupyter Notebooks
+
+
+
+
 
 
 
