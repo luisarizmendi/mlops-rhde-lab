@@ -568,6 +568,299 @@ You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
 Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
 
+
+
+
+
+== (optional) Create a custom Container Image
+
+You can create a custom Container base image, so for example you can avoid having to install the dependancies each time that you create an environment for the Jupyter Notebook.
+
+The first step is to create a Containerfile prepared to run in OpenShift. In our case we need to start from a base image that is prepared for pytorch and install the ultralytics, roboflow and minio dependancies. Something like this one:
+
+
+[source,python,role=execute,subs="attributes"]
+----
+FROM quay.io/modh/odh-pytorch-notebook:v2-2024a-20250116-b42b86c
+
+USER 0
+
+RUN INSTALL_PKGS="ultralytics roboflow minio" && \
+    pip install --no-cache-dir  $INSTALL_PKGS 
+
+USER 1001
+----
+
+Then build your Container Image and push it into a registry:
+
+[source,python,role=execute,subs="attributes"]
+----
+podman build -t <registry>/<namespace>/<image name>:<image tag> .
+podman login -u <username> <registry>
+podman push <registry>/<namespace>/<image name>:<image tag>
+----
+
+[TIP]
+
+If you don't want to build the image you can use this one: quay.io/luisarizmendi/pytorch-custom:latest
+
+
+
+Then .....
+
+
+
+
+
+ai-train-custom-image.png
+
+
+
+
+
+
+
+
+
+== (optional) Prototyping Pipeline
+
+
+
+
+=== Custom Container Image
+
+
+
+
+
+***************************
+add it to custom runtime images
+***************************
+
+quay.io/luisarizmendi/pytorch-custom:latest
+
+
+ai-train-custom-elyra-image.png
+
+
+
+
+
+
+=== Pipeline Server
+
+
+
+----
+
+create pipeline server (region none and bucket userxx-ai-pipelines)
+
+
+ai-train-pipeline-server.png
+
+
+
+
+restart workbench
+
+
+
+open workbench
+
+click the gear on the left menu (Runtimes) and then check runtime configuration was loaded automatically
+
+
+
+
+
+
+=== Create the step Jupyter Notebooks
+
+
+
+
+-----
+
+Prepare step files
+
+
++ remove pip installs
+
++ dataset_location from get_data to train (pickle) 
+
+* include environment variables (to get dataset, custom typical hyperparameters), for example 
+    'epochs': os.getenv("MODEL_EPOCHS"),
+    'batch': os.getenv("MODEL_BATCH"), 
+
+
+
+* include imports in each step
+
+
++ cambiar path save en el object store
+
++ create cleanup to remove local files
+
++ Store the variables from training into a file to pass between pipeline tasks
+
+
+
+TRAIN:
+
+results_train_serializable = {
+    "maps": results_train.maps,
+    "names": results_train.names,
+    "save_dir": results_train.save_dir,
+    "results_dict": results_train.results_dict,
+}
+
+results_train_save_path = "model_train_results.pth"
+
+torch.save(results_train_serializable, results_train_save_path)
+
+
+results_test_serializable = {
+    "maps": results_test.maps,
+    "names": results_test.names,
+    "save_dir": results_test.save_dir,
+    "results_dict": results_test.results_dict,
+}
+
+results_test_save_path = "model_test_results.pth"
+
+torch.save(results_test_serializable, results_test_save_path)
+
+    
+
+
+
+
+
+SVAE:
+
+import torch 
+
+results_train_save_path = "model_train_results.pth"
+results_train = torch.load(results_train_save_path)
+
+results_test_save_path = "model_test_results.pth"
+results_test = torch.load(results_test_save_path)
+
+
+
+y cambiar esto:
+
+model_path_train = results_train['save_dir']
+
+model_path_train = results_train['save_dir']
+weights_path = os.path.join(model_path_train, "weights")
+model_path_test = results_test['save_dir']
+
+files_train = [os.path.join(model_path_train, f) for f in os.listdir(model_path_train) if os.path.isfile(os.path.join(model_path_train, f))]
+files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path) if os.path.isfile(os.path.join(weights_path, f))]
+files_test = [os.path.join(model_path_test, f) for f in os.listdir(model_path_test) if os.path.isfile(os.path.join(model_path_test, f))]
+
+
+
+
+
+=== Create an Elyra Pipeline
+
+
+
+
+
+
+click on "+" tab on the header (close to protyping.ipynb  "x") 
+
+Select "Pipeline Editor" en the Elyra section
+
+Rename .pipeline file "training-elyra.pipeline"
+
+
+
+
+
+
+
+
+
+----
+
+drag drop and connect 
+
+
+
+
+
+click top right square to open the pipeline configuration panel on the right (do not close it we will use it)
+
+
+for each node: 
+
++ choose runtime and GPU config (GPU=1 GPU vendor nvidia.com/gpu)
+
++ Add environment variables  (??? maybe better at the pipeline level instead?)
+
+
+
+
+ADD VOLUME 
+* create PVC  (training-elyra-pipeline with 1G is enough in the userxx-ai project)
+* Config pipeline volume (/opt/app-root/src)
+
+
+
+
+
+
+
+
+save
+
+
+
+
+
+=== Run the Elyra Pipeline
+
+
+run 
+
+
+
+
+Go to Experiments and se it running 
+
+
+
+
+tip 
+you can review live logs by jumping into openshift and see pod logs 
+
+
+once the tasks are finishing, you can check the logs 
+
+
+Check the Object Storage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 == Solution and Next Steps
 
 In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained used this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1[metrics that you can find here].

@@ -1,0 +1,176 @@
+
+#
+# Deployed in an empty OpenShift cluster or in the "Red Hat OpenShift Container Platform Cluster GITOPS" lab
+#
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: openshift-gitops-operator
+  labels:
+    kubernetes.io/metadata.name: openshift-gitops-operator
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+spec: {}
+
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: openshift-gitops
+  labels:
+    kubernetes.io/metadata.name: openshift-gitops
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+spec: {}
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-rbac-ca
+subjects:
+  - kind: ServiceAccount
+    name: openshift-gitops-argocd-application-controller
+    namespace: openshift-gitops
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+  
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openshift-gitops-operator
+  namespace: openshift-gitops-operator
+spec:
+  upgradeStrategy: Default
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: openshift-gitops-operator
+  namespace: openshift-gitops-operator
+spec:
+  channel: latest 
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator 
+  source: redhat-operators 
+  sourceNamespace: openshift-marketplace 
+
+---
+apiVersion: user.openshift.io/v1
+kind: Group
+metadata:
+  name: cluster-admins
+users:
+  - admin
+
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bootstrap-lab
+  namespace: openshift-gitops
+spec:
+  template:
+    spec:
+      serviceAccountName: openshift-gitops-argocd-application-controller
+      containers:
+      - name: bootstrap-lab
+        image: quay.io/openshift/origin-cli:latest  
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Wait for the GitOps Server to be ready
+          until oc get pods -n openshift-gitops | grep 'openshift-gitops-server' | grep 'Running' | grep '1/1'; do
+            echo "Waiting for GitOps Server pod to be in Running state..."
+            sleep 10
+          done
+
+          oc apply -f - <<EOF
+          apiVersion: argoproj.io/v1alpha1
+          kind: ApplicationSet
+          metadata:
+            name: bootstrap-lab
+            namespace: openshift-gitops
+          spec:
+            goTemplate: true
+            goTemplateOptions: ["missingkey=error"]
+            generators:
+            - git:
+                repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
+                revision: main
+                directories:
+                  - path: deployment/openshift/bootstrap-lab/manifests/*
+                  - path: deployment/openshift/bootstrap-lab/manifests/nvidia-operator
+                    exclude: true
+                  - path: deployment/openshift/bootstrap-lab/manifests/nfd
+                    exclude: true
+            template:
+              metadata:
+                name: '{{.path.basename}}'
+              spec:
+                project: default
+                source:
+                  repoURL: https://github.com/luisarizmendi/workshop-object-detection-rhde.git
+                  targetRevision: main
+                  path: '{{.path.path}}'
+                destination:
+                  server: https://kubernetes.default.svc
+                syncPolicy:
+                  automated:
+                    prune: true
+                    selfHeal: true
+          EOF
+
+          # Wait for the DataScienceCluster to be ready
+          until oc get pods -n redhat-ods-applications | grep 'odh-model-controller' | grep 'Running' | grep '1/1'; do
+            echo "Waiting for DataScienceCluster pod to be in Running state..."
+            sleep 10
+          done
+
+          oc apply -f - <<EOF
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: bootstrap-lab-path
+            namespace: openshift-gitops
+          spec:
+            template:
+              spec:
+                serviceAccountName: openshift-gitops-argocd-application-controller
+                containers:
+                - name: bootstrap-lab
+                  image: quay.io/openshift/origin-cli:latest  
+                  command: ["/bin/sh", "-c"]
+                  args:
+                  - |
+                    #
+                    oc patch datasciencecluster default-dsc --type='json' -p='[
+                      {
+                        "op": "replace",
+                        "path": "/spec/components/dashboard/managementState",
+                        "value": "Removed"
+                      },
+                      {
+                        "op": "add",
+                        "path": "/spec/components/newComponent",
+                        "value": {
+                          "managementState": "Managed"
+                        }
+                      }
+                    ]'
+                restartPolicy: Never
+            backoffLimit: 1
+          EOF          
+
+          echo "Environment ready!"
+      restartPolicy: Never
+  backoffLimit: 1
+
