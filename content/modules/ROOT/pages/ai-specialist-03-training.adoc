@@ -334,7 +334,7 @@ click on "+" tab on the header (close to protyping.ipynb  "x")
 
 Select "Pipeline Editor" en the Elyra section
 
-Rename .pipeline file "training.pipeline"
+Rename .pipeline file "training-elyra.pipeline"
 
 
 
@@ -456,7 +456,7 @@ for each node:
 
 
 ADD VOLUME 
-* create PVC  (training-pipeline with 5G is enough in the userxx-ai project)
+* create PVC  (training-elyra-pipeline with 1G is enough in the userxx-ai project)
 * Config pipeline volume (/opt/app-root/src)
 
 

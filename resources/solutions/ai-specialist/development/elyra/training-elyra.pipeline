@@ -248,7 +248,7 @@
         "version": 8,
         "runtime_type": "KUBEFLOW_PIPELINES",
         "properties": {
-          "name": "training",
+          "name": "training-elyra",
           "runtime": "Data Science Pipelines",
           "pipeline_defaults": {
             "kubernetes_tolerations": [],
@@ -258,7 +258,7 @@
             "mounted_volumes": [
               {
                 "path": "/opt/app-root/src",
-                "pvc_name": "training-pipeline",
+                "pvc_name": "training-elyra-pipeline",
                 "read_only": false
               }
             ],
