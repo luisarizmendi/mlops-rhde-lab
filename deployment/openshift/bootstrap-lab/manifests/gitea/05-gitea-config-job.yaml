@@ -22,8 +22,8 @@ spec:
             echo "Waiting for Gitea to be ready..."
             sleep 5
           done
-          echo "Gitea is ready!"
-
+          echo "Gitea is ready waiting to start user creation!"
+          sleep 60
           AUTH_HEADER="Authorization: Basic $(echo -n "$GITEA_ADMIN_USER:$GITEA_ADMIN_PASS" | base64)"
 
           # Create users
@@ -43,7 +43,7 @@ spec:
           done
           
           # Create repositories
-          for i in $(seq -w 1 $USER_NUM) user99; do
+          for i in $(seq -w 1 $USER_NUM) 99; do
             USERNAME="$USER_BASE_NAME$i"
             REPO_NAME="$USERNAME-ai"
             curl -X POST "$GITEA_BASE_URL/api/v1/admin/users/$USERNAME/repos" \
