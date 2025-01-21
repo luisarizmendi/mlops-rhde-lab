@@ -584,7 +584,7 @@ By creating a custom container base image, you can preconfigure the environment 
 
 The first step is to create a Containerfile tailored for OpenShift. In this example, we’ll use a base image prepared for PyTorch and install the necessary dependencies such as Ultralytics, Roboflow, and MinIO. The resulting Containerfile would look something like this:
 
-[source,python,role=execute,subs="attributes"]
+[source,containerfile,role=execute,subs="attributes"]
 ----
 FROM quay.io/modh/odh-pytorch-notebook:v2-2024a-20250116-b42b86c
 
@@ -598,7 +598,7 @@ USER 1001
 
 Then you can  build your Container Image using the Containerfile and push it into a registry (ie. https://quay.io[Quay])
 
-[source,python,subs="attributes"]
+[source,shell,subs="attributes"]
 ----
 podman build -t `<registry>/<namespace>/<image name>:<image tag>` .
 podman login -u `<username> <registry>`
@@ -654,48 +654,50 @@ To verify that the Pipeline Server has been successfully loaded into your Jupyte
 
 === Create the Pipeline Step Jupyter Notebooks
 
-In order to make it easy, we will use the created Jupyter Notebook that we used to quick prototyping the model, but we cannot use it directly, for example since in a pipeline each step is run independently you will need to include a way to pass the files and the variables from one step into the other.
+A pipeline is composed of multiple steps. In our case, it will consist of three: one step to fetch the dataset, another to train the model, and a final step to upload the files to the Object Storage. For this, you’ll need to create three new `.ipynb` files each corresponding to one of these steps.
 
-[NOTE]
+To simplify the process, we’ll use the Jupyter Notebook created for quick prototyping as a base. However, this notebook cannot be directly split into pipeline steps. In a pipeline, each step runs independently, so you’ll need to incorporate mechanisms to transfer files and variables between steps.
 
-This exercice is also useful to be better prepared to implement the training pipeline based on Kubeflow that we will implement in the xref:ai-specialist-03-training.adoc[Model Training] section.
+[NOTE] 
 
-Let's review the changes that you need to introduce:
+This exercise will also help you prepare for implementing the training pipeline with Kubeflow, which will be covered in the xref:ai-specialist-03-training.adoc[Model Training] section.
 
+Start by copying the relevant code blocks from the prototyping notebook into their respective new files. Then, apply the necessary modifications as outlined below
+
+[TIP]
+
+If you prefer to save time, you can skip this step and directly https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/development/elyra[reference the solution] by using the pipeline files provided in the resources directory.
+
+==== "Get Data" Notebook
 
 * Remove the `pip install` entries: Since you will be using the custom image that you created, you won't need to install any further dependencies
 
+* Save the `dataset` variable into a file (eg, using `pickle`) since it will be used in the "Train" Notebook
+
+[source,python,role=execute,subs="attributes"]
+----
+import pickle
+
+with open('dataset.pkl', 'wb') as file:
+    pickle.dump(dataset, file)
+----
 
 
+==== "Train" Notebook
 
-* 
+* Include the relevant imports (this is a new Notebook, it does not use them from the "Get Data" Notebook)
 
-
-
-
-
-
-+ dataset_location from get_data to train (pickle) 
-
-* include environment variables (to get dataset, custom typical hyperparameters), for example 
+* Including environment variables is a great way to control the training configuration when launching the pipeline. For instance, you can define variables for parameters like the number of `epochs` and the `batch size`.
+[source,python,role=execute,subs="attributes"]
+----
     'epochs': os.getenv("MODEL_EPOCHS"),
-    'batch': os.getenv("MODEL_BATCH"), 
+    'batch': os.getenv("MODEL_BATCH"),
+----
 
+* As with the previous file, you need to save the variable containing the training and testing results so it can be used by the next step in the pipeline. However, due to the complexity of this variable, `pickle` cannot be used. Instead, you'll need to manually serialize the data as shown below.
 
-
-* include imports in each step
-
-
-+ cambiar path save en el object store
-
-+ create cleanup to remove local files
-
-+ Store the variables from training into a file to pass between pipeline tasks
-
-
-
-TRAIN:
-
+[source,python,role=execute,subs="attributes"]
+----
 results_train_serializable = {
     "maps": results_train.maps,
     "names": results_train.names,
@@ -707,7 +709,6 @@ results_train_save_path = "model_train_results.pth"
 
 torch.save(results_train_serializable, results_train_save_path)
 
-
 results_test_serializable = {
     "maps": results_test.maps,
     "names": results_test.names,
@@ -718,15 +719,17 @@ results_test_serializable = {
 results_test_save_path = "model_test_results.pth"
 
 torch.save(results_test_serializable, results_test_save_path)
-
-    
-
+----
 
 
+==== "Save Data" Notebook
 
+* Again, include the relevant Python imports.
 
-SVAE:
+* Deserialize the variables that were stored in a file in the "Train" Notebook:
 
+[source,python,role=execute,subs="attributes"]
+----
 import torch 
 
 results_train_save_path = "model_train_results.pth"
@@ -734,65 +737,13 @@ results_train = torch.load(results_train_save_path)
 
 results_test_save_path = "model_test_results.pth"
 results_test = torch.load(results_test_save_path)
+----
 
+* The deserialized values are accessed as an array rather than through methods. Therefore, you’ll need to update  `results_xxx.save_dir` to results_xxx['save_dir']`:
 
+* Update the path where the model and results are stored in the Object Storage (e.g., change from `prototype/notebook/` to `prototype/pipeline/`).
 
-y cambiar esto:
-
-model_path_train = results_train['save_dir']
-
-model_path_train = results_train['save_dir']
-weights_path = os.path.join(model_path_train, "weights")
-model_path_test = results_test['save_dir']
-
-files_train = [os.path.join(model_path_train, f) for f in os.listdir(model_path_train) if os.path.isfile(os.path.join(model_path_train, f))]
-files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path) if os.path.isfile(os.path.join(weights_path, f))]
-files_test = [os.path.join(model_path_test, f) for f in os.listdir(model_path_test) if os.path.isfile(os.path.join(model_path_test, f))]
-
-
-
-
-
-
-y esto: 
-
-
-directory_name= os.path.basename(model_path_train)
-
-for file_path_train in files_train:
-    try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/train-val/" + os.path.basename(file_path_train), file_path_train)
-        print(f"'{os.path.basename(file_path_train)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
-    except S3Error as e:
-        print("Error occurred: ", e)
-
-for file_path_model in files_models:
-    try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/" + os.path.basename(file_path_model), file_path_model)
-        print(f"'{os.path.basename(file_path_model)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
-    except S3Error as e:
-        print("Error occurred: ", e)
-
-for file_path_test in files_test:
-    try:
-        client.fput_object(AWS_S3_BUCKET, "prototype/pipeline/" + directory_name + "/test/" + os.path.basename(file_path_test), file_path_test)
-        print(f"'{os.path.basename(file_path_test)}' is successfully uploaded as object to bucket '{AWS_S3_BUCKET}'.")
-    except S3Error as e:
-        print("Error occurred: ", e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* Since the pipeline will run multiple times using the same storage, it's recommended to clean up the generated files after the pipeline has finished saving the content.
 
 
 === Create an Elyra Pipeline
