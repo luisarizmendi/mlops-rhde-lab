@@ -1,159 +1,151 @@
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-  name: mysql-object-recognition-model-registry-config
-  namespace: rhoai-model-registries
-data:
-  my.cnf: |
-    [mysqld]
-
-    # Disabling symbolic-links is recommended to prevent assorted security risks
-    symbolic-links = 0
-
-    # http://www.percona.com/blog/2008/05/31/dns-achilles-heel-mysql-installation/
-    skip_name_resolve
-
-    default_authentication_plugin=mysql_native_password
-
-    datadir = /var/lib/mysql/data
-    basedir = /usr
-    plugin-dir = /usr/lib64/mysql/plugin
-
-
-    key_buffer_size = 51M
-    max_allowed_packet = 200M
-    table_open_cache = 400
-    sort_buffer_size = 256K
-    read_buffer_size = 25M
-    read_rnd_buffer_size = 256K
-    net_buffer_length = 2K
-    thread_stack = 256K
-    myisam_sort_buffer_size = 2M
-
-    # It is recommended that innodb_buffer_pool_size is configured to 50 to 75 percent of system memory.
-    innodb_buffer_pool_size = 256M
-    # Set .._log_file_size to 25 % of buffer pool size
-    innodb_log_file_size = 76M
-    innodb_log_buffer_size = 76M
-
-    [mysqldump]
-    quick
-    max_allowed_packet = 16M
-
-    [mysql]
-    no-auto-rehash
-
-    [myisamchk]
-    key_buffer_size = 8M
-    sort_buffer_size = 8M
-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app.kubernetes.io/name: model-registry-db
+      app.kubernetes.io/instance: model-registry-db
+      app.kubernetes.io/part-of: model-registry-db
+      app.kubernetes.io/managed-by: kustomize
+    annotations:
+      argocd.argoproj.io/sync-wave: "3"
+      template.openshift.io/expose-uri: mysql://{.spec.clusterIP}:{.spec.ports[?(.name==\mysql\)].port}
+    name: model-registry-db
+  spec:
+    ports:
+    - name: mysql
+      nodePort: 0
+      port: 3306
+      protocol: TCP
+      appProtocol: tcp
+      targetPort: 3306
+    selector:
+      name: model-registry-db
+    sessionAffinity: None
+    type: ClusterIP
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-  name: mysql-object-recognition-model-registry
-  namespace: rhoai-model-registries
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: mysql-object-recognition-model-registry
-  template:
-    metadata:
-      labels:
-        name: mysql-object-recognition-model-registry
-    spec:
-      containers:
-        - name: mysql
-          image: registry.redhat.io/rhel9/mysql-80:latest
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    labels:
+      app.kubernetes.io/name: model-registry-db
+      app.kubernetes.io/instance: model-registry-db
+      app.kubernetes.io/part-of: model-registry-db
+      app.kubernetes.io/managed-by: kustomize
+    name: model-registry-db
+    annotations:
+      argocd.argoproj.io/sync-wave: "3"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app.kubernetes.io/name: model-registry-db
+      app.kubernetes.io/instance: model-registry-db
+      app.kubernetes.io/part-of: model-registry-db
+      app.kubernetes.io/managed-by: kustomize
+    annotations:
+      argocd.argoproj.io/sync-wave: "3"
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: model-registry-db
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 0
+    selector:
+      matchLabels:
+        name: model-registry-db
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: model-registry-db
+          sidecar.istio.io/inject: "false"
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: model-registry-db
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: model-registry-db
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: model-registry-db
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: model-registry-db
+          args:
+            - --datadir
+            - /var/lib/mysql/datadir
+            - --default-authentication-plugin=mysql_native_password
+          image: mysql:8.3.0
           imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3306
-              protocol: TCP
-          env:
-            - name: MYSQL_USER
-              value: admin
-            - name: MYSQL_PASSWORD
-              value: R3dh4t1!
-            - name: MYSQL_ROOT_PASSWORD
-              value: R3dh4t1!
-            - name: MYSQL_DATABASE
-              value: object_recognition_model_registry
-          resources:
-            limits:
-              memory: 512Mi
-          volumeMounts:
-            - name: mysql-object-recognition-model-registry-data
-              mountPath: /var/lib/mysql/data
-            - name: mysql-config
-              mountPath: /etc/my.cnf
-              subPath: my.cnf
           livenessProbe:
             exec:
               command:
-                - /bin/sh
-                - '-i'
-                - '-c'
-                - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin -u $MYSQL_USER ping
-            initialDelaySeconds: 30
+                - /bin/bash
+                - -c
+                - mysqladmin -u${MYSQL_USER} -p${MYSQL_ROOT_PASSWORD} ping
+            initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 1
-            failureThreshold: 3
-            successThreshold: 1
+            timeoutSeconds: 5
+          name: mysql
+          ports:
+          - containerPort: 3306
+            protocol: TCP
           readinessProbe:
             exec:
               command:
-                - /bin/sh
-                - '-i'
-                - '-c'
-                - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin -u $MYSQL_USER ping
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 1
-            failureThreshold: 3
-            successThreshold: 1
-      volumes:
-        - name: mysql-object-recognition-model-registry-data
+              - /bin/bash
+              - -c
+              - mysql -D ${MYSQL_DATABASE} -u${MYSQL_USER} -p${MYSQL_ROOT_PASSWORD} -e 'SELECT 1'
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: model-registry-db-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        volumes:
+        - name: model-registry-db-data
           persistentVolumeClaim:
-            claimName: mysql-object-recognition-model-registry
-        - name: mysql-config
-          configMap:
-            name: mysql-object-recognition-model-registry-config
-      restartPolicy: Always
-
+            claimName: model-registry-db
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-object-recognition-model-registry
-  namespace: rhoai-model-registries
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
-  name: mysql-object-recognition-model-registry
-  namespace: rhoai-model-registries
-  labels:
-    app: mysql-object-recognition-model-registry
-spec:
-  ports:
-  - port: 3306
-    targetPort: 3306
-  selector:
-    name: mysql-object-recognition-model-registry
-  type: ClusterIP
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    labels:
+      app.kubernetes.io/name: model-registry-db
+      app.kubernetes.io/instance: model-registry-db
+      app.kubernetes.io/part-of: model-registry-db
+      app.kubernetes.io/managed-by: kustomize
+    annotations:
+      argocd.argoproj.io/sync-wave: "3"
+      template.openshift.io/expose-database_name: '{.data[''database-name'']}'
+      template.openshift.io/expose-password: '{.data[''database-password'']}'
+      template.openshift.io/expose-username: '{.data[''database-user'']}'
+    name: model-registry-db
+  stringData:
+    database-name: "object_detection_model_registry"
+    database-password: "R3dh4t1!"
+    database-user: "admin"

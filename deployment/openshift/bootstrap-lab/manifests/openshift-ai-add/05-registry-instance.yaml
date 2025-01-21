@@ -8,7 +8,7 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     openshift.io/description: ''
     openshift.io/display-name: model-registry
-  name: model-registry
+  name: object-detection-model-registry
   namespace: rhoai-model-registries
 spec:
   grpc:
@@ -28,11 +28,11 @@ spec:
           mode: SIMPLE
     tlsMode: ISTIO_MUTUAL
   mysql:
-    database: model_registry
-    host: object_recognition_model_registry
+    database: object_detection_model_registry
+    host: model-registry-db
     passwordSecret:
       key: database-password
-      name: model-registry-secret
+      name: object-detection-model-registry-secret
     port: 3306
     skipDBCreation: false
     username: admin
