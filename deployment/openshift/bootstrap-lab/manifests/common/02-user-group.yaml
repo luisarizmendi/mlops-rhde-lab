@@ -35,7 +35,7 @@ users:
 apiVersion: user.openshift.io/v1
 kind: Group
 metadata:
-  name: object-detection-model-registry
+  name: object-detection-model-registry-users
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 users:

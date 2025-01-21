@@ -20,11 +20,11 @@
               "env_vars": [
                 {
                   "env_var": "MODEL_EPOCHS",
-                  "value": "1"
+                  "value": "50"
                 },
                 {
                   "env_var": "MODEL_BATCH",
-                  "value": "4"
+                  "value": "16"
                 },
                 {
                   "env_var": "PYTORCH_CUDA_ALLOC_CONF",
@@ -96,20 +96,16 @@
               "outputs": [],
               "env_vars": [
                 {
-                  "env_var": "AWS_S3_ENDPOINT",
-                  "value": "minio-api-minio.apps.cluster-sg2tp.dynamic.redhatworkshops.io"
+                  "env_var": "AWS_S3_ENDPOINT"
                 },
                 {
-                  "env_var": "AWS_ACCESS_KEY_ID",
-                  "value": "user01"
+                  "env_var": "AWS_ACCESS_KEY_ID"
                 },
                 {
-                  "env_var": "AWS_SECRET_ACCESS_KEY",
-                  "value": "redhat01"
+                  "env_var": "AWS_SECRET_ACCESS_KEY"
                 },
                 {
-                  "env_var": "AWS_S3_BUCKET",
-                  "value": "user01-ai-models"
+                  "env_var": "AWS_S3_BUCKET"
                 }
               ],
               "kubernetes_pod_annotations": [],
@@ -177,20 +173,16 @@
               "outputs": [],
               "env_vars": [
                 {
-                  "env_var": "ROBOFLOW_KEY",
-                  "value": "kZAFZ30ULoBdNjSmyxlK"
+                  "env_var": "ROBOFLOW_KEY"
                 },
                 {
-                  "env_var": "ROBOFLOW_WORKSPACE",
-                  "value": "workshop-igjqz"
+                  "env_var": "ROBOFLOW_WORKSPACE"
                 },
                 {
-                  "env_var": "ROBOFLOW_PROJECT",
-                  "value": "group-99-hardhat-detection"
+                  "env_var": "ROBOFLOW_PROJECT"
                 },
                 {
-                  "env_var": "ROBOFLOW_DATASET_VERSION",
-                  "value": "4"
+                  "env_var": "ROBOFLOW_DATASET_VERSION"
                 }
               ],
               "kubernetes_pod_annotations": [],
@@ -206,8 +198,8 @@
             "ui_data": {
               "label": "00-get-data.ipynb",
               "image": "/notebook/user99-ai/object-detection-notebooks/static/elyra/notebook.svg",
-              "x_pos": 24,
-              "y_pos": 70,
+              "x_pos": 22,
+              "y_pos": 67,
               "description": "Run notebook file"
             }
           },
