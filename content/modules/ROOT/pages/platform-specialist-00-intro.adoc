@@ -38,21 +38,21 @@ Find below the workflow that you will follow as Platform Specialist during the w
 
 image::platform-workflow.png[]
 
-1. *Image Preparation*:
+1. *Image Baking*:
 
     * Image Creation: Building the base device image with required base OS and configurations
     * Image Distribution: Making the device image available to be used
     * Image Deployment: Automated installation of the Image created and remote access
 
 
-2. *Rollout*: 
+2. *Device Onboard*: 
     * Image Update: Adding management agent to the Image to perform Onboarding onto Flight Control
 
 
 3. *Day-2 Operations*: 
     * Device monitoring: centralized system health monitoring
     * Device updates: deploying application workload and system patches from the centralized console
-    
+
 Key feedback loop: Operational insights drive image improvements and updates, ensuring continuous refinement of base images based on real world usage patterns and requirements.
 
 

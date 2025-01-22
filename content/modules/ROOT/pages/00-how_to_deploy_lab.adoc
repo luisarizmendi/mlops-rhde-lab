@@ -208,6 +208,8 @@ mc admin policy attach minio user01-policy --user=user01
 mc mb minio/user01-ai
 
 == Gitea
+preparing the environment Gitea:
+$ ansible-playbook playbook.yml -i inventory 
 
 == FlighCTL
 
