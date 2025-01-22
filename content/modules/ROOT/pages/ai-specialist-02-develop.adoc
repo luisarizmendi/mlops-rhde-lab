@@ -765,15 +765,15 @@ It's time to create the Pipeline with the files that you prepared.
 ====
 To create a new Elyra pipeline do the following in your Workbench:
 
-1. Right-click on the directory view where the pipeline step files are located and select "New Data Science Pipeline Editor". Alternatively, you can open a new tab by pressing `+` and selecting "Pipeline Editor" from the Elyra section.
+1- Right-click on the directory view where the pipeline step files are located and select "New Data Science Pipeline Editor". Alternatively, you can open a new tab by pressing `+` and selecting "Pipeline Editor" from the Elyra section.
 
-2. Rename `.pipeline` file to `training-elyra.pipeline`.
+2- Rename `.pipeline` file to `training-elyra.pipeline`.
 
-3. Drag-and-drop the Step files that you prepared and connect them in the right order.
+3- Drag-and-drop the Step files that you prepared and connect them in the right order.
 
-4. Click the square with an arrow inside at the top right corner. A new menu will appear on the right with several tabs for configuring the pipeline and its steps. When you click a step, its configuration will open. You need to configure the following:
+4- Click the square with an arrow inside at the top right corner. A new menu will appear on the right with several tabs for configuring the pipeline and its steps. When you click a step, its configuration will open. You need to configure the following:
 
-* At the general pipeline level configure a "Data Volume" so the steps can share the files (it should be mounted under `/opt/app-root/src`) and the general Runtime Image that will be used, in this case it will be the custom image that you created (`PyTorch Custom`).
+** At the general pipeline level configure a "Data Volume" so the steps can share the files (it should be mounted under `/opt/app-root/src`) and the general Runtime Image that will be used, in this case it will be the custom image that you created (`PyTorch Custom`).
 
 image::ai-build-pipeline-config.png[]
 
@@ -785,7 +785,7 @@ image::ai-build-pipeline-config.png[]
 
 image::ai-build-pipeline-envs.png[]
 
-5. Click save (icon with a disk on the top menu).
+5- Click save (icon with a disk on the top menu).
 ====
 
 [IMPORTANT]
