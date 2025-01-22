@@ -779,25 +779,9 @@ image::ai-build-pipeline-config.png[]
 
 ** In each step you will need to fill in the required Environment Variable values that will be used, in our example:
 
-*** In the "Get Data" step:
----
-    ROBOFLOW_KEY
-    ROBOFLOW_WORKSPACE
-    ROBOFLOW_PROJECT
-    ROBOFLOW_DATASET_VERSION
----
-*** In the "Training" step:
----
-    MODEL_EPOCHS
-    MODEL_BATCH
----
-*** In the "Save Data" step:
----
-    AWS_S3_ENDPOINT
-    AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY
-    AWS_S3_BUCKET
----
+*** In the "Get Data" step: `ROBOFLOW_KEY`, `ROBOFLOW_WORKSPACE`, `ROBOFLOW_PROJECT` and `ROBOFLOW_DATASET_VERSION`
+*** In the "Training" step: `MODEL_EPOCHS` and `MODEL_BATCH`
+*** In the "Save Data" step: `AWS_S3_ENDPOINT`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_S3_BUCKET`
 
 image::ai-build-pipeline-envs.png[]
 
