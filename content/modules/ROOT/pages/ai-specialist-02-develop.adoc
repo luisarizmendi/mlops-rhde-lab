@@ -115,7 +115,13 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Object Detection Notebooks". You will need to select the base image that will be used to run your Jupyter Notebooks (select `PyTorch`), the Container Size (`Small` is enough), the Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage) and configure the Object Storage Connection that you already configured. One additional thing to take into account is that when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`) you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+4- Create a new Workbench named "Object Detection Notebooks". You will need to select:
+
+** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
+** Container Size (`Small` is enough)
+** Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage)
+** Object Storage Connection that you already configured. *
+** Additionally, when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
