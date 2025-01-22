@@ -1,0 +1,13 @@
+= Device Onboarding
+
+== Flight Control
+tour
+
+== Image Update
+include agent 
+update manually the device
+
+== Device Management
+approval
+fleet management
+

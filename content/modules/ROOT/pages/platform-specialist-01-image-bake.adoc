@@ -1,5 +1,55 @@
-preparing the environment Gitea:
-$ ansible-playbook playbook.yml -i inventory 
+= Image Baking
+
+So by now you should already be familiar with building a standardized OS using Image Mode, but here is a recap just in case.
+
+Image mode is a new approach to operating system (OS) deployment that lets users build, deploy, and manage Red Hat Enterprise Linux as a bootc container image. 
+Bootc is the original project https://containers.github.io/bootc/intro.html[*Bootc*] that is leveraged to  
+
+It reduces complexity across the enterprise by letting development, operations, and solution providers use the same container-native tools and techniques to manage everything from applications to the underlying OS. 
+Use image mode for RHEL to build, test, and deploy operating systems by using the same tools and techniques as application containers. Image mode for RHEL is available by using the registry.redhat.io/rhel9/rhel-bootc bootc image. The RHEL bootc images differ from the existing application Universal Base Images (UBI) in that they contain additional components necessary to boot that were traditionally excluded, such as, kernel, initrd, boot loader, firmware, among others. 
+
+One of the most obvious ways to use a bootable container as an operating system is to build it into a disk image. The new Bootc Image Builder project is a tool that does exactly that. Depending on your needs, it can generate different types of disk images, including:
+
+    raw: Common image format used by many virtualization tools
+    qcow: An image format primarily used by QEMU
+    iso: For creating bootable media using tools like Balena Etcher
+    vmdk: For creating VMs using VMWare Workstation or ESXi
+    ami: For creating virtual servers on Amazon EC2
+
+These types of disk images provide lots of options to deploy bootable containers—from booting from a USB drive, starting a virtual machine, or deploying virtual servers to the cloud.
+
+The benefits of using containers do not end here—for instance, transactional updates can be applied "in place" from new container images, without the need to replace the entire disk image. This keeps the two models in sync and once again allows a single path and the benefits of containers without sacrificing on performance when patching or updating the operating system.
+
+
+
+The bootc project intends to be operating system and distribution independent as possible, similar to its related projects podman and systemd, etc.
+
+The recommendations for creating bootc-compatible images will in general need to be owned by the OS/distribution - in particular the ones who create the default bootc base image(s). However, some guidance is very generic to most Linux systems (and bootc only supports Linux).
+
+Let's however restate a base goal of this project:
+
+    The original Docker container model of using "layers" to model applications has been extremely successful. This project aims to apply the same technique for bootable host systems - using standard OCI/Docker containers as a transport and delivery format for base operating system updates.
+
+Every tool and technique for creating application base images should apply to the host Linux OS as much as possible.
+
+
+== Image Creation
+
+start from henry container
+copy containerfile
+describe most of the containerfile lines
+add customization (script to trigger issue creation with IP address on gitea)
+command to build new image
+
+
+== Image Distribution
+command to create new iso file
+use usb drive and burn it
+
+== Image Rollout
+boot up nvidia with device
+remote access
+
 
 to build bootc image for nvidia platform which includes microshift started from image http://quay.io/hgeaydem/microshift-4.17-jetson-bootc:latest
 going to use the same nvidia platform to build the iso image
