@@ -106,7 +106,12 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
-3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Use your MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] ), the MinIO API URL ({minio-api}) (removing `http://`) and the Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" (you can keep the Region empty). 
+3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
+
+** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
+** MinIO API URL ({minio-api}) (removing `http://`) 
+** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
+** Region (you can keep the Region empty). 
 
 image::ai-build-dataconnection.png[]
 
