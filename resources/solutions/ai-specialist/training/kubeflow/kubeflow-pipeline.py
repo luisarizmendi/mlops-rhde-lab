@@ -165,14 +165,14 @@ def upload_to_minio(
 
     try:
         client.fput_object(bucket, 
-                        f"models/{directory_name}/model/pytorch/{os.path.basename(file_path)}", 
+                        f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}", 
                         files_model_pt)
     except S3Error as e:
         print(f"Error uploading {files_model_pt}: {e}")
 
     try:
         client.fput_object(bucket, 
-                        f"models/{directory_name}/model/onnx/1/{os.path.basename(file_path)}", 
+                        f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", 
                         files_model_onnx)
     except S3Error as e:
         print(f"Error uploading {files_model_onnx}: {e}")

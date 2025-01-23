@@ -12,10 +12,10 @@ COPY requirements.txt /opt/app-root/src/
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --no-cache-dir  -r /opt/app-root/src/requirements.txt
 
-COPY object-detection-batch.py /opt/app-root/src
+COPY object-detection-batch-model-file.py /opt/app-root/src
 
 WORKDIR /opt/app-root/src
 
 EXPOSE 8800
 
-CMD ["python", "object-detection-batch.py"]
+CMD ["python", "object-detection-batch-model-file.py"]
