@@ -207,3 +207,32 @@ mc admin policy attach minio user01-policy --user=user01
 
 mc mb minio/user01-ai
 
+== Gitea
+preparing the environment Gitea:
+$ ansible-playbook playbook.yml -i inventory 
+
+== FlighCTL
+
+  # git clone repo
+  # make sure you have the following packaes installed: git, make, and go (>= 1.21), openssl, openssl-devel, podman-compose
+  # sudo dnf install git make golang openssl openssl-devel podman-compose
+  # ensure podman socket is enabled : systemctl --user enable --now podman.socket
+  # build repo: make build
+  # install kind:
+  #[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+  # install kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
+  # install helm: https://helm.sh/docs/intro/install/#from-script
+  # deploy using helm with kind local cluster (it includes installing helm)
+  # make deploy
+  # CANT USE LOCAL METHOD AS IT DOESN'T INCLUDE UI
+  # install on cluster with acm
+  # helm upgrade --install --version=0-latest     --namespace flightctl --create-namespace     flightctl oci://quay.io/flightctl/charts/flightctl     --values content/modules/ROOT/pages/scripts/environment/values.yaml
+  # fix redis permission by patching ss with this user and group id: 1000860000
+  # install flighctl cli https://github.com/flightctl/flightctl/blob/main/docs/user/getting-started.md#installing-the-flight-control-cli
+  # login into flightctl
+  # $ flightctl login https://api.flightctl.apps.my.lmf.openshift.es/  --insecure-skip-tls-verify --token=sha256~CGM1m_RbqBqS1bbNdakdGVRU6-2aRZlwzlexZLpVQ3Y
+  # now you can get the devices registered with
+  # flightctl get devices
+
+== DNS - DHCP - Router Openwrt
+using this guide https://openwrt.org/docs/guide-user/installation/openwrt_x86 I'll reuse a device at home

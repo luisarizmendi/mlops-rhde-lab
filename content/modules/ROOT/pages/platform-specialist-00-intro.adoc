@@ -10,12 +10,12 @@ However, this initiative isn’t limited to one or two sites. ACME’s factories
 
 Collaboration will be key to success. The development team is building applications designed to operate across both RHEL and OpenShift environments, that means that every edge device will run on RHEL, chosen for its reputation as the most secure and reliable operating system available while in the cloud, OpenShift will provide the flexibility and scalability needed to host dashboards and centralized applications.  As the platform specialist, it’s up to you to ensure their work integrates smoothly into the larger ecosystem. The alignment between teams will drive innovation and reinforce ACME’s position as a leader in intelligent, safe manufacturing.
 
-Lastly, one additional note. For the AI inference processing at the edge, ACME has selected the NVIDIA Jetson Orin NANO devices, known for their optimal balance of performance and energy efficiency. This choice introduces an important architectural consideration: the platform must support ARM-based systems, expanding the scope of your infrastructure to handle both x86 and ARM architectures seamlessly.
+Lastly, one additional note. For the AI inference processing at the edge, ACME has selected the NVIDIA Jetson Orin NANO devices, known for their optimal balance of performance and energy efficiency. This choice introduces an important architectural consideration: the platform must support ARM-based systems and GPU-enabled hardware, expanding the scope of your infrastructure to handle both x86 and ARM architectures seamlessly, and to run ML enabled workload more efficiently.
 
 
 == Toolset
 
-To build and manage the platform supporting ACME’s safety solution, the workshop will leverage a set of robust tools designed to ensure scalability, automation, and seamless deployment across both edge and cloud environments. These tools include:
+To build and manage the platform supporting ACME’s safety solution, the workshop will leverage a set of robust tools designed to ensure scalability, automation and seamless deployment across both edge and cloud environments. These tools include:
 
 [NOTE]
 
@@ -27,9 +27,7 @@ You will find later that each section of this workshop outlines details about ou
 
 * *ArgoCD*: ArgoCD implements GitOps workflows to automate the deployment and synchronization of applications across environments. This ensures that infrastructure and application states are always aligned with the latest configurations stored in version control, reducing drift and enabling fast, consistent rollouts.
 
-* *Ansible Automation Platform*: Ansible automates the provisioning, configuration, and management of both cloud and edge environments. Its agentless architecture simplifies scaling, making it easy to deploy and manage large numbers of devices while maintaining consistent configurations.
-
-* *Flight Control*: Flight Control (community Open Source project) streamlines the management of edge devices, allowing the platform team to deploy updates, monitor device health, and orchestrate workloads across distributed environments.
+* *Flight Control*: Flight Control (community Open Source project) streamlines the management of edge devices, allowing the platform team to deploy updates, monitor device health, and orchestrate workloads across distributed fleets of Edge Devices.
 
 * *Bootc*: Bootc enables the use of bootable container images as the operating system for edge devices, providing atomic updates, rollbacks, and immutable infrastructure principles. This containerized approach simplifies OS management, enhances security through immutability, and ensures consistent, reliable updates across the edge fleet.
 
@@ -40,16 +38,20 @@ Find below the workflow that you will follow as Platform Specialist during the w
 
 image::platform-workflow.png[]
 
-1. *Image Preparation*:
+1. *Image Baking*:
 
-    * Image Creation: Building the base device image with required OS, applications, and configurations
+    * Image Creation: Building the base device image with required base OS and configurations
     * Image Distribution: Making the device image available to be used
+    * Image Deployment: Automated installation of the Image created and remote access
 
 
-2. *Rollout*: Zero-touch Onboarding: Automated deployment process enabling hands-off workstation provisioning.
+2. *Device Onboard*: 
+    * Image Update: Adding management agent to the Image to perform Onboarding onto Flight Control
 
 
-3. *Day-2 Operations*: Monitoring, Upgrades: Ongoing maintenance including system health monitoring, software updates/patches and configuration management
+3. *Day-2 Operations*: 
+    * Device monitoring: centralized system health monitoring
+    * Device updates: deploying application workload and system patches from the centralized console
 
 Key feedback loop: Operational insights drive image improvements and updates, ensuring continuous refinement of base images based on real world usage patterns and requirements.
 
