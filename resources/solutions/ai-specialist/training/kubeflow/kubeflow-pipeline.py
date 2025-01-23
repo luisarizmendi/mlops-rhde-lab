@@ -93,6 +93,7 @@ def train_model(
     
     # Export model
     model.export(format='onnx', imgsz=CONFIG['imgsz'])
+       
     
     return NamedTuple('Outputs', [('train_dir', str), ('test_dir', str)])(
         train_dir=str(results_train.save_dir),
@@ -119,7 +120,7 @@ def upload_to_minio(
     import datetime
     
     client = Minio(
-        endpoint,
+        endpoint.replace('https://', '').replace('http://', ''),
         access_key=access_key,
         secret_key=secret_key,
         secure=True
@@ -132,6 +133,11 @@ def upload_to_minio(
                    if os.path.isfile(os.path.join(train_dir, f))]
     files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path) 
                     if os.path.isfile(os.path.join(weights_path, f))]
+    
+    files_model_pt = os.path.join(train_dir, "weights") + "/best.pt"
+    
+    files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
+    
     files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir) 
                   if os.path.isfile(os.path.join(test_dir, f))]
     
@@ -146,14 +152,6 @@ def upload_to_minio(
         except S3Error as e:
             print(f"Error uploading {file_path}: {e}")
     
-    for file_path in files_models:
-        try:
-            client.fput_object(bucket, 
-                             f"models/{directory_name}/{os.path.basename(file_path)}", 
-                             file_path)
-        except S3Error as e:
-            print(f"Error uploading {file_path}: {e}")
-    
     for file_path in files_test:
         try:
             client.fput_object(bucket, 
@@ -164,6 +162,20 @@ def upload_to_minio(
 
     with open(model_path, "w") as f:
         f.write("models/" + directory_name)
+
+    try:
+        client.fput_object(bucket, 
+                        f"models/{directory_name}/model/pytorch/{os.path.basename(file_path)}", 
+                        files_model_pt)
+    except S3Error as e:
+        print(f"Error uploading {files_model_pt}: {e}")
+
+    try:
+        client.fput_object(bucket, 
+                        f"models/{directory_name}/model/onnx/1/{os.path.basename(file_path)}", 
+                        files_model_onnx)
+    except S3Error as e:
+        print(f"Error uploading {files_model_onnx}: {e}")
 
 
 # Define the pipeline
@@ -184,7 +196,7 @@ def yolo_training_pipeline(
     train_epochs: int = 50,
     train_batch_size: int = 16,
     train_img_size: int = 640,
-    pvc_storage_class: str = "ocs-external-storagecluster-ceph-rbd",
+    pvc_storage_class: str = "gp3-csi",
     pvc_size: str = "5Gi",
     pvc_name_sufix: str = "-kubeflow-pvc"
 ):

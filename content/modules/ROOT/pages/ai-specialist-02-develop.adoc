@@ -4,6 +4,8 @@ The process of AI model prototype building is a multistep journey that transform
 
 While these two stages (Feature Engineering and Model development) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 
+This will be the most time consuming section of the workshop, are you ready?
+
 
 === Tools and preparations
 
@@ -54,7 +56,7 @@ We will use Gitea to store and version-control the Jupyter Notebooks developed f
 ====
 If you plan to use Gitea you can take a look and check that the "userpass:[<span id="gnumberVal"></span>]-ai" repository is already created:
 
-1. Navegate to {gitea}
+1. Navegate to http://{gitea-server}
 2. Click "Sign In" (top right button) with user "userpass:[<span id="gnumberVal"></span>]" and password "redhatpass:[<span id="gnumberVal"></span>]"
 3. You can see on the right the "userpass:[<span id="gnumberVal"></span>]-ai" repository.
 ====
@@ -102,16 +104,16 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]  
+1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
 3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
 
 ** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
-** MinIO API URL ({minio-api}) removing `http://`. 
+** MinIO API URL ({minio-api}). 
 ** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
-** Region (you can keep the Region empty). 
+** Region. You can keep the Region empty but it's better to include any string (e.g. `none`). 
 
 image::ai-build-dataconnection.png[]
 
@@ -162,7 +164,7 @@ In our case, however, we will need additional packages, such as the one that all
 
 [IMPORTANT]
 
-Once you have identified all the required packages, consider creating a custom base image that includes these dependencies. This optimized image will streamline not only the prototyping phase but also regular training workflows performed through Pipelines.
+Once you have identified all the required packages, consider creating a custom base image that includes these dependencies (check the https://access.redhat.com/articles/rhoai-supported-configs[Software included in the supported workbench images]). This optimized image will streamline not only the prototyping phase but also regular training workflows performed through Pipelines.
 
 === Python Libraries
 
@@ -518,7 +520,7 @@ In order to do that you need to create an Object Storage Client and then use it 
 [source,python,role=execute,subs="attributes"]
 ----
 client = Minio(
-    AWS_S3_ENDPOINT,
+    AWS_S3_ENDPOINT_NAME,
     access_key=AWS_ACCESS_KEY_ID,
     secret_key=AWS_SECRET_ACCESS_KEY,
     secure=True
@@ -529,11 +531,15 @@ But what are those values? Well, when you created the Workbench you configured a
 
 [source,python,role=execute,subs="attributes"]
 ----
-AWS_S3_ENDPOINT = os.getenv("AWS_S3_ENDPOINT")
+AWS_S3_ENDPOINT_NAME = os.getenv("AWS_S3_ENDPOINT", "").replace('https://', '').replace('http://', '')
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 ----
+
+[NOTE]
+
+In the `AWS_S3_ENDPOINT_NAME` we removed the `https://` from the `AWS_S3_ENDPOINT` variable
 
 Once you have the Client configured, you just need to select the files and upload them using the `client.fput_object` method. If you don't want to expend time investigating https://min.io/docs/minio/linux/developers/python/API.html[how to use client.fput_object] you can copy paste the code below to save time:
 
@@ -583,7 +589,7 @@ Finally, I recommend cleaning up the directories created during the training and
 
 So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits even for prototyping, such as ensuring consistency, repeatability, and improved collaboration.
 
-OpenShift AI integrates seamlessly with Elyra Pipelines, an Open Source visual pipeline editor that simplifies the creation, editing, and execution of data science workflows. Elyra allows you to design workflows through an intuitive drag-and-drop interface, standardize your prototyping process to ensure reproducibility, and automate repetitive tasks to reduce manual effort. It also enables you to scale your workflows efficiently using OpenShift AI's powerful infrastructure while making it easier to share and collaborate with your team.
+OpenShift AI integrates seamlessly with https://elyra.readthedocs.io/en/latest/user_guide/pipelines.html[Elyra Pipelines], an Open Source visual pipeline editor that simplifies the creation, editing, and execution of data science workflows. Elyra allows you to design workflows through an intuitive drag-and-drop interface, standardize your prototyping process to ensure reproducibility, and automate repetitive tasks to reduce manual effort. It also enables you to scale your workflows efficiently using OpenShift AI's powerful infrastructure while making it easier to share and collaborate with your team.
 
 Let's build an Elyra Pipeline to automate the model prototyping process, helping you focus on innovation rather than managing infrastructure and repetitive tasks.
 
@@ -783,6 +789,10 @@ image::ai-build-pipeline-config.png[]
 *** In the "Training" step: `MODEL_EPOCHS` and `MODEL_BATCH`
 *** In the "Save Data" step: `AWS_S3_ENDPOINT`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_S3_BUCKET`
 
+[NOTE]
+
+Remember that if you want to save time you could use the "Plan B" Dataset (although it produces a non-usable model).
+
 image::ai-build-pipeline-envs.png[]
 
 5- Click save (icon with a disk on the top menu).
@@ -814,6 +824,10 @@ image::ai-build-pipeline-run.png[]
 
 [NOTE]
 
+The first time that you run the Pipeline it could take some time to finish the first task since it needs to pull the custom Container Image.
+
+[NOTE]
+
 You can only view the logs of the tasks once they are completed. However, if you're interested in monitoring the logs in real time, you can access the Pod logs directly through the OpenShift Console.
 
 Once the Pipeline is finished, you could check that the contents are saved into the Object Data Store.
@@ -822,4 +836,12 @@ Once the Pipeline is finished, you could check that the contents are saved into 
 
 In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained used this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1[metrics that you can find here].
 
-You can now also push to the Git Source repository the files that you created (use the `Git` menu in the top bar) before jumping into the xref:ai-specialist-03-training.adoc[Model Training] section.
+You can now also push to the Git Source repository the files that you created:
+
+1. Click on the Git icon on the left menu.
+2. Press the `+` to select the files to be pushed.
+3. Include at the botton the Commit message.
+4. Press "Commit".
+5. Use the `Git` menu in the top bar to Push the changes into the remote repository.
+
+Move on into xref:ai-specialist-03-training.adoc[Model Training].
