@@ -161,7 +161,7 @@ spec:
                     ]'
                 restartPolicy: Never
             backoffLimit: 1
-          EOF        
+          EOF
 
           echo "Environment ready!"
       restartPolicy: Never

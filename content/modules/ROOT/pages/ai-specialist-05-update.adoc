@@ -14,3 +14,44 @@ blah, blah
 == Retraining
 
 blah, blah
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9. Prometheus and Grafana
+
+Overview
+
+Prometheus and Grafana are integral to OpenShift AI’s monitoring stack, providing metrics collection, visualization, and alerting.
+
+Usage with RHEL Inference
+
+Configure Prometheus on RHEL to expose metrics (e.g., inference latency, resource usage).
+
+Forward these metrics to OpenShift AI’s monitoring stack for centralized visualization and analysis in Grafana.
+
+10. Trust Management
+
+Overview
+
+OpenShift AI ensures secure deployment and serving of models with trust management capabilities, including custom certificates and token-based authentication.
+
+Usage with RHEL Inference
+
+Secure inference endpoints on RHEL using certificates and authentication tokens generated in OpenShift AI.
+
+Integrate secure communication channels between RHEL inference servers and OpenShift AI monitoring systems.
+
+
+
+

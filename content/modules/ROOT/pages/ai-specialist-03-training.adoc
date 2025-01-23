@@ -1,199 +1,180 @@
 = Model Training
 
+In production environments, training machine learning models requires more than just running a script or experimenting in a notebook. A robust pipeline provides the following benefits:
 
-* OpenShift Pipelines: OpenShift Pipelines is a CI/CD solution for automating workflows, including model training, serving, and monitoring. In the building context, this feature will be used to automate the retrieval, training and containerization of then model. Pipelines are also useful to help with model serving (when deploying on OpenShift) and to periodically update models based on feedback or retraining needs (explained in xref:ai-specialist-04-update.adoc[Day-2 Operations] section).
+* Scalability: Handle large datasets and distribute computational workloads efficiently across resources.
 
+* Reproducibility: Ensure that every training run can be replicated, enabling consistent model behavior.
 
+* Automation: Reduce manual intervention by automating steps such as data preprocessing, model training, evaluation, and deployment.
 
+* Monitoring and Governance: Track metrics, manage versions, and audit changes to ensure compliance and performance.
 
+Without a pipeline, training a model becomes an ad-hoc, error-prone process, which can lead to inconsistent outcomes and increased operational risks.
 
+Elyra Pipelines, built on Jupyter Notebooks, offer a simple and accessible way to construct data science workflows. However, they fall short when used in production environments for several reasons. Elyra workflows are not designed to efficiently handle large-scale data or distributed workloads across clusters. They are heavily tied to the Jupyter Notebook ecosystem, which is not ideal for enterprise-grade, high-availability systems. Additionally, Elyra lacks advanced integrations with monitoring tools, production-grade storage solutions, and other enterprise MLOps requirements. Managing versions of pipelines and models is cumbersome in Elyra, leading to challenges in reproducibility and governance. While Elyra is a good tool for prototyping and early-stage experimentation, it is not built to meet the demands of a production-scale MLOps pipeline.
 
+Kubeflow, a comprehensive open-source MLOps platform, is specifically designed to address the challenges of deploying machine learning workflows at scale. Built to leverage Kubernetes, it enables seamless scalability, resource management, and fault tolerance. Kubeflow supports the entire machine learning lifecycle, from data preparation to training, tuning, and deployment. It allows integration with enterprise tools such as monitoring systems, CI/CD platforms, and storage solutions. Kubeflow Pipelines provide tools to create, share, and reuse modular pipelines with version control. With strong community support and continuous development, it remains up-to-date with the latest advancements in AI/ML. For enterprises seeking a production-grade MLOps solution, Kubeflow is a highly recommended choice.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://github.com/opendatahub-io/ai-edge
-
-
-
-
-
-
-
-
+OpenShift AI simplifies the deployment and management of AI/ML workloads on Red Hat OpenShift, and it offers built-in support for importing and running Kubeflow Pipelines and that's what we are going to do now.
 
 
 === Tools and preparations
 
-In this section we will be using the following tools: 
+In this section, we will utilize the following tools to streamline our workflow:
 
-* OpenShift AI
+* OpenShift AI: This platform will be used to import and execute the Kubeflow pipeline, enabling seamless integration with our Kubernetes-based environment. Besides the Pipeline management feature of OpenShift AI, you will be using the "Model Registry". The OpenShift AI Model Registry serves as a central repository for storing, sharing, versioning, and tracking machine learning models. It supports metadata management, including training details, hyperparameters, and performance metrics.
 
-* GitHub
+* GitHub: Serving as the repository for the pipeline definition, GitHub ensures version control and collaborative development.
 
-* MinIO
+* MinIO: Acting as the storage solution for the produced model, MinIO provides high-performance, scalable object storage.
 
-* Quay.io
+All tools have been pre-configured and are ready for immediate use, allowing us to dive directly into the tasks ahead without additional setup.
 
 
 
+== Training Pipeline
 
-openshift ai with rhel
+The Kubeflow pipeline that we are going to import is based on Python code. OpenShift AI Workbenches include an environment specificlly created to develop code with an integrated IDE, so let's deploy a new Workbench of that type.
 
+To deploy a Code Workbench you have to:
 
-1. Model Registry
+1. Navigate to OpenShift AI "Data Science Projects" and select your project.
+2. Go to "Workbenches" tab and click "Create Wrokbench"
+3. Give it a name (e.g. "Object Detection Pipeline Code") and select the `code-server` type. Keep the local volume but you don't need to configure the Object Storage Connection. There is no need for Accelerators even if you have GPUs available.
+4. Create the Workbench and wait until is ready to open it.
+5. Click on the Three horizontal lines on the top left menu, then select "Terminal" > "New Terminal"
 
-Overview
 
-The OpenShift AI Model Registry serves as a central repository for storing, sharing, versioning, and tracking machine learning models. It supports metadata management, including training details, hyperparameters, and performance metrics.
+image::ai-train-code-terminal.png[]
 
-Usage with RHEL Inference
 
-Models can be retrieved from the registry and exported to RHEL for inference.
+6. Use the Terminal Console to clone your Gitea repo: `git clone {gitea}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git`
 
-Use S3-compatible tools or the oc CLI to download model artifacts.
 
-The model metadata can inform deployment strategies and runtime configuration on RHEL.
+Now you can create a new file `kubeflow-pipeline.py` (right click on the cloned directory name) and start coding...
 
-2. Model Serving
+In order to make it easy, you can simply copy this file https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/kubeflow-pipeline.py and save it.
 
-Overview
+Let's review the script. 
 
-OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
 
-Single-model serving (KServe): Designed for large models requiring dedicated resources.
 
-Multi-model serving (ModelMesh): Optimized for small and medium-sized models sharing resources.
 
-Usage with RHEL Inference
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
-Containerize models using OpenShift AI’s serving runtime (e.g., NVIDIA Triton, TensorFlow Serving).
 
-Push containerized models to a container registry for deployment on RHEL.
 
-Use Podman or Docker on RHEL to deploy and serve the model locally.
+pass data between tasks: https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/
 
-3. Monitoring with TrustyAI
 
-Overview
 
-TrustyAI in OpenShift AI enables monitoring of machine learning models for fairness, bias, and drift. It integrates with OpenShift’s monitoring stack to provide insights into model behavior and performance.
 
-Usage with RHEL Inference
 
-Metrics Collection:
 
-Use Prometheus and Node Exporter on RHEL to collect system and inference metrics.
+onnx path format needs a version
 
-Forward these metrics to OpenShift’s Prometheus instance.
 
-Bias and Drift Analysis:
 
-Send inference inputs and outputs from RHEL to OpenShift AI for analysis using TrustyAI.
 
-Leverage TrustyAI’s bias and drift metrics for ongoing model evaluation.
 
 
 
 
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 
 
 
-1. Model Registry
+Let's proceed with the import, but first you need to convert the Python script into a YAML Kubeflow Pipeline definition by executing the script thanks to the `kpf` library we will obtain the yaml file that we can use to import the pipeline.
 
-Overview
 
-The OpenShift AI Model Registry serves as a central repository for storing, sharing, versioning, and tracking machine learning models. It supports metadata management, including training details, hyperparameters, and performance metrics.
 
-Usage with RHEL Inference
+Run the following commands in the Code terminal:
 
-Models can be retrieved from the registry and exported to RHEL for inference.
+pip install --upgrade pip
+pip install kfp[kubernetes]
+cd userpass:[<span id="gnumberVal"></span>]-ai
+python kubeflow-pipeline.py
 
-Use S3-compatible tools or the oc CLI to download model artifacts.
 
-The model metadata can inform deployment strategies and runtime configuration on RHEL.
 
-2. Model Serving
+You will obtain a file `yolo_training_pipeline.yaml`. It's time to Push the new files into Gitea, on the Terminal window run the following commands:
 
-Overview
 
-OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
 
-Single-model serving (KServe): Designed for large models requiring dedicated resources.
 
-Multi-model serving (ModelMesh): Optimized for small and medium-sized models sharing resources.
+git config --global user.email userpass:[<span id="gnumberVal"></span>]@acme.com
+git config --global user.name userpass:[<span id="gnumberVal"></span>]
+git remote set-url origin http://userpass:[<span id="gnumberVal"></span>]:redhatpass:[<span id="gnumberVal"></span>]@{gitea-server}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git
+git add .
+git commit -m "kubeflow Pipeline"
+git push
 
-Usage with RHEL Inference
 
-Containerize models using OpenShift AI’s serving runtime (e.g., NVIDIA Triton, TensorFlow Serving).
 
-Push containerized models to a container registry for deployment on RHEL.
 
-Use Podman or Docker on RHEL to deploy and serve the model locally.
 
-3. Monitoring with TrustyAI
+Now you can go to Gitea (http://{gitea-server}) and check that your files have been pushed. Open the `yolo_training_pipeline.yaml` file and open the `Raw` version (top right menu), you will need that URL to import the pipeline.
 
-Overview
 
-TrustyAI in OpenShift AI enables monitoring of machine learning models for fairness, bias, and drift. It integrates with OpenShift’s monitoring stack to provide insights into model behavior and performance.
 
-Usage with RHEL Inference
 
-Metrics Collection:
 
-Use Prometheus and Node Exporter on RHEL to collect system and inference metrics.
+image::ai-train-gitea-raw.png[]
 
-Forward these metrics to OpenShift’s Prometheus instance.
 
-Bias and Drift Analysis:
 
-Send inference inputs and outputs from RHEL to OpenShift AI for analysis using TrustyAI.
 
-Leverage TrustyAI’s bias and drift metrics for ongoing model evaluation.
 
+To proceed with the Kubeflow Pipeline import:
 
+1. Go to Data Science Pipelines
+2. Click Import Pipeline
+3. Fill in Name (yolo-training)
+4. Select "Import by URL" and include the Gitea URL with the `yolo_training_pipeline.yaml` raw content.
 
 
 
+image::ai-train-pipeline-kubeflow-import.png[]
 
 
-9. Prometheus and Grafana
+After the correct import, you will see the Pipeline diagram:
 
-Overview
 
-Prometheus and Grafana are integral to OpenShift AI’s monitoring stack, providing metrics collection, visualization, and alerting.
 
-Usage with RHEL Inference
+image::ai-train-kubeflow-pipe.png[]
 
-Configure Prometheus on RHEL to expose metrics (e.g., inference latency, resource usage).
 
-Forward these metrics to OpenShift AI’s monitoring stack for centralized visualization and analysis in Grafana.
+It's time to run the imported Kubeflow Pipeline:
 
-10. Trust Management
+Click Actions and then "Create run"
+Click "Create new experiment" (hardhat-detection)
+Give the run a name (e.g. `v1`)
+Fill in the environment variables used in your run:
+    * Access Key: "userpass:[<span id="gnumberVal"></span>]"
+    * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
+    * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
+    * Endpoint: {}
+    * PVC sufix: 
+    * Roboflow API 
+    * Roboflow Project 
+    * Roboflow Workspace 
+    * Roboflow version 
+    * Batch Size 
+    * Ephoch number 
+    * Image Size 
+    * Training name (e.g. `hardhat-detection`)
 
-Overview
 
-OpenShift AI ensures secure deployment and serving of models with trust management capabilities, including custom certificates and token-based authentication.
 
-Usage with RHEL Inference
 
-Secure inference endpoints on RHEL using certificates and authentication tokens generated in OpenShift AI.
+IF THE FIRST RUN FAILS, RE RUN IT 
 
-Integrate secure communication channels between RHEL inference servers and OpenShift AI monitoring systems.
 
 
 
+Plan B?????????????
 
 
 
@@ -201,61 +182,37 @@ Integrate secure communication channels between RHEL inference servers and OpenS
 
 
 
+image::ai-train-pipeline-run.png[]
 
+[NOTE]
 
-blah, blah
+In contrast with what happened with the Elyra Pipelines, this Kubeflow Pipeline automataically created and delete the Persistent Volume used to pass the files between Pipeline tasks
 
-== Packaging
 
-blah, blah
 
-== Serving
 
-blah, blah
 
 
+se crea pod 
+yolo-training-pipeline-d6qhq-system-container-impl-4214525703
 
 
+pueden ver el pvc claim bond 
 
 
 
 
 
+explicar que se crea un objeto "Workflow" con el pipe run
 
 
--------------------------------------------------------------------------------------------------------------------
 
-MODEL REGISTRY
 
 
-https://github.com/opendatahub-io/model-registry-operator
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--------------------------------------------------------------------------------------------------------------------
-
-
-
-
+check in object storage
 
 
 
@@ -276,58 +233,59 @@ SCHEDULE!!!!!!!
 
 
 
-*********************************+
-KUBEFLOW PIPELINES
-
-
-support: https://access.redhat.com/articles/rhoai-supported-configs
 
 
 
-
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/openshift_ai_tutorial_-_fraud_detection_example/index#running-a-pipeline-generated-from-python-code
-
-
-
-
-
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/working_with_data_science_pipelines/index#defining-a-pipeline_ds-pipelines
-
-The Kubeflow Pipelines SDK enables you to define end-to-end machine learning and data pipelines. Use the latest Kubeflow Pipelines 2.0 SDK to build your data science pipeline in Python code. After you have built your pipeline, use the SDK to compile it into an Intermediate Representation (IR) YAML file. After defining the pipeline, you can import the YAML file to the OpenShift AI dashboard to enable you to configure its execution settings.
-
-
-
-
-nuevo workbench code ****
-
-
-
-
-
- https://github.com/Ark-kun/kfp_samples/blob/65a98da/2019-10%20Kubeflow%20summit/104%20-%20Passing%20data%20for%20python%20components/104%20-%20Passing%20data%20for%20python%20component
-
-
-
- https://www.kubeflow.org/docs/components/pipelines/legacy-v1/sdk/manipulate-resources/
-
-
-
-
-https://github.com/kubeflow/pipelines/tree/master/samples/core
-
-
-https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/
+-------------------------------------------------------------------------------------------------------------------
 
 
 
 
 
 
-Crear un nuevo experiment antes de lanzar el run
+
+
+
+
+== Model Publishing
 
 
 
 
 
 
-explicar que se crea un objeto "Workflow" con el pipe run
+
+
+
+Go to Model Registry
+Click Register model 
+Fill in: 
+    NAme: hardhat-detection
+    Version name: PyTorch v1 
+    Source model format: PyTorch  ???? (decir lo de onxx)
+    Source model format version: ???? 
+    Object Storage: Autofill
+    Add the PAth to the model: something like "models/yolo-2025-01-22-1106/best.pt)"
+    Click Register model
+
+ai-train-register-model.png
+
+
+ADD onnx too (Register new Version)
+
+
+
+METER LA REGIÓN EN LA CONXIÓN DE OBJECT STORAGE PORQUE SI NO:
+
+
+!!!
+{"code":13, "message":"Failed to pull model from storage due to error: unable to list objects in bucket 'user99-ai-models': MissingRegion: could not find region configuration"}
+
+
+
+
+
+
+
+
+

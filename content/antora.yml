@@ -20,7 +20,7 @@ asciidoc:
     flightctl-ui: https://yyyyyyyyyyyyyy
     flightctl-user-basename: flightctluser
     flightctl-password: secretflightctl
-    gitea: http://nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+    gitea-server: nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   # No http://
     minio-ui: http://eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     minio-api: http://fffffffffffffffff
     minio-user-base: user

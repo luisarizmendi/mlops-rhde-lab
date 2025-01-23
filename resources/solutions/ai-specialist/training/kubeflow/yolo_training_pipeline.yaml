@@ -8,7 +8,7 @@
 #    minio_secret_key: str
 #    pvc_name_sufix: str [Default: '-kubeflow-pvc']
 #    pvc_size: str [Default: '5Gi']
-#    pvc_storage_class: str [Default: 'ocs-external-storagecluster-ceph-rbd']
+#    pvc_storage_class: str [Default: 'gp3-csi']
 #    roboflow_api_key: str
 #    roboflow_project: str
 #    roboflow_version: int
@@ -244,7 +244,7 @@ deploymentSpec:
           \ = model.val(\n        data=CONFIG['data'],\n        split='test',\n  \
           \      device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n    )\n\n\
           \    # Export model\n    model.export(format='onnx', imgsz=CONFIG['imgsz'])\n\
-          \n    return NamedTuple('Outputs', [('train_dir', str), ('test_dir', str)])(\n\
+          \n\n    return NamedTuple('Outputs', [('train_dir', str), ('test_dir', str)])(\n\
           \        train_dir=str(results_train.save_dir),\n        test_dir=str(results_test.save_dir)\n\
           \    )\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest
@@ -279,14 +279,16 @@ deploymentSpec:
           \   endpoint: str,\n    access_key: str,\n    secret_key: str,\n    bucket:\
           \ str,\n    model_path: dsl.OutputPath(str)\n) -> None:\n    from minio\
           \ import Minio\n    from minio.error import S3Error\n    import os\n   \
-          \ import datetime\n\n    client = Minio(\n        endpoint,\n        access_key=access_key,\n\
-          \        secret_key=secret_key,\n        secure=True\n    )\n\n    # Get\
-          \ paths for files\n    weights_path = os.path.join(train_dir, \"weights\"\
-          )\n\n    files_train = [os.path.join(train_dir, f) for f in os.listdir(train_dir)\
-          \ \n                   if os.path.isfile(os.path.join(train_dir, f))]\n\
-          \    files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path)\
+          \ import datetime\n\n    client = Minio(\n        endpoint.replace('https://',\
+          \ '').replace('http://', ''),\n        access_key=access_key,\n        secret_key=secret_key,\n\
+          \        secure=True\n    )\n\n    # Get paths for files\n    weights_path\
+          \ = os.path.join(train_dir, \"weights\")\n\n    files_train = [os.path.join(train_dir,\
+          \ f) for f in os.listdir(train_dir) \n                   if os.path.isfile(os.path.join(train_dir,\
+          \ f))]\n    files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path)\
           \ \n                    if os.path.isfile(os.path.join(weights_path, f))]\n\
-          \    files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir)\
+          \n    files_model_pt = os.path.join(train_dir, \"weights\") + \"/best.pt\"\
+          \n\n    files_model_onnx = os.path.join(train_dir, \"weights\") + \"/best.onnx\"\
+          \n\n    files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir)\
           \ \n                  if os.path.isfile(os.path.join(test_dir, f))]\n\n\
           \    directory_name = os.path.basename(train_dir) + \"-\" + datetime.datetime.now().strftime(\"\
           %Y-%m-%d-%H%M\")\n\n    # Upload files\n    for file_path in files_train:\n\
@@ -294,15 +296,17 @@ deploymentSpec:
           \              f\"models/{directory_name}/train-val/{os.path.basename(file_path)}\"\
           , \n                             file_path)\n        except S3Error as e:\n\
           \            print(f\"Error uploading {file_path}: {e}\")\n\n    for file_path\
-          \ in files_models:\n        try:\n            client.fput_object(bucket,\
-          \ \n                             f\"models/{directory_name}/{os.path.basename(file_path)}\"\
-          , \n                             file_path)\n        except S3Error as e:\n\
-          \            print(f\"Error uploading {file_path}: {e}\")\n\n    for file_path\
           \ in files_test:\n        try:\n            client.fput_object(bucket, \n\
           \                             f\"models/{directory_name}/test/{os.path.basename(file_path)}\"\
           , \n                             file_path)\n        except S3Error as e:\n\
           \            print(f\"Error uploading {file_path}: {e}\")\n\n    with open(model_path,\
-          \ \"w\") as f:\n        f.write(\"models/\" + directory_name)\n\n"
+          \ \"w\") as f:\n        f.write(\"models/\" + directory_name)\n\n    try:\n\
+          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/pytorch/{os.path.basename(file_path)}\"\
+          , \n                        files_model_pt)\n    except S3Error as e:\n\
+          \        print(f\"Error uploading {files_model_pt}: {e}\")\n\n    try:\n\
+          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/onnx/1/{os.path.basename(file_path)}\"\
+          , \n                        files_model_onnx)\n    except S3Error as e:\n\
+          \        print(f\"Error uploading {files_model_onnx}: {e}\")\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest
 pipelineInfo:
   description: Pipeline to download data, train YOLO model, and upload results to
@@ -433,7 +437,7 @@ root:
         isOptional: true
         parameterType: STRING
       pvc_storage_class:
-        defaultValue: ocs-external-storagecluster-ceph-rbd
+        defaultValue: gp3-csi
         isOptional: true
         parameterType: STRING
       roboflow_api_key:
