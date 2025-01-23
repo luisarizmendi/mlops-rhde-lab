@@ -39,6 +39,59 @@ In the following sections we will go through the following phases:
 image::platform-image-mode-phases.png[]
 
 == Image Build
+Since bootc image is available both for x86-64 and aarch64 architectures we are able to leverage this technology on the Nvidia Orin Nano device in front of you. 
+
+The Nvidia device has already been flashed to the latest stable and supported by Red Hat JetPack (6.0). Nvidia JetPack provides a full development environment for the Jetson platform including Jetson Linux with BSP, kernel, RootFS, etc., the NVIDIA AI stack with hardware accelerated libraries, SDKs, and frameworks, and Jetson Platform Services for application development.
+
+A RHEL is already installed on the Nvidia device but it is RPM based. 
+Since you don't know yet the IP address or the credentials to the Nvidia Device and you (as Platform Specialist) would like to standardize and simplify platform building and deployment, you are going to leverage bootc.
+
+We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the console or DisplayPort.
+
+You will find this container image on the local container registry (based on Gitea) here: {container-registry-gitea}
+
+[source,docker]
+----
+FROM registry.gitlab.com/redhat/rhel/sst/orin-sidecar/nvidia-jetson-sidecar/rhel-9.4:36.3.1-20240516220919
+
+ARG USHIFT_VER=4.17
+RUN dnf config-manager \
+        --set-enabled rhocp-${USHIFT_VER}-for-rhel-9-$(uname -m)-rpms \
+        --set-enabled fast-datapath-for-rhel-9-$(uname -m)-rpms
+RUN dnf install -y firewalld microshift && \
+    systemctl enable microshift && \
+    dnf clean all
+
+# Create a default 'redhat' user with the specified password.
+# Add it to the 'wheel' group to allow for running sudo commands.
+ARG USER_PASSWD
+RUN if [ -z "${USER_PASSWD}" ] ; then \
+        echo USER_PASSWD is a mandatory build argument && exit 1 ; \
+    fi
+RUN useradd -m -d /var/home/redhat -G wheel redhat && \
+    usermod -G video redhat && \
+    echo "redhat:${USER_PASSWD}" | chpasswd
+
+# Mandatory firewall configuration
+RUN firewall-offline-cmd --zone=public --add-port=22/tcp && \
+    firewall-offline-cmd --zone=trusted --add-source=10.42.0.0/16 && \
+    firewall-offline-cmd --zone=trusted --add-source=169.254.169.1
+
+# Create a systemd unit to recursively make the root filesystem subtree
+# shared as required by OVN images
+RUN cat > /etc/systemd/system/microshift-make-rshared.service <<'EOF'
+[Unit]
+Description=Make root filesystem shared
+Before=microshift.service
+ConditionVirtualization=container
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mount --make-rshared /
+[Install]
+WantedBy=multi-user.target
+EOF
+RUN systemctl enable microshift-make-rshared.service
+----
 
 start from henry container
 copy containerfile
@@ -55,6 +108,14 @@ use usb drive and burn it
 boot up nvidia with device
 remote access
 
+
+.SOLUTION
+====
+
+====
+
+
+Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding].
 
 to build bootc image for nvidia platform which includes microshift started from image http://quay.io/hgeaydem/microshift-4.17-jetson-bootc:latest
 going to use the same nvidia platform to build the iso image
