@@ -301,10 +301,10 @@ deploymentSpec:
           , \n                             file_path)\n        except S3Error as e:\n\
           \            print(f\"Error uploading {file_path}: {e}\")\n\n    with open(model_path,\
           \ \"w\") as f:\n        f.write(\"models/\" + directory_name)\n\n    try:\n\
-          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/pytorch/{os.path.basename(file_path)}\"\
+          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}\"\
           , \n                        files_model_pt)\n    except S3Error as e:\n\
           \        print(f\"Error uploading {files_model_pt}: {e}\")\n\n    try:\n\
-          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/onnx/1/{os.path.basename(file_path)}\"\
+          \        client.fput_object(bucket, \n                        f\"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}\"\
           , \n                        files_model_onnx)\n    except S3Error as e:\n\
           \        print(f\"Error uploading {files_model_onnx}: {e}\")\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest

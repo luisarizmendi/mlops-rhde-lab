@@ -1,0 +1,7 @@
+gradio
+numpy
+opencv-python-headless
+requests
+pillow
+torch
+torchvision
