@@ -1,0 +1,164 @@
+= Image Baking
+
+So by now you should already be familiar with building a standardized OS using Image Mode, but here is a recap just in case.
+
+Image mode is a new approach to operating system (OS) deployment that lets users build, deploy, and manage Red Hat Enterprise Linux as a bootc container image. 
+Bootc is the original project https://containers.github.io/bootc/intro.html[*Bootc*] that is leveraged to  
+
+It reduces complexity across the enterprise by letting development, operations, and solution providers use the same container-native tools and techniques to manage everything from applications to the underlying OS. 
+Use image mode for RHEL to build, test, and deploy operating systems by using the same tools and techniques as application containers. Image mode for RHEL is available by using the registry.redhat.io/rhel9/rhel-bootc bootc image. The RHEL bootc images differ from the existing application Universal Base Images (UBI) in that they contain additional components necessary to boot that were traditionally excluded, such as, kernel, initrd, boot loader, firmware, among others. 
+
+One of the most obvious ways to use a bootable container as an operating system is to build it into a disk image. The new Bootc Image Builder project is a tool that does exactly that. Depending on your needs, it can generate different types of disk images, including:
+
+    raw: Common image format used by many virtualization tools
+    qcow: An image format primarily used by QEMU
+    iso: For creating bootable media using tools like Balena Etcher
+    vmdk: For creating VMs using VMWare Workstation or ESXi
+    ami: For creating virtual servers on Amazon EC2
+
+These types of disk images provide lots of options to deploy bootable containers—from booting from a USB drive, starting a virtual machine, or deploying virtual servers to the cloud.
+
+The benefits of using containers do not end here—for instance, transactional updates can be applied "in place" from new container images, without the need to replace the entire disk image. This keeps the two models in sync and once again allows a single path and the benefits of containers without sacrificing on performance when patching or updating the operating system.
+
+
+
+The bootc project intends to be operating system and distribution independent as possible, similar to its related projects podman and systemd, etc.
+
+The recommendations for creating bootc-compatible images will in general need to be owned by the OS/distribution - in particular the ones who create the default bootc base image(s). However, some guidance is very generic to most Linux systems (and bootc only supports Linux).
+
+Let's however restate a base goal of this project:
+
+    The original Docker container model of using "layers" to model applications has been extremely successful. This project aims to apply the same technique for bootable host systems - using standard OCI/Docker containers as a transport and delivery format for base operating system updates.
+
+Every tool and technique for creating application base images should apply to the host Linux OS as much as possible.
+
+
+== Image Creation
+
+start from henry container
+copy containerfile
+describe most of the containerfile lines
+add customization (script to trigger issue creation with IP address on gitea)
+command to build new image
+
+
+== Image Distribution
+command to create new iso file
+use usb drive and burn it
+
+== Image Rollout
+boot up nvidia with device
+remote access
+
+
+to build bootc image for nvidia platform which includes microshift started from image http://quay.io/hgeaydem/microshift-4.17-jetson-bootc:latest
+going to use the same nvidia platform to build the iso image
+
+BUILDING X86 IMAGE FOR TESTING
+build the container image like this (remember to authenticate to registry.redhat.io first!):
+$ sudo podman build -t localhost/rhel9-baseline:0.0.1 .
+push image to registry:
+$ sudo podman push localhost/rhel9-baseline:0.0.1 osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
+ISSUE : finally discovered that bootc doesn't support yet pulling from insecure registry: https://github.com/containers/bootc/issues/461
+trying with quay.io
+$ sudo podman push localhost/rhel9-baseline:0.0.1 quay.io/luferrar/rhel9-baseline:0.0.1
+build iso:
+$ sudo podman run     --rm     -it     --privileged --tls-verify=false    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso     --config /config.toml   osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
+
+turned off automatic updates:
+https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/managing-rhel-bootc-images#turning-off-automatic-updates_managing-rhel-bootc-images
+
+create the updated version with flightctl included
+
+build new image
+$ sudo podman build -t localhost/rhel9-baseline:0.0.1 -f Containerfile-agent
+
+push image to local registry
+$  sudo podman push localhost/rhel9-baseline:0.0.1 osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
+
+check that the device is pointing to local registry
+$ sudo bootc status
+
+check update available
+$ sudo bootc upgrade --check
+Update available for: docker://osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
+  Version: 9.20250109.0
+  Digest: sha256:77ff6ec1713ab776d691bb8cfe131543d76a4399c7cc0fd75f01821c1941a2b2
+Total new layers: 78    Size: 1.8 GB
+Removed layers:   0     Size: 0 bytes
+Added layers:     3     Size: 251.7 MB
+
+upgrade device
+$ bootc upgrade
+
+# TODO at the moment the agent doesn't seem to work out of the box, but after creating the folder /var/lib/flighctl it seems to start
+
+approve device in the GUI and add some labels
+
+create a fleet in the GUI
+
+to install bootc image builder follow this
+https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#installing-bootc-image-builder_creating-bootc-compatible-base-disk-images-with-bootc-image-builder
+
+to deregister a device delete agent key in /var/lib/flightctl/certs
+
+## NVIDIA
+build an iso image with kickstart file embedded
+https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#using-bootc-image-builder-to-build-iso-images-with-a-kickstart-file_creating-bootc-compatible-base-disk-images-with-bootc-image-builder
+$ sudo podman run     --rm     -it     --privileged     --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso     --config /config.toml   quay.io/hgeaydem/microshift-4.17-jetson-bootc
+
+copy iso to usb using dd
+$ sudo dd if=output/bootiso/install.iso of=/dev/sda bs=4M status=progress oflag=sync
+
+booted and added openshift-pull-secret to /etc/crio on the device
+
+create a new version of the image with a system service to copy kubeconfig in the admin home directory
+how to switch from local ostree repo to registry:
+
+
+LAB PREPARATION:
+installed gitea as container registry with the following playbook and inventory
+check the playbook and default conf file from nginx for configuration (add gitea as address in etc hosts file)
+IDEA can pushg issue to gitea registry at boot time with hostname and ip address
+
+HW:  add neofetch to the containerfile to display Ip address as MOTD
+configure neofetch like this: https://github.com/dylanaraps/neofetch/wiki/Getting-Started
+
+add flighctl agent following this:
+https://github.com/flightctl/flightctl/blob/main/docs/user/getting-started.md#building-a-bootable-container-image-including-the-flight-control-agent
+
+command to be executed:
+
+Retrieve the agent configuration with enrollment credentials by running:
+
+$ flightctl certificate request --signer=enrollment --expiration=365d --output=embedded > config.yaml
+
+The returned config.yaml should look similar to this:
+
+$ cat config.yaml
+enrollment-service:
+  service:
+    server: https://agent-api.flightctl.127.0.0.1.nip.io:7443
+    certificate-authority-data: LS0tLS1CRUdJTiBD...
+  authentication:
+    client-certificate-data: LS0tLS1CRUdJTiBD...
+    client-key-data: LS0tLS1CRUdJTiBF...
+  enrollment-ui-endpoint: https://ui.flightctl.127.0.0.1.nip.io:8081
+
+Create a Containerfile with the following content:
+
+$ cat Containerfile
+
+FROM quay.io/centos-bootc/centos-bootc:stream9
+
+RUN dnf -y copr enable @redhat-et/flightctl-dev centos-stream-9-x86_64 && \
+    dnf -y install flightctl-agent; \
+    dnf -y clean all; \
+    systemctl enable flightctl-agent.service
+
+# Optional: to enable podman-compose application support uncomment below”
+# RUN dnf -y install epel-release epel-next-release && \
+#    dnf -y install podman-compose && \
+#    systemctl enable podman.service
+
+ADD agentconfig.yaml /etc/flightctl/config.yaml
