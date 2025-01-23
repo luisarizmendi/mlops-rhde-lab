@@ -28,6 +28,10 @@ asciidoc:
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
     registry-url: https://quay.io/user/luisarizmendi/
     registry-local-url: http://192.168.100.200/workshop/
+    gateway-dns-dhcp-openwrt: http://192.168.1.1
+    container-registry-gitea: http://192.168.1.100
+    container-registry-gitea-user: gitea
+    container-registry-gitea-pass: gitea
     page-links:
     - url: https://redhat.com
       text: Video - AI Specialist Video

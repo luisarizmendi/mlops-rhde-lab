@@ -3,37 +3,95 @@
 So by now you should already be familiar with building a standardized OS using Image Mode, but here is a recap just in case.
 
 Image mode is a new approach to operating system (OS) deployment that lets users build, deploy, and manage Red Hat Enterprise Linux as a bootc container image. 
-Bootc is the original project https://containers.github.io/bootc/intro.html[*Bootc*] that is leveraged to  
+Bootc is the original project on which this is built on https://containers.github.io/bootc/intro.html[*Bootc*].
 
-It reduces complexity across the enterprise by letting development, operations, and solution providers use the same container-native tools and techniques to manage everything from applications to the underlying OS. 
-Use image mode for RHEL to build, test, and deploy operating systems by using the same tools and techniques as application containers. Image mode for RHEL is available by using the registry.redhat.io/rhel9/rhel-bootc bootc image. The RHEL bootc images differ from the existing application Universal Base Images (UBI) in that they contain additional components necessary to boot that were traditionally excluded, such as, kernel, initrd, boot loader, firmware, among others. 
+Why was this project started at all? 
+The original Docker container model of using "layers" to model applications has been extremely successful. This project aims to apply the same technique for bootable host systems - using standard OCI/Docker containers as a transport and delivery format for base operating system updates.
 
-One of the most obvious ways to use a bootable container as an operating system is to build it into a disk image. The new Bootc Image Builder project is a tool that does exactly that. Depending on your needs, it can generate different types of disk images, including:
+Every tool and technique that you already know and use for creating application base images can now apply to the host Linux OS.
 
-    raw: Common image format used by many virtualization tools
-    qcow: An image format primarily used by QEMU
-    iso: For creating bootable media using tools like Balena Etcher
-    vmdk: For creating VMs using VMWare Workstation or ESXi
-    ami: For creating virtual servers on Amazon EC2
+This clearly reduces complexity across the enterprise by letting development, operations, and solution providers use the same container-native tools and techniques to manage everything from applications to the underlying OS. 
+Use can use Image Mode for RHEL to build, test, and deploy operating systems by using the same tools and techniques as application containers. Image mode for RHEL is available by using the registry.redhat.io/rhel9/rhel-bootc bootc image. 
+The RHEL bootc images differ from the existing application Universal Base Images (UBI) in that they contain additional components necessary to boot that were traditionally excluded, such as, kernel, initrd, boot loader, firmware, among others. 
 
-These types of disk images provide lots of options to deploy bootable containers—from booting from a USB drive, starting a virtual machine, or deploying virtual servers to the cloud.
+One of the most obvious ways to use a bootable container as an operating system is to build it into a disk image. The new https://github.com/osbuild/bootc-image-builder[*Bootc Image Builder*] project is a tool that does exactly that. Depending on your needs, it can generate different types of disk images, including:
 
-The benefits of using containers do not end here—for instance, transactional updates can be applied "in place" from new container images, without the need to replace the entire disk image. This keeps the two models in sync and once again allows a single path and the benefits of containers without sacrificing on performance when patching or updating the operating system.
+* raw: Common image format used by many virtualization tools
+* qcow: An image format primarily used by QEMU
+* iso: For creating bootable media using tools like Balena Etcher
+* vmdk: For creating VMs using VMWare Workstation or ESXi
+* ami: For creating virtual servers on Amazon EC2
 
+These types of disk images provide lots of options to deploy bootable containers, from booting from a USB drive, starting a virtual machine, or deploying virtual servers to the cloud.
 
+The benefits of using containers do not end here. These are some of the most important ones: 
 
-The bootc project intends to be operating system and distribution independent as possible, similar to its related projects podman and systemd, etc.
+*   Container images are easier to understand and use than other image formats and are fast to build
+*   Consolidate process, infrastructure, and release artifacts and reuse the same tooling available for distributing applications
+*   Immutable updates: just as containerized applications are updated in an immutable way, with image mode for RHEL, the operating system is also. 
+*   Portability across hybrid cloud environments across physical, virtualized, cloud, and edge environments. 
+*   Building container images: you can configure your operating system at a build time by modifying the Containerfile. You can automate the build process by using CI/CD pipelines. 
+*   Versioning, mirroring, and testing container images: you can version, mirror, introspect, and sign your derived bootc image by using the container tools of your choice. 
+*   Updating your operating system: the system supports in-place transactional updates with rollback after deployment. Automatic updates are on by default. As the updates are transactional, a reboot is required to apply them. 
 
-The recommendations for creating bootc-compatible images will in general need to be owned by the OS/distribution - in particular the ones who create the default bootc base image(s). However, some guidance is very generic to most Linux systems (and bootc only supports Linux).
+In the following sections we will go through the following phases: 
 
-Let's however restate a base goal of this project:
+image::platform-image-mode-phases.png[]
 
-    The original Docker container model of using "layers" to model applications has been extremely successful. This project aims to apply the same technique for bootable host systems - using standard OCI/Docker containers as a transport and delivery format for base operating system updates.
+== Image Build
+Since bootc image is available both for x86-64 and aarch64 architectures we are able to leverage this technology on the Nvidia Orin Nano device in front of you. 
 
-Every tool and technique for creating application base images should apply to the host Linux OS as much as possible.
+The Nvidia device has already been flashed to the latest stable and supported by Red Hat JetPack (6.0). Nvidia JetPack provides a full development environment for the Jetson platform including Jetson Linux with BSP, kernel, RootFS, etc., the NVIDIA AI stack with hardware accelerated libraries, SDKs, and frameworks, and Jetson Platform Services for application development.
 
+A RHEL is already installed on the Nvidia device but it is RPM based. 
+Since you don't know yet the IP address or the credentials to the Nvidia Device and you (as Platform Specialist) would like to standardize and simplify platform building and deployment, you are going to leverage bootc.
 
-== Image Creation
+We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the console or DisplayPort.
+
+You will find this container image on the local container registry (based on Gitea) here: {container-registry-gitea}
+
+[source,docker]
+----
+FROM registry.gitlab.com/redhat/rhel/sst/orin-sidecar/nvidia-jetson-sidecar/rhel-9.4:36.3.1-20240516220919
+
+ARG USHIFT_VER=4.17
+RUN dnf config-manager \
+        --set-enabled rhocp-${USHIFT_VER}-for-rhel-9-$(uname -m)-rpms \
+        --set-enabled fast-datapath-for-rhel-9-$(uname -m)-rpms
+RUN dnf install -y firewalld microshift && \
+    systemctl enable microshift && \
+    dnf clean all
+
+# Create a default 'redhat' user with the specified password.
+# Add it to the 'wheel' group to allow for running sudo commands.
+ARG USER_PASSWD
+RUN if [ -z "${USER_PASSWD}" ] ; then \
+        echo USER_PASSWD is a mandatory build argument && exit 1 ; \
+    fi
+RUN useradd -m -d /var/home/redhat -G wheel redhat && \
+    usermod -G video redhat && \
+    echo "redhat:${USER_PASSWD}" | chpasswd
+
+# Mandatory firewall configuration
+RUN firewall-offline-cmd --zone=public --add-port=22/tcp && \
+    firewall-offline-cmd --zone=trusted --add-source=10.42.0.0/16 && \
+    firewall-offline-cmd --zone=trusted --add-source=169.254.169.1
+
+# Create a systemd unit to recursively make the root filesystem subtree
+# shared as required by OVN images
+RUN cat > /etc/systemd/system/microshift-make-rshared.service <<'EOF'
+[Unit]
+Description=Make root filesystem shared
+Before=microshift.service
+ConditionVirtualization=container
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mount --make-rshared /
+[Install]
+WantedBy=multi-user.target
+EOF
+RUN systemctl enable microshift-make-rshared.service
+----
 
 start from henry container
 copy containerfile
@@ -42,7 +100,7 @@ add customization (script to trigger issue creation with IP address on gitea)
 command to build new image
 
 
-== Image Distribution
+== Image Deploy
 command to create new iso file
 use usb drive and burn it
 
@@ -50,6 +108,14 @@ use usb drive and burn it
 boot up nvidia with device
 remote access
 
+
+.SOLUTION
+====
+
+====
+
+
+Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding].
 
 to build bootc image for nvidia platform which includes microshift started from image http://quay.io/hgeaydem/microshift-4.17-jetson-bootc:latest
 going to use the same nvidia platform to build the iso image
@@ -63,7 +129,7 @@ ISSUE : finally discovered that bootc doesn't support yet pulling from insecure 
 trying with quay.io
 $ sudo podman push localhost/rhel9-baseline:0.0.1 quay.io/luferrar/rhel9-baseline:0.0.1
 build iso:
-$ sudo podman run     --rm     -it     --privileged --tls-verify=false    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso     --config /config.toml   osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
+$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
 
 turned off automatic updates:
 https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/managing-rhel-bootc-images#turning-off-automatic-updates_managing-rhel-bootc-images

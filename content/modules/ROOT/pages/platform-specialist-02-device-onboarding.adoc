@@ -3,7 +3,7 @@
 == Flight Control
 tour
 
-== Image Update
+== Image Manage
 include agent 
 update manually the device
 
