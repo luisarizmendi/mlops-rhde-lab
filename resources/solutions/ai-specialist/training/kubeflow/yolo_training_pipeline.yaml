@@ -2,20 +2,20 @@
 # Name: yolo-training-pipeline
 # Description: Pipeline to download data, train YOLO model, and upload results to MinIO
 # Inputs:
-#    minio_access_key: str [Default: 'user99']
-#    minio_bucket: str [Default: 'user99-ai-models']
-#    minio_endpoint: str [Default: 'https://minio-api-minio.apps.cluster-q4bsk.q4bsk.sandbox2707.opentlc.com']
-#    minio_secret_key: str [Default: 'redhat99']
+#    minio_access_key: str
+#    minio_bucket: str
+#    minio_endpoint: str
+#    minio_secret_key: str
 #    model_registry_name: str [Default: 'object-detection-model-registry']
 #    pvc_name_suffix: str [Default: '-kubeflow-pvc']
 #    pvc_size: str [Default: '5Gi']
 #    pvc_storage_class: str [Default: 'gp3-csi']
-#    roboflow_api_key: str [Default: 'kZAFZ30ULoBdNjSmyxlK']
-#    roboflow_project: str [Default: 'group-99-hardhat-detection']
-#    roboflow_version: int [Default: 4.0]
-#    roboflow_workspace: str [Default: 'workshop-igjqz']
-#    train_batch_size: int [Default: 1.0]
-#    train_epochs: int [Default: 1.0]
+#    roboflow_api_key: str
+#    roboflow_project: str
+#    roboflow_version: int
+#    roboflow_workspace: str
+#    train_batch_size: int [Default: 16.0]
+#    train_epochs: int [Default: 50.0]
 #    train_img_size: int [Default: 640.0]
 #    train_name: str [Default: 'user99-hardhat']
 components:
@@ -553,20 +553,12 @@ root:
   inputDefinitions:
     parameters:
       minio_access_key:
-        defaultValue: user99
-        isOptional: true
         parameterType: STRING
       minio_bucket:
-        defaultValue: user99-ai-models
-        isOptional: true
         parameterType: STRING
       minio_endpoint:
-        defaultValue: https://minio-api-minio.apps.cluster-q4bsk.q4bsk.sandbox2707.opentlc.com
-        isOptional: true
         parameterType: STRING
       minio_secret_key:
-        defaultValue: redhat99
-        isOptional: true
         parameterType: STRING
       model_registry_name:
         defaultValue: object-detection-model-registry
@@ -585,27 +577,19 @@ root:
         isOptional: true
         parameterType: STRING
       roboflow_api_key:
-        defaultValue: kZAFZ30ULoBdNjSmyxlK
-        isOptional: true
         parameterType: STRING
       roboflow_project:
-        defaultValue: group-99-hardhat-detection
-        isOptional: true
         parameterType: STRING
       roboflow_version:
-        defaultValue: 4.0
-        isOptional: true
         parameterType: NUMBER_INTEGER
       roboflow_workspace:
-        defaultValue: workshop-igjqz
-        isOptional: true
         parameterType: STRING
       train_batch_size:
-        defaultValue: 1.0
+        defaultValue: 16.0
         isOptional: true
         parameterType: NUMBER_INTEGER
       train_epochs:
-        defaultValue: 1.0
+        defaultValue: 50.0
         isOptional: true
         parameterType: NUMBER_INTEGER
       train_img_size:
