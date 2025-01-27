@@ -1,8 +1,26 @@
- FROM quay.io/modh/odh-pytorch-notebook:v2-2024a-20250116-b42b86c
+ FROM registry.access.redhat.com/ubi9/python-39:latest AS base
 
- USER 0
+ USER root
+ 
+ RUN dnf install -y \
+     python3 \
+     python3-pip \
+     gcc \
+     git \
+     python3-devel \
+     podman \
+     && dnf clean all \
+     && python3 -m ensurepip --upgrade
+     
+ RUN python3 -m pip install --upgrade pip
+ 
+ RUN python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
  RUN INSTALL_PKGS="ultralytics roboflow minio" && \
      pip install --no-cache-dir  $INSTALL_PKGS 
 
- USER 1001
+WORKDIR /opt/app-root/src
+
+USER 1001
+
+CMD ["/bin/bash"]

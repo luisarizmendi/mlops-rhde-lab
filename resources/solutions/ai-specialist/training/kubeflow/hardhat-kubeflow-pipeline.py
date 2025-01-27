@@ -133,7 +133,8 @@ def upload_to_minio(
     bucket: str,
     model_path: dsl.OutputPath(str)
 ) -> NamedTuple('Outputs', [
-    ('model_artifact_s3_path', str)
+    ('model_artifact_s3_path', str),
+    ('files_model_pt', str)
 ]):
     from minio import Minio
     from minio.error import S3Error
@@ -200,9 +201,11 @@ def upload_to_minio(
     model_artifact_s3_path=f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}"
 
     return NamedTuple('Outputs', [
-        ('model_artifact_s3_path', str)
+        ('model_artifact_s3_path', str),
+        ('files_model_pt', str)
     ])(
-        model_artifact_s3_path
+        model_artifact_s3_path,
+        files_model_pt
     )
 
 
@@ -221,7 +224,12 @@ def push_to_model_registry(
     s3_endpoint: str,
     roboflow_workspace: str,
     roboflow_project: str,
-    roboflow_version: int,    
+    roboflow_version: int,  
+    image_tag: str,
+    container_registry: str,
+    container_registry_username: str,
+    container_registry_password: str,
+    container_registry_repo: str  
 ):
     from model_registry import ModelRegistry
     import os
@@ -249,7 +257,8 @@ def push_to_model_registry(
         registered_model_name = model_object_prefix
         version_name = version
         metadata = {
-            "dataset": f"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}",
+            "Inference image": f"{container_registry}/{container_registry_username}/{container_registry_repo}:{image_tag}",
+            "Dataset": f"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}",
             "mAP50": str(metrics["mAP50"]),
             "mAP50-95": str(metrics["mAP50-95"]),
             "precision": str(metrics["precision"]),
@@ -273,6 +282,76 @@ def push_to_model_registry(
     print(f"s3://{s3_endpoint_url}/{model_artifact_s3_path}")
 
     _register_model(namespace, server_address, model_object_prefix, f"{model_object_prefix}-{version}")
+
+
+
+# Component 5: Create and push inference container image
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["podman"]
+)
+def build_and_push_image(
+    files_model_pt: str,
+    image_tag: str,
+    container_registry: str,
+    container_registry_username: str,
+    container_registry_password: str,
+    container_registry_repo: str
+) -> None:
+    import os
+    import shutil
+    import tempfile
+    import subprocess
+   
+    
+    # Create a Containerfile (Podman uses the same Containerfile syntax)
+    containerfile = f"""
+    FROM python:3.9-slim
+
+    # Install dependencies
+    RUN pip install torch
+
+    # Copy model file into container
+    COPY model.pt /app/model.pt
+
+    # Set working directory
+    WORKDIR /app
+
+    # Set entrypoint
+    CMD ["python", "-c", "print('Model loaded successfully')"]
+    """
+
+    # Write the Containerfile to a temporary location
+    temp_dir = tempfile.mkdtemp()
+
+    containerfile_path = os.path.join(temp_dir, "Containerfile")
+    with open(containerfile_path, "w") as f:
+        f.write(containerfile)
+
+    shutil.copy(files_model_pt, os.path.join(temp_dir, f"model.pt"))
+
+    subprocess.run(["which", "podman"], check=True)
+
+    # Build Podman Image using subprocess
+    subprocess.run([
+        "/usr/bin/podman", "build", "-f", containerfile_path, "-t", f"{container_registry}/{container_registry_username}/{container_registry_repo}:{image_tag}", temp_dir
+    ], check=True)
+
+    # Authenticate with the container registry using Podman
+    subprocess.run([
+        "/usr/bin/podman", "login", "--username", container_registry_username, "--password", container_registry_password, container_registry
+    ], check=True)
+
+    # Push the image to the registry using Podman
+    subprocess.run([
+        "/usr/bin/podman", "push", f"{container_registry}/{container_registry_username}/{container_registry_repo}:{image_tag}"
+    ], check=True)
+
+    # Clean up temporary directory
+    shutil.rmtree(temp_dir)
+
+
+
     
     
 # Define the pipeline
@@ -282,23 +361,40 @@ def push_to_model_registry(
 )
 def yolo_training_pipeline(
 
-    roboflow_api_key: str,
-    roboflow_workspace: str,
-    roboflow_project: str,
-    roboflow_version: int,
-    minio_endpoint: str,
-    minio_access_key: str,
-    minio_secret_key: str,
-    minio_bucket: str,
+    #roboflow_api_key: str,
+    #roboflow_workspace: str,
+    #roboflow_project: str,
+    #roboflow_version: int,
+    #minio_endpoint: str,
+    #minio_access_key: str,
+    #minio_secret_key: str,
+    #minio_bucket: str,
+    roboflow_api_key: str = "kZAFZ30ULoBdNjSmyxlK",
+    roboflow_workspace: str = "workshop-igjqz",
+    roboflow_project: str = "group-99-hardhat-detection",
+    roboflow_version: int = 4,
+    minio_endpoint: str = "https://minio-api-minio.apps.cluster-q4bsk.q4bsk.sandbox2707.opentlc.com",
+    minio_access_key: str = "user99",
+    minio_secret_key: str = "redhat99",
+    minio_bucket: str = "user99-ai-models",
     pvc_storage_class: str = "gp3-csi",
     pvc_size: str = "5Gi",
     pvc_name_suffix: str = "-kubeflow-pvc",
     train_name: str = "user99-hardhat",
-    train_epochs: int = 50,
-    train_batch_size: int = 16,
+    #train_epochs: int = 50,
+    #train_batch_size: int = 16,
+    train_epochs: int = 1,
+    train_batch_size: int = 1,
     train_img_size: int = 640,
     model_registry_name: str = "object-detection-model-registry",
+    container_registry: str = "quay.io",
+    container_registry_username: str = "luisarizmendi",
+    container_registry_password: str = "",
+    container_registry_repo: str = "hardhat-inference"
 ):
+        
+    from datetime import datetime
+    
     # Create PV
     pvc = kubernetes.CreatePVC(
         pvc_name_suffix=pvc_name_suffix,
@@ -362,12 +458,37 @@ def yolo_training_pipeline(
         s3_endpoint=minio_endpoint,
         roboflow_workspace=roboflow_workspace,
         roboflow_project=roboflow_project,
-        roboflow_version=roboflow_version
+        roboflow_version=roboflow_version,
+        image_tag=f"{train_name}-{datetime.now().strftime('%y%m%d%H%M')}",
+        container_registry=container_registry,
+        container_registry_username=container_registry_username,
+        container_registry_password=container_registry_password,
+        container_registry_repo=container_registry_repo
     ).after(upload_task)
 
+
+
+    # Build and push Container image
+    build_and_push_image_task= build_and_push_image(
+        files_model_pt=upload_task.outputs['files_model_pt'],
+        image_tag=f"{train_name}-{datetime.now().strftime('%y%m%d%H%M')}",
+        container_registry=container_registry,
+        container_registry_username=container_registry_username,
+        container_registry_password=container_registry_password,
+        container_registry_repo=container_registry_repo
+    ).after(upload_task)
+    build_and_push_image_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        build_and_push_image_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+    
+    
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
-    ).after(upload_task)
+    ).after(build_and_push_image_task)
+
 
 if __name__ == "__main__":
     # Compile the pipeline
