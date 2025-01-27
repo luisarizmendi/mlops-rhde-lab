@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import torch
@@ -6,7 +7,6 @@ import cv2
 import numpy as np
 import base64
 from typing import List, Optional, Dict
-import os
 from datetime import datetime
 
 app = FastAPI(title="YOLO Object Detection Inference Server")
@@ -67,7 +67,7 @@ model_service = ModelService()
 
 class PredictionRequest(BaseModel):
     image: str  # Base64 encoded image
-    confidence_threshold: Optional[float] = 0.25
+    confidence_threshold: Optional[float] = None
 
 class Detection(BaseModel):
     class_name: str
@@ -100,8 +100,11 @@ async def predict(model_name: str, request: PredictionRequest):
     if not model_service.ready or model_service.name != model_name:
         raise HTTPException(status_code=404, detail=f"Inferencing failed: Model {model_name} not found")
     
+    # Use environment variable or default value for confidence_threshold
+    confidence_threshold = request.confidence_threshold if request.confidence_threshold is not None else float(os.getenv('CONFIDENCE_THRESHOLD', 0.25))
+    
     img = decode_image(request.image)
-    return model_service.predict(img, request.confidence_threshold)
+    return model_service.predict(img, confidence_threshold)
 
 @app.get("/v1/models/{model_name}")
 async def get_model_status(model_name: str):
