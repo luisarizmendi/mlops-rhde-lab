@@ -1,17 +1,17 @@
 [Unit]
-Description=Object Detection Webcam Service
+Description=Object Detection Webcam Stream Manager
 Wants=network-online.target
 After=network-online.target
 
 [Container]
-Image=quay.io/luisarizmendi/object-detection-webcam:x86
+Image=quay.io/luisarizmendi/object-detection-stream-manager:prod
 AutoUpdate=registry
+NetworkMode=host
 Ports=5000:5000
 Privileged=true
 Environment=CAMERA_INDEX=1
-Environment=YOLO_MODEL_FILE=object-detection-hardhat-v1-m.pt
-Environment=YOLO_MODEL_THRESHOLD=0.2
-
+Environment=MODEL_NAME=1
+Environment=INFERENCE_SERVER_URL=http://localhost:8080
 [Service]
 Restart=always
 
