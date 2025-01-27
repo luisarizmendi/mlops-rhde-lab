@@ -6,4 +6,4 @@
 
 pip install kfp[kubernetes]
 
-python kubeflow-pipeline.py
+python hardhat-kubeflow-pipeline.py
