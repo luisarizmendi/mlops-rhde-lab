@@ -7,7 +7,7 @@ This is an example use case of how you can use a webcam to detect objects at the
 ![](images/object-detection-webcam.png)
 
 
-[stream manager](object-detection-stream-manager/README.md)
+[Camera Stream Manager](object-detection-stream-manager/README.md)
 
 [Inference server](object-detection-inference-server/README.md)
 
@@ -48,23 +48,26 @@ Device details screen on the Dashboard:
 
 If you want to run a quick test you could run all components locally. First start the inference server:
 
-podman run -d -p 8080:8080 quay.io/luisarizmendi/object-detection-inference-server:x86
+```bash
+podman run -d -p 8080:8080 quay.io/luisarizmendi/object-detection-inference-server:prod
+```
 
 > NOTE
+>
 > If you have an NVIDA GPU you might want to use it by adding `--device nvidia.com/gpu=all --security-opt=label=disable`
 
 
 Then the APP that manages the stream from your camera (as root):
 
 ```bash
-sudo podman run -d -p 5000:5000 --privileged --network=host quay.io/luisarizmendi/object-detection-stream-manager:x86
+sudo podman run -d -p 5000:5000 --privileged --network=host quay.io/luisarizmendi/object-detection-stream-manager:prod
 ```
 
 After that, start the rest of the services:
 
 
 ```bash
-podman run -d --network=host quay.io/luisarizmendi/object-detection-action:x86
+podman run -d --network=host quay.io/luisarizmendi/object-detection-action:prod
 
 podman run -d -p 5005:5005 quay.io/luisarizmendi/object-detection-dashboard-backend:v1
 
