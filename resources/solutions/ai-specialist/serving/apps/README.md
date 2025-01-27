@@ -107,7 +107,7 @@ sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
 3. Now you could create an ARM image in your x86 system with this command.
 
 ```bash
-podman build --arch arm64  -t <arm image> .
+podman build --platform linux/arm64  -t <arm image> .
 ```
 
 
@@ -118,30 +118,32 @@ podman build --arch arm64  -t <arm image> .
 
 ```bash
 # Build for x86 (amd64)
-podman build --arch amd64 -t <image>:x86 .
+podman build --platform linux/amd64 -t <image>:x86 .
 
 # Build for arm64
-podman build --arch arm64 -t <image>:arm .
+podman build --platform linux/arm64 -t <image>:arm .
 ```
 
 
 
-2. Create the manifest list. After building both images, create a manifest list to combine them. This list will point to both the x86 and arm64 images:
+2. Create the manifest list. After building both images, create a manifest list to combine them (e.g., with tag `prod`). This list will point to both the x86 and arm64 images:
 
 ```bash
 podman manifest create <image>:prod
-podman manifest add <image>:latest <image>:x86
-podman manifest add <image>:latest <image>:arm
+podman manifest add <image>:prod <image>:x86
+podman manifest add <image>:prod <image>:arm
 ```
 
 
 3. Finally publish the manifest
 
 ```bash
-podman push <image>:prod
+podman manifest push <image>:prod
 ```
 
-
+> NOTE
+> 
+> It is `podman manifest push` not just `podman push`
 
 
 
