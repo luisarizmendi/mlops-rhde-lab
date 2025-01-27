@@ -196,6 +196,7 @@ def upload_to_minio(
         'boto3',
         'model-registry'
     ]
+)
 def push_to_model_registry(
     model_name: str,
     version: str,
@@ -243,7 +244,6 @@ def push_to_model_registry(
     server_address = f"https://{namespace}-registry-rest.{cluster_domain}"
     _register_model(namespace, server_address, model_object_prefix, version)
 
-)
 
 
 
@@ -286,6 +286,7 @@ def yolo_training_pipeline(
     minio_access_key: str,
     minio_secret_key: str,
     minio_bucket: str,
+    cluster_domain: str,
     train_name: str = "hardhat",
     train_epochs: int = 50,
     train_batch_size: int = 16,
@@ -293,7 +294,6 @@ def yolo_training_pipeline(
     pvc_storage_class: str = "gp3-csi",
     pvc_size: str = "5Gi",
     pvc_name_sufix: str = "-kubeflow-pvc",
-    cluster_domain: str
 ):
     # Create PV
     pvc = kubernetes.CreatePVC(
@@ -353,12 +353,12 @@ def yolo_training_pipeline(
     ).after(upload_task)
 
     # Create entry in Model Registry
-    def push_to_model_registry(
+    push_to_model_registry_task = push_to_model_registry(
         model_name=train_name,
         version="",
         cluster_domain=cluster_domain,
-        metrics: train_task.outputs['metrics'],
-        dataset: download_task.outputs['dataset'],
+        metrics=train_task.outputs['metrics'],
+        dataset=download_task.outputs['dataset']
     ).after(upload_task)
 
 
