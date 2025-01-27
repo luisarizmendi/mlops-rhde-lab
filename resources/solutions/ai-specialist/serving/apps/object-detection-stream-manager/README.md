@@ -1,26 +1,25 @@
-# Object detection inference server
+# Object Detection Camera Stream Manager
 
 ## Description
 
-This Flask application provides object detection system using YOLO (You Only Look Once) for computer vision tasks.
-
+This Flask application provides a streaming interface and batch processing capabilities for object detection, working in conjunction with the YOLO Object Detection Inference Server. It handles camera streaming, frame processing, and visualization of detection results.
 
 ## Features
 
-- Object detection using YOLO
-- Webcam streaming with object annotations
-- Batch image processing (for testing)
-- Configurable detection thresholds
-- Endpoint giving predictions
-- GPU/CPU support
+- Live webcam streaming with real-time object detection annotations
+- Batch image processing support
+- Real-time detection statistics
+- Automatic camera detection and configuration
+- Multipart streaming with annotations and detection data
+- Color-coded visualization for different object classes
 
 ## Prerequisites
 
-- Python 3.8+
-- OpenCV
-- PyTorch
-- Ultralytics YOLO
+- Python 3.9+
 - Flask
+- OpenCV
+- NumPy
+- Requests
 
 You can run `pip install` using the `requirements.txt` file:
 
@@ -28,31 +27,46 @@ You can run `pip install` using the `requirements.txt` file:
 pip install -r requirements.txt
 ```
 
+## Requirements
+
+The following dependencies are required:
+
+```
+Flask
+opencv-python
+numpy
+requests
+```
+
 ## Environment Variables
 
 The application supports the following environment variables for configuration:
 
-| Variable             | Description                                     | Default Value                |
-|----------------------|------------------------------------------------|------------------------------|
-| `YOLO_MODEL_PATH`    | Directory path for YOLO model                   | Current directory (`.`)      |
-| `YOLO_MODEL_FILE`    | Filename of the YOLO model                      | `object-detection-hardhat-v1-m.pt` |
-| `YOLO_MODEL_THRESHOLD` | Global confidence threshold for object detection | `0.25`                       |
-| `CAMERA_INDEX`       | Specific camera index to use                    | `-1` (auto-select)           |
+| Variable               | Description                                     | Default Value                |
+|-----------------------|------------------------------------------------|------------------------------|
+| `INFERENCE_SERVER_URL`| URL of the YOLO inference server               | `http://localhost:8080`      |
+| `CAMERA_INDEX`        | Specific camera index to use                   | `-1` (auto-select)           |
+| `MODEL_NAME`          | Model name to use for inference                | `1`                          |
 
-## Endpoints
+## API Endpoints
 
-### 1. `http://<ip>:5000/video_stream`
+### 1. `/video_stream`
 - **Purpose**: Stream webcam with object detection annotations
-- **Returns**: Multipart stream with annotated video frames and detection JSON
+- **Returns**: Multipart stream containing:
+  - JPEG frames with annotations
+  - JSON with current detections
 
-### 2. `http://<ip>:5000/current_detections` (GET)
-- **Purpose**: Retrieve current object detection statistics
-- **Returns**: JSON with object class counts and confidence levels
+### 2. `/current_detections` (GET)
+- **Purpose**: Get current detection statistics
+- **Returns**: JSON with object counts and confidence levels per class
 
-### 3. `http://<ip>:5000/detect_image` (POST)
-- **Purpose**: Process batch image uploads
-- **Accepts**: Multipart form-data with multiple image files
-- **Returns**: JSON with processed images, object counts, and base64 encoded images
+### 3. `/detect_image` (POST)
+- **Purpose**: Process uploaded images
+- **Accepts**: Multipart form-data with image files
+- **Returns**: JSON with:
+  - Processed images (base64 encoded)
+  - Detection results
+  - File information
 
 ## Usage Examples
 
@@ -60,43 +74,32 @@ The application supports the following environment variables for configuration:
 
 ```bash
 # Set environment variables (optional)
-export YOLO_MODEL_THRESHOLD=0.3
+export INFERENCE_SERVER_URL=http://localhost:8080
 export CAMERA_INDEX=0
 
 # Run the application
-python object-detection-server.py
+python object-detection-stream-manager.py
 ```
 
-If you want to run it containerized, you will need to run with root user as a "privileged" container to have access to the video input device.
+### Container Deployment
+
+The application can be containerized using the provided Containerfile. The base image uses Red Hat's UBI9 Python 3.9 image.
 
 ```bash
-sudo podman run -d -p 5000:5000 -e YOLO_MODEL_THRESHOLD=0.3 --privileged <image name>
-```
-> **Note:**
-> You can find an image in `quay.io/luisarizmendi/object-detection-webcam:x86`. It is a big image so it could take time to pull it.
+# Build the container
+podman build -t object-detection-stream-manager .
 
-> **Note:**
-> You can select the device to be used by setting the environment variable `CAMERA_INDEX`.
-
-If you want to run the Container with podman accessing and using the GPUs, be sure that you have installed the `nvidia-container-toolkit` and the NVIDIA drivers in your host and you [configured the Container Device Interface for Podman](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html).
-
-The Container always tries to run the model on a GPU (fallbacks to CPU if it's not found) so you just need to bind it to the running Container to make use of it:
-
-
-```bash
-sudo podman run -d -p 5000:5000 --device nvidia.com/gpu=all --security-opt=label=disable --privileged -e YOLO_MODEL_THRESHOLD=0.3 <image name>
+# Run the container
+podman run -d -p 5000:5000 --device /dev/video0 \
+  -e INFERENCE_SERVER_URL=http://localhost:8080 \
+  --privileged object-detection-stream-manager
 ```
 
+Note: The container requires privileged access to use the camera device.
 
-### Sending Batch Image Detection Request
+### Processing Images
 
-You can use the script that you find under the `test` directory or run curl to send a test image:
-
-```bash
-curl -X POST -F "images=@example.jpg" http://localhost:5000/detect_batch > response.json
-```
-
-Yo can also use python to send images to the batch image detection endpoint:
+You can use Python to send images for processing:
 
 ```python
 import requests
@@ -109,9 +112,27 @@ files = [
 response = requests.post(url, files=files)
 ```
 
+Or use curl:
+
+```bash
+curl -X POST -F "images=@example.jpg" http://localhost:5000/detect_image > response.json
+```
+
+## System Requirements
+
+The container image requires the following system packages for camera and display support:
+- mesa-libGL
+- mesa-dri-drivers
+- libX11
+- libXext
+- gstreamer1-plugins-base
+
 ## Considerations
 
-- The application automatically detects and uses GPU if available
-- The application will use the camera configured with `CAMERA_INDEX` environment variable, if it cannot be used the camera selection is then dynamic, choosing the highest resolution available
-- Configurable confidence thresholds for fine-tuning detection sensitivity
-
+- The application requires connection to a running YOLO inference server
+- Camera selection is automatic if not specified via `CAMERA_INDEX`
+- The stream includes both visual annotations and JSON detection data
+- Each object class is assigned a unique color for visualization
+- Detection results include confidence scores and object counts
+- The application maintains a queue of the most recent frame for efficient streaming
+- Detection statistics are thread-safe and updated in real-time
