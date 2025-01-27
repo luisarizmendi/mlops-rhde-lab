@@ -243,7 +243,7 @@ def push_to_model_registry(
     server_address = f"https://{namespace}-registry-rest.{cluster_domain}"
     _register_model(namespace, server_address, model_object_prefix, version)
 
-
+)
 
 
 
