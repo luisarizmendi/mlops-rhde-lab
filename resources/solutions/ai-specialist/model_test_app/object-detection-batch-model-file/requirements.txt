@@ -1,5 +1,0 @@
-gradio
-ultralytics
-Pillow
-opencv-python
-torch

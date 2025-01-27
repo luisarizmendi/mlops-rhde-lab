@@ -143,6 +143,68 @@ a "kind: InferenceService" object is created when deployed
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/opendatahub-io/caikit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 curl https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2
 {"name":"OpenVINO Model Server","version":"2024.3.0"}
 
@@ -172,7 +234,7 @@ https://docs.openvino.ai/2024/openvino-workflow/model-server/ovms_docs_rest_api_
 
 
 
-
+https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2/models/hardhat/versions/1/infer
 
 
 
@@ -187,9 +249,24 @@ https://blog.openvino.ai/blog-posts/kserve-api
 
 app para probar: 
 
+CLI - explicar
+
+
+UI
+
 podman build -t quay.io/luisarizmendi/object-detection-batch-model-api:latest .
 
 podman run -it --rm -p 8800:8800 quay.io/luisarizmendi/object-detection-batch-model-api:latest
 
 
 
+
+
+
+
+
+
+
+
+
+https://developer.hpe.com/blog/production-ready-object-detection-model-training-workflow-with-hpe-machine-learning-development-environment/

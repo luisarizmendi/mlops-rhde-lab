@@ -1,0 +1,31 @@
+# Use Red Hat UBI 9 Python 3.9 image as the base
+FROM registry.access.redhat.com/ubi9/python-39:latest AS base
+
+# Use root user to install dependencies
+USER root
+
+# Install required system packages
+RUN dnf install -y \
+    mesa-libGL \
+    libGL \
+    && dnf clean all \
+    && python3 -m ensurepip --upgrade
+
+# Copy the Python dependencies file
+COPY requirements.txt /opt/app-root/src/
+
+# Upgrade pip and install Python dependencies
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install --no-cache-dir -r /opt/app-root/src/requirements.txt
+
+# Copy the application script into the container
+COPY object-detection-openvino-onnx.py /opt/app-root/src/
+
+# Set the working directory
+WORKDIR /opt/app-root/src/
+
+# Expose the port your app will run on
+EXPOSE 8800
+
+# Define the command to run the application
+CMD ["python", "object-detection-openvino-onnx.py"]
