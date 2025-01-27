@@ -38,7 +38,7 @@
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
               "filename": "01-train.ipynb",
-              "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
+              "runtime_image": "quay.io/luisarizmendi/pytorch-custom-notebook:latest"
             },
             "label": "",
             "ui_data": {
@@ -115,7 +115,7 @@
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
               "filename": "02-save.ipynb",
-              "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
+              "runtime_image": "quay.io/luisarizmendi/pytorch-custom-notebook:latest"
             },
             "label": "",
             "ui_data": {
@@ -192,7 +192,7 @@
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
               "filename": "00-get-data.ipynb",
-              "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
+              "runtime_image": "quay.io/luisarizmendi/pytorch-custom-notebook:latest"
             },
             "label": "",
             "ui_data": {
@@ -256,7 +256,7 @@
             ],
             "kubernetes_secrets": [],
             "env_vars": [],
-            "runtime_image": "quay.io/luisarizmendi/pytorch-custom:latest"
+            "runtime_image": "quay.io/luisarizmendi/pytorch-custom-notebook:latest"
           }
         }
       },

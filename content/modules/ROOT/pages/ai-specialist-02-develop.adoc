@@ -142,7 +142,7 @@ Let's start with the first code block, the dependencies.
 
 [TIP]
 
-If you'd prefer to skip the process of configuring each code block or simply want to see the completed version, the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/developmentprototyping.ipynb[full Jupyter Notebook is available for you to review here]. This allows you to quickly access the final file without spending time on the setup.
+If you'd prefer to skip the process of configuring each code block or simply want to see the completed version, the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[full Jupyter Notebook is available for you to review here]. This allows you to quickly access the final file without spending time on the setup.
 
 
 === Dependencies
@@ -613,7 +613,7 @@ RUN INSTALL_PKGS="ultralytics roboflow minio" && \
 USER 1001
 ----
 
-Then you can  build your Container Image using the Containerfile and push it into a registry (ie. https://quay.io[Quay])
+Then you can build your Container Image using the Containerfile and push it into a registry (ie. https://quay.io[Quay])
 
 [source,shell,subs="attributes"]
 ----
@@ -624,7 +624,7 @@ podman push $registry/$namespace/$image-name:$image-tag
 
 [TIP]
 
-If you don’t want to build the image yourself, you can use an existing pre-built image: `quay.io/luisarizmendi/pytorch-custom:latest`.
+If you don’t want to build the image yourself, you can use an existing pre-built image: `quay.io/luisarizmendi/pytorch-custom-notebook:latest`.
 
 
 Once you have the container image you want to use for running the code in your pipeline steps, the next step is to "import" it into your Jupyter environment for use with Elyra Pipelines.
@@ -636,7 +636,7 @@ To add your custom image to the Jupyter Enviroment in order to use it with the E
 1. Open the Jupyter Notebook workbench.
 2. Navigate to "Runtime Images" by selecting the icon with squares in the left menu.
 3. Click the "+" button to add a new runtime image.
-4. Provide a name for the image, such as PyTorch Custom, add a tag like pytorch, and specify the image name (e.g., quay.io/luisarizmendi/pytorch-custom:latest).
+4. Provide a name for the image, such as PyTorch Custom, add a tag like pytorch, and specify the image name (e.g., quay.io/luisarizmendi/pytorch-custom-notebook:latest).
 5. Click Save.
 ====
 
