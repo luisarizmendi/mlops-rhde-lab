@@ -1,0 +1,7 @@
+gradio
+ultralytics
+torch
+pillow
+opencv-python
+numpy
+onnxruntime

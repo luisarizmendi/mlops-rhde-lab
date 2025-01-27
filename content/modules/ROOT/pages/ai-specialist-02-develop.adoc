@@ -448,7 +448,7 @@ results_test = model.val(data=CONFIG['data'], split='test', device=CONFIG['devic
 After the evaluation with the Test Data Set you will see how a new directory with the results, similar to what you got with the training, has been created. 
 
 
-To visually test the performance of your object detection model, you can download the `best.pt` file (check the directory `runs/detects/<model_name>/weights`). Then, utilize the following containerized application to perform the test locally: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/model_test_app/object-detection-batch-model-file/object-detection-batch-model-file.py[object-detection-batch-model-file.py]. This script allows you to run a visual model performance evaluation directly on your local machine.
+To visually test the performance of your object detection model, you can download the `best.pt` file (check the directory `runs/detects/<model_name>/weights`). Then, utilize the following containerized application to perform the test locally: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/model_test_app/object-detection-batch-model-file/pytorch/object-detection-pytorch.py[object-detection-batch-model-file.py]. This script allows you to run a visual model performance evaluation directly on your local machine.
 
 [source,python,role=execute,subs="attributes"]
 ----

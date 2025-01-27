@@ -92,8 +92,8 @@ def train_model(
     )
     
     # Export model
-    model.export(format='onnx', imgsz=CONFIG['imgsz'])
-       
+    #model.export(format='onnx', imgsz=CONFIG['imgsz'])
+    #model.export(format="torchscript")       
     
     return NamedTuple('Outputs', [('train_dir', str), ('test_dir', str)])(
         train_dir=str(results_train.save_dir),
@@ -136,7 +136,8 @@ def upload_to_minio(
     
     files_model_pt = os.path.join(train_dir, "weights") + "/best.pt"
     
-    files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
+    #files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
+    #files_model_torchscript = os.path.join(train_dir, "weights") + "/best.torchscript"
     
     files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir) 
                   if os.path.isfile(os.path.join(test_dir, f))]
@@ -146,17 +147,13 @@ def upload_to_minio(
     # Upload files
     for file_path in files_train:
         try:
-            client.fput_object(bucket, 
-                             f"models/{directory_name}/train-val/{os.path.basename(file_path)}", 
-                             file_path)
+            client.fput_object(bucket, f"models/{directory_name}/train-val/{os.path.basename(file_path)}", file_path)
         except S3Error as e:
             print(f"Error uploading {file_path}: {e}")
     
     for file_path in files_test:
         try:
-            client.fput_object(bucket, 
-                             f"models/{directory_name}/test/{os.path.basename(file_path)}", 
-                             file_path)
+            client.fput_object(bucket, f"models/{directory_name}/test/{os.path.basename(file_path)}", file_path)
         except S3Error as e:
             print(f"Error uploading {file_path}: {e}")
 
@@ -164,18 +161,115 @@ def upload_to_minio(
         f.write("models/" + directory_name)
 
     try:
-        client.fput_object(bucket, 
-                        f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}", 
-                        files_model_pt)
+        client.fput_object(bucket, f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}", files_model_pt)
     except S3Error as e:
         print(f"Error uploading {files_model_pt}: {e}")
 
-    try:
-        client.fput_object(bucket, 
-                        f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", 
-                        files_model_onnx)
-    except S3Error as e:
-        print(f"Error uploading {files_model_onnx}: {e}")
+    #try:
+    #    client.fput_object(bucket, f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", files_model_onnx)
+    #except S3Error as e:
+    #    print(f"Error uploading {files_model_onnx}: {e}")
+
+    #try:
+    #    client.fput_object(bucket, f"models/{directory_name}/model/torchscript/1/model.pt", files_model_torchscript)
+    #except S3Error as e:
+    #    print(f"Error uploading {files_model_torchscript}: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Component 4: Create Entry in Model Registry
+@dsl.component(
+    base_image='python:3.9',
+    packages_to_install=[
+        'pip',  
+        'setuptools', 
+        'boto3',
+        'model-registry'
+    ]
+def push_to_model_registry(
+    model_name: str,
+    version: str,
+    cluster_domain: str,
+    metrics: Input[Metrics],
+    dataset: Input[Dataset],
+):
+
+    from os import environ, path, makedirs
+    from datetime import datetime
+    from model_registry import ModelRegistry
+    import shutil
+    import json
+    from boto3 import client
+    
+    # Save to Model Registry
+    namespace_file_path =\
+        '/var/run/secrets/kubernetes.io/serviceaccount/namespace'
+    with open(namespace_file_path, 'r') as namespace_file:
+        namespace = namespace_file.read()
+    
+    model_object_prefix = model_name if model_name else "model"
+    version = version if version else datetime.now().strftime('%y%m%d%H%M')
+        
+    def _register_model(author_name , server_address, model_object_prefix, version):
+        registry = ModelRegistry(server_address=server_address, port=443, author=author_name, is_secure=False)
+        registered_model_name = model_object_prefix
+        version_name = version
+        metadata = {
+            "accuracy": str(metrics.metadata['Accuracy']),
+        } | dataset.metadata
+        
+        rm = registry.register_model(
+            registered_model_name,
+           "to-be-updated" if prod_flag else f"s3://{s3_endpoint_url.split('https://')[-1]}{model_artifact_s3_path}",
+            model_format_name="pt",
+            model_format_version="1",
+            version=version_name,
+            description=f"{registered_model_name} is a dense neural network used for Hardhat detection in images .",
+            metadata=metadata
+        )
+        print("Model registered successfully")
+
+    # Register the model
+    server_address = f"https://{namespace}-registry-rest.{cluster_domain}"
+    _register_model(namespace, server_address, model_object_prefix, version)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Define the pipeline
@@ -192,13 +286,14 @@ def yolo_training_pipeline(
     minio_access_key: str,
     minio_secret_key: str,
     minio_bucket: str,
-    train_name: str = "yolo",
+    train_name: str = "hardhat",
     train_epochs: int = 50,
     train_batch_size: int = 16,
     train_img_size: int = 640,
     pvc_storage_class: str = "gp3-csi",
     pvc_size: str = "5Gi",
-    pvc_name_sufix: str = "-kubeflow-pvc"
+    pvc_name_sufix: str = "-kubeflow-pvc",
+    cluster_domain: str
 ):
     # Create PV
     pvc = kubernetes.CreatePVC(
@@ -256,6 +351,16 @@ def yolo_training_pipeline(
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
     ).after(upload_task)
+
+    # Create entry in Model Registry
+    def push_to_model_registry(
+        model_name=train_name,
+        version="",
+        cluster_domain=cluster_domain,
+        metrics: train_task.outputs['metrics'],
+        dataset: download_task.outputs['dataset'],
+    ).after(upload_task)
+
 
 if __name__ == "__main__":
     # Compile the pipeline
