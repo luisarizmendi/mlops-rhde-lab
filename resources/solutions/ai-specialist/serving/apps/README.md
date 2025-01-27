@@ -81,3 +81,75 @@ Then you can see the video stream in `http://localhost:5000/video_stream` and th
 
 
 
+## Multi-arch Container Images
+
+You can create a container image compatible with both x86 and ARM systems, and push it to a Container Image Registry that supports multi-architecture images.
+
+To achieve this, you need to build the image for both architectures, which may require two separate Containerfiles with different base images. 
+
+However, it's possible to create both images on the same system. For example, if you're running on an x86 machine with Podman, you can use `qemu-user-static` to build the ARM image as well:
+
+### Creating ARM Container Images in x86 System (example)
+
+
+1. Install `qemu-user-static`
+
+```bash
+sudo dnf install podman qemu-user-static
+```
+
+2. Run the `qemu-user-static` container
+
+```bash
+sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
+```
+
+3. Now you could create an ARM image in your x86 system with this command.
+
+```bash
+podman build --arch arm64  -t <arm image> .
+```
+
+
+### Creating the Multi-arch Container Image
+
+
+1. Build the images for both x86 and ARM64
+
+```bash
+# Build for x86 (amd64)
+podman build --arch amd64 -t <image>:x86 .
+
+# Build for arm64
+podman build --arch arm64 -t <image>:arm .
+```
+
+
+
+2. Create the manifest list. After building both images, create a manifest list to combine them. This list will point to both the x86 and arm64 images:
+
+```bash
+podman manifest create <image>:prod
+podman manifest add <image>:latest <image>:x86
+podman manifest add <image>:latest <image>:arm
+```
+
+
+3. Finally publish the manifest
+
+```bash
+podman push <image>:prod
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
