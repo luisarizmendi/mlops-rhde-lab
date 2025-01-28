@@ -51,6 +51,33 @@ Forward these metrics to OpenShift AI’s monitoring stack for centralized visua
 
 
 
+3. Monitoring with TrustyAI
+
+Overview
+
+TrustyAI in OpenShift AI enables monitoring of machine learning models for fairness, bias, and drift. It integrates with OpenShift’s monitoring stack to provide insights into model behavior and performance.
+
+Usage with RHEL Inference
+
+Metrics Collection:
+
+Use Prometheus and Node Exporter on RHEL to collect system and inference metrics.
+
+Forward these metrics to OpenShift’s Prometheus instance.
+
+Bias and Drift Analysis:
+
+Send inference inputs and outputs from RHEL to OpenShift AI for analysis using TrustyAI.
+
+Leverage TrustyAI’s bias and drift metrics for ongoing model evaluation.
+
+
+
+
+
+
+
+
 
 
 
