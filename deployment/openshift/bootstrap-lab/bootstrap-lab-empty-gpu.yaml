@@ -1,6 +1,6 @@
 
 #
-# Deployed in an empty OpenShift clusterwith GPUs
+# Deploy in an empty OpenShift clusterwith GPUs
 #
 ---
 kind: Project

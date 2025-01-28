@@ -1,76 +1,517 @@
 = Model Training
 
-In production environments, training machine learning models requires more than just running a script or experimenting in a notebook. A robust pipeline provides the following benefits:
+In production environments, training machine learning models is not as simple as running a script or experimenting in a notebook. A robust pipeline is essential to ensure:
 
-* Scalability: Handle large datasets and distribute computational workloads efficiently across resources.
+* Scalability: Handle large datasets and distribute computational workloads across resources efficiently.
+* Reproducibility: Replicate training runs for consistent model performance.
+* Automation: Automate steps like data preprocessing, model training, evaluation, and deployment, reducing manual errors.
+* Monitoring and Governance: Track metrics, manage versions, and ensure compliance and performance.
 
-* Reproducibility: Ensure that every training run can be replicated, enabling consistent model behavior.
+Without a pipeline, the training process becomes ad hoc and error-prone, leading to inconsistent results and increased operational risks.
 
-* Automation: Reduce manual intervention by automating steps such as data preprocessing, model training, evaluation, and deployment.
+Elyra Pipelines, built on Jupyter Notebooks, offer an accessible way to prototype workflows. However, they lack the scalability, integrations, and enterprise-grade features required for production. For example:
 
-* Monitoring and Governance: Track metrics, manage versions, and audit changes to ensure compliance and performance.
+* Inefficiency with large-scale data or distributed workloads.
+* Tight dependency on Jupyter Notebook, unsuitable for high-availability systems.
+* Limited monitoring tools, storage integrations, and governance capabilities.
 
-Without a pipeline, training a model becomes an ad-hoc, error-prone process, which can lead to inconsistent outcomes and increased operational risks.
+While Elyra is excellent for prototyping, Kubeflow Pipelines stand out as a robust, production-ready solution. Built for Kubernetes, Kubeflow supports the entire machine learning lifecycle—from data preparation to deployment—with features like:
 
-Elyra Pipelines, built on Jupyter Notebooks, offer a simple and accessible way to construct data science workflows. However, they fall short when used in production environments for several reasons. Elyra workflows are not designed to efficiently handle large-scale data or distributed workloads across clusters. They are heavily tied to the Jupyter Notebook ecosystem, which is not ideal for enterprise-grade, high-availability systems. Additionally, Elyra lacks advanced integrations with monitoring tools, production-grade storage solutions, and other enterprise MLOps requirements. Managing versions of pipelines and models is cumbersome in Elyra, leading to challenges in reproducibility and governance. While Elyra is a good tool for prototyping and early-stage experimentation, it is not built to meet the demands of a production-scale MLOps pipeline.
+* Seamless scalability and fault tolerance.
+* Integration with CI/CD platforms, monitoring tools, and storage systems.
+* Modular pipelines with version control and strong community support.
 
-Kubeflow, a comprehensive open-source MLOps platform, is specifically designed to address the challenges of deploying machine learning workflows at scale. Built to leverage Kubernetes, it enables seamless scalability, resource management, and fault tolerance. Kubeflow supports the entire machine learning lifecycle, from data preparation to training, tuning, and deployment. It allows integration with enterprise tools such as monitoring systems, CI/CD platforms, and storage solutions. Kubeflow Pipelines provide tools to create, share, and reuse modular pipelines with version control. With strong community support and continuous development, it remains up-to-date with the latest advancements in AI/ML. For enterprises seeking a production-grade MLOps solution, Kubeflow is a highly recommended choice.
+For enterprises seeking a scalable MLOps solution, Kubeflow on OpenShift AI is a powerful choice.
 
-OpenShift AI simplifies the deployment and management of AI/ML workloads on Red Hat OpenShift, and it offers built-in support for importing and running Kubeflow Pipelines and that's what we are going to do now.
 
 
 === Tools and preparations
 
-In this section, we will utilize the following tools to streamline our workflow:
+We’ll use the following tools to train a YOLO model to detect hardhats:
 
-* OpenShift AI: This platform will be used to import and execute the Kubeflow pipeline, enabling seamless integration with our Kubernetes-based environment. Besides the Pipeline management feature of OpenShift AI, you will be using the "Model Registry". The OpenShift AI Model Registry serves as a central repository for storing, sharing, versioning, and tracking machine learning models. It supports metadata management, including training details, hyperparameters, and performance metrics.
+* OpenShift AI: Manage Kubeflow pipelines within a Kubernetes-based environment. Leverage the Model Registry to store, version, and track models, along with their metadata (e.g., training parameters and metrics).
 
-* GitHub: Serving as the repository for the pipeline definition, GitHub ensures version control and collaborative development.
+* GitHub: Version control and collaborative development for pipeline definitions.
 
-* MinIO: Acting as the storage solution for the produced model, MinIO provides high-performance, scalable object storage.
+* MinIO: Scalable, high-performance object storage for model outputs.
 
-All tools have been pre-configured and are ready for immediate use, allowing us to dive directly into the tasks ahead without additional setup.
+These tools are pre-configured at this point, allowing you to dive straight into pipeline development.
 
 
 
-== Training Pipeline
 
-The Kubeflow pipeline that we are going to import is based on Python code. OpenShift AI Workbenches include an environment specificlly created to develop code with an integrated IDE, so let's deploy a new Workbench of that type.
+== Creating the Training Pipeline 
 
-To deploy a Code Workbench you have to:
 
-1. Navigate to OpenShift AI "Data Science Projects" and select your project.
-2. Go to "Workbenches" tab and click "Create Wrokbench"
-3. Give it a name (e.g. "Object Detection Pipeline Code") and select the `code-server` type. Keep the local volume but you don't need to configure the Object Storage Connection. There is no need for Accelerators even if you have GPUs available.
-4. Create the Workbench and wait until is ready to open it.
-5. Click on the Three horizontal lines on the top left menu, then select "Terminal" > "New Terminal"
+=== Creating the Training Pipeline 
 
+The training pipeline is implemented using Python. OpenShift AI Workbenches provide a coding environment with an integrated IDE. 
+
+
+[example]
+====
+Let’s deploy a Code Workbench to get started:
+
+1- Deploy the Workbench: Go to `OpenShift AI > Data Science Projects`, and select your project. 
+
+2- In the `Workbenches` tab, click `Create Workbench`. Name it (e.g., "Object Detection Pipeline Code") and choose the `code-server` type. Keep the default local volume; no need to configure Object Storage or GPUs. Click `Create Workbench` and wait for the deployment to complete.
+
+3- Access the Workbench: Once the Workbench is ready, open it. 
+
+4- From the menu (three horizontal lines, top-left), select `Terminal > New Terminal`.
 
 image::ai-train-code-terminal.png[]
 
+5- Clone the Repository: Use the terminal to clone your GitHub repository:
 
-6. Use the Terminal Console to clone your Gitea repo: `git clone {gitea}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git`
+[source,shell,role=execute,subs="attributes"]
+----
+git clone {gitea}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git
+----
+
+6. Set Up the Pipeline Script: Create a new file `hardhat-kubeflow-pipeline.py` in the cloned directory (right-click to create a file). Copy the example script from: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-hardhat-kubeflow-pipeline.py[hardhat-kubeflow-pipeline.py]. Save it and prepare for review.
+====
+
+Next, we’ll review the script’s implementation to understand the pipeline’s logic and adapt it to our needs.
+
+Let's review the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script]. 
+
+The script defines the pipeline structure, specifying the order in which pipeline components are executed. It also includes the input variable definitions and the Kubernetes resources allocated to each task. Similar to the Elyra pipeline, the steps are distinct, meaning that if variables or files are required from one step in another, they must be explicitly 'passed' between them. Kubeflow simplifies this process by offering tools to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/[manage data handling between tasks], allowing you to easily define input and output variables for seamless step-to-step communication. Additionally, Kubeflow provides straightforward mechanisms for creating and attaching Kubernetes Persistent Volumes, enabling file sharing between tasks. For instance, the dataset downloaded by the initial task can be stored on a volume and subsequently accessed by the training task without manual intervention.
+
+[source,python,role=execute,subs="attributes"]
+----
+# Define the pipeline
+@dsl.pipeline(
+    name='YOLO Training Pipeline',
+    description='Pipeline to download data, train YOLO model, and upload results to MinIO'
+)
+def yolo_training_pipeline(
+
+    roboflow_api_key: str,
+    roboflow_workspace: str,
+    roboflow_project: str,
+    roboflow_version: int,
+    minio_endpoint: str,
+    minio_access_key: str,
+    minio_secret_key: str,
+    minio_bucket: str,
+    pvc_storage_class: str = "gp3-csi",
+    pvc_size: str = "5Gi",
+    pvc_name_suffix: str = "-kubeflow-pvc",
+    train_name: str = "hardhat",
+    train_epochs: int = 50,
+    train_batch_size: int = 16,
+    train_img_size: int = 640,
+    model_registry_name: str = "object-detection-model-registry"
+):
+        
+    from datetime import datetime
+    
+    # Create PV
+    pvc = kubernetes.CreatePVC(
+        pvc_name_suffix=pvc_name_suffix,
+        access_modes=['ReadWriteOnce'],
+        size=pvc_size,
+        storage_class_name=pvc_storage_class,
+    )
+
+    # Download dataset
+    download_task = download_dataset(
+        api_key=roboflow_api_key,
+        workspace=roboflow_workspace,
+        project=roboflow_project,
+        version=roboflow_version
+    )
+    download_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        download_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+
+    # Train model
+    train_task = train_model(
+        dataset_path=download_task.output,
+        epochs=train_epochs,
+        batch_size=train_batch_size,
+        img_size=train_img_size,
+        name=train_name
+    ).after(download_task)
+    train_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        train_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+
+    # Upload results
+    upload_task = upload_to_minio(
+        train_dir=train_task.outputs['train_dir'],
+        test_dir=train_task.outputs['test_dir'],
+        endpoint=minio_endpoint,
+        access_key=minio_access_key,
+        secret_key=minio_secret_key,
+        bucket=minio_bucket
+    ).after(train_task)
+    upload_task.set_caching_options(enable_caching=False)
+    kubernetes.mount_pvc(
+        upload_task,
+        pvc_name=pvc.outputs['name'],
+        mount_path='/opt/app-root/src',
+    )
+
+    
+    delete_pvc = kubernetes.DeletePVC(
+        pvc_name=pvc.outputs['name']
+    ).after(upload_task)
+
+    
+    # Push to model registry
+    push_to_model_registry(
+        model_name=train_name,
+        version="",
+        metrics=train_task.outputs['metrics'],
+        model_registry_name=model_registry_name,
+        model_artifact_s3_path=upload_task.outputs['model_artifact_s3_path'],
+        s3_endpoint=minio_endpoint,
+        roboflow_workspace=roboflow_workspace,
+        roboflow_project=roboflow_project,
+        roboflow_version=roboflow_version
+    ).after(upload_task)
+----
+
+Besides the Pipeline definition, the  https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script] also contains the step (components) definitions.
+
+The first step is to download the Dataset. This task has a Persistent Volume attached where it will store the Dataset contents. It will use the Roboflow libraries and the provided input variables to download the files directly from Roboflow, as it was done during the Model Development section.
+
+[source,python,role=execute,subs="attributes"]
+----
+# Component 1: Download Dataset
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["roboflow", "pyyaml"]
+)
+def download_dataset(
+    api_key: str,
+    workspace: str,
+    project: str,
+    version: int,
+    dataset_path: dsl.OutputPath(str)
+) -> None:
+    from roboflow import Roboflow
+    import yaml
+    import os
+
+    rf = Roboflow(api_key=api_key)
+    project = rf.workspace(workspace).project(project)
+    version = project.version(version)
+    dataset = version.download("yolov11")
+
+    # Update data.yaml paths
+    dataset_yaml_path = f"{dataset.location}/data.yaml"
+    with open(dataset_yaml_path, "r") as file:
+        data_config = yaml.safe_load(file)
+
+    data_config["train"] = f"{dataset.location}/train/images"
+    data_config["val"] = f"{dataset.location}/valid/images"
+    data_config["test"] = f"{dataset.location}/test/images"
+
+    print(dataset)
+
+    with open(dataset_path, "w") as f:
+        f.write(dataset.location)
+----
+
+After downloading the dataset, the pipeline moves on to the model training task. This task utilizes the same Persistent Volume as the previous step, ensuring seamless access to the dataset files. During this phase, the provided inputs are used to configure the training hyperparameters.
+
+One significant enhancement in this Kubeflow step, compared to the Elyra pipelines, is the calculation of metrics during training. These metrics are stored in a variable and will later be used to populate the metadata in the Model Registry, adding an extra layer of insight and traceability to the model lifecycle.
+
+[source,python,role=execute,subs="attributes"]
+----
+# Component 2: Train Model
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["ultralytics", "torch", "pandas"]
+)
+def train_model(
+    dataset_path: str,
+    epochs: int = 50,
+    batch_size: int = 16,
+    img_size: int = 640,
+    name: str = "yolo",
+) -> NamedTuple('Outputs', [
+    ('train_dir', str),
+    ('test_dir', str),
+    ('metrics', dict)
+]):
+    import torch
+    from ultralytics import YOLO
+    import pandas as pd
+    import os
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    CONFIG = {
+        'name': name,
+        'model': 'yolo11m.pt',
+        'data': f"{dataset_path}/data.yaml",
+        'epochs': epochs,
+        'batch': batch_size,
+        'imgsz': img_size,
+        'device': device,
+    }
+
+    # Configure PyTorch
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+    # Initialize and train model
+    model = YOLO(CONFIG['model'])
+    results_train = model.train(
+        name=CONFIG['name'],
+        data=CONFIG['data'],
+        epochs=CONFIG['epochs'],
+        batch=CONFIG['batch'],
+        imgsz=CONFIG['imgsz'],
+        device=CONFIG['device'],
+    )
+
+    # Evaluate model
+    results_test = model.val(
+        data=CONFIG['data'],
+        split='test',
+        device=CONFIG['device'],
+        imgsz=CONFIG['imgsz']
+    )
+
+    # Compute metrics from CSV
+    results_csv_path = os.path.join(results_train.save_dir, "results.csv")
+    results_df = pd.read_csv(results_csv_path)
+
+    # Extract metrics
+    metrics = {
+        "precision": results_df["metrics/precision(B)"].iloc[-1],
+        "recall": results_df["metrics/recall(B)"].iloc[-1],
+        "mAP50": results_df["metrics/mAP50(B)"].iloc[-1],
+        "mAP50-95": results_df["metrics/mAP50-95(B)"].iloc[-1]
+    }
+
+    return NamedTuple('Outputs', [
+        ('train_dir', str),
+        ('test_dir', str),
+        ('metrics', dict)
+    ])(
+        train_dir=str(results_train.save_dir),
+        test_dir=str(results_test.save_dir),
+        metrics=metrics
+    )
+----
 
 
-Now you can create a new file `kubeflow-pipeline.py` (right click on the cloned directory name) and start coding...
 
-In order to make it easy, you can simply copy this file https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/kubeflow-pipeline.py and save it.
 
-Let's review the script. 
+
+
+
+
+
+
+
+
+
+
+
+
+[source,python,role=execute,subs="attributes"]
+----
+# Component 3: Upload to MinIO
+@dsl.component(
+    base_image="quay.io/luisarizmendi/pytorch-custom:latest",
+    packages_to_install=["minio"]
+)
+def upload_to_minio(
+    train_dir: str,
+    test_dir: str,
+    endpoint: str,
+    access_key: str,
+    secret_key: str,
+    bucket: str,
+    model_path: dsl.OutputPath(str)
+) -> NamedTuple('Outputs', [
+    ('model_artifact_s3_path', str),
+    ('files_model_pt', str)
+]):
+    from minio import Minio
+    from minio.error import S3Error
+    import os
+    import datetime
+
+    client = Minio(
+        endpoint.replace('https://', '').replace('http://', ''),
+        access_key=access_key,
+        secret_key=secret_key,
+        secure=True
+    )
+
+    # Get paths for files
+    weights_path = os.path.join(train_dir, "weights")
+
+    files_train = [os.path.join(train_dir, f) for f in os.listdir(train_dir)
+                   if os.path.isfile(os.path.join(train_dir, f))]
+    files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path)
+                    if os.path.isfile(os.path.join(weights_path, f))]
+
+    files_model_pt = os.path.join(train_dir, "weights") + "/best.pt"
+    
+    #files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
+    #files_model_torchscript = os.path.join(train_dir, "weights") + "/best.torchscript"
+    
+    files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir) 
+                  if os.path.isfile(os.path.join(test_dir, f))]
+    
+    directory_name = os.path.basename(train_dir) + "-" + datetime.datetime.now().strftime("%Y-%m-%d-%H%M")
+    
+    # Upload files
+    for file_path in files_train:
+        try:
+            client.fput_object(bucket, f"models/{directory_name}/train-val/{os.path.basename(file_path)}", file_path)
+        except S3Error as e:
+            print(f"Error uploading {file_path}: {e}")
+    
+    for file_path in files_test:
+        try:
+            client.fput_object(bucket, f"models/{directory_name}/test/{os.path.basename(file_path)}", file_path)
+        except S3Error as e:
+            print(f"Error uploading {file_path}: {e}")
+
+    with open(model_path, "w") as f:
+        f.write("models/" + directory_name)
+
+    try:
+        client.fput_object(bucket, f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}", files_model_pt)
+    except S3Error as e:
+        print(f"Error uploading {files_model_pt}: {e}")
+
+    #try:
+    #    client.fput_object(bucket, f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", files_model_onnx)
+    #except S3Error as e:
+    #    print(f"Error uploading {files_model_onnx}: {e}")
+
+    #try:
+    #    client.fput_object(bucket, f"models/{directory_name}/model/torchscript/1/model.pt", files_model_torchscript)
+    #except S3Error as e:
+    #    print(f"Error uploading {files_model_torchscript}: {e}")
+
+
+    model_artifact_s3_path=f"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}"
+
+    return NamedTuple('Outputs', [
+        ('model_artifact_s3_path', str),
+        ('files_model_pt', str)
+    ])(
+        model_artifact_s3_path,
+        files_model_pt
+    )
+----
+
+
+
+
+
+
+
+
+[source,python,role=execute,subs="attributes"]
+----
+# Component 4: Push to Model Registry
+@dsl.component(
+    base_image='python:3.9',
+    packages_to_install=['model-registry']
+)
+def push_to_model_registry(
+    model_name: str,
+    version: str,
+    metrics: dict,
+    model_registry_name: str,
+    model_artifact_s3_path: str,
+    s3_endpoint: str,
+    roboflow_workspace: str,
+    roboflow_project: str,
+    roboflow_version: int 
+):
+    from model_registry import ModelRegistry
+    import os
+    from datetime import datetime
+    import json
+    
+    s3_endpoint_url=s3_endpoint.replace('https://', '').replace('http://', '')
+    version = version if version else datetime.now().strftime('%y%m%d%H%M')
+    model_object_prefix = model_name if model_name else "model"
+    cluster_domain= ""    
+    namespace_file_path = '/var/run/secrets/kubernetes.io/serviceaccount/namespace'
+    with open(namespace_file_path, 'r') as namespace_file:
+        namespace = namespace_file.read().strip()
+
+
+    # Get Cluster domain from MinIO s3_endpoint.
+    cluster_domain = s3_endpoint.split("//")[-1].split(".", 2)[-1]
+
+ 
+    os.environ["KF_PIPELINES_SA_TOKEN_PATH"] = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      
+   
+    def _register_model(author_name , server_address, model_object_prefix, version):
+        registry = ModelRegistry(server_address=server_address, port=443, author=author_name, is_secure=False)
+        registered_model_name = model_object_prefix
+        version_name = version
+        metadata = {
+            "Dataset": f"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}",
+            "mAP50": str(metrics["mAP50"]),
+            "mAP50-95": str(metrics["mAP50-95"]),
+            "precision": str(metrics["precision"]),
+            "recall": str(metrics["recall"])
+        }
+      
+        rm = registry.register_model(
+            registered_model_name,
+            f"s3://{s3_endpoint_url}/{model_artifact_s3_path}",
+            model_format_name="pt",
+            model_format_version="1",
+            version=version_name,
+            description=f"{registered_model_name} is a dense neural network that detects Hardhats in images.",
+            metadata=metadata
+        )
+        print("Model registered successfully")
+    
+    
+    # Register the model
+    server_address = f"https://{model_registry_name}-rest.apps.{cluster_domain}"
+    print(f"s3://{s3_endpoint_url}/{model_artifact_s3_path}")
+
+    _register_model(namespace, server_address, model_object_prefix, f"{model_object_prefix}-{version}")
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-
-
-
-pass data between tasks: https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/
-
-
-
-
-
 
 onnx path format needs a version
 
@@ -86,72 +527,87 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 
 
 
-Let's proceed with the import, but first you need to convert the Python script into a YAML Kubeflow Pipeline definition by executing the script thanks to the `kpf` library we will obtain the yaml file that we can use to import the pipeline.
 
 
 
-Run the following commands in the Code terminal:
 
+
+
+
+
+
+
+
+
+=== Importing the Training Pipeline 
+
+Before proceeding with the import, we need to convert the Python script into a YAML Kubeflow Pipeline definition. Using the `kfp` library, we will execute the script to generate the YAML file required for importing the pipeline
+
+[example]
+====
+Let's generate the Pipeline YAML file and push it into Gitea.
+
+1. Run the following commands in the Code terminal:
+
+[source,shell,role=execute,subs="attributes"]
+----
 pip install --upgrade pip
 pip install kfp[kubernetes]
 cd userpass:[<span id="gnumberVal"></span>]-ai
-python kubeflow-pipeline.py
+python hardhat-kubeflow-pipeline.py
+----
 
 
+2. You will generate a file named `yolo_training_pipeline.yaml`. Next, push the newly created files to Gitea. In the terminal window, run the following commands:
 
-You will obtain a file `yolo_training_pipeline.yaml`. It's time to Push the new files into Gitea, on the Terminal window run the following commands:
-
-
-
-
+[source,shell,role=execute,subs="attributes"]
+----
 git config --global user.email userpass:[<span id="gnumberVal"></span>]@acme.com
 git config --global user.name userpass:[<span id="gnumberVal"></span>]
 git remote set-url origin http://userpass:[<span id="gnumberVal"></span>]:redhatpass:[<span id="gnumberVal"></span>]@{gitea-server}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git
 git add .
 git commit -m "kubeflow Pipeline"
 git push
+----
 
-
-
-
-
-Now you can go to Gitea (http://{gitea-server}) and check that your files have been pushed. Open the `yolo_training_pipeline.yaml` file and open the `Raw` version (top right menu), you will need that URL to import the pipeline.
-
-
-
-
+3. Now, navigate to Gitea at http://{gitea-server} to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
 
 image::ai-train-gitea-raw.png[]
 
+====
 
+Once you have the YAML file available in Gitea, you can import it directly into OpenShift AI.
 
-
-
+[example]
+====
 To proceed with the Kubeflow Pipeline import:
 
 1. Go to Data Science Pipelines
 2. Click Import Pipeline
-3. Fill in Name (yolo-training)
+3. Fill in Name (`hardhat-training`)
 4. Select "Import by URL" and include the Gitea URL with the `yolo_training_pipeline.yaml` raw content.
-
-
 
 image::ai-train-pipeline-kubeflow-import.png[]
 
+====
 
 After the correct import, you will see the Pipeline diagram:
-
 
 
 image::ai-train-kubeflow-pipe.png[]
 
 
+
+=== Running the Training Pipeline 
+
+[example]
+====
 It's time to run the imported Kubeflow Pipeline:
 
-Click Actions and then "Create run"
-Click "Create new experiment" (hardhat-detection)
-Give the run a name (e.g. `v1`)
-Fill in the environment variables used in your run:
+1. Click Actions and then `Create run`
+2. Click "Create new experiment" (`hardhat-detection`)
+3. Give the run a name (e.g. `v1`)
+4. Fill in the environment variables used in your run:
     * Access Key: "userpass:[<span id="gnumberVal"></span>]"
     * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
     * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
@@ -165,28 +621,33 @@ Fill in the environment variables used in your run:
     * Ephoch number 
     * Image Size 
     * Training name (e.g. `hardhat-detection`)
-
-
-
-
-IF THE FIRST RUN FAILS, RE RUN IT 
-
-
-
-
-Plan B?????????????
-
-
-
-
-
-
+====
 
 image::ai-train-pipeline-run.png[]
 
+
 [NOTE]
 
-In contrast with what happened with the Elyra Pipelines, this Kubeflow Pipeline automataically created and delete the Persistent Volume used to pass the files between Pipeline tasks
+In contrast to Elyra Pipelines, this Kubeflow Pipeline automatically creates and deletes the Persistent Volume used for transferring files between pipeline tasks, ensuring efficient resource management and streamlined execution.
+
+[TIP]
+
+Keep in mind that if you're short on time and can't wait for a full model training process, you can opt for the so-called 'Plan B' by using the reduced dataset you prepared during the Model Development section. However, note that models trained on this dataset won't be suitable for deployment, as they won't achieve accurate object detection. Instead, you'll need to use the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat[provided pre-trained model] during the Deployment section to ensure proper functionality.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
