@@ -5,6 +5,197 @@
 
 
 
+
+
+*Create project
+
+
+
+
+*create backend
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "python"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: quay.io/luisarizmendi/object-detection-dashboard-backend:v1
+        ports:
+        - containerPort: 5005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 5005
+    targetPort: 5005
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-backend
+  port:
+    targetPort: 5005
+
+
+
+
+
+*create fronend
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "nodejs"
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"object-detection-dashboard-backend"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: BACKEND_API_BASE_URL
+          value: http://object-detection-dashboard-backend-user99-test.apps.cluster-hkr2j.hkr2j.sandbox1307.opentlc.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: frontend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-frontend
+  port:
+    targetPort: 3000
+
+
+
+
+
+
+
+
+
+
+Deploy the action, inference and stream manager locally. 
+
+
+
+
+
+
+podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
+
+
+
+
+
+
+
+
+
+
+
+
+
+create inference if GPUs in OpenShift
+
+
+
+
+
+sudo podman run -it --rm -p 5000:5000 --privileged -e INFERENCE_SERVER_URL=${INFERENCE_SERVER_OCP_ROUTE} quay.io/luisarizmendi/object-detection-stream-manager:prod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 https://github.com/opendatahub-io/ai-edge
 
 
