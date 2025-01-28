@@ -224,7 +224,10 @@ def push_to_model_registry(
     s3_endpoint: str,
     roboflow_workspace: str,
     roboflow_project: str,
-    roboflow_version: int 
+    roboflow_version: int,
+    train_epochs: int,
+    train_batch_size: int,
+    train_img_size: int
 ):
     from model_registry import ModelRegistry
     import os
@@ -253,6 +256,9 @@ def push_to_model_registry(
         version_name = version
         metadata = {
             "Dataset": f"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}",
+            "Epochs": str(train_epochs),
+            "Batch Size": str(train_batch_size),
+            "Image Size": str(train_img_size),
             "mAP50": str(metrics["mAP50"]),
             "mAP50-95": str(metrics["mAP50-95"]),
             "precision": str(metrics["precision"]),
@@ -377,7 +383,10 @@ def yolo_training_pipeline(
         s3_endpoint=minio_endpoint,
         roboflow_workspace=roboflow_workspace,
         roboflow_project=roboflow_project,
-        roboflow_version=roboflow_version
+        roboflow_version=roboflow_version,
+        train_epochs=train_epochs,
+        train_batch_size=train_batch_size,
+        train_img_size=train_img_size
     ).after(upload_task)
 
     

@@ -124,6 +124,12 @@ components:
           parameterType: STRING
         s3_endpoint:
           parameterType: STRING
+        train_batch_size:
+          parameterType: NUMBER_INTEGER
+        train_epochs:
+          parameterType: NUMBER_INTEGER
+        train_img_size:
+          parameterType: NUMBER_INTEGER
         version:
           parameterType: STRING
   comp-train-model:
@@ -258,7 +264,8 @@ deploymentSpec:
           \ *\n\ndef push_to_model_registry(\n    model_name: str,\n    version: str,\n\
           \    metrics: dict,\n    model_registry_name: str,\n    model_artifact_s3_path:\
           \ str,\n    s3_endpoint: str,\n    roboflow_workspace: str,\n    roboflow_project:\
-          \ str,\n    roboflow_version: int \n):\n    from model_registry import ModelRegistry\n\
+          \ str,\n    roboflow_version: int,\n    train_epochs: int,\n    train_batch_size:\
+          \ int,\n    train_img_size: int\n):\n    from model_registry import ModelRegistry\n\
           \    import os\n    from datetime import datetime\n    import json\n\n \
           \   s3_endpoint_url=s3_endpoint.replace('https://', '').replace('http://',\
           \ '')\n    version = version if version else datetime.now().strftime('%y%m%d%H%M')\n\
@@ -273,7 +280,9 @@ deploymentSpec:
           \ port=443, author=author_name, is_secure=False)\n        registered_model_name\
           \ = model_object_prefix\n        version_name = version\n        metadata\
           \ = {\n            \"Dataset\": f\"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}\"\
-          ,\n            \"mAP50\": str(metrics[\"mAP50\"]),\n            \"mAP50-95\"\
+          ,\n            \"Epochs\": str(train_epochs),\n            \"Batch Size\"\
+          : str(train_batch_size),\n            \"Image Size\": str(train_img_size),\n\
+          \            \"mAP50\": str(metrics[\"mAP50\"]),\n            \"mAP50-95\"\
           : str(metrics[\"mAP50-95\"]),\n            \"precision\": str(metrics[\"\
           precision\"]),\n            \"recall\": str(metrics[\"recall\"])\n     \
           \   }\n\n        rm = registry.register_model(\n            registered_model_name,\n\
@@ -498,6 +507,12 @@ root:
               componentInputParameter: roboflow_workspace
             s3_endpoint:
               componentInputParameter: minio_endpoint
+            train_batch_size:
+              componentInputParameter: train_batch_size
+            train_epochs:
+              componentInputParameter: train_epochs
+            train_img_size:
+              componentInputParameter: train_img_size
             version:
               runtimeValue:
                 constant: ''
