@@ -1,11 +1,11 @@
 * xref:00-arch-intro.adoc[Architecture]
 * -------------------------
 * `_AI Specialist_`
-* xref:ai-specialist-00-intro.adoc[0. AI Specialist Intro]
-* xref:ai-specialist-00-intro.adoc#_background[-    Background]
-* xref:ai-specialist-00-intro.adoc#_toolset[-    Toolset]
-* xref:ai-specialist-00-intro.adoc#_workflow_overview[-    Workflow Overview]
-* xref:ai-specialist-00-intro.adoc#_section_video_recording[-    Section Video Recording]
+* xref:ai-specialist-00-intro.adoc[*0. AI Specialist Intro*]
+* xref:ai-specialist-00-intro.adoc#_background[- Background]
+* xref:ai-specialist-00-intro.adoc#_toolset[- Toolset]
+* xref:ai-specialist-00-intro.adoc#_workflow_overview[- Workflow Overview]
+* xref:ai-specialist-00-intro.adoc#_section_video_recording[- Section Video Recording]
 * xref:ai-specialist-01-data.adoc[1. Data Management]
 * xref:ai-specialist-01-data.adoc#_collection[   * Collection]
 * xref:ai-specialist-01-data.adoc#_preparation[   * Preparation]
