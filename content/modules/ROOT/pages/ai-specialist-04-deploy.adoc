@@ -120,14 +120,12 @@ It's also important to mention that the https://github.com/luisarizmendi/worksho
 
 Once it is deployed, you can test it by using `curl`, for example you can check the Inference Server health:
 
-source,shell,role=execute,subs="attributes"]
 ----
 curl http://<inference url>:<inference port>/healthz
 ----
 
 The answer will provide valuable information about whether GPU inferencing is available and confirm whether the model has been successfully loaded and is ready for inference:
 
-source,shell,role=execute,subs="attributes"]
 ----
 {
     "status": "healthy",
@@ -141,7 +139,6 @@ source,shell,role=execute,subs="attributes"]
 
 You can also run object detection using a local image file (`image.jpg` infered by the model named `default` in the following example): 
 
-source,shell,role=execute,subs="attributes"]
 ----
 curl -X POST http://<inference url>:<inference port>/v1/models/default/infer \
   -H "Content-Type: application/json" \
@@ -153,7 +150,6 @@ curl -X POST http://<inference url>:<inference port>/v1/models/default/infer \
 
 The response will include details about any detections made, such as the class name, the confidence score of the detection, and the coordinates of the detection bounding box.
 
-source,shell,role=execute,subs="attributes"]
 ----
 {
     "detections": [
@@ -180,27 +176,15 @@ source,shell,role=execute,subs="attributes"]
 
 === Building the Microservices
 
-
-
-
-
 [TIP]
 ====
 If you don't want to create the images on your own you can use the following:
 
-
 * https://quay.io/repository/luisarizmendi/object-detection-stream-manager?tab=tags[Camera Stream Manager container image]: quay.io/luisarizmendi/object-detection-stream-manager:prod
-
 * https://quay.io/repository/luisarizmendi/object-detection-inference-server?tab=tags[Inference server container image]: quay.io/luisarizmendi/object-detection-inference-server:prod
-
 * https://quay.io/repository/luisarizmendi/object-detection-action?tab=tags[Actuator service container image]: quay.io/luisarizmendi/object-detection-action:prod
-
 * https://quay.io/repository/luisarizmendi/object-detection-dashboard-backend?tab=tags[Dashboard backend container image]: quay.io/luisarizmendi/object-detection-dashboard-backend:prod
-
 * https://quay.io/repository/luisarizmendi/object-detection-dashboard-frontend?tab=tags[Dashboard frontend container image]: quay.io/ luisarizmendi/object-detection-dashboard-frontend:prod
-
-
-
 ====
 
 When planning to create a container image, it's essential to consider the system architecture of the device where the application will run. For deployments on Public Cloud or Core Data Centers, this is usually straightforward since the architecture will likely be x86_64. However, for Edge use cases, the situation is different.
@@ -213,9 +197,8 @@ You can find the Containerfiles for each application in the `src` directory of e
 
 The build process is closely tied to the architecture of the system you're using. If you build on an ARM-based system, the resulting container images will default to the ARM architecture unless you specifically perform cross-compilation (which we'll cover in more detail below). For this workshop, we will be using an x86-based system for the build process.
 
-For the applications running on the Cloud (x86 only) you just need to build the images in the normal way:
+For this workshop, we will be building the container images locally instead of utilizing an automated CI/CD pipeline. For the applications running on the Cloud (x86 only) you just need to build the images in the normal way:
 
-source,shell,role=execute,subs="attributes"]
 ----
 cd <application src directory>
 podman build -t <registry>/<namespace>/<container image name>:<tag> .
@@ -223,66 +206,90 @@ podman login -u <user> <registry>
 podman push <registry>/<namespace>/<container image name>:<tag> 
 ----
 
+[NOTE]
+
+Remember to make the images public once you pushed into the registry for simplicity, otherwise you will need to configure the registry credentials in order to pull the images.
 
 
 
 
+For the applications that will run at the Edge, we need to create container images for both x86 and ARM architectures. If you're working on an x86 system, you can build the x86 images using the same procedure as outlined earlier. But what about the ARM images? Strictly speaking, you would need access to an ARM system to build ARM-based images. However, you can use cross-compilation tools to create ARM images directly on x86 systems (and vice versa). In this section, we’ll focus on how to perform cross-compilation on x86 RHEL-based systems.
+
+If your laptop is running an x86 Linux distribution (preferably Fedora or RHEL), you can leverage `qemu-user-static` to enable the creation of ARM images.
+
+What is qemu-user-static? `qemu-user-static` is a versatile user-space emulator that enables programs compiled for one architecture to run on another. By using this tool, you can emulate the ARM architecture on an x86 system, making it possible to build and test ARM container images without requiring native ARM hardware.
 
 
+[example]
+====
+Before building the ARM container images, follow these steps to set up qemu-user-static:
 
+1. Install the `qemu-user-static` package in your system 
 
-make the images public 
+[source,shell,role=execute,subs="attributes"]
+----
+sudo dnf install podman qemu-user-static
+----
 
+2. Run the `qemu-user-static` container  to enable multi-architecture support
 
+[source,shell,role=execute,subs="attributes"]
+----
+sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
+----
+====
 
+With these steps completed, you can proceed to build ARM-based container images on your x86 system as if you were working on native ARM hardware.
 
-You can use that file to build the images in the following way:
+[example]
+====
+In order to create the create the ARM image you will need to run the `podman build` but including the desired ARM architecture with the argument `--platform linux/arm64`.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-For this workshop, we will be building the container images locally instead of utilizing an automated CI/CD pipeline.
+----
+podman build --platform linux/arm64  -t <arm image>:<tag> .
+----
+====
 
 [NOTE]
 
-A container image rebuild will be required during the xref:ai-specialist-05-update.adoc[Day-2 Operations] section.
+From now on, it's recommended to always specify the platform explicitly when building container images (e.g., `linux/arm64` for ARM and `linux/amd64` for x86...yes, the naming is quite similar). This is because Podman "remembers" the last platform you used during the build process, and without explicitly setting the platform, you might unintentionally create an ARM image when you only intended to build a standard x86 image. Explicitly defining the platform ensures clarity and prevents unexpected results.
+
+[TIP]
+
+It's a good idea to mention in the image `tag` if that image is intended to be used in an x86 or ARM system (e,g, `<image>:arm-v1`)
+
+At this point you will have the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager[Camera Stream Manager], https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-inference-server[Inference server] and https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-action[Actuator service] images for both ARM and x86 systems but you had to use different tags, otherwise you will be "overwriting" one image with other, this is not ideal since the image image name will be different depending on the system that you are deploying to.
+
+But that's not a big problem since the multi-arch container images exist.
+
+You can create a "pseudo container image" called a manifest that references multiple images for different architectures. At deployment time, the runtime automatically selects the appropriate image based on the system architecture. This allows you to use the same container image name and tag consistently, regardless of the system on which it is deployed.
 
 
+[example]
+====
+Let's create a multi-arch container image and push it into our registry.
 
+1. Create the manifest
 
+----
+podman manifest create <image>:<shared tag>
+----
 
+2. Add the images that you created for both architectures 
 
+----
+podman manifest add <image>:<shared tag> <image>:<x86 tag>
+podman manifest add <image>:<shared tag> <image>:<arm tag>
+----
 
+3. Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
 
-multiarch
+----
+podman manifest push <image>:<shared tag> 
+----
+====
 
-
-
-
-
-
-
-
-
-
-
+Now you can use the `<image>:<shared tag>` to deploy the container seamlessly on both x86 and ARM systems, with the runtime automatically selecting the correct architecture-specific image.
 
 
 
