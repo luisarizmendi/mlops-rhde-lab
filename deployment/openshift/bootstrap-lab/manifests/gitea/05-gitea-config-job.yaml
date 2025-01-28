@@ -66,6 +66,6 @@ spec:
         - name: USER_BASE_PASS
           value: "redhat"
         - name: USER_NUM
-          value: "25"
+          value: "50"
       restartPolicy: OnFailure
 

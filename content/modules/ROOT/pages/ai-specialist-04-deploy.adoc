@@ -1,9 +1,102 @@
+= Model Release
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+== Serving
+
+
+
+
+
+
+
+
+
+
+2. Model Serving
+
+Overview
+
+OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
+
+Single-model serving (KServe): Designed for large models requiring dedicated resources.
+
+Multi-model serving (ModelMesh): Optimized for small and medium-sized models sharing resources.
+
+Usage with RHEL Inference
+
+Containerize models using OpenShift AI’s serving runtime (e.g., NVIDIA Triton, TensorFlow Serving).
+
+Push containerized models to a container registry for deployment on RHEL.
+
+Use Podman or Docker on RHEL to deploy and serve the model locally.
+
+
+
+
+
+
+
+
+
+
+
+
+
+app info 
+
+
+
+
+
+
+
+== Live Testing
 
 
 
@@ -291,275 +384,3 @@ sudo podman run -it --rm -p 5000:5000 --privileged -e INFERENCE_SERVER_URL=${INF
 
 
 
-
-
-
-
-
-
-
-https://github.com/opendatahub-io/ai-edge
-
-
-
-
-
-
-
-
-
-
-
-
-2. Model Serving
-
-Overview
-
-OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
-
-Single-model serving (KServe): Designed for large models requiring dedicated resources.
-
-Multi-model serving (ModelMesh): Optimized for small and medium-sized models sharing resources.
-
-Usage with RHEL Inference
-
-Containerize models using OpenShift AI’s serving runtime (e.g., NVIDIA Triton, TensorFlow Serving).
-
-Push containerized models to a container registry for deployment on RHEL.
-
-Use Podman or Docker on RHEL to deploy and serve the model locally.
-
-3. Monitoring with TrustyAI
-
-Overview
-
-TrustyAI in OpenShift AI enables monitoring of machine learning models for fairness, bias, and drift. It integrates with OpenShift’s monitoring stack to provide insights into model behavior and performance.
-
-Usage with RHEL Inference
-
-Metrics Collection:
-
-Use Prometheus and Node Exporter on RHEL to collect system and inference metrics.
-
-Forward these metrics to OpenShift’s Prometheus instance.
-
-Bias and Drift Analysis:
-
-Send inference inputs and outputs from RHEL to OpenShift AI for analysis using TrustyAI.
-
-Leverage TrustyAI’s bias and drift metrics for ongoing model evaluation.
-
-
-
-
-
-
-
-
-
-
-ai-deploy-serving-type.png
-
-->  Multi-model serving platform
-
-
-
-
-
-
-
-
-
-https://docs.openvino.ai/2024/index.html
-
-
-
-
-
-
-
-https://ai-on-openshift.io/demos/yolov5-training-serving/yolov5-training-serving/#consuming-the-model-over-grpc
-
-
-
-
-test in openshift 
-
-
-
-https://github.com/rh-aiservices-bu/fraud-detection
-
-
-
-
-
-
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/serving_models/index#supported-model-serving-runtimes_serving-large-models
-
-
-
-
-
-
-Best Options for YOLO Model Serving
-
-    vLLM ServingRuntime for KServe:
-        Why? It supports PyTorch (.pt) and ONNX models and is optimized for single-model serving via REST.
-        Use this runtime for deploying YOLO models effectively, especially if you're using PyTorch models.
-
-    OpenVINO Model Server (Multi-Model):
-        Why? Ideal for ONNX models and optimized for inference on Intel hardware.
-        If you have exported the YOLO model to .onnx, this is an excellent choice for high-performance serving.
-
-    Caikit Standalone ServingRuntime for KServe:
-        Why? Suitable for single PyTorch models (.pt) served over REST.
-        If you want to stick with the native .pt format without conversion, this is a straightforward option.
-
-
-
-
-
-
-
-
-
-
-
-
-
-a "kind: InferenceService" object is created when deployed
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://github.com/opendatahub-io/caikit
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-curl https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2
-{"name":"OpenVINO Model Server","version":"2024.3.0"}
-
-
-
-
-(change model name to the one that you put in when deployed)
-curl https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2/models/hardhat/versions/1/ready
-
-
-
-
-
-
-curl https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2/models/hardhat
-{"name":"hardhat","versions":["1"],"platform":"OpenVINO","inputs":[{"name":"images","datatype":"FP32","shape":[1,3,640,640]}],"outputs":[{"name":"output0","datatype":"FP32","shape":[1,6,8400]}]}
-
-
-
-
-
-
-
-
-
-https://docs.openvino.ai/2024/openvino-workflow/model-server/ovms_docs_rest_api_kfs.html#inference-api
-
-
-
-https://hardhat-user99-ai.apps.cluster-r2h4p.r2h4p.sandbox3268.opentlc.com/v2/models/hardhat/versions/1/infer
-
-
-
-
-
-https://blog.openvino.ai/blog-posts/kserve-api
-
-
-
-
-
-
-app para probar: 
-
-CLI - explicar
-
-
-UI
-
-podman build -t quay.io/luisarizmendi/object-detection-batch-model-api:latest .
-
-podman run -it --rm -p 8800:8800 quay.io/luisarizmendi/object-detection-batch-model-api:latest
-
-
-
-
-
-
-
-
-
-
-
-
-https://developer.hpe.com/blog/production-ready-object-detection-model-training-workflow-with-hpe-machine-learning-development-environment/
