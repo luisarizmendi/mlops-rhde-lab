@@ -58,9 +58,9 @@ spec:
         - name: GITEA_BASE_URL
           value: "http://gitea:3000"
         - name: GITEA_ADMIN_USER
-          value: "gitea"
+          value: "opentlc-mgr"
         - name: GITEA_ADMIN_PASS
-          value: "R3dh4t1!"
+          value: "openshift"
         - name: USER_BASE_NAME
           value: "user"
         - name: USER_BASE_PASS
