@@ -167,13 +167,6 @@ The response will include details about any detections made, such as the class n
 
 
 
-
-
-
-
-
-
-
 === Building the Microservices
 
 [TIP]
@@ -294,109 +287,43 @@ Now you can use the `<image>:<shared tag>` to deploy the container seamlessly on
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 == Live Testing
 
-You are now ready 
+So far, you have completed the AI Specialist's tasks by creating the model and taken on some Application Development responsibilities by manually building the container images. Now, before handing over to the Platform Specialist for deploying the applications to the Edge devices, it's a good idea to perform a final test of the model you created. Let’s deploy all the components together and verify if everything works as expected.
 
+For this test, we will use your own laptop as the "Edge Device" and deploy the cloud-side applications in a temporary OpenShift project, which can easily be deleted after the testing is complete.
 
 
 
+=== Cloud-side Applications deployment
 
 
+[NOTE]
 
+Instructions below are using the provided pre-created container images, but you can use your own images if you created them in the previous step.
 
 
+[example]
+====
+Follow the steps below to create the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/backend[Dashboard backend] and https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/frontend[Dashboard frontend] applications in OpenShift:
 
+1. Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
 
+2. Deploy the backend using the following manifests (you can use the `+` icon on the top right corner of the OpenShift Console to paste them)
 
-image::ai-deploy-screenshot_video_stream.png[]
-
-
-
-
-
-
-
-
-image::ai-deploy-screenshot_dashboard_main.png[]
-
-
-
-
-
-image::ai-deploy-screenshot_dashboard_detail.png[]
-
-
-
-
-
-
-
-
-
-
-
-
-
-Find below the workflow that you will follow as Application Developer during the workshop (each of those will be a different "module").
-
-
-
-
-This represents a continuous cycle rather than a linear process, with several feedback loops driving ongoing improvement:
-
-    * From operations back to architecture design: Performance metrics and operational insights inform architectural decisions and improvements
-    * From operations to development: Production issues may require code changes or optimizations
-    * From testing back to development: Issues found during testing lead to code refinement
-    * From deployment experiences back to architecture: Real-world deployment challenges might necessitate architectural adjustments
-
-The feedback loops ensure continuous improvement and adaptation to changing requirements, performance needs, and operational realities. For successful application development, it's crucial to understand that you may need to revisit earlier phases as new information or challenges emerge.
-
-Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first module: xref:app-developer-01-arch.adoc[App Planning].
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*Create project
-
-
-
-
-*create backend
-
+[source,yaml,role=execute,subs="attributes"]
+----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -451,15 +378,13 @@ spec:
     name: object-detection-dashboard-backend
   port:
     targetPort: 5005
+----
 
 
 
+3. Create the frontend application. This time you cannot just copy-paste the manifests below since you will need to include in the Deployment manifest a value for the `BACKEND_API_BASE_URL` environment variable. You can get the Backend URL if you check it in the `Networking > Routes` menu in the OpenShift Consol (it will something like `http://object-detection-dashboard-backend-user99-test.apps.cluster-hkr2j.hkr2j.sandbox1307.opentlc.com`)
 
-
-*create fronend
-
-
-
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -489,7 +414,7 @@ spec:
         - containerPort: 3000
         env:
         - name: BACKEND_API_BASE_URL
-          value: http://object-detection-dashboard-backend-user99-test.apps.cluster-hkr2j.hkr2j.sandbox1307.opentlc.com
+          value: HERE-YOU-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
 ---
 apiVersion: v1
 kind: Service
@@ -519,6 +444,165 @@ spec:
     name: object-detection-dashboard-frontend
   port:
     targetPort: 3000
+---
+====
+
+
+
+=== Local machine applications
+
+You have deployed the Cloud-side applications, now use your own laptop to run the rest of the applications:
+
+[NOTE]
+
+Instructions for Fedora/RHEL based systems and using the interactive mode, so you can review live logs easily (you will need to use three different command line terminals).
+
+[example]
+====
+
+1. Deploy the Inference Server:
+
+[source,shell,role=execute,subs="attributes"]
+----
+podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inference-server:prod
+----
+
+[NOTE]
+
+If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by adding `--device nvidia.com/gpu=all --security-opt=label=disable`
+
+
+
+2. Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
+
+[source,shell,role=execute,subs="attributes"]
+----
+sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisarizmendi/object-detection-stream-manager:prod
+----
+
+
+3. Deploy the Actuator. It needs also to use the host network. Also you will need to include 
+
+
+[source,shell,role=execute,subs="attributes"]
+----
+podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
+----
+
+====
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==== The convinient but not-that-edgy test architecture
+
+
+
+
+
+[example]
+====
+
+
+
+
+
+
+
+====
+
+
+
+
+
+
+
+
+
+=== Testing workflow
+
+
+
+
+image::ai-deploy-screenshot_video_stream.png[]
+
+
+
+
+
+
+
+
+image::ai-deploy-screenshot_dashboard_main.png[]
+
+
+
+
+
+image::ai-deploy-screenshot_dashboard_detail.png[]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,12 +615,6 @@ spec:
 
 Deploy the action, inference and stream manager locally. 
 
-
-
-
-
-
-podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
 
 
 
