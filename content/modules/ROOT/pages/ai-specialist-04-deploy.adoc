@@ -1,82 +1,117 @@
 = Model Release
 
+The Model Release Phase is where a validated machine learning model is prepared for production use. It ensures seamless deployment, reproducibility, and scalability while maintaining accountability.
 
+Key aspects to take into account while AI Model releasing:
 
+* Versioning and Registry: The model is versioned and stored in a registry with metadata like training data, performance metrics, and hyperparameters. This step was already done by the Kubeflow Pipeline by publishing the model into the OpenShift AI Model Registry.
+* Packaging: The model and its dependencies are prepared for consistent execution by containerizing them or converting them into standardized formats like ONNX or TorchScript. During the workshop, we demonstrated how to "export" the model from its native PyTorch format into other formats. For instance, TorchScript is particularly well-suited for edge deployments due to its compact size and efficiency. However, for simplicity in this workshop, you will continue using the native PyTorch file format. This approach ensures flexibility while allowing you to explore the practical benefits of exporting models in production scenarios.
+* Validation: Additional tests, such as performance, integration, and scalability, are conducted in staging environments to ensure the model meets production requirements. In this workshop, we will perform a simple live test of the model to verify its functionality before proceeding with full deployment to edge devices.
+* Deployment: Techniques like blue-green or canary deployments are commonly used to ensure a smooth and reliable transition to production. While OpenShift AI offers Model Serving capabilities through `KServe` and `ModelMesh` for models within the same cluster, deploying inference on a different environment—such as a Single Node OpenShift cluster or directly on Red Hat Enterprise Linux—requires a separate workflow to handle model transfer and deployment. In this workshop, we demonstrate the use of a custom Inference Server to host the PyTorch model, tailored for deployment beyond the primary OpenShift AI cluster.
+* Monitoring: Metrics such as latency, resource usage, and data drift are continuously tracked to ensure the model's performance remains optimal. However, when deploying models at the Edge, the monitoring tools provided by OpenShift AI (e.g., TrustyAI, Grafana) cannot be used directly. Alternative monitoring strategies suited for Edge environments will be explored in detail in the next section.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In this section, we will explore how to deploy our model on a custom inference server and examine the overall application architecture, which is built on microservices. This architecture leverages the model's predictions to create a system that raises alarms when individuals are not wearing hardhats. Additionally, we will demonstrate how to conduct a quick live test of the trained model to ensure it functions as expected.
 
 
 == Serving
 
-
-
-
-
-
-
-
-
-
-2. Model Serving
-
-Overview
-
 OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
 
-Single-model serving (KServe): Designed for large models requiring dedicated resources.
+* Single-model serving (`KServe`): Designed for large models requiring dedicated resources.
 
-Multi-model serving (ModelMesh): Optimized for small and medium-sized models sharing resources.
+* Multi-model serving (`ModelMesh`): Optimized for small and medium-sized models sharing resources.
 
-Usage with RHEL Inference
+As mentioned, these options are not available for our use case since the deployment will occur at the Edge.
 
-Containerize models using OpenShift AI’s serving runtime (e.g., NVIDIA Triton, TensorFlow Serving).
-
-Push containerized models to a container registry for deployment on RHEL.
-
-Use Podman or Docker on RHEL to deploy and serve the model locally.
+When deploying on Red Hat Enterprise Linux, there are several options for Model Serving. However, to simplify things in this workshop, we have created a custom Python-based inference server.
 
 
+
+=== Overview of the solution
+
+
+
+Before diving into the deployment details, let’s first understand the overall solution architecture, including the microservices involved and how they communicate. In this architecture we use a webcam to detect objects at the edge, and how those detections can trigger messages/alarms that can be visualized in a dashboard on the Core Datacenter/Cloud.
+
+
+image::ai-deploy-object-detection-webcam.png[]
+
+The solution is based on the following microservices, you can clik on the names to get detailed information about each one.
+
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/README.md[Camera Stream Manager]
+
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-inference-server/README.md[Inference server]
+
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-action/README.md[Actuator service]
+
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/backend/README.md[Dashboard backend]
+
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/frontend/README.md[Dashboard frontend]
+
+
+The workflow is the following:
+
+1. The Camera Stream Manager sends images to the Inference API
+2. The Inference Server, that contains the AI model detecting objects, returns the predictions
+3. The "action" service calls the inference endpoint and if detects certain objects it will trigger an alarm, that is sent to the database hosted in a remote site.
+4. The information of the database is shown in the database
+
+
+
+Although application development is not covered in this workshop, it plays a fundamental role and can also be carried out on OpenShift. OpenShift provides several tools to support application development, such as:
+
+* *OpenShift Developer Hub*: This internal developer portal centralizes access to resources, templates, and documentation, accelerating the onboarding process and standardizing application development across teams. It ensures consistency and visibility into microservices and APIs.
+
+* *OpenShift Dev Spaces*: OpenShift Dev Spaces provides cloud-based development environments accessible directly from the browser. It offers pre-configured, containerized workspaces that mirror production, ensuring developers can write, test, and debug code in an environment that reflects the final deployment conditions.
+
+* *OpenShift Pipelines*: Built on Tekton, OpenShift Pipelines automates CI/CD workflows, enabling fast, consistent builds, tests, and deployments of containerized applications. This tool ensures rapid iteration and integration, reducing downtime and accelerating feature delivery.
+
+* *Quay Container Image Registry*: A secure container image registry stores and manages application images, ensuring that developers can reliably push, pull, and deploy containers to different environments. It supports versioning and helps enforce security and compliance policies.
+
+* *OpenShift GitOps*: Implements GitOps practices for application deployment and lifecycle management.
+
+
+All of these tools can be utilized throughout the application development lifecycle, which mirrors the MLOps cycle we are following in this workshop. Both cycles share common stages, such as:
+image::dev-workflow.png[]
+
+1. *App Planning*: Architecture Design: This foundational phase focuses on system design decisions, technology stack selection, and establishing the technical approach. It sets the blueprint for the entire application development lifecycle.
+
+2. *App Development*: This encompasses the core development activities:
+
+    * Code Development: Writing application code following established design patterns and best practices. This involves implementing features and functionality according to requirements.
+    * Testing: Comprehensive testing. This phase often requires iteration back to code development to address identified issues.
+
+3. *App Release*: Integration, Deployment: After successful testing, the application is prepared for production, involving integration with other systems and services, deployment through CI/CD pipelines,final verification in staging environments and production rollout
+
+4. *Day-2 Operations*: Monitoring, Tuning: Post-deployment activities focus on application performance monitoring, resource utilization optimization and performance tuning based on real world usage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+multiarch 
 
 
 
@@ -91,6 +126,33 @@ Use Podman or Docker on RHEL to deploy and serve the model locally.
 app info 
 
 
+appdev
+
+
+
+
+
+
+
+
+
+
+
+
+
+=== Custom Inference Server
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -103,6 +165,22 @@ app info
 
 
 
+image::ai-deploy-screenshot_video_stream.png[]
+
+
+
+
+
+
+
+
+image::ai-deploy-screenshot_dashboard_main.png[]
+
+
+
+
+
+image::ai-deploy-screenshot_dashboard_detail.png[]
 
 
 
@@ -112,22 +190,14 @@ app info
 
 
 
-== Workflow Overview
+
+
+
 
 Find below the workflow that you will follow as Application Developer during the workshop (each of those will be a different "module").
 
-image::dev-workflow.png[]
 
-1. *App Planning*: Architecture Design: This foundational phase focuses on system design decisions, technology stack selection, and establishing the technical approach. It sets the blueprint for the entire application development lifecycle.
 
-2. *App Development*: This encompasses the core development activities:
-
-    * Code Development: Writing application code following established design patterns and best practices. This involves implementing features and functionality according to requirements.
-    * Testing: Comprehensive testing. This phase often requires iteration back to code development to address identified issues.
-
-3. *App Release*: Integration, Deployment: After successful testing, the application is prepared for production, involving integration with other systems and services, deployment through CI/CD pipelines,final verification in staging environments and production rollout
-
-4. *Day-2 Operations*: Monitoring, Tuning: Post-deployment activities focus on application performance monitoring, resource utilization optimization and performance tuning based on real world usage
 
 This represents a continuous cycle rather than a linear process, with several feedback loops driving ongoing improvement:
 
@@ -143,32 +213,6 @@ Now that you understand your requirements, your task and the workflow that you s
 
 
 
-
-
-
-
-
-
-
-
-
-You have been chosen as the lead application developer for a critical safety initiative at ACME Your role is pivotal in building a suite of modern applications that will integrate cutting edge AI models developed by your colleagues to prevent accidents on the factory floor. As you step into this role, the challenge ahead is not just about coding, it’s about designing and deploying software that will safeguard lives and transform workplace safety.
-
-ACME is embracing a "modern application development" approach, signaling a shift towards technologies and architectures that enable greater scalability, flexibility, and resilience. This translates to creating containerized microservices that can be deployed and scaled across different environments, ensuring the applications evolve as fast as the company’s needs. By adopting this approach, you’ll accelerate development cycles, improve reliability, and pave the way for continuous innovation.
-
-Your mission is clear: develop the core applications that will bring the AI models to life. These applications will gather video feeds from webcams, analyze worker safety in real-time, and trigger alarms when hazards are detected. 
-
-* One application will collect and send images for inference - *Image Capture and Inference Application*
-
-* One application will handle predictions and trigger alerts for non-compliance - *Alarm Management Service*
-
-* One application will provide a web-based dashboard to monitor the system’s health and performance - *Dashboard and Monitoring Application*
-
-While the inference and alarm systems will operate on the Edge Device, the dashboard will reside in the Cloud on OpenShift, bridging the factory floor with centralized oversight.
-
-But this isn’t a solo endeavor. The project demands collaboration – you’ll work alongside data scientists, AI engineers, and operations specialists to ensure the entire solution integrates seamlessly. Development must align with broader goals like minimizing deployment times through CI/CD pipelines, ensuring the resilience of applications, and adhering to strict security protocols. Applications must be scalable, modular, and designed for longevity, reflecting the strategic goals of ACME’s software development group.
-
-As you begin this journey, your work will not only shape the future of ACME’s safety measures but also redefine how modern applications can drive transformative change in industrial environments.
 
 
 
