@@ -6,9 +6,11 @@
      python3 \
      python3-pip \
      gcc \
+     unzip \
      git \
      python3-devel \
      podman \
+     mesa-libGL \
      && dnf clean all \
      && python3 -m ensurepip --upgrade
      

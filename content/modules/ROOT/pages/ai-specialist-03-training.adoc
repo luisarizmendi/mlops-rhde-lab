@@ -38,6 +38,10 @@ We’ll use the following tools to train a YOLO model to detect hardhats:
 These tools are pre-configured at this point, allowing you to dive straight into pipeline development.
 
 
+[IMPORTANT]
+
+You must have a Pipeline Server defined to proceed. If this step was completed during the Elyra Pipelines setup, you're all set. However, if you skipped that part, you’ll need to follow the steps to create the Pipeline Server now before continuing.
+
 
 
 == Creating the Training Pipeline 
@@ -176,13 +180,18 @@ def yolo_training_pipeline(
         s3_endpoint=minio_endpoint,
         roboflow_workspace=roboflow_workspace,
         roboflow_project=roboflow_project,
-        roboflow_version=roboflow_version
+        roboflow_version=roboflow_version,
+        train_epochs=train_epochs,
+        train_batch_size=train_batch_size,
+        train_img_size=train_img_size
     ).after(upload_task)
 ----
 
 Besides the Pipeline definition, the  https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script] also contains the step (components) definitions.
 
 The first step is to download the Dataset. This task has a Persistent Volume attached where it will store the Dataset contents. It will use the Roboflow libraries and the provided input variables to download the files directly from Roboflow, as it was done during the Model Development section.
+
+An important aspect to highlight is that each step in the pipeline specifies the base container image to be used. In this case, the custom image `quay.io/luisarizmendi/pytorch-custom:latest` is utilized. This image https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/Containerfile[includes all the necessary dependencies], eliminating the need to download and install packages every time the task runs. Additionally, the task definitions include examples of how to install additional packages if needed. However, these package installations won't be executed in this setup, as all required packages are already pre-installed within the custom image, ensuring efficiency and consistency.
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -306,20 +315,9 @@ def train_model(
     )
 ----
 
+The training step also shares the Persistent Volume with the next step, as the trained model needs to be uploaded to Object Storage. Since each training iteration may result in a different name and file path, the training name is passed as an input variable. This allows dynamic calculation of the model paths and the performance result files.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+The trained model native PyTorch `.pt` is uploaded to the bucket specified by the input variable, stored in the `/model/pytorch` directory. If you have exported the model in alternative formats, such as `onnx` or `torchscript`, you can upload those files as well. However, it's important to consider that certain model serving solutions, like the Model Server, may require a specific directory structure. For instance, OpenVINO serving with the `onnx-1` format expects the directory structure to be `<version>/<model_name>.onnx`, while NVIDIA Triton for `torchscript` expects the format `<version>/model.pt`.
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -413,12 +411,9 @@ def upload_to_minio(
     )
 ----
 
+Once the model has been uploaded to Object Storage, the final step is to register the model in the Model Registry.
 
-
-
-
-
-
+The OpenShift AI Model Registry is a centralized repository for storing, managing, and tracking machine learning models throughout their lifecycle. It allows you to add rich metadata to each model's description, which can include performance metrics, hyperparameters, model version, and even the container image used for training. This metadata is invaluable for model versioning, auditing, and traceability, ensuring that all relevant information about the model's origin and performance is easily accessible and well-documented for future use.
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -436,7 +431,10 @@ def push_to_model_registry(
     s3_endpoint: str,
     roboflow_workspace: str,
     roboflow_project: str,
-    roboflow_version: int 
+    roboflow_version: int,
+    train_epochs: int,
+    train_batch_size: int,
+    train_img_size: int
 ):
     from model_registry import ModelRegistry
     import os
@@ -465,6 +463,9 @@ def push_to_model_registry(
         version_name = version
         metadata = {
             "Dataset": f"https://universe.roboflow.com/{roboflow_workspace}/{roboflow_project}/dataset/{str(roboflow_version)}",
+            "Epochs": str(train_epochs),
+            "Batch Size": str(train_batch_size),
+            "Image Size": str(train_img_size),
             "mAP50": str(metrics["mAP50"]),
             "mAP50-95": str(metrics["mAP50-95"]),
             "precision": str(metrics["precision"]),
@@ -489,54 +490,6 @@ def push_to_model_registry(
 
     _register_model(namespace, server_address, model_object_prefix, f"{model_object_prefix}-{version}")
 ----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-
-onnx path format needs a version
-
-
-
-
-
-
-
-
-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 === Importing the Training Pipeline 
@@ -611,16 +564,17 @@ It's time to run the imported Kubeflow Pipeline:
     * Access Key: "userpass:[<span id="gnumberVal"></span>]"
     * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
     * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
-    * Endpoint: {}
-    * PVC sufix: 
-    * Roboflow API 
+    * Endpoint: {minio-api}
+    * Model Registry Name: `object-detection-model-registry`
+    * PVC sufix: `-kubeflow-pvc`
+    * Roboflow API
     * Roboflow Project 
     * Roboflow Workspace 
     * Roboflow version 
     * Batch Size 
     * Ephoch number 
-    * Image Size 
-    * Training name (e.g. `hardhat-detection`)
+    * Image Size: `640`
+    * Training name (e.g. `hardhat`)
 ====
 
 image::ai-train-pipeline-run.png[]
@@ -632,7 +586,15 @@ In contrast to Elyra Pipelines, this Kubeflow Pipeline automatically creates and
 
 [TIP]
 
-Keep in mind that if you're short on time and can't wait for a full model training process, you can opt for the so-called 'Plan B' by using the reduced dataset you prepared during the Model Development section. However, note that models trained on this dataset won't be suitable for deployment, as they won't achieve accurate object detection. Instead, you'll need to use the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat[provided pre-trained model] during the Deployment section to ensure proper functionality.
+Keep in mind that if you're short on time and can't wait for a full model training process, you can opt for the so-called 'Plan B' by using the reduced dataset you prepared during the Model Development section and configuring only one epoch. However, note that models trained on this dataset won't be suitable for deployment, as they won't achieve accurate object detection. Instead, you'll need to use the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat[provided pre-trained model] during the Deployment section to ensure proper functionality.
+
+You can view the details of each task while it's running to monitor important information. Additionally, you can check the POD name generated for the task, which is useful for accessing real-time logs in the OpenShift Console (since the Logs tab in the OpenShift AI Pipeline view is only available once the task has completed). You can also track the inputs and outputs associated with each task, which will be displayed once the task finishes, providing insight into the data flow and results at each stage of execution.
+
+image::ai-train-pipeline-pod-task.png[]
+
+You can also open the OpenShift Console and check how the Persistent Volume was created and bounded into the PODs that are used to run the Pipeline tasks.
+
+After some time, the pipeline will finish.
 
 
 
@@ -644,29 +606,7 @@ Keep in mind that if you're short on time and can't wait for a full model traini
 
 
 
-
-
-
-
-
-
-
-
-
-
-se crea pod 
-yolo-training-pipeline-d6qhq-system-container-impl-4214525703
-
-
-pueden ver el pvc claim bond 
-
-
-
-
-
-explicar que se crea un objeto "Workflow" con el pipe run
-
-
+image::ai-train-pipeline-finish.png[]
 
 
 
