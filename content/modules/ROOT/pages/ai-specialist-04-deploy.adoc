@@ -26,6 +26,9 @@ As mentioned, these options are not available for our use case since the deploym
 When deploying on Red Hat Enterprise Linux, there are several options for Model Serving. However, to simplify things in this workshop, we have created a custom Python-based inference server.
 
 
+Although this part is more typically the responsibility of Application Developers rather than AI Specialists, for the purposes of this workshop we will briefly introduce the applications involved in the use case. Since the workshop doesn't cover the full application development lifecycle, this overview will help you understand how the AI model fits into the broader system.
+
+
 
 === Overview of the solution
 
@@ -36,17 +39,17 @@ Before diving into the deployment details, let’s first understand the overall 
 
 image::ai-deploy-object-detection-webcam.png[]
 
-The solution is based on the following microservices, you can clik on the names to get detailed information about each one.
+The solution is based on the following microservices, you can clik on the names to get detailed information about each one.c
 
-* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/README.md[Camera Stream Manager]
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager[Camera Stream Manager]
 
-* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-inference-server/README.md[Inference server]
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-inference-server[Inference server]
 
-* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-action/README.md[Actuator service]
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-action[Actuator service]
 
-* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/backend/README.md[Dashboard backend]
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/backend[Dashboard backend]
 
-* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/frontend/README.md[Dashboard frontend]
+* https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/frontend[Dashboard frontend]
 
 
 The workflow is the following:
@@ -85,13 +88,6 @@ image::dev-workflow.png[]
 3. *App Release*: Integration, Deployment: After successful testing, the application is prepared for production, involving integration with other systems and services, deployment through CI/CD pipelines,final verification in staging environments and production rollout
 
 4. *Day-2 Operations*: Monitoring, Tuning: Post-deployment activities focus on application performance monitoring, resource utilization optimization and performance tuning based on real world usage
-
-
-For this workshop, we will be building the container images locally instead of utilizing an automated CI/CD pipeline.
-
-[NOTE]
-
-A container image rebuild will be required during the xref:ai-specialist-05-update.adoc[Day-2 Operations] section.
 
 
 
@@ -174,18 +170,117 @@ source,shell,role=execute,subs="attributes"]
 ----
 
 
+
+
+
+
+
+
+
+
+=== Building the Microservices
+
+
+When planning to create a container image, it's essential to consider the system architecture of the device where the application will run. For deployments on Public Cloud or Core Data Centers, this is usually straightforward since the architecture will likely be x86_64. However, for Edge use cases, the situation is different.
+
+In our case, we will build x86 container images for the services that are running on the Cloud and container images for both x86_64 and ARM_64 architectures for the ones running at the Edge, leveraging the multi-architecture container image feature available in certain Container Image Registries like Quay.
+
+You can find the Containerfiles for each application in the `src` directory of each application's URL shared above, along with the application code and other associated files. Feel free to clone the repository and use these files for your own builds.
+
+[NOTE]
+
+The build process is closely tied to the architecture of the system you're using. If you build on an ARM-based system, the resulting container images will default to the ARM architecture unless you specifically perform cross-compilation (which we'll cover in more detail below). For this workshop, we will be using an x86-based system for the build process.
+
+
+For the applications running on the Cloud (x86 only) you just need to build the images in the normal way:
+
+source,shell,role=execute,subs="attributes"]
+----
+cd <application src directory>
+podman build -t <registry>/<namespace>/<container image name>:<tag> .
+podman login -u <user> <registry>
+podman push <registry>/<namespace>/<container image name>:<tag> 
+----
+
+
+
+
+
+
+
+
+
+[TIP]
+
+pre-create images
+
+
+
+
+
+
+make the images public 
+
+
+
+
+You can use that file to build the images in the following way:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+For this workshop, we will be building the container images locally instead of utilizing an automated CI/CD pipeline.
+
+[NOTE]
+
+A container image rebuild will be required during the xref:ai-specialist-05-update.adoc[Day-2 Operations] section.
+
+
+
+
+
+
+
+
+multiarch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 == Live Testing
 
+You are now ready 
 
 
 
-
-
-
-
-
-
-multiarch 
 
 
 
