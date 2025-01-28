@@ -181,6 +181,28 @@ source,shell,role=execute,subs="attributes"]
 === Building the Microservices
 
 
+
+
+
+[TIP]
+====
+If you don't want to create the images on your own you can use the following:
+
+
+* https://quay.io/repository/luisarizmendi/object-detection-stream-manager?tab=tags[Camera Stream Manager container image]: quay.io/luisarizmendi/object-detection-stream-manager:prod
+
+* https://quay.io/repository/luisarizmendi/object-detection-inference-server?tab=tags[Inference server container image]: quay.io/luisarizmendi/object-detection-inference-server:prod
+
+* https://quay.io/repository/luisarizmendi/object-detection-action?tab=tags[Actuator service container image]: quay.io/luisarizmendi/object-detection-action:prod
+
+* https://quay.io/repository/luisarizmendi/object-detection-dashboard-backend?tab=tags[Dashboard backend container image]: quay.io/luisarizmendi/object-detection-dashboard-backend:prod
+
+* https://quay.io/repository/luisarizmendi/object-detection-dashboard-frontend?tab=tags[Dashboard frontend container image]: quay.io/ luisarizmendi/object-detection-dashboard-frontend:prod
+
+
+
+====
+
 When planning to create a container image, it's essential to consider the system architecture of the device where the application will run. For deployments on Public Cloud or Core Data Centers, this is usually straightforward since the architecture will likely be x86_64. However, for Edge use cases, the situation is different.
 
 In our case, we will build x86 container images for the services that are running on the Cloud and container images for both x86_64 and ARM_64 architectures for the ones running at the Edge, leveraging the multi-architecture container image feature available in certain Container Image Registries like Quay.
@@ -190,7 +212,6 @@ You can find the Containerfiles for each application in the `src` directory of e
 [NOTE]
 
 The build process is closely tied to the architecture of the system you're using. If you build on an ARM-based system, the resulting container images will default to the ARM architecture unless you specifically perform cross-compilation (which we'll cover in more detail below). For this workshop, we will be using an x86-based system for the build process.
-
 
 For the applications running on the Cloud (x86 only) you just need to build the images in the normal way:
 
@@ -204,15 +225,6 @@ podman push <registry>/<namespace>/<container image name>:<tag>
 
 
 
-
-
-
-
-
-
-[TIP]
-
-pre-create images
 
 
 
