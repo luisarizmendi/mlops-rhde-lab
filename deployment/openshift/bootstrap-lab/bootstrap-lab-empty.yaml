@@ -112,6 +112,8 @@ spec:
                     exclude: true
                   - path: deployment/openshift/bootstrap-lab/manifests/nfd
                     exclude: true
+                  - path: deployment/openshift/bootstrap-lab/manifests/gitea-add
+                    exclude: true
             template:
               metadata:
                 name: '{{.path.basename}}'
