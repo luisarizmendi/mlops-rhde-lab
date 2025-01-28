@@ -17,6 +17,9 @@ spec:
           image: quay.io/luisarizmendi/object-detection-inference-server:prod
           ports:
             - containerPort: 8080
+          resources:
+            limits:
+              nvidia.com/gpu: 1 
 ---
 apiVersion: v1
 kind: Service
