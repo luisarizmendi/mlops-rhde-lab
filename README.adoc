@@ -38,8 +38,6 @@ To successfully implement this initiative, you need to assemble a cross-function
 
 * Data Scientist / ML Engineer: Responsible for building and fine-tuning the ML model.
 
-* DevOps Team: Develops the application, ensuring seamless deployment and updates.
-
 * IT/OT Platform Specialist: Assists in monitoring and automating the application. OT Specialist configure the Alarm Management System and ensures proper integration with existing plant operations.
 
 === The Path Forward
@@ -53,11 +51,9 @@ Now that you have the background, it's time to step into action. You will take o
 
 * AI Specialist / MLOps Engineer 
 
-* App Developer / DevOps Engineer
-
 * Platform Specialist / Site Reliability Engineer (SRE)
 
-Each role plays a critical part in delivering the overall solution. The AI Specialist crafts the intelligence behind the system, the App Developer ensures smooth user interaction and integration, and the Platform Specialist guarantees the application runs efficiently in a production environment.
+Each role plays a critical part in delivering the overall solution. The AI Specialist crafts the intelligence behind the system, and the Platform Specialist guarantees the application runs efficiently in a production environment (the App Developer is also important and ensures smooth user interaction and integration but it won't be part of this workshop).
 
 Start reviewing the xref:https://luisarizmendi.github.io/workshop-object-detection-rhde/modules/00-arch-intro.html[*Architecture*] and then choose your role... or try all of them if time allows!
 
