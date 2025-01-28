@@ -10,7 +10,8 @@
 * xref:ai-specialist-01-data.adoc[*1. Data Management*]
 * xref:ai-specialist-01-data.adoc#_collection[- Collection]
 * xref:ai-specialist-01-data.adoc#_preparation[- Preparation]
-* xref:ai-specialist-02-develop.adoc[2. Model Development]
+
+* xref:ai-specialist-02-develop.adoc[*2. Model Development*]
 * xref:ai-specialist-02-develop.adoc#_feature_engineering[- Feature Engineering]
 * xref:ai-specialist-02-develop.adoc#_developing[- Developing]
 
