@@ -2,56 +2,25 @@
 * -------------------------
 * `_AI Specialist_`
 * xref:ai-specialist-00-intro.adoc[0. AI Specialist Intro]
-* xref:ai-specialist-00-intro.adoc#_background[  * Background]
-* xref:ai-specialist-00-intro.adoc#_toolset[  * Toolset]
-* xref:ai-specialist-00-intro.adoc#_workflow_overview[  * Workflow Overview]
-* xref:ai-specialist-00-intro.adoc#_section_video_recording[  * Section Video Recording]
+* xref:ai-specialist-00-intro.adoc#_background[   * Background]
+* xref:ai-specialist-00-intro.adoc#_toolset[   * Toolset]
+* xref:ai-specialist-00-intro.adoc#_workflow_overview[   * Workflow Overview]
+* xref:ai-specialist-00-intro.adoc#_section_video_recording[   * Section Video Recording]
 * xref:ai-specialist-01-data.adoc[1. Data Management]
-
-
-** xref:ai-specialist-01-data.adoc#_collection[Collection]
-** xref:ai-specialist-01-data.adoc#_preparation[Preparation]
-
-
+* xref:ai-specialist-01-data.adoc#_collection[   * Collection]
+* xref:ai-specialist-01-data.adoc#_preparation[   * Preparation]
 * xref:ai-specialist-02-develop.adoc[2. Model Development]
-
-
-
-** xref:ai-specialist-02-develop.adoc#_feature_engineering[Feature Engineering]
-** xref:ai-specialist-02-develop.adoc#_developing[Developing]
-
-
-
-
+* xref:ai-specialist-02-develop.adoc#_feature_engineering[   * Feature Engineering]
+* xref:ai-specialist-02-develop.adoc#_developing[   * Developing]
 * xref:ai-specialist-03-training.adoc[3. Model Training]
-
-
-
-** xref:ai-specialist-03-training.adoc#_training_pipeline[Training Pipeline]
-
-
-
-
+* xref:ai-specialist-03-training.adoc#_training_pipeline[   * Training Pipeline]
 * xref:ai-specialist-04-deploy.adoc[4. Model Release]
-
-
-
-** xref:ai-specialist-04-deploy.adoc#_serving[Serving]
-** xref:ai-specialist-04-deploy.adoc#_live_testing[Live Testing]
-
-
-
-
-
+* xref:ai-specialist-04-deploy.adoc#_serving[   * Serving]
+* xref:ai-specialist-04-deploy.adoc#_live_testing[   * Live Testing]
 * xref:ai-specialist-05-update.adoc[5. Day-2 Operations]
-
-
-** xref:ai-specialist-05-update.adoc#_monitoring[Monitoring]
-** xref:ai-specialist-05-update.adoc#_dataset_update[Dataset Update]
-** xref:ai-specialist-05-update.adoc#_retrain[Retraining]
-
-
-
+* xref:ai-specialist-05-update.adoc#_monitoring[   * Monitoring]
+* xref:ai-specialist-05-update.adoc#_dataset_update[   * Dataset Update]
+* xref:ai-specialist-05-update.adoc#_retrain[   * Retraining]
 
 
 
