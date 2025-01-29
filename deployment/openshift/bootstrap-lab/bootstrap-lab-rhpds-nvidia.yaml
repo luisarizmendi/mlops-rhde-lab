@@ -86,7 +86,7 @@ spec:
           apiVersion: batch/v1
           kind: Job
           metadata:
-            name: bootstrap-lab-path
+            name: bootstrap-lab-ds-path
             namespace: openshift-gitops
           spec:
             template:
@@ -117,49 +117,6 @@ spec:
                 restartPolicy: Never
             backoffLimit: 1
           EOF
-          # Wait for the DataScienceCluster to be ready
-          until oc get pods -n redhat-ods-applications | grep 'odh-model-controller' | grep 'Running' | grep '1/1'; do
-            echo "Waiting for DataScienceCluster pod to be in Running state..."
-            sleep 10
-          done
-
-          oc apply -f - <<EOF
-          apiVersion: batch/v1
-          kind: Job
-          metadata:
-            name: bootstrap-lab-ds-path
-            namespace: openshift-gitops
-          spec:
-            template:
-              spec:
-                serviceAccountName: openshift-gitops-argocd-application-controller
-                containers:
-                - name: bootstrap-lab
-                  image: quay.io/openshift/origin-cli:latest  
-                  command: ["/bin/sh", "-c"]
-                  args:
-                  - |
-                    #
-                    ########################## DO IT WORK!!!!!!!!!!!!!!!!!!!!!!!!
-                    sleep 15
-
-
-                  securityContext:
-                    allowPrivilegeEscalation: false
-                    capabilities:
-                      drop:
-                        - "ALL"
-                    runAsNonRoot: true
-                    seccompProfile:
-                      type: RuntimeDefault
-                restartPolicy: Never
-            backoffLimit: 1
-          EOF
-
-
-
-
-
 
           oc apply -f - <<EOF
           apiVersion: batch/v1
