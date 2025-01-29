@@ -70,7 +70,7 @@ image::ai-train-code-terminal.png[]
 
 [source,shell,role=execute,subs="attributes"]
 ----
-git clone {gitea}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
+git clone http://{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 ----
 
 6. Set Up the Pipeline Script: Create a new file `hardhat-kubeflow-pipeline.py` in the cloned directory (right-click to create a file). Copy the example script from: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-hardhat-kubeflow-pipeline.py[hardhat-kubeflow-pipeline.py]. Save it and prepare for review.
