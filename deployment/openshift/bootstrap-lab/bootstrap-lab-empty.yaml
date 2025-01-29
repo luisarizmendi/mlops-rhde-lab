@@ -1,6 +1,6 @@
 
 #
-# Deploy in an empty OpenShift cluster or in the "Red Hat OpenShift Container Platform Cluster GITOPS" lab
+# Deploy in an empty OpenShift cluster or in the "Red Hat OpenShift Container Platform Cluster (AWS)" lab
 #
 ---
 kind: Project

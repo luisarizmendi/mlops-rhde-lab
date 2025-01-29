@@ -80,7 +80,16 @@ Next, we’ll review the script’s implementation to understand the pipeline’
 
 Let's review the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script]. 
 
-The script defines the pipeline structure, specifying the order in which pipeline components are executed. It also includes the input variable definitions and the Kubernetes resources allocated to each task. Similar to the Elyra pipeline, the steps are distinct, meaning that if variables or files are required from one step in another, they must be explicitly 'passed' between them. Kubeflow simplifies this process by offering tools to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/[manage data handling between tasks], allowing you to easily define input and output variables for seamless step-to-step communication. Additionally, Kubeflow provides straightforward mechanisms for creating and attaching Kubernetes Persistent Volumes, enabling file sharing between tasks. For instance, the dataset downloaded by the initial task can be stored on a volume and subsequently accessed by the training task without manual intervention.
+The script defines the pipeline structure, specifying the order in which pipeline components are executed. It also includes the input variable definitions and the Kubernetes resources allocated to each task. Similar to the Elyra pipeline, the steps are distinct, meaning that if variables or files are required from one step in another, they must be explicitly 'passed' between them. Kubeflow simplifies this process by offering tools to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/[manage data handling between tasks] (there is also a feature to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/artifacts/[pass ML artifacts] that is not used in this workshop), allowing you to easily define input and output variables for seamless step-to-step communication. Additionally, Kubeflow provides straightforward mechanisms for creating and attaching Kubernetes Persistent Volumes, enabling file sharing between tasks. For instance, the dataset downloaded by the initial task can be stored on a volume and subsequently accessed by the training task without manual intervention.
+
+[NOTE]
+
+The `train` step has an additional Persistent Volumen mounted to https://stackoverflow.com/questions/43373463/how-to-increase-shm-size-of-a-kubernetes-container-shm-size-equivalent-of-doc[extend the POD's Shared Memory]. This is needed when you run the inference using GPUs. Kubeflow v2 https://github.com/kubeflow/pipelines/pull/10913[already implemented the method to use `EmptyDir`] instead but the current version of the OpenShift AI pipelines does not have this path yet, so a Persistent Volume is used instead.
+
+
+
+
+
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -89,7 +98,7 @@ The script defines the pipeline structure, specifying the order in which pipelin
     name='YOLO Training Pipeline',
     description='Pipeline to download data, train YOLO model, and upload results to MinIO'
 )
-def yolo_training_pipeline(
+def yolo_training_pipeline_shm(
 
     roboflow_api_key: str,
     roboflow_workspace: str,
@@ -118,6 +127,12 @@ def yolo_training_pipeline(
         size=pvc_size,
         storage_class_name=pvc_storage_class,
     )
+    pvc_shm = kubernetes.CreatePVC(
+        pvc_name_suffix="shm",
+        access_modes=['ReadWriteOnce'],
+        size=pvc_size,
+        storage_class_name=pvc_storage_class,
+    )    
 
     # Download dataset
     download_task = download_dataset(
@@ -133,6 +148,7 @@ def yolo_training_pipeline(
         mount_path='/opt/app-root/src',
     )
 
+
     # Train model
     train_task = train_model(
         dataset_path=download_task.output,
@@ -141,11 +157,18 @@ def yolo_training_pipeline(
         img_size=train_img_size,
         name=train_name
     ).after(download_task)
+    train_task.set_memory_request('2Gi')
+    train_task.set_memory_limit('4Gi')
     train_task.set_caching_options(enable_caching=False)
     kubernetes.mount_pvc(
         train_task,
         pvc_name=pvc.outputs['name'],
         mount_path='/opt/app-root/src',
+    )
+    kubernetes.mount_pvc(
+        train_task,
+        pvc_name=pvc_shm.outputs['name'],
+        mount_path='/dev/shm',
     )
 
     # Upload results
@@ -164,10 +187,13 @@ def yolo_training_pipeline(
         mount_path='/opt/app-root/src',
     )
 
-    
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
     ).after(upload_task)
+    
+    delete_pvc_shm = kubernetes.DeletePVC(
+        pvc_name=pvc_shm.outputs['name']
+    ).after(train_task)
 
     
     # Push to model registry
@@ -185,6 +211,7 @@ def yolo_training_pipeline(
         train_batch_size=train_batch_size,
         train_img_size=train_img_size
     ).after(upload_task)
+
 ----
 
 Besides the Pipeline definition, the  https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script] also contains the step (components) definitions.
