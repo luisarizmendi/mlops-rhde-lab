@@ -274,20 +274,20 @@ You can create a "pseudo container image" called a manifest that references mult
 ====
 Let's create a multi-arch container image and push it into our registry.
 
-1. Create the manifest
+1- Create the manifest
 
 ----
 podman manifest create <registry>/<namespace>/<container image name>:<shared tag>
 ----
 
-2. Add the images that you created for both architectures 
+2- Add the images that you created for both architectures 
 
 ----
 podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<x86 tag>
 podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<arm tag>
 ----
 
-3. Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
+3- Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
 
 ----
 podman manifest push <registry>/<namespace>/<container image name>:<shared tag> 
@@ -463,6 +463,11 @@ spec:
 4- Go to Routes in the OpenShift Console and take note of the Backend and Frontend URLs
 ====
 
+You can now test the access to the dashboard navigating to the Dashboard Frontend URL.
+
+[CAUTION]
+
+The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
 
 
 === Local machine applications
