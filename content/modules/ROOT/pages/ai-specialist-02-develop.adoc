@@ -106,6 +106,13 @@ To get started, you will create a new, empty Jupyter Notebook using OpenShift AI
 
 1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
+[NOTE]
+====
+You need to select the `htpasswd_workshop` authenticaticator
+
+image::ai-build-authenticator.png[]
+====
+
 2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
 3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
