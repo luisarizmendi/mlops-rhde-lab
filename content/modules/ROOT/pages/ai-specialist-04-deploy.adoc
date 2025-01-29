@@ -4,11 +4,11 @@ The Model Release Phase is where a validated machine learning model is prepared 
 
 Key aspects to take into account while AI Model releasing:
 
-* Versioning and Registry: The model is versioned and stored in a registry with metadata like training data, performance metrics, and hyperparameters. This step was already done by the Kubeflow Pipeline by publishing the model into the OpenShift AI Model Registry.
+* *Versioning and Registry*: The model is versioned and stored in a registry with metadata like training data, performance metrics, and hyperparameters. This step was already done by the Kubeflow Pipeline by publishing the model into the OpenShift AI Model Registry.
 * Packaging: The model and its dependencies are prepared for consistent execution by containerizing them or converting them into standardized formats like ONNX or TorchScript. During the workshop, we demonstrated how to "export" the model from its native PyTorch format into other formats. For instance, TorchScript is particularly well-suited for edge deployments due to its compact size and efficiency. However, for simplicity in this workshop, you will continue using the native PyTorch file format. This approach ensures flexibility while allowing you to explore the practical benefits of exporting models in production scenarios.
-* Validation: Additional tests, such as performance, integration, and scalability, are conducted in staging environments to ensure the model meets production requirements. In this workshop, we will perform a simple live test of the model to verify its functionality before proceeding with full deployment to edge devices.
-* Deployment: Techniques like blue-green or canary deployments are commonly used to ensure a smooth and reliable transition to production. While OpenShift AI offers Model Serving capabilities through `KServe` and `ModelMesh` for models within the same cluster, deploying inference on a different environment—such as a Single Node OpenShift cluster or directly on Red Hat Enterprise Linux—requires a separate workflow to handle model transfer and deployment. In this workshop, we demonstrate the use of a custom Inference Server to host the PyTorch model, tailored for deployment beyond the primary OpenShift AI cluster.
-* Monitoring: Metrics such as latency, resource usage, and data drift are continuously tracked to ensure the model's performance remains optimal. However, when deploying models at the Edge, the monitoring tools provided by OpenShift AI (e.g., TrustyAI, Grafana) cannot be used directly. Alternative monitoring strategies suited for Edge environments will be explored in detail in the next section.
+* *Validation*: Additional tests, such as performance, integration, and scalability, are conducted in staging environments to ensure the model meets production requirements. In this workshop, we will perform a simple live test of the model to verify its functionality before proceeding with full deployment to edge devices.
+* *Deployment*: Techniques like blue-green or canary deployments are commonly used to ensure a smooth and reliable transition to production. While OpenShift AI offers Model Serving capabilities through `KServe` and `ModelMesh` for models within the same cluster, deploying inference on a different environment—such as a Single Node OpenShift cluster or directly on Red Hat Enterprise Linux—requires a separate workflow to handle model transfer and deployment. In this workshop, we demonstrate the use of a custom Inference Server to host the PyTorch model, tailored for deployment beyond the primary OpenShift AI cluster.
+* *Monitoring*: Metrics such as latency, resource usage, and data drift are continuously tracked to ensure the model's performance remains optimal. However, when deploying models at the Edge, the monitoring tools provided by OpenShift AI (e.g., TrustyAI, Grafana) cannot be used directly. Alternative monitoring strategies suited for Edge environments will be explored in detail in the next section.
 
 In this section, we will explore how to deploy our model on a custom inference server and examine the overall application architecture, which is built on microservices. This architecture leverages the model's predictions to create a system that raises alarms when individuals are not wearing hardhats. Additionally, we will demonstrate how to conduct a quick live test of the trained model to ensure it functions as expected.
 
@@ -21,7 +21,9 @@ OpenShift AI provides robust serving platforms to deploy models as inference end
 
 * Multi-model serving (`ModelMesh`): Optimized for small and medium-sized models sharing resources.
 
-As mentioned, these options are not available for our use case since the deployment will occur at the Edge.
+As mentioned, these options are not available for our use case since the deployment will occur at the Edge, remember that for our use case the MLOps workflow diagram is:
+
+image::ai-build-rhoai-features.png[]
 
 When deploying on Red Hat Enterprise Linux, there are several options for Model Serving. However, to simplify things in this workshop, we have created a custom Python-based inference server.
 
@@ -217,14 +219,14 @@ What is qemu-user-static? `qemu-user-static` is a versatile user-space emulator 
 ====
 Before building the ARM container images, follow these steps to set up qemu-user-static:
 
-1. Install the `qemu-user-static` package in your system 
+1- Install the `qemu-user-static` package in your system 
 
 [source,shell,role=execute,subs="attributes"]
 ----
 sudo dnf install podman qemu-user-static
 ----
 
-2. Run the `qemu-user-static` container  to enable multi-architecture support
+2- Run the `qemu-user-static` container  to enable multi-architecture support
 
 [source,shell,role=execute,subs="attributes"]
 ----
