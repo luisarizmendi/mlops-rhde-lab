@@ -65,6 +65,13 @@ This won't be a pure lineal workflow, you could find the need to step back to a 
 
 Now that you understand your requirements, your task and the workflow that you should follow, you can jump directly into the first module: xref:ai-specialist-01-data.adoc[Data Management].
 
+
+[IMPORTANT]
+
+Remember that  *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
+
+
+
 == Section Video Recording
 
 TBD
