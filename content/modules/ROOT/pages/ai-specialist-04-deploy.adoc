@@ -13,6 +13,16 @@ Key aspects to take into account while AI Model releasing:
 In this section, we will explore how to deploy our model on a custom inference server and examine the overall application architecture, which is built on microservices. This architecture leverages the model's predictions to create a system that raises alarms when individuals are not wearing hardhats. Additionally, we will demonstrate how to conduct a quick live test of the trained model to ensure it functions as expected.
 
 
+=== Tools and preparations
+
+In this step, you will build several container images locally. To do this, ensure you have either `docker` or `podman` installed on your laptop. Additionally, you will need access to a Container Image Registry to publish these images.
+
+[NOTE]
+
+The examples below use (https//quay.io)[Quay.io] as the Container Registry.
+
+
+
 == Serving
 
 OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
@@ -264,27 +274,27 @@ You can create a "pseudo container image" called a manifest that references mult
 ====
 Let's create a multi-arch container image and push it into our registry.
 
-1. Create the manifest
+1- Create the manifest
 
 ----
-podman manifest create <image>:<shared tag>
+podman manifest create <registry>/<namespace>/<container image name>:<shared tag>
 ----
 
-2. Add the images that you created for both architectures 
+2- Add the images that you created for both architectures 
 
 ----
-podman manifest add <image>:<shared tag> <image>:<x86 tag>
-podman manifest add <image>:<shared tag> <image>:<arm tag>
+podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<x86 tag>
+podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<arm tag>
 ----
 
-3. Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
+3- Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
 
 ----
-podman manifest push <image>:<shared tag> 
+podman manifest push <registry>/<namespace>/<container image name>:<shared tag> 
 ----
 ====
 
-Now you can use the `<image>:<shared tag>` to deploy the container seamlessly on both x86 and ARM systems, with the runtime automatically selecting the correct architecture-specific image.
+Now you can use the `<registry>/<namespace>/<container image name>:<shared tag>` to deploy the container seamlessly on both x86 and ARM systems, with the runtime automatically selecting the correct architecture-specific image.
 
 
 
@@ -453,6 +463,11 @@ spec:
 4- Go to Routes in the OpenShift Console and take note of the Backend and Frontend URLs
 ====
 
+You can now test the access to the dashboard navigating to the Dashboard Frontend URL.
+
+[CAUTION]
+
+The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
 
 
 === Local machine applications
@@ -475,11 +490,17 @@ podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inferenc
 
 [NOTE]
 
-If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by adding `--device nvidia.com/gpu=all --security-opt=label=disable`
+If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by running `podman run -it --rm -p 8080:8080 --device nvidia.com/gpu=all --security-opt=label=disable quay.io/luisarizmendi/object-detection-inference-server:prod`
 
 
+2- Now you can check that the GPU is being detected by checking the `healthz` endpoint, see an example below.
 
-2- Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
+----
+curl http://localhost:8080/healthz
+{"status":"healthy","gpu_available":true,"model_loaded":true,"model_name":"1","timestamp":"2025-01-28T22:34:31.102136"}
+----
+
+3- Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
 
 [source,shell,role=execute,subs="attributes"]
 ----
@@ -487,7 +508,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisar
 ----
 
 
-3- Deploy the Actuator. It needs also to use the host network. Also you will need to include the backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
+4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
 
 ----
 podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
