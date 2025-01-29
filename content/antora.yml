@@ -16,9 +16,12 @@ asciidoc:
     openshift-user-base: user
     openshift-password-base: redhat
     gitea-server: nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   # without http://
-    container-registry-gitea: http://192.168.1.100
+    container-registry-gitea: 192.168.1.100
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea
+    shared-nvidia-ip: 192.168.1.2
+    shared-nvidia-user: admin
+    shared-nvidia-pass: R3dh4t1!
     gateway-dns-dhcp-openwrt: http://192.168.1.1
     # Platform
     device-ip-base: 192.168.100.1

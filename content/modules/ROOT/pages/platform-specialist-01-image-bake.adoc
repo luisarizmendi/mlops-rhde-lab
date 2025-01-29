@@ -48,7 +48,11 @@ Since you don't know yet the IP address or the credentials to the Nvidia Device 
 
 We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the console or DisplayPort.
 
-You will find this container image on the local container registry (based on Gitea) here: {container-registry-gitea}
+You will find this container image on the local container registry (based on Gitea) here: {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
+
+#Make sure to pull the container image with `sudo` since the last step of building the bootc image requires `sudo` permissions.#
+
+Let's analyze the base image provided:
 
 [source,docker]
 ----
@@ -68,7 +72,7 @@ ARG USER_PASSWD
 RUN if [ -z "${USER_PASSWD}" ] ; then \
         echo USER_PASSWD is a mandatory build argument && exit 1 ; \
     fi
-RUN useradd -m -d /var/home/redhat -G wheel redhat && \
+RUN useradd -m -d /var/home/redhat && \
     usermod -G video redhat && \
     echo "redhat:${USER_PASSWD}" | chpasswd
 
@@ -93,16 +97,197 @@ EOF
 RUN systemctl enable microshift-make-rshared.service
 ----
 
-start from henry container
-copy containerfile
-describe most of the containerfile lines
-add customization (script to trigger issue creation with IP address on gitea)
-command to build new image
+In the Containerfile in order: 
+
+* we are basing image of RHEL 9.4
+* we are including Microshift as well, as we will be using it in the last part of this lab to deploy applications
+* we are creating a `redhat` user, and adding that user to the `video` group, since it will allow him to use GPU resources
+* we are afterwards opening the needed firewall ports
+* we are finally making root filesystem shared as required by OVN containers
+
+
+What we are going to add to the image is:
+
+. add administrative rights to the `redhat` user, change the user password and enable passwordless escalation
+. install and enable cockpit interface for remote graphical management
+. a script to notify you of the acquired IP address
+. a customization to also print the IP address on the console
+
+Since the first 2 points should be fairly easy to include, I'll leave them as exercise for the reader, but you can find them as snippets below.
+
+.Click to reveal it
+[%collapsible]
+====
+[source,docker]
+----
+...
+RUN usermod -aG wheel redhat
+RUN echo "redhat:R3dh4t1!" | chpasswd
+RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
+...
+RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socket
+...
+----
+====
+
+For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time.
+
+[source,docker]
+----
+RUN cat > /var/tmp/network-info.sh <<EOF
+#!/bin/bash
+sleep 5
+conn_name=\$(nmcli -t -f NAME con show | head -n 1)
+device_name=\$(nmcli -t -f GENERAL.DEVICES con show "\$conn_name" | head -n 1 | cut -d: -f2)
+IP_ADDRESS=\$(nmcli -t -f IP4.ADDRESS con show "\$conn_name" | head -n 1 | cut -d: -f2 | cut -d/ -f1)
+MAC_ADDRESS=\$(nmcli -g GENERAL.HWADDR device show "\$device_name" | tr -d '\\')
+MAC_ADDRESS_FORMAT=\$(echo "\$MAC_ADDRESS" | tr -d ':')
+
+
+if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] || [ -z "\$USER" ]; then
+    echo "One or more required variables are empty. Script failed."
+    exit 1
+fi
+
+
+JSON="{ \
+\"body\":\"\$IP_ADDRESS\", \
+\"title\": \"GROUP-NAME-CHANGE-ME\" \
+}"
+
+echo "\$JSON"
+
+/usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
+EOF
+
+RUN chmod +x  /var/tmp/network-info.sh
+
+RUN cat > /etc/systemd/system/network-info.service <<EOF
+[Unit]
+Description=Register Network Info onto Gitea
+After=network.target
+After=connect-wifi.service
+ConditionPathExists=!/var/tmp/net-info-registered
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'while true; do /var/tmp/network-info.sh && /usr/bin/touch /var/tmp/net-info-registered && break; done'
+
+[Install]
+WantedBy=default.target
+EOF
+
+RUN systemctl enable network-info.service
+----
+
+
+For the last point we are going to leverage the https://man7.org/linux/man-pages/man5/issue.5.html[issue] file in Linux, and add the following:
+
+[source,bash]
+----
+IP: \4
+----
+
+
+NOTE: To build this new image you are going to use the shared Nvidia Device available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Nvidia Device you have in front of you. 
+Username and password for the shared Nvidia Device are {shared-nvidia-user}:{shared-nvidia-pass}. 
+
+WARNING: Watch out for using your assigned Nvidia Device to try and build the next iteration of the Device Image! To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*). So for this and the following step you would need to use the shared Nvidia Device mentioned above.  
+
+You can find the complete Containerfile here:
+
+
+.Click to reveal it
+[%collapsible]
+====
+[source,docker]
+----
+FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
+
+RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socket
+
+# Modifying default user
+RUN usermod -aG wheel redhat
+RUN echo "redhat:R3dh4t1!" | chpasswd
+RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
+
+# Network info script
+RUN cat > /var/tmp/network-info.sh <<EOF
+#!/bin/bash
+sleep 5
+conn_name=\$(nmcli -t -f NAME con show | head -n 1)
+device_name=\$(nmcli -t -f GENERAL.DEVICES con show "\$conn_name" | head -n 1 | cut -d: -f2)
+IP_ADDRESS=\$(nmcli -t -f IP4.ADDRESS con show "\$conn_name" | head -n 1 | cut -d: -f2 | cut -d/ -f1)
+MAC_ADDRESS=\$(nmcli -g GENERAL.HWADDR device show "\$device_name" | tr -d '\\')
+MAC_ADDRESS_FORMAT=\$(echo "\$MAC_ADDRESS" | tr -d ':')
+
+
+if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] || [ -z "\$USER" ]; then
+    echo "One or more required variables are empty. Script failed."
+    exit 1
+fi
+
+
+JSON="{ \
+\"body\":\"\$IP_ADDRESS\", \
+\"title\": \"GROUP-NAME-CHANGE-ME\" \
+}"
+
+echo "\$JSON"
+
+/usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
+EOF
+
+RUN chmod +x  /var/tmp/network-info.sh
+
+RUN cat > /etc/systemd/system/network-info.service <<EOF
+[Unit]
+Description=Register Network Info onto Gitea
+After=network.target
+After=connect-wifi.service
+ConditionPathExists=!/var/tmp/net-info-registered
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'while true; do /var/tmp/network-info.sh && /usr/bin/touch /var/tmp/net-info-registered && break; done'
+
+[Install]
+WantedBy=default.target
+EOF
+
+RUN systemctl enable network-info.service
+
+# Priting IPv4 address on console
+RUN echo "IP: \4" >> /etc/issue
+
+# Mandatory firewall configuration
+RUN firewall-offline-cmd --zone=public --add-port=9090/tcp
+EXPOSE 9090
+----
+====
+
+Given the complete Containerfile, we are going to build a new container image and then push it to the central Gitea Container Registry.
+
+Make sure to create a new folder on the shared Nvidia Device with your group name and copy the created Containerfile there.  
+You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Container Registry):
+
+[source,bash]
+----
+$ sudo podman build -t {container-registry-gitea}/group-name-change-me/nvidia:0.0.2 .
+----
 
 
 == Image Deploy
+Now that you have built the "refreshed" container image we need to deploy it to your personal Nvidia Device sitting on your desk.
+
+For that we need to use the `bootc-image-builder` as highlighted https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems[here].  
+
+In our case we would be creating an ISO omage with an embedded Kickstart file (an example is found https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#using-bootc-image-builder-to-build-iso-images-with-a-kickstart-file_creating-bootc-compatible-base-disk-images-with-bootc-image-builder[here])
 command to create new iso file
 use usb drive and burn it
+TODO : disable autoupdate for bootc!
+
+
 
 == Image Rollout
 boot up nvidia with device
@@ -111,7 +296,8 @@ remote access
 
 .SOLUTION
 ====
-
+pointer to the image built already with script
+and iso generate uploaded to httpd
 ====
 
 
