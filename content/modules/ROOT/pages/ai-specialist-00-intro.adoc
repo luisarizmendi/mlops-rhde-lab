@@ -34,6 +34,7 @@ You will find later that each module of this workshop outlines details about our
 
 * *GitHub Source Code Repository*: Version control is critical for collaborative development. A Git repository will be used to manage the project codebase, track changes, and facilitate team collaboration.
 
+* *Quay.io*: A fully-managed hosted container image registry that offers both public and private repository options and automated lifecycle of your containerized artifacts, including advanced features such as replication or security scaning of images.
 
 == Workflow Overview
 

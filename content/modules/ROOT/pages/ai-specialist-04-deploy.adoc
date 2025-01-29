@@ -13,6 +13,16 @@ Key aspects to take into account while AI Model releasing:
 In this section, we will explore how to deploy our model on a custom inference server and examine the overall application architecture, which is built on microservices. This architecture leverages the model's predictions to create a system that raises alarms when individuals are not wearing hardhats. Additionally, we will demonstrate how to conduct a quick live test of the trained model to ensure it functions as expected.
 
 
+=== Tools and preparations
+
+In this step, you will build several container images locally. To do this, ensure you have either `docker` or `podman` installed on your laptop. Additionally, you will need access to a Container Image Registry to publish these images.
+
+[NOTE]
+
+The examples below use (https//quay.io)[Quay.io] as the Container Registry.
+
+
+
 == Serving
 
 OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
