@@ -122,7 +122,7 @@ image::ai-build-dataconnection.png[]
 ** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
 ** Container Size (`Small` is enough)
 ** Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage)
-** Object Storage Connection that you already configured. *
+** Object Storage Connection that you already configured. 
 ** Additionally, when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
@@ -207,7 +207,7 @@ If you have multiple versions of your dataset, make sure you are using the corre
 from roboflow import Roboflow
 
 rf = Roboflow(api_key="xxxxxxxxxxxxxxxxx")  # Replace with your API key
-project = rf.workspace("workspace").project("user-pass:[<span id="gnumberVal"></span>]-hardhat-detection") # Replace with your workspace and project names
+project = rf.workspace("workspace").project("user<span id="gnumberVal"></span>-hardhat-detection") # Replace with your workspace and project names
 
 version = project.version(1) # Replace with your version number
 dataset = version.download("yolov11")
@@ -217,9 +217,11 @@ This code downloads the Dataset, but you'll need to explicitly specify the paths
 
 This is done in the data.yaml file. Open that file so you can see the paths that you need to update by removing the dots and completing the path:
 
+----
 train: ../train/images
 val: ../valid/images
 test: ../test/images
+----
 
 You can reuse this code block to do it automatically if you don't want to open and update the file manually:
 
@@ -254,31 +256,31 @@ The list below is a subset of all the parameters that you can configure. You can
 
 *Training Settings*
 
-* Batch size (`batch`): The https://medium.com/geekculture/how-does-batch-size-impact-your-model-learning-2dd34d9fb1fa[batch size] is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are `16`, `32` or `64`. You can try higher values if your GPU allows it. Take into account that if you are running the training on your CPU and configure a batch size that your container instance size cannot manage,then the Workbench will launch an error while training the model and will ask if you want to restart it.
+* *Batch size* (`batch`): The https://medium.com/geekculture/how-does-batch-size-impact-your-model-learning-2dd34d9fb1fa[batch size] is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are `16`, `32` or `64`. You can try higher values if your GPU allows it. Take into account that if you are running the training on your CPU and configure a batch size that your container instance size cannot manage,then the Workbench will launch an error while training the model and will ask if you want to restart it.
 
-* Epochs (`epochs`): The https://medium.com/@saiwadotai/epoch-in-machine-learning-understanding-the-core-of-model-training-bfd64bbd5604[Epochs] are the number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: `50`, `100` (default), `300`. Start with `50` and increase if needed (or just configure `1` epoch if you are running the "Plan B").
+* *Epochs* (`epochs`): The https://medium.com/@saiwadotai/epoch-in-machine-learning-understanding-the-core-of-model-training-bfd64bbd5604[Epochs] are the number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: `50`, `100` (default), `300`. Start with `50` and increase if needed (or just configure `1` epoch if you are running the "Plan B").
 
-* Base YOLO Model (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements. In our project we will base our model in YOLOv11 so you will need to configure `yolo11m.pt`.
+* *Base YOLO Model* (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements. In our project we will base our model in YOLOv11 so you will need to configure `yolo11m.pt`.
 
-* Image Size (`imgsz`): The resolution of the images fed into the model during training. Higher resolutions improve accuracy but increase training time and memory usage. Typical values: `640` (default), `1280`. Start with `640` and increase if your system can handle larger images.
+* *Image Size* (`imgsz`): The resolution of the images fed into the model during training. Higher resolutions improve accuracy but increase training time and memory usage. Typical values: `640` (default), `1280`. Start with `640` and increase if your system can handle larger images.
 
-* Patience (`patience`): https://medium.com/@shouke.wei/optimizing-performance-unveiling-the-impact-of-patience-values-on-machine-learning-models-ef1ff3cbdee5 [Patience] is the number of epochs with no improvement in validation performance before the early stopping mechanism kicks in to stop training. This helps prevent overfitting by stopping training early. Typical value is `10` but try to increase the value if you hit the early stopping, to be sure that you are not preventing the training to make your model improve in later epochs.
+* *Patience* (`patience`): https://medium.com/@shouke.wei/optimizing-performance-unveiling-the-impact-of-patience-values-on-machine-learning-models-ef1ff3cbdee5[Patience] is the number of epochs with no improvement in validation performance before the early stopping mechanism kicks in to stop training. This helps prevent overfitting by stopping training early. Typical value is `10` but try to increase the value if you hit the early stopping, to be sure that you are not preventing the training to make your model improve in later epochs.
 
 
 
 *Optimization Parameters*
 
-* Optimized (`optimizer`): The algorithm used to minimize the loss function during training. Common optimizers include https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e[Adam] and https://mohitmishra786687.medium.com/stochastic-gradient-descent-a-basic-explanation-cbddc63f08e0[SGD (Stochastic Gradient Descent)] being Adam the default. You never know which one could be better so configure either `Adam` or `SGD` and check the results in each case.
+* *Optimized* (`optimizer`): The algorithm used to minimize the loss function during training. Common optimizers include https://medium.com/@weidagang/demystifying-the-adam-optimizer-in-machine-learning-4401d162cb9e[Adam] and https://mohitmishra786687.medium.com/stochastic-gradient-descent-a-basic-explanation-cbddc63f08e0[SGD (Stochastic Gradient Descent)] being Adam the default. You never know which one could be better so configure either `Adam` or `SGD` and check the results in each case.
 
-* Learning rate (`lr0` and `lrf`): The https://en.wikipedia.org/wiki/Learning_rate[learning rate] controls how quickly the model updates weights during trainicng. Adjusting the learning rate can significantly impact model performance and training time. A learning rate that is too high may cause the model to converge too quickly to a suboptimal solution or fail to converge, while a rate that is too low can slow down training and may result in underfitting. You have two values, the first one is `lr0`, the starting learning rate used at the beginning of the training process and that determines the size of the initial updates made to the model weights during gradient descent. The other value is `lrf`, the Learning Rate Final Multiplier, that is a multiplier that specifies the final learning rate as a fraction of `lr0`, the learning rate gradually decays from `lr0` to `lr0 * lrf` over the course of training. Typical values are `0.01` for both parameters. If the model takes too long to converge, consider increasing the learning rate. However, if you observe sudden fluctuations or jumps in performance, it may indicate the need to reduce the learning rate (ie. `lr0` = `0.001`) to facilitate smoother and more stable convergence.
+* *Learning rate* (`lr0` and `lrf`): The https://en.wikipedia.org/wiki/Learning_rate[learning rate] controls how quickly the model updates weights during trainicng. Adjusting the learning rate can significantly impact model performance and training time. A learning rate that is too high may cause the model to converge too quickly to a suboptimal solution or fail to converge, while a rate that is too low can slow down training and may result in underfitting. You have two values, the first one is `lr0`, the starting learning rate used at the beginning of the training process and that determines the size of the initial updates made to the model weights during gradient descent. The other value is `lrf`, the Learning Rate Final Multiplier, that is a multiplier that specifies the final learning rate as a fraction of `lr0`, the learning rate gradually decays from `lr0` to `lr0 * lrf` over the course of training. Typical values are `0.01` for both parameters. If the model takes too long to converge, consider increasing the learning rate. However, if you observe sudden fluctuations or jumps in performance, it may indicate the need to reduce the learning rate (ie. `lr0` = `0.001`) to facilitate smoother and more stable convergence.
 
-* Momentum (`momentum`): https://blog.dailydoseofds.com/p/an-intuitive-and-visual-demonstration[Momentum] is a method used in training models to make learning faster and smoother. Instead of just using the current error to update the model, it also remembers the direction it was going in before and if continues in the same directio the learning rate is increased. This helps the model move more steadily, avoid bouncing around too much, and speed up when progress is slow. Default value is `0.937`
+* *Momentum* (`momentum`): https://blog.dailydoseofds.com/p/an-intuitive-and-visual-demonstration[Momentum] is a method used in training models to make learning faster and smoother. Instead of just using the current error to update the model, it also remembers the direction it was going in before and if continues in the same directio the learning rate is increased. This helps the model move more steadily, avoid bouncing around too much, and speed up when progress is slow. Default value is `0.937`
 
-* Weight Decay (`weight_decay`): Also known as L2 regularization. https://medium.com/@sujathamudadla1213/weight-decay-in-deep-learning-8fb8b5dd825c[Weight Decay] is a technique that adds a penalty to the loss to prevent overfitting by discouraging large weights. The idea is to encourage the model to keep the weights small, which can lead to simpler, more general models that perform better on unseen data. The default value is `0.0005`.
+* *Weight Decay* (`weight_decay`): Also known as L2 regularization. https://medium.com/@sujathamudadla1213/weight-decay-in-deep-learning-8fb8b5dd825c[Weight Decay] is a technique that adds a penalty to the loss to prevent overfitting by discouraging large weights. The idea is to encourage the model to keep the weights small, which can lead to simpler, more general models that perform better on unseen data. The default value is `0.0005`.
 
-* Warmups (`warmup_epochs`, `warmup_bias_lr`, `warmup_momentum`): Warmups gradually increase the learning rate during the first few epochs to help the model stabilize before it starts learning aggressively. You have three hyperparameters: `warmup_epochs`, `warmup_bias_lr`, `warmup_momentum`. The `warmup_epochs` (default `0.8`) is the number of steps where the learning rate gradually increases, `warmup_bias_lr` (default `0.1`) controls the initial learning rate for bias parameters during warmup, and `warmup_momentum` (default `3.0`) sets the starting momentum value, all helping to stabilize the model's early training.
+* *Warmups* (`warmup_epochs`, `warmup_bias_lr`, `warmup_momentum`): Warmups gradually increase the learning rate during the first few epochs to help the model stabilize before it starts learning aggressively. You have three hyperparameters: `warmup_epochs`, `warmup_bias_lr`, `warmup_momentum`. The `warmup_epochs` (default `0.8`) is the number of steps where the learning rate gradually increases, `warmup_bias_lr` (default `0.1`) controls the initial learning rate for bias parameters during warmup, and `warmup_momentum` (default `3.0`) sets the starting momentum value, all helping to stabilize the model's early training.
 
-* Automatic Mixed Precision (`amp`): Deep Neural Network training has traditionally relied on IEEE single-precision format, however with https://developer.nvidia.com/automatic-mixed-precision[Automatic Mixed Precision], you can train with half precision while maintaining the network accuracy achieved with single precision. It's useful for saving memory and speeding up computations but sometimes its usage cause issues with certain GPUs. Defaults to `True`.
+* *Automatic Mixed Precision* (`amp`): Deep Neural Network training has traditionally relied on IEEE single-precision format, however with https://developer.nvidia.com/automatic-mixed-precision[Automatic Mixed Precision], you can train with half precision while maintaining the network accuracy achieved with single precision. It's useful for saving memory and speeding up computations but sometimes its usage cause issues with certain GPUs. Defaults to `True`.
 
 
 *Additional Model Configuration*
@@ -409,19 +411,19 @@ You can find an https://github.com/luisarizmendi/workshop-object-detection-rhde/
 
 Those graphs are automatically generated by the YOLO method from the `results.csv` and include:
 
-* Confusion Matrix and Confusion Matrix Normalized: A table that shows the true positives, false positives, false negatives, and true negatives for each class. The normalized version represents values as proportions, aiding in comparisons across classes with varying sample sizes.
+* *Confusion Matrix* and *Confusion Matrix Normalized*: A table that shows the true positives, false positives, false negatives, and true negatives for each class. The normalized version represents values as proportions, aiding in comparisons across classes with varying sample sizes.
 
-* F1 Curve: A graph plotting the F1 score (harmonic mean of precision and recall) against confidence thresholds, highlighting the balance between precision and recall across different thresholds.
+* *F1 Curve*: A graph plotting the F1 score (harmonic mean of precision and recall) against confidence thresholds, highlighting the balance between precision and recall across different thresholds.
 
-* P Curve (Precision Curve): A plot of precision (ratio of true positives to predicted positives) across varying confidence thresholds, indicating the model's ability to make accurate predictions.
+* *P Curve* (Precision Curve): A plot of precision (ratio of true positives to predicted positives) across varying confidence thresholds, indicating the model's ability to make accurate predictions.
 
-* R Curve (Recall Curve): A plot of recall (ratio of true positives to actual positives) across confidence thresholds, showing the model's ability to identify all instances of a class.
+* *R Curve* (Recall Curve): A plot of recall (ratio of true positives to actual positives) across confidence thresholds, showing the model's ability to identify all instances of a class.
 
-* PR Curve (Precision-Recall Curve): A graph that visualizes the trade-off between precision and recall at different thresholds, providing insights into the model's performance across confidence levels.
+* *PR Curve* (Precision-Recall Curve): A graph that visualizes the trade-off between precision and recall at different thresholds, providing insights into the model's performance across confidence levels.
 
-* Labels Correlogram and Stats: A heatmap illustrating the co-occurrence of labeled objects in the dataset, combined with statistical summaries of label distributions and relationships, helping identify biases or correlations in the training data.
+* *Labels Correlogram and Stats*: A heatmap illustrating the co-occurrence of labeled objects in the dataset, combined with statistical summaries of label distributions and relationships, helping identify biases or correlations in the training data.
 
-* Epoch Steps Summary Results: A summary of key metrics recorded at each training epoch, including others such as:
+* *Epoch Steps Summary Results*: A summary of key metrics recorded at each training epoch, including others such as:
 
     ** Train/Box Loss: The loss related to bounding box regression accuracy.
     ** Train/Cls Loss: The loss associated with classification errors.
@@ -467,23 +469,23 @@ podman run --device nvidia.com/gpu=all --security-opt=label=disable --privileged
 ----
 
 [NOTE]
-----
+====
 If you find the following error:
 Error: crun: cannot stat `/usr/lib64/libEGL_nvidia.so.565.57.01`: No such file or directory: OCI runtime attempted to invoke a command that was not found
 
 Be sure that you have ran `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`
-----
+====
 
 The application takes some time to start.
 
 [NOTE]
-----
+====
 It will be ready when you get this log in the terminal:
 
 Creating new Ultralytics Settings v0.0.6 file ✅ 
 View Ultralytics Settings with 'yolo settings' or at '/app/.config/Ultralytics/settings.json'
 Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
-----
+====
 
 Once it's up you can navigate to `http://localhost:8800/` and the select the file with the model and all the images where you want to test it (you can download the Dataset from Roboflow as explained in the xref:ai-specialist-01-data.adoc[Data Management] section and use the Test Set)
 

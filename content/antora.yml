@@ -9,29 +9,32 @@ asciidoc:
     lab_name: "Object detection with Red Hat Device Edge"
     release-version: master
     page-pagination: true
+    # Common
+    git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
+    openshift-console: https://console-openshift-console.apps.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    openshift-api: https://api.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:6443
+    openshift-user-base: user
+    openshift-password-base: redhat
+    gitea-server: nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   # without http://
+    container-registry-gitea: http://192.168.1.100
+    container-registry-gitea-user: gitea
+    container-registry-gitea-pass: gitea
+    gateway-dns-dhcp-openwrt: http://192.168.1.1
+    # Platform
     device-ip-base: 192.168.100.1
     device-username: admin
     device-password: secret
-    openshift-console: https://xxxxxxxxxxxxxxxxxxxxxxxxx
-    openshift-api: https://xxxxxxxxxxxxxxxxxxxxxxxxx:6443
-    openshift-user-base: user
-    openshift-password-base: redhat
     openshift-ai: https://UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUu
     flightctl-ui: https://yyyyyyyyyyyyyy
     flightctl-user-basename: flightctluser
     flightctl-password: secretflightctl
-    gitea-server: nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn   # No http://
+    registry-local-url: http://192.168.100.200/workshop/
+    # AI
     minio-ui: http://eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     minio-api: http://fffffffffffffffff
     minio-user-base: user
     minio-password-base: redhat
-    git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
     registry-url: https://quay.io/user/luisarizmendi/
-    registry-local-url: http://192.168.100.200/workshop/
-    gateway-dns-dhcp-openwrt: http://192.168.1.1
-    container-registry-gitea: http://192.168.1.100
-    container-registry-gitea-user: gitea
-    container-registry-gitea-pass: gitea
     page-links:
     - url: https://redhat.com
       text: Video - AI Specialist Video
