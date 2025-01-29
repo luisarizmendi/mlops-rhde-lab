@@ -1,7 +1,25 @@
 = Device Onboarding
 
-== Flight Control
-tour
+After deployment on Day 1, you as a Platform Specalist, are faced with the challenging task of scaling this to the 1000s of devices that you would like to onboard across the different factories. 
+
+This, as part of Day 2 Operations, is what would fall under Edge Management, to ensure that these distributed systems are operating efficiently, securely, and reliably. Some of the fuinctionalities expected by Edge Management involve overseeing the deployment, monitoring, and maintenance of Edge Devices, ensuring they are well-integrated with the overall network, and balancing resources to maximize performance and minimize latency.
+
+However there are several challenges that this kind of solution would need to overcome: 
+
+* the connection between the Edge Devices and the Central Management location might be intermittent, making pushing any configuration or change quite unreliable
+* in plenty of cases the Edge Device cannot be reached directly through SSH or other connection, since Firewalls at the Far Edge level are protecting from inbound connection
+* the Edge Management layer needs to be easy enough so that even non-IT specialist or non DevOps can use it to operate Devices at the Far Edge
+
+https://github.com/flightctl/flightctl/blob/main/docs/user/README.md[Flight Control] project was created with all of these objectives in mind.
+
+== Flight Control intro
+
+image::platform-flightctl-fleet.png[]
+
+image::platform-flightctl-device.png[]
+
+image::platform-flightctl-repo.png[]
+
 
 == Image Manage
 include agent 
@@ -11,3 +29,4 @@ update manually the device
 approval
 fleet management
 
+Move on to xref:platform-specialist-03-day-2-ops.adoc[Day 2 Operations]

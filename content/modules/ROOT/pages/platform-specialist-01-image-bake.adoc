@@ -423,5 +423,5 @@ pointer to the image built already with script
 ====
 
 
-Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding].
+Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding]
 
