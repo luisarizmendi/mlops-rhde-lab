@@ -277,24 +277,24 @@ Let's create a multi-arch container image and push it into our registry.
 1. Create the manifest
 
 ----
-podman manifest create <image>:<shared tag>
+podman manifest create <registry>/<namespace>/<container image name>:<shared tag>
 ----
 
 2. Add the images that you created for both architectures 
 
 ----
-podman manifest add <image>:<shared tag> <image>:<x86 tag>
-podman manifest add <image>:<shared tag> <image>:<arm tag>
+podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<x86 tag>
+podman manifest add <registry>/<namespace>/<container image name>:<shared tag> <registry>/<namespace>/<container image name>:<arm tag>
 ----
 
 3. Push the manifest. Pay attention that the command is `podman manifest push`, not just `podman push`
 
 ----
-podman manifest push <image>:<shared tag> 
+podman manifest push <registry>/<namespace>/<container image name>:<shared tag> 
 ----
 ====
 
-Now you can use the `<image>:<shared tag>` to deploy the container seamlessly on both x86 and ARM systems, with the runtime automatically selecting the correct architecture-specific image.
+Now you can use the `<registry>/<namespace>/<container image name>:<shared tag>` to deploy the container seamlessly on both x86 and ARM systems, with the runtime automatically selecting the correct architecture-specific image.
 
 
 
