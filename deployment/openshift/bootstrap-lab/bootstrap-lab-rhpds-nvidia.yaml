@@ -81,12 +81,12 @@ spec:
             echo "Waiting for DataScienceCluster pod to be in Running state..."
             sleep 10
           done
-
+          sleep 60
           oc apply -f - <<EOF
           apiVersion: batch/v1
           kind: Job
           metadata:
-            name: bootstrap-lab-ds-path
+            name: bootstrap-lab-ds-patch
             namespace: openshift-gitops
           spec:
             template:
@@ -102,18 +102,10 @@ spec:
                     oc patch datasciencecluster default-dsc --type='json' -p='[
                       {
                         "op": "replace",
-                        "path": "/spec/components/dashboard/managementState",
+                        "path": "/spec/components/modelregistry/managementState",
                         "value": "Managed"
                       }
                     ]'
-                  securityContext:
-                    allowPrivilegeEscalation: false
-                    capabilities:
-                      drop:
-                        - "ALL"
-                    runAsNonRoot: true
-                    seccompProfile:
-                      type: RuntimeDefault
                 restartPolicy: Never
             backoffLimit: 1
           EOF
@@ -122,7 +114,7 @@ spec:
           apiVersion: batch/v1
           kind: Job
           metadata:
-            name: bootstrap-lab-nfd-path
+            name: bootstrap-lab-nfd-patch
             namespace: openshift-gitops
           spec:
             template:
