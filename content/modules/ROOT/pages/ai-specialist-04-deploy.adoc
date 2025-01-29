@@ -493,8 +493,14 @@ podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inferenc
 If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by running `podman run -it --rm -p 8080:8080 --device nvidia.com/gpu=all --security-opt=label=disable quay.io/luisarizmendi/object-detection-inference-server:prod`
 
 
+2- Now you can check that the GPU is being detected by checking the `healthz` endpoint, see an example below.
 
-2- Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
+----
+curl http://localhost:8080/healthz
+{"status":"healthy","gpu_available":true,"model_loaded":true,"model_name":"1","timestamp":"2025-01-28T22:34:31.102136"}
+----
+
+3- Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
 
 [source,shell,role=execute,subs="attributes"]
 ----
@@ -502,7 +508,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisar
 ----
 
 
-3- Deploy the Actuator. It needs also to use the host network. Also you will need to include the backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
+4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
 
 ----
 podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
