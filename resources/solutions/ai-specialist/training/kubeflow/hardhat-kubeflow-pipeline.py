@@ -63,7 +63,8 @@ def train_model(
     import os
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+    print(f"Using device: {device}")
+    
     CONFIG = {
         'name': name,
         'model': 'yolo11m.pt',
@@ -321,6 +322,12 @@ def yolo_training_pipeline(
         size=pvc_size,
         storage_class_name=pvc_storage_class,
     )
+    pvc_shm = kubernetes.CreatePVC(
+        pvc_name_suffix="shm",
+        access_modes=['ReadWriteOnce'],
+        size=pvc_size,
+        storage_class_name=pvc_storage_class,
+    )    
 
     # Download dataset
     download_task = download_dataset(
@@ -336,6 +343,7 @@ def yolo_training_pipeline(
         mount_path='/opt/app-root/src',
     )
 
+
     # Train model
     train_task = train_model(
         dataset_path=download_task.output,
@@ -344,11 +352,18 @@ def yolo_training_pipeline(
         img_size=train_img_size,
         name=train_name
     ).after(download_task)
+    train_task.set_memory_request('2Gi')
+    train_task.set_memory_limit('4Gi')
     train_task.set_caching_options(enable_caching=False)
     kubernetes.mount_pvc(
         train_task,
         pvc_name=pvc.outputs['name'],
         mount_path='/opt/app-root/src',
+    )
+    kubernetes.mount_pvc(
+        train_task,
+        pvc_name=pvc_shm.outputs['name'],
+        mount_path='/dev/shm',
     )
 
     # Upload results
@@ -367,10 +382,13 @@ def yolo_training_pipeline(
         mount_path='/opt/app-root/src',
     )
 
-    
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
     ).after(upload_task)
+    
+    delete_pvc_shm = kubernetes.DeletePVC(
+        pvc_name=pvc_shm.outputs['name']
+    ).after(train_task)
 
     
     # Push to model registry

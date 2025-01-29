@@ -140,13 +140,10 @@ spec:
                   args:
                   - |
                     #
-                    oc patch datasciencecluster default-dsc --type='json' -p='[
-                      {
-                        "op": "replace",
-                        "path": "/spec/components/modelregistry/managementState",
-                        "value": "Removed"
-                      }
-                    ]'
+                    ########################## DO IT WORK!!!!!!!!!!!!!!!!!!!!!!!!
+                    sleep 15
+
+
                   securityContext:
                     allowPrivilegeEscalation: false
                     capabilities:
@@ -158,6 +155,11 @@ spec:
                 restartPolicy: Never
             backoffLimit: 1
           EOF
+
+
+
+
+
 
           oc apply -f - <<EOF
           apiVersion: batch/v1

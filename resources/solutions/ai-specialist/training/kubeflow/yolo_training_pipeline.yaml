@@ -80,8 +80,77 @@ components:
       parameters:
         name:
           parameterType: STRING
+  comp-createpvc-2:
+    executorLabel: exec-createpvc-2
+    inputDefinitions:
+      parameters:
+        access_modes:
+          description: 'AccessModes to request for the provisioned PVC. May
+
+            be one or more of ``''ReadWriteOnce''``, ``''ReadOnlyMany''``, ``''ReadWriteMany''``,
+            or
+
+            ``''ReadWriteOncePod''``. Corresponds to `PersistentVolumeClaim.spec.accessModes
+            <https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes>`_.'
+          parameterType: LIST
+        annotations:
+          description: Annotations for the PVC's metadata. Corresponds to `PersistentVolumeClaim.metadata.annotations
+            <https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaim>`_.
+          isOptional: true
+          parameterType: STRUCT
+        pvc_name:
+          description: 'Name of the PVC. Corresponds to `PersistentVolumeClaim.metadata.name
+            <https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaim>`_.
+            Only one of ``pvc_name`` and ``pvc_name_suffix`` can
+
+            be provided.'
+          isOptional: true
+          parameterType: STRING
+        pvc_name_suffix:
+          description: 'Prefix to use for a dynamically generated name, which
+
+            will take the form ``<argo-workflow-name>-<pvc_name_suffix>``. Only one
+
+            of ``pvc_name`` and ``pvc_name_suffix`` can be provided.'
+          isOptional: true
+          parameterType: STRING
+        size:
+          description: The size of storage requested by the PVC that will be provisioned.
+            For example, ``'5Gi'``. Corresponds to `PersistentVolumeClaim.spec.resources.requests.storage
+            <https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec>`_.
+          parameterType: STRING
+        storage_class_name:
+          defaultValue: ''
+          description: 'Name of StorageClass from which to provision the PV
+
+            to back the PVC. ``None`` indicates to use the cluster''s default
+
+            storage_class_name. Set to ``''''`` for a statically specified PVC.'
+          isOptional: true
+          parameterType: STRING
+        volume_name:
+          description: 'Pre-existing PersistentVolume that should back the
+
+            provisioned PersistentVolumeClaim. Used for statically
+
+            specified PV only. Corresponds to `PersistentVolumeClaim.spec.volumeName
+            <https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#PersistentVolumeClaimSpec>`_.'
+          isOptional: true
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        name:
+          parameterType: STRING
   comp-deletepvc:
     executorLabel: exec-deletepvc
+    inputDefinitions:
+      parameters:
+        pvc_name:
+          description: Name of the PVC to delete. Supports passing a runtime-generated
+            name, such as a name provided by ``kubernetes.CreatePvcOp().outputs['name']``.
+          parameterType: STRING
+  comp-deletepvc-2:
+    executorLabel: exec-deletepvc-2
     inputDefinitions:
       parameters:
         pvc_name:
@@ -191,7 +260,13 @@ deploymentSpec:
     exec-createpvc:
       container:
         image: argostub/createpvc
+    exec-createpvc-2:
+      container:
+        image: argostub/createpvc
     exec-deletepvc:
+      container:
+        image: argostub/deletepvc
+    exec-deletepvc-2:
       container:
         image: argostub/deletepvc
     exec-download-dataset:
@@ -328,19 +403,19 @@ deploymentSpec:
           yolo\",\n) -> NamedTuple('Outputs', [\n    ('train_dir', str),\n    ('test_dir',\
           \ str),\n    ('metrics', dict)\n]):\n    import torch\n    from ultralytics\
           \ import YOLO\n    import pandas as pd\n    import os\n\n    device = torch.device(\"\
-          cuda:0\" if torch.cuda.is_available() else \"cpu\")\n\n    CONFIG = {\n\
-          \        'name': name,\n        'model': 'yolo11m.pt',\n        'data':\
-          \ f\"{dataset_path}/data.yaml\",\n        'epochs': epochs,\n        'batch':\
-          \ batch_size,\n        'imgsz': img_size,\n        'device': device,\n \
-          \   }\n\n    # Configure PyTorch\n    os.environ[\"PYTORCH_CUDA_ALLOC_CONF\"\
-          ] = \"expandable_segments:True\"\n\n    # Initialize and train model\n \
-          \   model = YOLO(CONFIG['model'])\n    results_train = model.train(\n  \
-          \      name=CONFIG['name'],\n        data=CONFIG['data'],\n        epochs=CONFIG['epochs'],\n\
-          \        batch=CONFIG['batch'],\n        imgsz=CONFIG['imgsz'],\n      \
-          \  device=CONFIG['device'],\n    )\n\n    # Evaluate model\n    results_test\
-          \ = model.val(\n        data=CONFIG['data'],\n        split='test',\n  \
-          \      device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n    )\n\n\
-          \    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
+          cuda:0\" if torch.cuda.is_available() else \"cpu\")\n    print(f\"Using\
+          \ device: {device}\")\n\n    CONFIG = {\n        'name': name,\n       \
+          \ 'model': 'yolo11m.pt',\n        'data': f\"{dataset_path}/data.yaml\"\
+          ,\n        'epochs': epochs,\n        'batch': batch_size,\n        'imgsz':\
+          \ img_size,\n        'device': device,\n    }\n\n    # Configure PyTorch\n\
+          \    os.environ[\"PYTORCH_CUDA_ALLOC_CONF\"] = \"expandable_segments:True\"\
+          \n\n    # Initialize and train model\n    model = YOLO(CONFIG['model'])\n\
+          \    results_train = model.train(\n        name=CONFIG['name'],\n      \
+          \  data=CONFIG['data'],\n        epochs=CONFIG['epochs'],\n        batch=CONFIG['batch'],\n\
+          \        imgsz=CONFIG['imgsz'],\n        device=CONFIG['device'],\n    )\n\
+          \n    # Evaluate model\n    results_test = model.val(\n        data=CONFIG['data'],\n\
+          \        split='test',\n        device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n\
+          \    )\n\n    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
           \ \"results.csv\")\n    results_df = pd.read_csv(results_csv_path)\n\n \
           \   # Extract metrics\n    metrics = {\n        \"precision\": results_df[\"\
           metrics/precision(B)\"].iloc[-1],\n        \"recall\": results_df[\"metrics/recall(B)\"\
@@ -351,6 +426,11 @@ deploymentSpec:
           \  train_dir=str(results_train.save_dir),\n        test_dir=str(results_test.save_dir),\n\
           \        metrics=metrics\n    )\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest
+        resources:
+          memoryLimit: 4.294967296
+          memoryRequest: 2.147483648
+          resourceMemoryLimit: 4Gi
+          resourceMemoryRequest: 2Gi
     exec-upload-to-minio:
       container:
         args:
@@ -443,6 +523,26 @@ root:
               componentInputParameter: pvc_storage_class
         taskInfo:
           name: createpvc
+      createpvc-2:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-createpvc-2
+        inputs:
+          parameters:
+            access_modes:
+              runtimeValue:
+                constant:
+                - ReadWriteOnce
+            pvc_name_suffix:
+              runtimeValue:
+                constant: shm
+            size:
+              componentInputParameter: pvc_size
+            storage_class_name:
+              componentInputParameter: pvc_storage_class
+        taskInfo:
+          name: createpvc-2
       deletepvc:
         cachingOptions:
           enableCache: true
@@ -459,6 +559,22 @@ root:
                 producerTask: createpvc
         taskInfo:
           name: deletepvc
+      deletepvc-2:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-deletepvc-2
+        dependentTasks:
+        - createpvc-2
+        - train-model
+        inputs:
+          parameters:
+            pvc_name:
+              taskOutputParameter:
+                outputParameterKey: name
+                producerTask: createpvc-2
+        taskInfo:
+          name: deletepvc-2
       download-dataset:
         cachingOptions: {}
         componentRef:
@@ -524,6 +640,7 @@ root:
           name: comp-train-model
         dependentTasks:
         - createpvc
+        - createpvc-2
         - download-dataset
         inputs:
           parameters:
@@ -637,6 +754,10 @@ platforms:
             taskOutputParameter:
               outputParameterKey: name
               producerTask: createpvc
+          - mountPath: /dev/shm
+            taskOutputParameter:
+              outputParameterKey: name
+              producerTask: createpvc-2
         exec-upload-to-minio:
           pvcMount:
           - mountPath: /opt/app-root/src

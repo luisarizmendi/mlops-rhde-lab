@@ -1,28 +1,9 @@
- FROM registry.access.redhat.com/ubi9/python-39:latest AS base
+# Due tp issues I switch back to this base image although it contains more than requried (Jupyter)
+FROM quay.io/modh/odh-pytorch-notebook:v2-2024a-20250116-b42b86c
 
- USER root
- 
- RUN dnf install -y \
-     python3 \
-     python3-pip \
-     gcc \
-     unzip \
-     git \
-     python3-devel \
-     podman \
-     mesa-libGL \
-     && dnf clean all \
-     && python3 -m ensurepip --upgrade
-     
- RUN python3 -m pip install --upgrade pip
- 
- RUN python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+USER 0
 
- RUN INSTALL_PKGS="ultralytics roboflow minio" && \
-     pip install --no-cache-dir  $INSTALL_PKGS 
-
-WORKDIR /opt/app-root/src
+RUN INSTALL_PKGS="ultralytics roboflow minio podman" && \
+    pip install --no-cache-dir  $INSTALL_PKGS 
 
 USER 1001
-
-CMD ["/bin/bash"]

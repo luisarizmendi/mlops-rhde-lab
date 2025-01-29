@@ -4,13 +4,13 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
-    operators.coreos.com/nfd.openshift-nfd: ''
-  name: nfd
-  namespace: openshift-nfd
+    operators.coreos.com/gpu-operator-certified.nvidia-gpu-operator: ''
+  name: gpu-operator-certified
+  namespace: nvidia-gpu-operator
 spec:
-  channel: stable
+  channel: v24.6
   installPlanApproval: Automatic
-  name: nfd
-  source: redhat-operators
+  name: gpu-operator-certified
+  source: certified-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: nfd.4.16.0-202409032335
+  startingCSV: gpu-operator-certified.v24.6.1
