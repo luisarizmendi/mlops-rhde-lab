@@ -511,13 +511,13 @@ Stick to the Edge Computing setup, accepting slower frame detection. While not i
 
 Leverage an OpenShift Cluster with GPUs (if available through this workshop). This allows you to deploy the Inference Server in the Cloud instead of your local machine for testing.
 
-While the second option provides faster inferencing, it is not a true Edge Computing architecture. *Sending images from the edge to the Cloud introduces network delays and additional costs*, two key drawbacks that edge computing is designed to mitigate. However, for a quick test, it offers a practical way to achieve high-speed inferencing.
+While the second option provides faster inferencing, it is not a true Edge Computing architecture. [.underline]*Sending images from the edge to the Cloud introduces network delays and additional costs*, two key drawbacks that edge computing is designed to mitigate. However, for a quick test, it offers a practical way to achieve high-speed inferencing.
 
 [NOTE]
 
 This deployment is also useful for comparing Edge vs. Non-Edge setups. You can test with or without a GPU in both environments to evaluate user experience, delays, and performance trade-offs.
 
-Now, let’s examine the *non-edge architecture* we’ll set up for testing. As you can see, the difference comparing it with the "pure" edge deployment is where the Inference Server is located.
+Now, let’s examine the [.underline]*non-edge architecture* we’ll set up for testing. As you can see, the difference comparing it with the "pure" edge deployment is where the Inference Server is located.
 
 
 image::ai-deploy-noy-edge-arch.png[]
