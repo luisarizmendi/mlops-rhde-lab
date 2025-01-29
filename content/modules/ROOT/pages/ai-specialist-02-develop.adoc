@@ -34,11 +34,11 @@ image::ai-build-rhoai-features.png[]
 
 In this section Model Building we will be using Data Science Projects and Jupyter Notebooks. OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
 
-No real addaptation for these componentes are needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Release] section).
+No real addaptation for these componentes are needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Serving] section).
 
 [NOTE]
 
-In the next section xref:ai-specialist-03-deploy.adoc[Model Release] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
+In the next section xref:ai-specialist-03-deploy.adoc[Model Serving] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
 
 [NOTE]
 

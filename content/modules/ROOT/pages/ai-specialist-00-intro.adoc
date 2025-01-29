@@ -52,7 +52,7 @@ image::ai-workflow.png[]
     * Model Training Pipeline: The model is trained using the engineered features and developed algorithms, refining the weights and parameters based on the data.
     * Model Validation: The trained model is evaluated to ensure accuracy and robustness. If necessary, adjustments are made by looping back to the model development phase.
 
-4. *Model Release*: Model Serving Pipeline: After successful validation, the model is packaged and deployed into production environments, ready to handle stream or batch predictions.
+4. *Model Serving*: Model Serving Pipeline, after successful validation, the model is packaged and deployed into production environments, ready to handle stream or batch predictions.
 
 5. *Day-2 Operations*: Monitoring and Validation: Post-deployment, the model's performance is continuously monitored. This step ensures that the model maintains accuracy and adapts to data drift or operational changes. Monitoring may lead to re-initiating data collection, feature engineering, or retraining cycles to refine the model.
 

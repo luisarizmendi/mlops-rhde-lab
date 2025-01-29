@@ -1,6 +1,6 @@
-= Model Release
+= Model Serving
 
-The Model Release Phase is where a validated machine learning model is prepared for production use. It ensures seamless deployment, reproducibility, and scalability while maintaining accountability.
+The Model Serving Phase is where a validated machine learning model is prepared for production use. It ensures seamless deployment, reproducibility, and scalability while maintaining accountability.
 
 Key aspects to take into account while AI Model releasing:
 

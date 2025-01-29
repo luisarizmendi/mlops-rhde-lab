@@ -18,7 +18,7 @@
 * xref:ai-specialist-03-training.adoc[*3. Model Training*]
 * xref:ai-specialist-03-training.adoc#_training_pipeline[- Training Pipeline]
 
-* xref:ai-specialist-04-deploy.adoc[*4. Model Release*]
+* xref:ai-specialist-04-deploy.adoc[*4. Model Serving*]
 * xref:ai-specialist-04-deploy.adoc#_serving[- Serving]
 * xref:ai-specialist-04-deploy.adoc#_live_testing[- Live Testing]
 
