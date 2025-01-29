@@ -54,7 +54,7 @@ Running Locally:
 
 * Webcam: Arducam 16MP Autofocus USB Camera.
 
-* Network Infrastructure: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+* Network Infrastructure: TBD
 
 * Local Server: OnLogic Helix 500 with XXXXXXXXXX cores, XXXXXXXXXXXX GB memory, and XXXXXXXXXXX disk capacity. The local server will run the following services:
     - Container Image Registry mirror (to save bandwidth).
@@ -75,7 +75,7 @@ Running in the Cloud:
 
 * APP Development Environment: OpenShift Dev Spaces + OpenShift Pipelines.
 
-* Edge Device Image Builder: ???????????????????????????????????????????????????????????????????????????
+* Edge Device Image Builder: TBD
 
 * Edge Device Manager: xref:https://github.com/flightctl/flightctl[Flight Control] running on top of OpenShift.
 
