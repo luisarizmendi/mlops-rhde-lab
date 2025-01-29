@@ -471,6 +471,7 @@ podman run --device nvidia.com/gpu=all --security-opt=label=disable --privileged
 [NOTE]
 ====
 If you find the following error:
+
 Error: crun: cannot stat `/usr/lib64/libEGL_nvidia.so.565.57.01`: No such file or directory: OCI runtime attempted to invoke a command that was not found
 
 Be sure that you have ran `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`
@@ -637,8 +638,8 @@ To add your custom image to the Jupyter Enviroment in order to use it with the E
 
 1. Open the Jupyter Notebook workbench.
 2. Navigate to "Runtime Images" by selecting the icon with squares in the left menu.
-3. Click the "+" button to add a new runtime image.
-4. Provide a name for the image, such as PyTorch Custom, add a tag like pytorch, and specify the image name (e.g., quay.io/luisarizmendi/pytorch-custom-notebook:latest).
+3. Click the `+` button to add a new runtime image.
+4. Provide a name for the image, such as PyTorch Custom, add a tag like pytorch, and specify the image name (e.g., `quay.io/luisarizmendi/pytorch-custom-notebook:latest`).
 5. Click Save.
 ====
 
@@ -850,5 +851,7 @@ You can now also push to the Git Source repository the files that you created:
 3. Include at the botton the Commit message.
 4. Press "Commit".
 5. Use the `Git` menu in the top bar to Push the changes into the remote repository.
+
+Finally, since you won't need it in further steps, it's a good idea that you stop the OpenShift AI Workbench that you have been using to save resources in the OpenShift cluster.
 
 Move on into xref:ai-specialist-03-training.adoc[Model Training].
