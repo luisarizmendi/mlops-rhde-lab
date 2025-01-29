@@ -533,7 +533,7 @@ Let's generate the Pipeline YAML file and push it into Gitea.
 ----
 pip install --upgrade pip
 pip install kfp[kubernetes]
-cd userpass:[<span id="gnumberVal"></span>]-ai
+cd user<span id="gnumberVal"></span>-ai
 python hardhat-kubeflow-pipeline.py
 ----
 
@@ -542,9 +542,9 @@ python hardhat-kubeflow-pipeline.py
 
 [source,shell,role=execute,subs="attributes"]
 ----
-git config --global user.email userpass:[<span id="gnumberVal"></span>]@acme.com
-git config --global user.name userpass:[<span id="gnumberVal"></span>]
-git remote set-url origin http://userpass:[<span id="gnumberVal"></span>]:redhatpass:[<span id="gnumberVal"></span>]@{gitea-server}/userpass:[<span id="gnumberVal"></span>]/userpass:[<span id="gnumberVal"></span>]-ai.git
+git config --global user.email user<span id="gnumberVal"></span>@acme.com
+git config --global user.name user<span id="gnumberVal"></span>
+git remote set-url origin http://user<span id="gnumberVal"></span>:redhat<span id="gnumberVal"></span>@{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 git add .
 git commit -m "kubeflow Pipeline"
 git push
