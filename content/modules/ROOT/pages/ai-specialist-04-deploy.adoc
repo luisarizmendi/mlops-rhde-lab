@@ -490,7 +490,7 @@ podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inferenc
 
 [NOTE]
 
-If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by adding `--device nvidia.com/gpu=all --security-opt=label=disable`
+If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by running `podman run -it --rm -p 8080:8080 --device nvidia.com/gpu=all --security-opt=label=disable quay.io/luisarizmendi/object-detection-inference-server:prod`
 
 
 
