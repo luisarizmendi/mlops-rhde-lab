@@ -74,36 +74,36 @@ From here, you're ready to start...
 
 == Collection
 
-Data collection is the foundational step in AI model development, encompassing the systematic gathering and organization of information that will be used to train and validate machine learning models. This process begins with identifying relevant data sources, which can include both primary data gathered directly through sensors, surveys, or experiments, and secondary data obtained from existing databases, APIs, or public datasets. The quality and scope of collected data directly influence the model's performance, making it crucial to establish robust collection methods and quality control measures from the outset.
+Data collection is the first step in AI model development, involving the systematic gathering and organization of data for training and validation. It starts by identifying relevant sources, including primary data from sensors, surveys, or experiments and secondary data from databases, APIs, or public datasets. The quality and scope of data directly impact model performance, making robust collection methods and quality control essential.
 
-In the context of AI development, data collection goes beyond mere gathering of information. It requires careful consideration of data relevance, accuracy, and representativeness to ensure the resulting model can effectively learn and generalize patterns. This involves implementing proper sampling strategies, maintaining consistency in data formats, and ensuring adequate coverage of all relevant scenarios the model might encounter. Additionally, organizations must navigate legal and ethical considerations, including privacy regulations, data ownership rights, and consent requirements.
+Beyond gathering information, data collection requires ensuring relevance, accuracy, and representativeness. This includes proper sampling, format consistency, and covering all relevant scenarios. Organizations must also address legal and ethical considerations like privacy, ownership, and consent.
 
-Successful data collection relies on a well-planned infrastructure that can handle the required data volume while maintaining data integrity. This includes establishing secure storage systems, implementing validation protocols, and ensuring proper documentation of data sources and collection methodologies. The collected data must be regularly monitored for quality and relevance, with mechanisms in place to identify and address any biases or gaps that could impact model performance. Through careful attention to these aspects, organizations can build a solid foundation for their AI development projects and maximize the likelihood of creating effective, reliable models.
+A well-planned infrastructure is key to handling data volume while maintaining integrity. Secure storage, validation protocols, and proper documentation are crucial. Continuous monitoring helps identify and correct biases or gaps that could affect model performance.
 
 In our case, you will focusing only in the data gathering more than in the data storage and access management, since we will be using the Roboflow tool that will help with those point in this specific case.
 
 We will be using the YOLO (You Only Look Once) object detection model. YOLO requires that the data that we use to be labeled to effectively train and identify objects within an image. This aligns with the principles of supervised learning, where the model learns from labeled datasets to predict outcomes accurately, contrast with the Unsupervised or Reinforcement learning:
 
-* Supervised Learning: Models are trained on labeled data (e.g., images with hardhat/no hardhat labels). This ensures the model can classify and detect objects correctly. This is our current use case.
+* *Supervised Learning*: Models are trained on labeled data (e.g., images with hardhat/no hardhat labels). This ensures the model can classify and detect objects correctly. This is our current use case.
 
-* Unsupervised Learning: Models work with unlabeled data, identifying patterns or clusters without predefined categories.
+* *Unsupervised Learning*: Models work with unlabeled data, identifying patterns or clusters without predefined categories.
 
-* Reinforcement Learning: The model learns through trial and error by receiving feedback based on its actions.
+* *Reinforcement Learning*: The model learns through trial and error by receiving feedback based on its actions.
 
 
 When collecting data you can perform a manual data gathering, by capturing new images/videos of the objects that you want to detect, but that's often only done when no suitable datasets are publicly available. While gathering raw data is essential, labeling data is often the most time-consuming part of the process. Annotating thousands of images manually can introduce bottlenecks and require significant human effort. Already created pre-labeled datasets streamline the model development process by providing ready-to-use data, allowing you to focus on model tuning and experimentation. That's why, when possible (not special data is needed), you should prioritize gathering data from datasets that are already annotated to accelerate the AI development lifecycle. 
 
 There are multiple ways to get pre-Labeled image datasets, for example:
 
-* Private Datasets: You can pay to be allowed to use certain private Datasets already created or you can hire a 3rd party to create your own specific Dataset
+* *Private Datasets*: You can pay to be allowed to use certain private Datasets already created or you can hire a 3rd party to create your own specific Dataset
 
-* Public Datasets: Many datasets are freely available for computer vision tasks. Examples include https://cocodataset.org/#home[COCO] (Common Objects in Context) or the https://storage.googleapis.com/openimages/web/index.html[Open Images Dataset].
+* *Public Datasets*: Many datasets are freely available for computer vision tasks. Examples include https://cocodataset.org/#home[COCO] (Common Objects in Context) or the https://storage.googleapis.com/openimages/web/index.html[Open Images Dataset].
 
-* Open Data Repositories: Platforms like https://www.kaggle.com/datasets[Kaggle], https://datasetsearch.research.google.com/[Google Dataset Search], and https://universe.roboflow.com/[https://universe.roboflow.com/[Roboflow Universe]] provide datasets contributed by the community.
+* *Open Data Repositories*: Platforms like https://www.kaggle.com/datasets[Kaggle], https://datasetsearch.research.google.com/[Google Dataset Search], and https://universe.roboflow.com/[Roboflow Universe]] provide datasets contributed by the community.
 
-* Synthetic Data: Using AI or simulation tools to generate artificial but realistic datasets. This approach is useful when real-world data is scarce or expensive to obtain.
+* *Synthetic Data*: Using AI or simulation tools to generate artificial but realistic datasets. This approach is useful when real-world data is scarce or expensive to obtain.
 
-In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[https://universe.roboflow.com/[Roboflow Universe]] using the already created account in Roboflow. We will use the Datasets that you find in https://universe.roboflow.com/[Roboflow Universe] to add images to your own "Project" in your https://roboflow.com/[Roboflow account].
+In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe]] using the already created account in Roboflow. We will use the Datasets that you find in https://universe.roboflow.com/[Roboflow Universe] to add images to your own "Project" in your https://roboflow.com/[Roboflow account].
 
 
 === Dataset Search 
@@ -121,7 +121,7 @@ For hardhat detection specifically, you'll want to focus on datasets with labels
 ====
 Now that you know what to look for, pick the source Datasets that you will be using in your project:
 
-1. Go to https://universe.roboflow.com/[https://universe.roboflow.com/[Roboflow Universe]] 
+1. Go to https://universe.roboflow.com/[Roboflow Universe]] 
 
 2. Select "*Object Detection*" in the `By Project Type` filter. This is required since other types of vision ai projects won't include required labeled data, for example the object classification does not include the location of the object.
  
@@ -202,15 +202,15 @@ Sometimes cloning the images with the required labels makes more sense than fork
 ====
 To clone a subset of images in a Dataset you have to:
 
-1. Navigate to the dataset's URL in https://universe.roboflow.com/[Roboflow Universe].
-2. Click the "Images" button.
-3. Use the Filter function to select your target Class (labels).
-4. Click the box right above the first image to select all images.
+1- Navigate to the dataset's URL in https://universe.roboflow.com/[Roboflow Universe].
+2- Click the "Images" button.
+3- Use the Filter function to select your target Class (labels).
+4- Click the box right above the first image to select all images.
 
 [NOTE]
 Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
 
-5. Check that all images are selected and then click "Clone <number> Selected Images" on the top right corner. Select the Workspace and the Project that you created before and click "Clone <number> Images"
+5- Check that all images are selected and then click "Clone <number> Selected Images" on the top right corner. Select the Workspace and the Project that you created before and click "Clone <number> Images"
 
 [NOTE]
 If the page does not respond or you find errors, try to clone images in batches of 900 images instead of performing a single clone with a high number of items.
@@ -256,19 +256,19 @@ Labeling assigns the necessary annotations to raw data, making it usable for sup
 
 Visual AI models can take various approaches depending on the objective:
 
-* Object Classification: Determines the type of object in an image but does not specify its location.
+* *Object Classification*: Determines the type of object in an image but does not specify its location.
 
-* Object Detection: Identifies and localizes objects within an image.
+* *Object Detectio*n: Identifies and localizes objects within an image.
 
-* Segmentation: Divides the image into segments, classifying each pixel into different object categories.
+* *Segmentation*: Divides the image into segments, classifying each pixel into different object categories.
 
-* Pose Estimation: Tracks and identifies the key points or joints of objects (typically used for human posture recognition).
+* *Pose Estimation*: Tracks and identifies the key points or joints of objects (typically used for human posture recognition).
 
-* Object Tracking: Follows objects across frames in a video, maintaining their identity over time. Useful for surveillance or autonomous driving.
+* *Object Tracking*: Follows objects across frames in a video, maintaining their identity over time. Useful for surveillance or autonomous driving.
 
-* Action Recognition: Classifies actions happening in videos by analyzing sequences of frames, widely used in video surveillance and human activity recognition.
+* *Action Recognition*: Classifies actions happening in videos by analyzing sequences of frames, widely used in video surveillance and human activity recognition.
 
-* Anomaly Detection: Identifies unusual patterns in visual data, often used for defect detection in manufacturing.
+* *Anomaly Detection*: Identifies unusual patterns in visual data, often used for defect detection in manufacturing.
 
 Object detection is our focus, as the goal is to identify workers wearing hardhats and detect their locations in the image. Unlike object classification, object detection requires detailed annotations that highlight the exact location of the object within the image. This involves:
 
@@ -279,7 +279,7 @@ Object detection is our focus, as the goal is to identify workers wearing hardha
 
 That means that in the case of object detection (our case), labels include both class names and spatial coordinates. Accurate labeling is crucial because mislabeled data can lead to poor model performance. 
 
-Data management tools, including Roboglow, usually provide a way to add and label images. We re-used images from other Datasets that are already labeled but you can re-lable some of them or just manually upload new images and perform the annotation on them.
+Data management tools, including Roboflow, usually provide a way to add and label images. We reused images from other Datasets that are already labeled but you can re-lable some of them or just manually upload new images and perform the annotation on them.
 
 If you upload new images manually, once the images are uploaded, Roboflow gives you three options to annotate (add labels) your images: Auto Label (Roboflow automation), Maunal Labeling and Roboflow Labeling (hire Roboflow people to label your images). In our case we will proceed with Manual Labeling.
 
@@ -366,9 +366,9 @@ Splitting data refers to dividing a dataset into separate subsets for training, 
 
 These are the most common splits:
 
-* Training Set: This subset is used to teach the model by iteratively adjusting parameters to minimize errors. It typically makes up 60-80% of the total dataset.
-* Validation Set: During training, this subset helps tune hyperparameters and monitor performance to avoid overfitting. It generally accounts for 10-20% of the dataset.
-* Test Set: Held out until the end, this subset provides an unbiased evaluation of the model's generalization to unseen data. It typically comprises 10-20% of the total dataset.
+* *Training Set*: This subset is used to teach the model by iteratively adjusting parameters to minimize errors. It typically makes up 60-80% of the total dataset.
+* *Validation Set*: During training, this subset helps tune hyperparameters and monitor performance to avoid overfitting. It generally accounts for 10-20% of the dataset.
+* *c*: Held out until the end, this subset provides an unbiased evaluation of the model's generalization to unseen data. It typically comprises 10-20% of the total dataset.
 
 [example]
 ====
@@ -448,7 +448,7 @@ You will get something similar to this:
 
 from roboflow import Roboflow
 rf = Roboflow(api_key="xxxxxxxxxxxxxxxxxxxxx")
-project = rf.workspace("workspace").project("user-pass:[<span id="gnumberVal"></span>]-hardhat-detection")
+project = rf.workspace("workspace").project("user-<span id="gnumberVal"></span>-hardhat-detection")
 version = project.version(1)
 dataset = version.download("yolov11")
 ----

@@ -8,7 +8,7 @@
 
 Congratulations! You are the newly appointed plant manager at ACME Co., a company specializing in plastic bottle manufacturing. However, your appointment comes at a turbulent time. In the past three months, the company has experienced three major accidents, resulting in serious injuries to machine operators. Two of these incidents occurred in the very plant you now oversee.
 
-Your primary mission is clear: improve efficiency and reduce production costs while ensuring that such accidents never happen again. The key to achieving this lies in identifying and mitigating manufacturing hazards. This initiative is not just about compliance—it’s about creating a safer, more productive workplace.
+Your primary mission is clear: improve efficiency and reduce production costs while ensuring that such accidents never happen again. The key to achieving this lies in identifying and mitigating manufacturing hazards. This initiative is not just about compliance, it’s about creating a safer, more productive workplace.
 
 === Why Hazard Identification Matters
 Identifying hazards in manufacturing is crucial for multiple reasons:
@@ -26,9 +26,9 @@ Identifying hazards in manufacturing is crucial for multiple reasons:
 * Strengthens Reputation: Demonstrating a commitment to safety enhances the company’s image, attracting top talent and fostering trust.
 
 === The Initiative: Leveraging Machine Learning for Accident Prevention
-To address these challenges, you propose a forward-thinking initiative to reduce and prevent accidents using Machine Learning (ML). The goal is to develop and deploy an ML model capable of detecting PPE (Personal Protective Equipment) in real-time, issuing alerts when workers approach machinery without proper equipment.
+To address these challenges, you propose a forward-thinking initiative to reduce and prevent accidents using Machine Learning (ML). The goal is to develop and deploy an ML model capable of detecting PPE (Personal Protective Equipment), issuing alerts when workers approach machinery without proper equipment.
 
-Why ML? Machine Learning offers unparalleled capabilities in analyzing large volumes of data, detecting patterns, and generating real-time insights, making it ideal for enhancing workplace safety.
+Why ML? Machine Learning offers unparalleled capabilities in analyzing large volumes of data, detecting patterns, and generating insights, making it ideal for enhancing workplace safety.
 
 === Available Resources
 Fortunately, much of the hardware required to kickstart this project is already available on-site:
