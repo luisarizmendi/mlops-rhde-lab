@@ -495,7 +495,7 @@ podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROU
 
 [NOTE]
 
-You will see logs directly in the console terminal. The Inference Server may already be displaying detection results, and if a `no-helmet` detection occurs, the "actuator" will trigger an alarm. Additionally, the Camera Stream Manager logs important details at startup, such as the selected webcam ID, providing useful insights for debugging and verification
+You will see logs directly in the console terminal. The Inference Server may already be displaying detection results, and if a `no_helmet` detection occurs, the "actuator" will trigger an alarm. Additionally, the Camera Stream Manager logs important details at startup, such as the selected webcam ID, providing useful insights for debugging and verification
 
 
 ==== The Convenient Yet Non-Edge Test Architecture
@@ -622,16 +622,16 @@ For this initial test, you will start without wearing a hardhat.
 Once all services are up and running, follow these steps to validate the system:
 
 
-1. Open `http://localhost:5000/video_stream`. You should see the camera feed displaying a `no-helmet` detection.
+1. Open `http://localhost:5000/video_stream`. You should see the camera feed displaying a `no_helmet` detection.
 
 
 image::ai-deploy-screenshot_video_stream.png[]
 
 
-2. Open the Dashboard URL. If the camera has already detected anything (`helmet` or `no-helmet`), you will see a device listed with your MAC address as the Device Name.
+2. Open the Dashboard URL. If the camera has already detected anything (`helmet` or `no_helmet`), you will see a device listed with your MAC address as the Device Name.
 
 
-3. Since the camera is detecting no-helmet, an alarm icon will appear next to your device name.
+3. Since the camera is detecting no_helmet, an alarm icon will appear next to your device name.
 
 image::ai-deploy-screenshot_dashboard_main.png[]
 
