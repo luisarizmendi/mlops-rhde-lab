@@ -604,7 +604,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged -e INFERENCE_SERVER_URL=${INF
 ----
 podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
 ----
-===
+====
 
 
 
