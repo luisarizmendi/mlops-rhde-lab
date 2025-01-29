@@ -144,7 +144,7 @@ MAC_ADDRESS=\$(nmcli -g GENERAL.HWADDR device show "\$device_name" | tr -d '\\')
 MAC_ADDRESS_FORMAT=\$(echo "\$MAC_ADDRESS" | tr -d ':')
 
 
-if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] || [ -z "\$USER" ]; then
+if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] ; then
     echo "One or more required variables are empty. Script failed."
     exit 1
 fi
@@ -222,7 +222,7 @@ MAC_ADDRESS=\$(nmcli -g GENERAL.HWADDR device show "\$device_name" | tr -d '\\')
 MAC_ADDRESS_FORMAT=\$(echo "\$MAC_ADDRESS" | tr -d ':')
 
 
-if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] || [ -z "\$USER" ]; then
+if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] ; then
     echo "One or more required variables are empty. Script failed."
     exit 1
 fi
@@ -276,141 +276,152 @@ You can now build the new Container image like this (assuming there is just one 
 $ sudo podman build -t {container-registry-gitea}/group-name-change-me/nvidia:0.0.2 .
 ----
 
+You can now create the new Organization inside Gitea to push the newly baked container image to. 
+
+You can find that functionality here:
+
+image::platform-image-mode-gitea.png[]
+
+
+Now we can push it to the Container Registry like this
+
+[source,bash]
+----
+$ sudo podman push <imageID> {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+----
+
 
 == Image Deploy
+
 Now that you have built the "refreshed" container image we need to deploy it to your personal Nvidia Device sitting on your desk.
 
 For that we need to use the `bootc-image-builder` as highlighted https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems[here].  
 
-In our case we would be creating an ISO omage with an embedded Kickstart file (an example is found https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#using-bootc-image-builder-to-build-iso-images-with-a-kickstart-file_creating-bootc-compatible-base-disk-images-with-bootc-image-builder[here])
-command to create new iso file
-use usb drive and burn it
-TODO : disable autoupdate for bootc!
+In our case we would be creating an ISO image with an embedded Kickstart file (an example is found https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#using-bootc-image-builder-to-build-iso-images-with-a-kickstart-file_creating-bootc-compatible-base-disk-images-with-bootc-image-builder[here]). 
 
+The Kickstart will be defined in a `TOML` file and injected at building time when using `bootc-image-builder`.
+
+Here we will define: 
+
+* the disk layout in terms of partitioning
+* any additional user
+* switching the `bootc` reference to the Container Registry, since the once installed from USB we would to need to point to a https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/managing-rhel-bootc-images#switching-the-container-image-reference_managing-rhel-bootc-images[centralized image location]
+* turning off automatic updates for bootc (since we are going to want to apply the update manually)
+
+This is the example TOML file
+
+[source,toml]
+----
+[customizations.installer.kickstart]
+contents = """
+lang en_US.UTF-8
+keyboard us
+timezone Europe/Rome
+network --bootproto=dhcp --onboot=true --activate
+
+user --name=admin --password=R3dh4t1! --plaintext --groups=wheel
+rootpw --lock
+
+zerombr
+clearpart --all --initlabel
+part /boot/efi --fstype=efi --size=200
+part /boot --fstype=xfs --asprimary --size=800
+part swap --fstype=swap --recommended
+part pv.01 --grow
+volgroup rhel pv.01
+logvol / --vgname=rhel --fstype=xfs --percent=70 --name=root
+
+reboot --eject
+
+%post
+#Switch bootc to shared registry upstream
+mkdir -p /etc/containers/registries.conf.d/
+cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
+[[registry]]
+location = "{container-registry-gitea}"
+insecure = true
+EOF
+bootc switch --mutate-in-place --transport registry {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+%end
+
+%post
+systemctl mask bootc-fetch-apply-updates.timer
+%end
+"""
+----
+
+Now we can go ahead and create the ISO image (make sure to save the above file as config.toml and create an output directory).
+
+TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure registry.
+
+[source,bash]
+----
+$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+----
+
+NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created with the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
 
 
 == Image Rollout
-boot up nvidia with device
-remote access
 
+You can now burn the ISO to a USB stick and boot your Nvidia Device up.
+
+[source,bash]
+----
+$ sudo dd if=output/bootiso/install.iso of=/dev/sda bs=4M status=progress oflag=sync
+----
+
+The automated installation will take approximately 10 minutes after which the Device will reboot and post the detected IP address on Gitea, inside the `inventories` repo, as an issue: 
+
+image::platform-image-mode-gitea-inventories.png[]
+
+You will now have access to the Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the local Nvidia Device.
+
+You can also verify that the Device is pointing to the Central Container Registry by running the following: 
+
+[source,bash]
+----
+$ sudo bootc status
+
+apiVersion: org.containers.bootc/v1alpha1
+kind: BootcHost
+metadata:
+  name: host
+spec:
+  image:
+    image: osbuild.lmf.openshift.es:5000/lmf/nvidia:0.0.2
+    transport: registry
+  bootOrder: default
+status:
+  staged: null
+  booted:
+    image:
+      image:
+        image: osbuild.lmf.openshift.es:5000/lmf/nvidia:0.0.2
+        transport: registry
+      version: 9.20241104.0
+      timestamp: null
+      imageDigest: sha256:baa44e2d93a6da1d79ac8b3db2181cd05ce7711cae9846015071c2e13ea44745
+    cachedUpdate: null
+    incompatible: false
+    pinned: false
+    store: ostreeContainer
+    ostree:
+      checksum: 6782da6b43ee72521a12f758dcde6ec3ec8c9fe31515583eb8b60a6d04c654a1
+      deploySerial: 0
+  rollback: null
+  rollbackQueued: false
+  type: bootcHost
+
+----
+
+NOTE: You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device.
 
 .SOLUTION
 ====
 pointer to the image built already with script
-and iso generate uploaded to httpd
 ====
 
 
 Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding].
 
-to build bootc image for nvidia platform which includes microshift started from image http://quay.io/hgeaydem/microshift-4.17-jetson-bootc:latest
-going to use the same nvidia platform to build the iso image
-
-BUILDING X86 IMAGE FOR TESTING
-build the container image like this (remember to authenticate to registry.redhat.io first!):
-$ sudo podman build -t localhost/rhel9-baseline:0.0.1 .
-push image to registry:
-$ sudo podman push localhost/rhel9-baseline:0.0.1 osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
-ISSUE : finally discovered that bootc doesn't support yet pulling from insecure registry: https://github.com/containers/bootc/issues/461
-trying with quay.io
-$ sudo podman push localhost/rhel9-baseline:0.0.1 quay.io/luferrar/rhel9-baseline:0.0.1
-build iso:
-$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
-
-turned off automatic updates:
-https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/managing-rhel-bootc-images#turning-off-automatic-updates_managing-rhel-bootc-images
-
-create the updated version with flightctl included
-
-build new image
-$ sudo podman build -t localhost/rhel9-baseline:0.0.1 -f Containerfile-agent
-
-push image to local registry
-$  sudo podman push localhost/rhel9-baseline:0.0.1 osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
-
-check that the device is pointing to local registry
-$ sudo bootc status
-
-check update available
-$ sudo bootc upgrade --check
-Update available for: docker://osbuild.lmf.openshift.es:7443/lucamaf/rhel9-baseline:0.0.1
-  Version: 9.20250109.0
-  Digest: sha256:77ff6ec1713ab776d691bb8cfe131543d76a4399c7cc0fd75f01821c1941a2b2
-Total new layers: 78    Size: 1.8 GB
-Removed layers:   0     Size: 0 bytes
-Added layers:     3     Size: 251.7 MB
-
-upgrade device
-$ bootc upgrade
-
-# TODO at the moment the agent doesn't seem to work out of the box, but after creating the folder /var/lib/flighctl it seems to start
-
-approve device in the GUI and add some labels
-
-create a fleet in the GUI
-
-to install bootc image builder follow this
-https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#installing-bootc-image-builder_creating-bootc-compatible-base-disk-images-with-bootc-image-builder
-
-to deregister a device delete agent key in /var/lib/flightctl/certs
-
-## NVIDIA
-build an iso image with kickstart file embedded
-https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#using-bootc-image-builder-to-build-iso-images-with-a-kickstart-file_creating-bootc-compatible-base-disk-images-with-bootc-image-builder
-$ sudo podman run     --rm     -it     --privileged     --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso     --config /config.toml   quay.io/hgeaydem/microshift-4.17-jetson-bootc
-
-copy iso to usb using dd
-$ sudo dd if=output/bootiso/install.iso of=/dev/sda bs=4M status=progress oflag=sync
-
-booted and added openshift-pull-secret to /etc/crio on the device
-
-create a new version of the image with a system service to copy kubeconfig in the admin home directory
-how to switch from local ostree repo to registry:
-
-
-LAB PREPARATION:
-installed gitea as container registry with the following playbook and inventory
-check the playbook and default conf file from nginx for configuration (add gitea as address in etc hosts file)
-IDEA can pushg issue to gitea registry at boot time with hostname and ip address
-
-HW:  add neofetch to the containerfile to display Ip address as MOTD
-configure neofetch like this: https://github.com/dylanaraps/neofetch/wiki/Getting-Started
-
-add flighctl agent following this:
-https://github.com/flightctl/flightctl/blob/main/docs/user/getting-started.md#building-a-bootable-container-image-including-the-flight-control-agent
-
-command to be executed:
-
-Retrieve the agent configuration with enrollment credentials by running:
-
-$ flightctl certificate request --signer=enrollment --expiration=365d --output=embedded > config.yaml
-
-The returned config.yaml should look similar to this:
-
-$ cat config.yaml
-enrollment-service:
-  service:
-    server: https://agent-api.flightctl.127.0.0.1.nip.io:7443
-    certificate-authority-data: LS0tLS1CRUdJTiBD...
-  authentication:
-    client-certificate-data: LS0tLS1CRUdJTiBD...
-    client-key-data: LS0tLS1CRUdJTiBF...
-  enrollment-ui-endpoint: https://ui.flightctl.127.0.0.1.nip.io:8081
-
-Create a Containerfile with the following content:
-
-$ cat Containerfile
-
-FROM quay.io/centos-bootc/centos-bootc:stream9
-
-RUN dnf -y copr enable @redhat-et/flightctl-dev centos-stream-9-x86_64 && \
-    dnf -y install flightctl-agent; \
-    dnf -y clean all; \
-    systemctl enable flightctl-agent.service
-
-# Optional: to enable podman-compose application support uncomment below”
-# RUN dnf -y install epel-release epel-next-release && \
-#    dnf -y install podman-compose && \
-#    systemctl enable podman.service
-
-ADD agentconfig.yaml /etc/flightctl/config.yaml
