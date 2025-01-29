@@ -41,7 +41,7 @@ Find below the workflow that you will follow as AI specialist during the worksho
 
 image::ai-workflow.png[]
 
-1. *Data Management*: Data Collection and Cleaning: This is the foundational step where raw data is gathered, cleaned, and pre-processed to ensure quality and consistency. It serves as the input for downstream processes.
+1. *Data Management*: Data Collection and Cleaning, this is the foundational step where raw data is gathered, cleaned, and pre-processed to ensure quality and consistency. It serves as the input for downstream processes.
 
 2. *Model Development*: Which includes the following steps:
 
