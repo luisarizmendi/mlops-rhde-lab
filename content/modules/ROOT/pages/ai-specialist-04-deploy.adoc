@@ -631,7 +631,7 @@ Once all services are up and running, follow these steps to validate the system:
 image::ai-deploy-screenshot_video_stream.png[]
 
 
-2- Open the Dashboard URL. If the camera has already detected anything (`helmet` or `no_helmet`), you will see a device listed with your MAC address as the Device Name.
+2- Open the Dashboard Frontend URL. If the camera has already detected anything (`helmet` or `no_helmet`), you will see a device listed with your MAC address as the Device Name.
 
 
 3- Since the camera is detecting no_helmet, an alarm icon will appear next to your device name.
@@ -656,4 +656,4 @@ In this step, you have completed key application development tasks, including bu
 
 At this stage, you are well-positioned to hand over the solution to the xref:platform-specialist-00-intro.adoc[Platform Specialist] for deployment on Edge Devices. However, if you prefer to skip that step or have already completed it in a previous part of the workshop, you can proceed to the final task for the AI Specialist: the xref:ai-specialist-05-update.adoc[Day-2 Operations] section.
 
-
+Do not remove the services that you deployed for your model testing since you will need it in the next section.
