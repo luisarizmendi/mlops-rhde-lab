@@ -37,6 +37,8 @@
 * xref:platform-specialist-00-intro.adoc#_workflow_overview[- Workflow Overview]
 * xref:platform-specialist-00-intro.adoc#_section_video_recording[- Section Video Recording]
 * xref:platform-specialist-01-image-bake.adoc[*1. Device Image Preparation*]
+* xref:platform-specialist-01-image-bake.adoc#_image_build[- Image Build]
+* xref:platform-specialist-01-image-bake.adoc#_image_rollout[- Image Rollout]
 * xref:platform-specialist-02-device-onboarding.adoc[*2. Device Rollout*]
 * xref:platform-specialist-03-day-2-ops.adoc[*3. Day-2 Operations*]
 * -------------------------
