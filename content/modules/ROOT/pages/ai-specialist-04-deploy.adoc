@@ -472,7 +472,7 @@ The Dashboard application does not use TLS, so the URL must start `http://` and 
 
 === Local machine applications deployment
 
-You’ve successfully deployed the cloud-side applications! Now, take the next step by running the remaining applications seamlessly on your own laptop
+You’ve successfully deployed the cloud-side applications! Now, take the next step by running the remaining applications on your own laptop
 
 [NOTE]
 
@@ -508,7 +508,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisar
 ----
 
 
-4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
+4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the Dashboard backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
 
 ----
 podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod

@@ -1,5 +1,13 @@
 = AI Specialist
 
+[IMPORTANT]
+====
+This is the beginning of the complete workshop guide for AI Specialists. It includes step-by-step explanations, different approaches you can take to complete the workshop, and additional information to help you better understand the underlying technology and its business value.
+
+Following the full guide takes time. If you're short on time or simply want a quick, copy-paste style guide to complete the workshop efficiently, I recommend using the xref:ai-specialist-99-fast.adoc[quick guide available here].
+====
+
+
 == Background
 
 You've been chosen as the lead AI specialist for ACME's latest workplace safety initiative. The company is counting on your expertise to solve a critical challenge ensuring that every worker on the factory floor is equipped with proper safety gear. Hardhats are essential for preventing head injuries, but compliance isn't always guaranteed. Now, it's your responsibility to design the AI driven solution that could prevent the next accident.
