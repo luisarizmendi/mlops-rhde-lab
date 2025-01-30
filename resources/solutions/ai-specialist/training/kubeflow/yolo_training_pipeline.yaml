@@ -427,9 +427,10 @@ deploymentSpec:
           \        metrics=metrics\n    )\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest
         resources:
-          memoryLimit: 4.294967296
+          accelerator:
+            count: '1'
+            resourceCount: '1'
           memoryRequest: 2.147483648
-          resourceMemoryLimit: 4Gi
           resourceMemoryRequest: 2Gi
     exec-upload-to-minio:
       container:
@@ -748,6 +749,11 @@ platforms:
             taskOutputParameter:
               outputParameterKey: name
               producerTask: createpvc
+          tolerations:
+          - effect: NoSchedule
+            key: nvidia.com/gpu
+            operator: Equal
+            value: 'True'
         exec-train-model:
           pvcMount:
           - mountPath: /opt/app-root/src
@@ -758,9 +764,19 @@ platforms:
             taskOutputParameter:
               outputParameterKey: name
               producerTask: createpvc-2
+          tolerations:
+          - effect: NoSchedule
+            key: nvidia.com/gpu
+            operator: Equal
+            value: 'True'
         exec-upload-to-minio:
           pvcMount:
           - mountPath: /opt/app-root/src
             taskOutputParameter:
               outputParameterKey: name
               producerTask: createpvc
+          tolerations:
+          - effect: NoSchedule
+            key: nvidia.com/gpu
+            operator: Equal
+            value: 'True'

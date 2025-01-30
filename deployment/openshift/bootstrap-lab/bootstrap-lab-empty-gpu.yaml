@@ -123,8 +123,14 @@ spec:
                   server: https://kubernetes.default.svc
                 syncPolicy:
                   automated:
-                    prune: true
+                    prune: false
                     selfHeal: true
+                ignoreDifferences:
+                  - group: ""
+                    kind: Secret
+                    name: v4-0-config-user-idp-1-file-data
+                    jsonPointers:
+                      - /
           EOF
           # Wait for the DataScienceCluster to be ready
           until oc get pods -n redhat-ods-applications | grep 'odh-model-controller' | grep 'Running' | grep '1/1'; do

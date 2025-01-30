@@ -342,6 +342,13 @@ def yolo_training_pipeline(
         pvc_name=pvc.outputs['name'],
         mount_path='/opt/app-root/src',
     )
+    kubernetes.add_toleration(
+        download_task,
+        key="nvidia.com/gpu",
+        operator="Equal",       
+        value="True",           
+        effect="NoSchedule"
+    )
 
 
     # Train model
@@ -352,8 +359,8 @@ def yolo_training_pipeline(
         img_size=train_img_size,
         name=train_name
     ).after(download_task)
+    train_task.set_gpu_limit(1)
     train_task.set_memory_request('2Gi')
-    train_task.set_memory_limit('4Gi')
     train_task.set_caching_options(enable_caching=False)
     kubernetes.mount_pvc(
         train_task,
@@ -365,7 +372,15 @@ def yolo_training_pipeline(
         pvc_name=pvc_shm.outputs['name'],
         mount_path='/dev/shm',
     )
+    kubernetes.add_toleration(
+        train_task,
+        key="nvidia.com/gpu",
+        operator="Equal",       
+        value="True",           
+        effect="NoSchedule"
+    )
 
+    
     # Upload results
     upload_task = upload_to_minio(
         train_dir=train_task.outputs['train_dir'],
@@ -381,6 +396,15 @@ def yolo_training_pipeline(
         pvc_name=pvc.outputs['name'],
         mount_path='/opt/app-root/src',
     )
+    kubernetes.add_toleration(
+        upload_task,
+        key="nvidia.com/gpu",
+        operator="Equal",       
+        value="True",           
+        effect="NoSchedule"
+    )
+ 
+
 
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
@@ -406,6 +430,7 @@ def yolo_training_pipeline(
         train_batch_size=train_batch_size,
         train_img_size=train_img_size
     ).after(upload_task)
+
 
     
 

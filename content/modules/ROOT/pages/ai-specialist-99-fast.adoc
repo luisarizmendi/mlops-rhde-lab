@@ -189,6 +189,25 @@ In production environments, training machine learning models is not as simple as
 
 In this step you will use the same tools than in the previous one: OpenShift AI and MinIO Object Storage.
 
+Before Importing a pipeline you will need to enable the Pipeline server.
+
+
+[example]
+====
+To create a Pipeline Server:
+
+1. Navigate to "Data Science Pipelines" in OpenShift AI and configure a new pipeline server.
+2. Fill in the Data Connection information but this time use the Bucket userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to `none` (as it is not configured in MinIO).
+3. Save the configuration.
+====
+
+image::ai-build-pipeline-server.png[]
+
+
+
+Wait until the Pipeline is ready. Then you can import your pipeline.
+
+
 [example]
 ====
 To proceed with the Kubeflow Pipeline import:
