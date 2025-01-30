@@ -161,6 +161,14 @@ spec:
                         "value": "Removed"
                       }
                     ]'
+                  securityContext:
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                      drop:
+                        - "ALL"
+                    runAsNonRoot: true
+                    seccompProfile:
+                      type: RuntimeDefault
                 restartPolicy: Never
             backoffLimit: 1
           EOF
