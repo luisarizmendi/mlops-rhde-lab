@@ -207,6 +207,7 @@ To clone a subset of images in a Dataset you have to:
 2- Click the "Images" button.
 
 3- Use the Filter function to select your target Class (labels).
+
 4- Click the box right above the first image to select all images.
 
 [NOTE]
