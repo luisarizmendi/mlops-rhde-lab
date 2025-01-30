@@ -116,6 +116,6 @@ You also have to redeploy this microservice with the latest version to get the f
 
 == Solution and Next Steps
 
-You have reached the end of the *AI Specialist* module. If you haven't done so yet, you can proceed to the xref:ai-specialist-05-update.adoc[Day-2 Operations] section.
+You have reached the end of the *AI Specialist* module. If you haven't done so yet, you can proceed to the xref:platform-specialist-00-intro.adoc[Platform Specialist Introduction] section.
 
 
