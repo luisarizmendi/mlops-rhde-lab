@@ -502,8 +502,7 @@ image::ai-deploy-screenshot_dashboard_detail.png[]
 ====
 
 
-At this stage, you are well-positioned to hand over the solution to the xref:platform-specialist-00-intro.adoc[Platform Specialist] for deployment on Edge Devices. However, if you prefer to skip that step or have already completed it in a previous part of the workshop, you can proceed to the final task for the AI Specialist
-
+At this stage, you are well-positioned to hand over the solution to the xref:platform-specialist-00-intro.adoc[Platform Specialist] for deployment on Edge Devices. However, if you prefer to skip that step or have already completed it in a previous part of the workshop, you can proceed to the final task for the AI Specialist.
 
 
 == 5. Day-2 Operations
