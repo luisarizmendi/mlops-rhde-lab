@@ -29,6 +29,7 @@ asciidoc:
     device-password: secret
     openshift-ai: https://-----TBC----openshift-ai----TBC-----
     flightctl-ui: https://-----TBC----flightctl-ui----TBC-----
+    flightctl-api: https://-----TBC----flightctl-api----TBC-----
     flightctl-user-basename: flightctluser
     flightctl-password: secretflightctl
     registry-local-url: http://192.168.100.200/workshop/
