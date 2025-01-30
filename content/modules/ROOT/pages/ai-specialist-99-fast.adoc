@@ -423,6 +423,90 @@ spec:
 **Local machine applications deployment**
 
 
+You’ve successfully deployed the cloud-side applications! Now, take the next step by running the remaining applications on your own laptop
+
+[NOTE]
+
+Instructions for Fedora/RHEL based systems and using the interactive mode, so you can review live logs easily (you will need to use three different command line terminals).
+
+[example]
+====
+
+1- Deploy the Inference Server:
+
+[source,shell,role=execute,subs="attributes"]
+----
+podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inference-server:prod
+----
+
+[NOTE]
+
+If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by running `podman run -it --rm -p 8080:8080 --device nvidia.com/gpu=all --security-opt=label=disable quay.io/luisarizmendi/object-detection-inference-server:prod`
+
+
+2- Now you can check that the GPU is being detected by checking the `healthz` endpoint, see an example below.
+
+----
+curl http://localhost:8080/healthz
+{"status":"healthy","gpu_available":true,"model_loaded":true,"model_name":"1","timestamp":"2025-01-28T22:34:31.102136"}
+----
+
+3- Deploy the Camera stream manager. In this case you will need to run it as privileged to access the system devices (webcams) and also to use the host network, so it can reach out to the inference server.
+
+[source,shell,role=execute,subs="attributes"]
+----
+sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisarizmendi/object-detection-stream-manager:prod
+----
+
+
+4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the Dashboard backend route that you copied before. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
+
+----
+podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
+----
+
+====
+
+
+As part of the workshop materials, hardhats should be provided. If you don’t have one, you can use a cycling helmet, though this may reduce detection accuracy.
+
+[NOTE]
+
+For this initial test, you will start without wearing a hardhat.
+
+
+
+[example]
+====
+Once all services are up and running, follow these steps to validate the system:
+
+
+1- Open `http://localhost:5000/video_stream`. You should see the camera feed displaying a `no_helmet` detection.
+
+
+image::ai-deploy-screenshot_video_stream.png[]
+
+
+2- Open the Dashboard Frontend URL. If the camera has already detected anything (`helmet` or `no_helmet`), you will see a device listed with your MAC address as the Device Name.
+
+
+3- Since the camera is detecting no_helmet, an alarm icon will appear next to your device name.
+
+image::ai-deploy-screenshot_dashboard_main.png[]
+
+
+4- Put on the hardhat and observe how the system detects it in the video stream. After a few seconds, the alarm should disappear.
+
+5- Click on your Device Name to view detailed information, including logged alarms. You can also rename the device to give it a more user-friendly name.
+
+image::ai-deploy-screenshot_dashboard_detail.png[]
+====
+
+
+
+
+
+
 
 
 
