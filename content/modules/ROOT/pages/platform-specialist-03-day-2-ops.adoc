@@ -1,6 +1,7 @@
 = Day 2 Operations
 
 == Application deployment
+using os configuration to deploy pull secret
 using os configuration deploy manifest onto microshift
 
 == OS Update
@@ -8,3 +9,5 @@ include cockpit-ostree to check device updates graphically
 
 == Device Monitoring
 prometheus
+
+Move back to xref:index.adoc[Index]
