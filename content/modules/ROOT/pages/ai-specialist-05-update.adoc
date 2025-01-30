@@ -12,7 +12,7 @@ Retraining your models periodically is a necessary practice to maintain their pe
 
 In our example use case, the trained model for detecting hardhats on the factory floor had been deployed and working as expected. However, over time, reports started emerging about incidents where people were not wearing helmets, but the system did not trigger any alarms. After investigation, it was found that the individuals in question were wearing cups or hats, which the model did not recognize as something that could interfere with hardhat detection. Since the model was only trained to detect hardhats and not other headgear, these individuals were simply not detected, causing false negatives.
 
-To solve this issue, retraining the model is necessary. This retraining should include additional objects that could be worn on the head, such as cups or hats. By expanding the dataset to include these new classes of headgear and properly labeling them, the model will be able to differentiate between a person wearing a hardhat, a cup, a hat, or no headgear at all.
+To solve this issue, retraining the model with new data is necessary. This retraining should include additional objects that could be worn on the head, such as cups or hats. By expanding the dataset to include these new classes of headgear and properly labeling them, the model will be able to differentiate between a person wearing a hardhat, a cup, a hat, or no headgear at all.
 
 The model should also be updated to raise an alarm when a person is either not wearing anything on their head or wearing something that is not a helmet. 
 

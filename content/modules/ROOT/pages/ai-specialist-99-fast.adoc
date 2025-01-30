@@ -502,13 +502,47 @@ image::ai-deploy-screenshot_dashboard_detail.png[]
 ====
 
 
+At this stage, you are well-positioned to hand over the solution to the xref:platform-specialist-00-intro.adoc[Platform Specialist] for deployment on Edge Devices. However, if you prefer to skip that step or have already completed it in a previous part of the workshop, you can proceed to the final task for the AI Specialist
 
 
 
+== 5. Day-2 Operations
+
+Over time, models deployed in production environments can experience a decrease in performance due to several factors.
+
+In our example use case, the trained model for detecting hardhats on the factory floor had been deployed and working as expected. However, over time, reports started emerging about incidents where people were not wearing helmets, but the system did not trigger any alarms. After investigation, it was found that the individuals in question were wearing cups or hats, which the model did not recognize as something that could interfere with hardhat detection. Since the model was only trained to detect hardhats and not other headgear, these individuals were simply not detected, causing false negatives.
+
+To solve this issue, retraining the model with new data is necessary.
 
 
+**Dataset Update**
+
+The first step to correct the problem is to have labeled data of people wearing hat and cup in order to train our model with those as well.
+
+You need to repeat the steps that you performed, but this time you might follow the xref:ai-specialist-01-data.adoc[Data Management] section. Remember that this time you will need to add images of hats and cups and labeling those as `hat`.
 
 
+**Retraining**
+
+In this phase you just need to re-run the training pipeline including the last version of you Dataset in the Pipeline Run setup.
+
+
+**Final Testing**
+
+Once you have the new model .pt file, would  build the Inference Server container image. In you case you can use the images that have been already pulled in the Container Registry containing the new model.
+
+You have to redeploy two local services: The Inference Server (with the new model detecting hats) and the Actuator (it now triggers alarms with the tag `hat`).
+
+You can find the images here:
+
+* https://quay.io/repository/luisarizmendi/object-detection-inference-server?tab=tags[Inference Server v2 container image]: `quay.io/luisarizmendi/object-detection-inference-server:v2-prod`
+
+* https://quay.io/repository/luisarizmendi/object-detection-action?tab=tags[Actuator v2]: `quay.io/luisarizmendi/object-detection-action:v2-prod`
+
+
+After deploying the new Inference Server and Actuator version you can reproduce again the testing workflow that you follow in the previous point, this time even wearing a hat will trigger the alarm.
+
+You have reached the end of the *AI Specialist* Fast-Track. You can proceed to the xref:platform-specialist-00-intro.adoc[Platform Specialist Introduction] section or if you find it useful, you can revisit the *AI Specialist* model following the xref:ai-specialist-00-intro.adoc[Full Guide].
 
 
 
