@@ -90,10 +90,24 @@ As the target configuration for devices and device fleets is declarative, users 
 
 == Flight Control deployment
 
+Install a released version of the Flight Control Service into the cluster by running:
+
+$ helm upgrade --install --version=<version-to-install> \
+    --namespace flightctl --create-namespace \
+    flightctl oci://quay.io/flightctl/charts/flightctl
+
+Verify your Flight Control Service is up and running:
+
+$ kubectl get pods -n flightctl
+
 
 == Image Manage
 
 Given include agent 
+
+image::platform-flight-control-agent-include.svg[]
+
+
 update manually the device
 
 == Device Management
