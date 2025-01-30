@@ -40,7 +40,7 @@
 * xref:platform-specialist-01-image-bake.adoc#_image_build[- Image Build]
 * xref:platform-specialist-01-image-bake.adoc#_image_deploy[- Image Deploy]
 * xref:platform-specialist-01-image-bake.adoc#_image_rollout[- Image Rollout]
-* xref:platform-specialist-02-device-onboarding.adoc[*2. Device Rollout*]
+* xref:platform-specialist-02-device-onboarding.adoc[*2. Device Onboarding*]
 * xref:platform-specialist-03-day-2-ops.adoc[*3. Day-2 Operations*]
 * -------------------------
 * xref:99-summary.adoc[Summary]
