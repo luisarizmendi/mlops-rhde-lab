@@ -88,6 +88,8 @@ If applying any of these changes fails or the system does not return online afte
 
 As the target configuration for devices and device fleets is declarative, users can store it in a Git repository that the Flight Control Service can periodically poll for updates or can receive updates from a webhook.
 
+== Flight Control deployment
+
 
 == Image Manage
 
