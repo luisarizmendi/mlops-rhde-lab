@@ -146,10 +146,24 @@ image::platform-flightctl-overview.png[]
 
 You can now install Flight Control CLI since you will need that to generate the base agent configuration.
 
+Select the appropriate Flight Control CLI binary for your OS (linux or darwin) and CPU architecture (amd64 or arm64), download the flightctl binary to your machine, rename it to flightctl and make it executable, move it into a location within your shell's search path.
 
-Login to Flight Control API Server like this
 [source,bash]
 ----
+$ FC_CLI_BINARY=flightctl-linux-amd64
+$ curl -LO https://github.com/flightctl/flightctl/releases/download/latest/${FC_CLI_BINARY}
+$ echo "$(curl -L -s https://github.com/flightctl/flightctl/releases/download/latest/${FC_CLI_BINARY}-sha256.txt)  ${FC_CLI_BINARY}" | shasum --check
+$ mv "${FC_CLI_BINARY}" flightctl && chmod +x flightctl
+$ sudo cp flightctl /usr/bin
+----
+
+Finally you can login to Flight Control API Server and verify you have access by querying for available Devices
+
+[source,bash]
+----
+$ flightctl login https://{flightctl-api} --web --insecure-skip-tls-verify
+$ flightctl get devices
+NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
 == Image Manage
@@ -179,11 +193,6 @@ The OS disk image is used to image (or "flash") a device when it is provisioned.
 Given include agent 
 
 image::platform-flight-control-agent-include.svg[]
-
-Before you start, ensure you have installed the following prerequisites:
-
-    flightctl CLI latest version (installation guide)
-    oc
 
 When the Flight Control agent starts, it expects to find its configuration in /etc/flightctl/config.yaml. This configuration needs to contain:
 
@@ -266,6 +275,8 @@ There are multiple ways when and how to apply labels to devices:
     You can define a set of default labels during image building that get automatically applied to all devices deploying that image.
     You can assign initial labels during enrollment (see Enrolling Devices).
     You can edit labels post-enrollment, which is described in the following sections.
+
+image::platform-flightctl-device.png[]
 
 Now that you local Nvidia Device is under management from Flight Control you can define the target configuration template in a declarative way and add the required predefined apps.
 
