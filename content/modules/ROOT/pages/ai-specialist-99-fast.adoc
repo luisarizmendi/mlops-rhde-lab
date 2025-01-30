@@ -526,7 +526,6 @@ You need to repeat the steps that you performed, but this time you might follow 
 
 In this phase you just need to re-run the training pipeline including the last version of you Dataset in the Pipeline Run setup.
 
-
 **Final Testing**
 
 Once you have the new model .pt file, would  build the Inference Server container image. In you case you can use the images that have been already pulled in the Container Registry containing the new model.
