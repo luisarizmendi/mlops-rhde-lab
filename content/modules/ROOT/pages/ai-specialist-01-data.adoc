@@ -203,7 +203,9 @@ Sometimes cloning the images with the required labels makes more sense than fork
 To clone a subset of images in a Dataset you have to:
 
 1- Navigate to the dataset's URL in https://universe.roboflow.com/[Roboflow Universe].
+
 2- Click the "Images" button.
+
 3- Use the Filter function to select your target Class (labels).
 4- Click the box right above the first image to select all images.
 
