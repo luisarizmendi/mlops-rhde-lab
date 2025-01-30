@@ -422,7 +422,6 @@ spec:
 
 **Local machine applications deployment**
 
-
 You’ve successfully deployed the cloud-side applications! Now, take the next step by running the remaining applications on your own laptop
 
 [NOTE]
