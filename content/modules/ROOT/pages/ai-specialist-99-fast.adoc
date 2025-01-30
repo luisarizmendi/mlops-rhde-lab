@@ -514,6 +514,7 @@ In our example use case, the trained model for detecting hardhats on the factory
 To solve this issue, retraining the model with new data is necessary.
 
 
+
 **Dataset Update**
 
 The first step to correct the problem is to have labeled data of people wearing hat and cup in order to train our model with those as well.
