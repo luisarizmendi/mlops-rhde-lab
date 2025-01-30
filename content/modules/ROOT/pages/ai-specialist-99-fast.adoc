@@ -1,0 +1,189 @@
+= Fast-Track Instructions
+
+
+Your mission is to develop an object detection system that monitors workers in real time, identifying whether they’re wearing hardhats. The system will rely on existing USB webcams across the factory floor, feeding video streams into AI models deployed on industrial PCs (IPCs) equipped with NVIDIA GPUs.
+
+image::labintro-arch.png[]
+
+
+Find below the workflow that you will follow as AI specialist during the workshop.
+
+image::ai-workflow.png[]
+
+
+Let's start with the first step.
+
+
+[IMPORTANT]
+
+Remember that  *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
+
+
+== 1. Data Management
+
+[NOTE]
+
+You have the full guide for this task in the xref:ai-specialist-01-data.adoc[Data Management] section
+
+It involves three essential steps:
+
+* Data Collection: Gathering and inspecting data.
+
+* Data Preparation: Cleaning, augmenting, splitting, and labeling the data.
+
+* Data Publication and Formatting: Converting the prepared data into the appropriate format required by the AI model or training framework.
+
+
+For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data.
+
+
+[example]
+====
+Your first task will be to create a https://roboflow.com/[Roboflow account] (if you don't have one already):
+
+1. Go to https://roboflow.com/ and click  `Get Started` in the top-right corner.
+
+2. Choose your preferred sign-up method (such as email) and enter your name and password.
+
+3. You’ll be prompted to create a new workspace, use "workshop" as name. This will serve as the central hub for organizing datasets and projects.
+
+4. Do not create a "Project" becase you are going to fork a Dataset and it will create a new Project for you. 
+====
+
+image::ai-data-roboflow.png[]
+
+[IMPORTANT]
+
+Roboflow includes some restrictions to Not-Paid accounts. The most important for us is that the overall number of images in your account must be less than 10,000, so we need to mantain the size of the Dataset that we will create in the next point below that number. 
+
+
+You will get images in your Roboflow account by forking another Project.
+
+[example]
+====
+Tor Fork the "Hardhat or Hat MockTrain" Project:
+
+1. Navigate to the  https://universe.roboflow.com/luisarizmendi/hardhat-or-hat-mocktrain/browse?queryText=&pageSize=50&startingIndex=0&browseQuery=true[dataset's URL that you want to Fork in Roboflow Universe].
+2. Click the "Fork Dataset" button on the top right corner.
+3. Confirm and wait until fork is done.
+====
+
+[NOTE]
+
+It is named 'MockTrain' because it contains only a few images to speed up training during the workshop. However, the resulting model will not be usable. A pre-trained model, trained on a more comprehensive dataset /https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1["Hardhat or Hat" Dataset](), will be provided as part of this workshop . 
+
+
+Roboflow need you to "publish" the Dataset to be trained by creating a "version".
+
+[example]
+====
+To create a new version of your Dataset: 
+
+1. Navigate to your Project's URL in your https://roboflow.com/[Roboflow account].
+2. Click on "Versions" in the left menu.
+3. You'll be prompted to apply additional preprocessing and aumentation actions. You won't include any so click "Continue" twice. 
+4. Click "Create".
+====
+
+Now is time to get the details to access this Dataset version. You don't need to download the files, the images and metadata will be directly gather from Roboflow in this workshop.
+
+
+[example]
+====
+To get the access details:
+
+1. Navigate to the Project's URL in your https://roboflow.com/[Roboflow account].
+2. Click the "Versions" on the left menu and select the version to be used (you have just one).
+3. Click on "Download Dataset" on top right corner.
+4. Select the format. We will be using a YOLOv11 based model.
+5. Select "Show download code" radio button.
+6. Unselect "Also train" option if it appears as an option.
+7. Click "Continue".
+
+====
+
+You get a piece of code, copy it because you will need them later. The generated code will be similar to this one:
+
+[source,python,role=execute,subs="attributes"]
+----
+!pip install roboflow
+
+from roboflow import Roboflow
+rf = Roboflow(api_key="xxxxxxxxxxxxxxxxxxxxx")
+project = rf.workspace("workspace").project("user<span id="gnumberVal"></span>-hardhat-detection")
+version = project.version(1)
+dataset = version.download("yolov11")
+----
+
+Ok, you have your Dataset ready to be used, move into the next task.
+
+
+== 2. Model Development
+
+[NOTE]
+
+You have the full guide for this task in the xref:ai-specialist-02-develop.adoc[Model Development] section
+
+
+This section will guide you through the essential steps of engineering, training, and evaluation to create the first model prototype.
+
+In this step you will be using OpenShift AI and MinIO. 
+
+OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the https://jupyter.org/[Jupyter Notebooks] for experimentation and model training.
+
+https://min.io/[MinIO] is an Open Source High Performance Object Storage where we will save the models and the files with the performance metrics.
+
+
+[example]
+====
+To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
+
+1- Navegate to {openshift-ai}. 
+
+2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
+
+You need to select the `htpasswd_workshop` authenticaticator
+
+image::ai-build-authenticator.png[]
+
+
+3- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
+
+4- Create a new S3 Storage Connection ("Connetions" tab) that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
+
+** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
+** MinIO API URL: {minio-api}
+** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
+** Region: "none" 
+
+image::ai-build-dataconnection.png[]
+
+5- Create a new Workbench named "Object Detection Notebooks". You will need to select:
+
+** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
+** Container Size (`Small` is enough)
+** Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage)
+** Object Storage Connection that you already configured. 
+** Additionally, when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+
+image::ai-build-workbench.png[]
+
+6- Once started, open the Workbench (it could take time to open)
+
+7- Clone the source the workshop's Git repository: {git-workshop-url}
+
+image::ai-build-gitclone.png[]
+
+8- Move into the `workshop-object-detection-rhde/resources/solutions/ai-specialist/development` directory. Open the `prototyping.ipynb`
+ file
+ 
+9- Paste the Roboflow access code in the first code block of the"Step 3: Download from Roboflow" and save your Notebook clicking the disk icon on the top bar menu.
+
+====
+
+Now you have your prototyping Jupyter Notebook ready. In order to start the prototype training you just need to click the "Run all blocks" (`>>` icon) icon on the top bar menu.
+
+Even being a Mock Training it could take some time to finish if you are using CPUs instead of GPUs, in the meanwhile you can take a look at the cell's output. 
+
+Once the Notebook finishes, you can go to Object Storage MinIO console ({minio-ui}) and click "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. Then you will see a `prototype` directory and inside you will find the model (`best.pt` file) in the `weights` directory along with diferent files containing training performance metrics.
+

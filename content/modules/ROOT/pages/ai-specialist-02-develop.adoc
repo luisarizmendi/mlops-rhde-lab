@@ -1,6 +1,6 @@
 = Model Development
 
-The process of AI model prototype building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation.
+The process of AI model prototype building is a multistep journey that transforms raw data into a functional model. It encompasses several key stages, each playing a crucial role in ensuring the model can learn, generalize, and ultimately perform as required. This section will guide you through the essential steps of engineering, training, and evaluation to create the first model prototype.
 
 While these two stages (Feature Engineering and Model development) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 
@@ -13,7 +13,7 @@ In this section we will be using the following tools:
 
 *OpenShift AI*
 
-OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the Jupyter Notebooks for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
+OpenShift AI is an integrated platform that simplifies the development and deployment of AI workloads. We will use it to create and manage the https://jupyter.org/[Jupyter Notebooks] for experimentation and model training. Furthermore, it will enable the creation and orchestration of automated pipelines, ensuring efficient and repeatable workflows.
 
 In this workshop we will explore  the features of OpenShift AI and their applicability when creating models in OpenShift AI while performing inference on RHEL. OpenShift AI is designed to deploy and serve models directly on OpenShift, leveraging its built-in capabilities for scalability, monitoring, and orchestration. However, it is also possible to leverage OpenShift AI features for workflows where inference is performed on RHEL, or more generic, when inference is performed at the Edge.
 
@@ -100,29 +100,33 @@ At this stage, it is essential to focus on choosing the right hyperparameters du
 
 Jupyter Notebooks are an interactive computing environment that combines live code, visualizations, and narrative text in a single document. They are ideal for prototyping machine learning models because they allow you to quickly test, debug, and document your workflows in a user-friendly interface.
 
+
+
 [example]
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai}. Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
+1- Navegate to {openshift-ai}. 
+
+2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
 You need to select the `htpasswd_workshop` authenticaticator
 
 image::ai-build-authenticator.png[]
 
 
-2- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
+3- Create a new Data Science Project "userpass:[<span id="gnumberVal"></span>]-ai"
 
-3- Create a new S3 Storage Connection that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
+4- Create a new S3 Storage Connection ("Connetions" tab) that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
 
 ** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
-** MinIO API URL ({minio-api}). 
-** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
+** MinIO API URL: {minio-api}
+** Bucket name: "userpass:[<span id="gnumberVal"></span>]-ai-models" 
 ** Region. You can keep the Region empty but it's better to include any string (e.g. `none`). 
 
 image::ai-build-dataconnection.png[]
 
-4- Create a new Workbench named "Object Detection Notebooks". You will need to select:
+5- Create a new Workbench named "Object Detection Notebooks". You will need to select:
 
 ** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
 ** Container Size (`Small` is enough)
@@ -132,16 +136,17 @@ image::ai-build-dataconnection.png[]
 
 image::ai-build-workbench.png[]
 
-5- Once started, open the Workbench (it could take time to open)
+6- Once started, open the Workbench (it could take time to open)
 
-6- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu (you can find the repository clone URL opening the Gitea repository).
+7- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu (you can find the repository clone URL opening the Gitea repository).
 
 image::ai-build-gitclone.png[]
 
-7- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
+8- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
 ====
 
-It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided below, then run the block by clicking the play button to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
+
+It's time to begin working on the Jupyter Notebook you just created. Below, you will find subsections that explain each necessary code block. To get started, create new code blocks by clicking the `+` button in the top menu. Configure each block based on the instructions provided below, then run the block by clicking the play button (`>` icon) to ensure it works as expected. You are encouraged to add additional Markdown cells for further explanations or adjust the provided code to suit your needs. This hands-on approach will help you gain a deeper understanding and tailor the notebook to your specific project.
 
 Let's start with the first code block, the dependencies.
 
@@ -205,7 +210,7 @@ The next step is to download the dataset prepared in the xref:ai-specialist-01-d
 Double check that you're using the correct API Key, Workspace name, Project name, and Version number to ensure a seamless connection to the dataset.
 
 [CAUTION]
-If you have multiple versions of your dataset, make sure you are using the correct version number under project.version. For example, if you created a new version as part of the "Plan B" (training the model with a smaller dataset), verify that the version matches the intended dataset. 
+If you have multiple versions of your dataset, make sure you are using the correct version number under project.version. For example, if you created a new version as part of the "*MockTrain*" (training the model with a smaller dataset), verify that the version matches the intended dataset. 
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -263,7 +268,7 @@ The list below is a subset of all the parameters that you can configure. You can
 
 * *Batch size* (`batch`): The https://medium.com/geekculture/how-does-batch-size-impact-your-model-learning-2dd34d9fb1fa[batch size] is the number of training samples used in one forward and backward pass. A larger batch size leads to more stable gradients and will also reduce sustantially the training time but requires more memory. Value will be dependant on your hardware (mainly memory) that you have available in your CPU/GPU, typical values are `16`, `32` or `64`. You can try higher values if your GPU allows it. Take into account that if you are running the training on your CPU and configure a batch size that your container instance size cannot manage,then the Workbench will launch an error while training the model and will ask if you want to restart it.
 
-* *Epochs* (`epochs`): The https://medium.com/@saiwadotai/epoch-in-machine-learning-understanding-the-core-of-model-training-bfd64bbd5604[Epochs] are the number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: `50`, `100` (default), `300`. Start with `50` and increase if needed (or just configure `1` epoch if you are running the "Plan B").
+* *Epochs* (`epochs`): The https://medium.com/@saiwadotai/epoch-in-machine-learning-understanding-the-core-of-model-training-bfd64bbd5604[Epochs] are the number of complete passes through the entire training dataset. More epochs generally improve model performance but also increase training time and risk of overfitting. Typical values: `50`, `100` (default), `300`. Start with `50` and increase if needed (or just configure `1` epoch if you are running the "*MockTrain*").
 
 * *Base YOLO Model* (`model`): The base model architecture, which defines the neural network's structure. For YOLO, different versions (e.g., YOLOv4, YOLOv5) or sizes (e.g., YOLOv5s, YOLOv5m) can be selected depending on your requirements. In our project we will base our model in YOLOv11 so you will need to configure `yolo11m.pt`.
 
@@ -400,7 +405,7 @@ results_train = model.train(
 
 [TIP]
 
-Remember to use the "Plan B" Dataset if you want to save time while trying this step.
+Remember to use the "*MockTrain*" Dataset if you want to save time while trying this step.
 
 
 Once the training is done you can see how a new directory has been created under `./run/detect`. If you open that directory you will find:
@@ -412,7 +417,7 @@ Once the training is done you can see how a new directory has been created under
 
 [NOTE]
 
-You can find an https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/development/object-detection-hardhat-or-hat/v1[example of these files here].
+You can find an https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat/v1[example of these files here].
 
 Those graphs are automatically generated by the YOLO method from the `results.csv` and include:
 
@@ -588,7 +593,7 @@ for file_path_test in files_test:
         print("Error occurred: ", e)
 ----
 
-You now can go to MinIO console ({minio-ui}) and "Browse Files" on your Bucket.
+You now can go to MinIO console ({minio-ui}) and "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket.
 
 Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
@@ -799,7 +804,7 @@ image::ai-build-pipeline-config.png[]
 
 [NOTE]
 
-Remember that if you want to save time you could use the "Plan B" Dataset (although it produces a non-usable model).
+Remember that if you want to save time you could use the "*MockTrain*" Dataset (although it produces a non-usable model).
 
 image::ai-build-pipeline-envs.png[]
 
@@ -847,7 +852,7 @@ Once the Pipeline is finished, you could check that the contents are saved into 
 
 == Solution and Next Steps
 
-In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "Plan B" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained used this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/object-detection-hardhat-or-hat/v1[metrics that you can find here].
+In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "*MockTrain*" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained used this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat/v1[metrics that you can find here].
 
 You can now also push to the Git Source repository the files that you created:
 
