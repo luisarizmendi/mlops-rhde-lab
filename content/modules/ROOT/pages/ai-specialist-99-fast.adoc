@@ -544,6 +544,3 @@ After deploying the new Inference Server and Actuator version you can reproduce 
 You have reached the end of the *AI Specialist* Fast-Track. You can proceed to the xref:platform-specialist-00-intro.adoc[Platform Specialist Introduction] section or if you find it useful, you can revisit the *AI Specialist* model following the xref:ai-specialist-00-intro.adoc[Full Guide].
 
 
-
-
-
