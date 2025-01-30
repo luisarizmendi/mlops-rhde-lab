@@ -187,3 +187,12 @@ Even being a Mock Training it could take some time to finish if you are using CP
 
 Once the Notebook finishes, you can go to Object Storage MinIO console ({minio-ui}) and click "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. Then you will see a `prototype` directory and inside you will find the model (`best.pt` file) in the `weights` directory along with diferent files containing training performance metrics.
 
+[NOTE]
+
+Remember that you performed a Mock Training with a reduced number of epochs and few data, so you cannot use that model to detect hardhats. During the deployment phase you will use a https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat[provided pre-trained model].
+
+== 3. Model Training
+
+[NOTE]
+
+You have the full guide for this task in the xref:ai-specialist-02-develop.adoc[Model Development] section
