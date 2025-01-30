@@ -8,6 +8,6 @@ using os configuration deploy manifest onto microshift
 include cockpit-ostree to check device updates graphically
 
 == Device Monitoring
-prometheus
+Application monitoring with Flight Control
 
 Move back to xref:index.adoc[Index]
