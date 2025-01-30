@@ -27,7 +27,7 @@
 * xref:ai-specialist-05-update.adoc#_dataset_update[- Dataset Update]
 * xref:ai-specialist-05-update.adoc#_retrain[- Retraining]
 
-* xref:ai-specialist-99-fast.adoc[Fast-Track for AI Specialist]
+* xref:ai-specialist-99-fast.adoc[*Fast-Track for AI Specialist*]
 
 * -------------------------
 * `_Platform Specialist_`
