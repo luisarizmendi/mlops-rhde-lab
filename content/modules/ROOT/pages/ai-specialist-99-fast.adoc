@@ -25,17 +25,7 @@ Remember that  *you must use the input boxes in the guide’s footer* (scroll do
 
 You have the full guide for this task in the xref:ai-specialist-01-data.adoc[Data Management] section
 
-It involves three essential steps:
-
-* Data Collection: Gathering and inspecting data.
-
-* Data Preparation: Cleaning, augmenting, splitting, and labeling the data.
-
-* Data Publication and Formatting: Converting the prepared data into the appropriate format required by the AI model or training framework.
-
-
 For this project, https://roboflow.com/[Roboflow] will be the primary tool used for managing and preparing data.
-
 
 [example]
 ====
@@ -49,8 +39,6 @@ Your first task will be to create a https://roboflow.com/[Roboflow account] (if 
 
 4. Do not create a "Project" becase you are going to fork a Dataset and it will create a new Project for you. 
 ====
-
-image::ai-data-roboflow.png[]
 
 [IMPORTANT]
 
@@ -90,7 +78,7 @@ Now is time to get the details to access this Dataset version. You don't need to
 
 [example]
 ====
-To get the access details:
+To get the Dataset access details:
 
 1. Navigate to the Project's URL in your https://roboflow.com/[Roboflow account].
 2. Click the "Versions" on the left menu and select the version to be used (you have just one).
@@ -104,7 +92,6 @@ To get the access details:
 
 You get a piece of code, copy it because you will need them later. The generated code will be similar to this one:
 
-[source,python,role=execute,subs="attributes"]
 ----
 !pip install roboflow
 
@@ -195,4 +182,250 @@ Remember that you performed a Mock Training with a reduced number of epochs and 
 
 [NOTE]
 
-You have the full guide for this task in the xref:ai-specialist-02-develop.adoc[Model Development] section
+You have the full guide for this task in the xref:ai-specialist-03-training.adoc[Model Training] section
+
+
+In production environments, training machine learning models is not as simple as running a script or experimenting in a notebook. A robust pipeline is essential. In this workshop we will use https://www.kubeflow.org/docs/components/pipelines/overview/[Kubeflow Pipelines].
+
+In this step you will use the same tools than in the previous one: OpenShift AI and MinIO Object Storage.
+
+[example]
+====
+To proceed with the Kubeflow Pipeline import:
+
+1. Go to Data Science Pipelines
+2. Click Import Pipeline
+3. Fill in Name (`hardhat-training`)
+4. Select "Import by URL" and include the following URL:
+
+`https://raw.githubusercontent.com/luisarizmendi/workshop-object-detection-rhde/refs/heads/main/resources/solutions/ai-specialist/training/kubeflow/yolo_training_pipeline.yaml`
+
+====
+
+
+After the correct import, you will see the Pipeline diagram:
+
+
+image::ai-train-kubeflow-pipe.png[]
+
+[NOTE]
+
+You will find the Roboflow values in the code that you saved before, including Key, Project name, Workspace and Dataset version.
+
+
+[example]
+====
+It's time to run the imported Kubeflow Pipeline:
+
+1. Click Actions and then `Create run`
+2. Click "Create new experiment" (`hardhat-detection`)
+3. Give the run a name (e.g. `v1`)
+4. Fill in the environment variables used in your run:
+    * Access Key: "userpass:[<span id="gnumberVal"></span>]"
+    * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
+    * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
+    * Endpoint: {minio-api}
+    * Model Registry Name: `object-detection-model-registry`
+    * PVC sufix: `-kubeflow-pvc`
+    * Roboflow Key: <your value>
+    * Roboflow Project: <your value>
+    * Roboflow Workspace: <your value>
+    * Roboflow version: <your value>
+    * Batch Size: `1`
+    * Ephoch number: `1` 
+    * Image Size: `640`
+    * Training name (e.g. `hardhat`)
+====
+
+
+You can view the details of each task while it's running to monitor important information. Additionally, you can check the POD name generated for the task (top right corner, in a red square in the image below), which is useful for accessing real-time logs in the OpenShift Console (since the Logs tab in the OpenShift AI Pipeline view is only available once the task has completed).
+
+image::ai-train-pipeline-pod-task.png[]
+
+
+After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to it.
+
+image::ai-train-minio.png[]
+
+Additionally, you can check the newly trained model in the Model Registry (check the left menu in OpenShift AI console), where it will be available along with all the associated metadata details that were added during the registration process.
+
+The Model Registry serves as the central hub for model publication. From here, you can directly deploy the model to the same OpenShift cluster running OpenShift AI, utilizing one of the supported Model Serving options. However, in this workshop, we won't be using this method. Instead, model inference will be performed at the Edge using Red Hat Enterprise Linux as it's explained in the next step.
+
+
+image::ai-train-registry.png[]
+
+
+== 4. Model Serving
+
+[NOTE]
+
+You have the full guide for this task in the xref:ai-specialist-04-deploy.adoc[Model Serving] section
+
+The Model Serving Phase is where a validated machine learning model is prepared for production use. 
+
+OpenShift AI provides a Model Serving capability (based on (https://github.com/kserve/kserve[`KServe`] and https://github.com/kserve/modelmesh[`ModelMesh`]) to deploy the AI models inside the OpenShift cluster where OpenShift AI is installed, but in our case we need to deploy the model in Edge Devices, so that feature cannot be used, insted we have prepared a custom Inference Server that will be used in this workshop.
+
+Along with the Inference Server other microservices have been developed to provide a solution that leverages the model's predictions to raise alarms when individuals are not wearing hardhats.
+
+This is the overal solution architecture:
+
+
+image::ai-deploy-object-detection-webcam.png[]
+
+Defore handing over to the Platform Specialist for deploying the applications to the Edge devices, it’s a good idea to perform a final test of the model.
+
+Let’s deploy all the components together and verify if everything works as expected.
+
+**Cloud-side Applications deployment**
+
+
+
+[example]
+====
+Deploy the Cloud-side sevices in OpenShift
+
+1- Navegate to {openshift-console}. 
+
+2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
+
+3- Click on the `+` icon on the top right corner of the OpenShift console.
+
+4- Paste there the content shown below to deploy the Dashboard Backend and Click "Create".
+
+[source,yaml,role=execute,subs="attributes"]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "python"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: quay.io/luisarizmendi/object-detection-dashboard-backend:v1
+        ports:
+        - containerPort: 5005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 5005
+    targetPort: 5005
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-backend
+  port:
+    targetPort: 5005
+----
+
+5- Go to "Routes" and take note of the Dashboard Backend route, you will need it.
+
+6- Click again on the `+` icon on the top right corner of the OpenShift console. Copy the code below and paste it there, **but before creating the object** include in the placeholder `HERE-YOU-BACKEND-API-BASE-URL---` the Dashboard Backend URL that you copied in the previous step.
+
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "nodejs"
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"object-detection-dashboard-backend"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: BACKEND_API_BASE_URL
+          value: HERE-YOU-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: frontend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-frontend
+  port:
+    targetPort: 3000
+----
+
+7- When all pods are running, you will be able to open the Dashboard using the Frontend URL. The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
+
+====
+
+**Local machine applications deployment**
+
+
+
+
+
+
+
+

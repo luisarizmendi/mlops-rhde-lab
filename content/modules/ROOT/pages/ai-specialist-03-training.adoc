@@ -15,7 +15,7 @@ Elyra Pipelines, built on Jupyter Notebooks, offer an accessible way to prototyp
 * Tight dependency on Jupyter Notebook, unsuitable for high-availability systems.
 * Limited monitoring tools, storage integrations, and governance capabilities.
 
-While Elyra is excellent for prototyping, Kubeflow Pipelines stand out as a robust, production-ready solution. Built for Kubernetes, Kubeflow supports the entire machine learning lifecycle—from data preparation to deployment—with features like:
+While Elyra is excellent for prototyping, https://www.kubeflow.org/docs/components/pipelines/overview/[Kubeflow Pipelines] stand out as a robust, production-ready solution. Built for Kubernetes, Kubeflow supports the entire machine learning lifecycle—from data preparation to deployment—with features like:
 
 * Seamless scalability and fault tolerance.
 * Integration with CI/CD platforms, monitoring tools, and storage systems.
@@ -594,12 +594,12 @@ It's time to run the imported Kubeflow Pipeline:
     * Endpoint: {minio-api}
     * Model Registry Name: `object-detection-model-registry`
     * PVC sufix: `-kubeflow-pvc`
-    * Roboflow API
-    * Roboflow Project 
-    * Roboflow Workspace 
-    * Roboflow version 
-    * Batch Size 
-    * Ephoch number 
+    * Roboflow Key: <your value>
+    * Roboflow Project: <your value>
+    * Roboflow Workspace: <your value>
+    * Roboflow version: <your value>
+    * Batch Size: <your value>
+    * Ephoch number: <your value>
     * Image Size: `640`
     * Training name (e.g. `hardhat`)
 ====
@@ -625,7 +625,7 @@ After some time, the pipeline will finish. You can at that point go to the Objec
 
 image::ai-train-minio.png[]
 
-Additionally, you can check the newly trained model in the Model Registry, where it will be available along with all the associated metadata details that were added during the registration process.
+Additionally, you can check the newly trained model in the Model Registry (check the left menu in OpenShift AI console), where it will be available along with all the associated metadata details that were added during the registration process.
 
 The Model Registry serves as the central hub for model publication. From here, you can directly deploy the model to the same OpenShift cluster running OpenShift AI, utilizing one of the supported Model Serving options. However, in this workshop, we won't be using this method. Instead, model inference will be performed at the Edge using Red Hat Enterprise Linux. More details on this approach will be provided in the xref:ai-specialist-04-deploy.adoc[Model Serving] section.
 

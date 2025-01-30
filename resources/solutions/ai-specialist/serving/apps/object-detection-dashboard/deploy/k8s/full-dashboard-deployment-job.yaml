@@ -1,0 +1,195 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: full-dashboard-deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: full-dashboard-deployment
+        image: quay.io/openshift/origin-cli:latest  
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          #
+          # Deploy Backend
+          cat <<EOF | oc create -f -
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: object-detection-dashboard-backend
+            labels:
+              app: object-detection-dashboard
+              app.kubernetes.io/part-of: Dashboard
+              app.openshift.io/runtime: "python"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: object-detection-dashboard
+                component: backend
+            template:
+              metadata:
+                labels:
+                  app: object-detection-dashboard
+                  component: backend
+              spec:
+                containers:
+                - name: backend
+                  image: quay.io/luisarizmendi/object-detection-dashboard-backend:v1
+                  ports:
+                  - containerPort: 5005
+          EOF
+
+          cat <<EOF | oc create -f -
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: object-detection-dashboard-backend
+            labels:
+              app: object-detection-dashboard
+          spec:
+            selector:
+              app: object-detection-dashboard
+              component: backend
+            ports:
+            - protocol: TCP
+              port: 5005
+              targetPort: 5005
+            type: ClusterIP
+          EOF
+
+          cat <<EOF | oc create -f -
+          apiVersion: route.openshift.io/v1
+          kind: Route
+          metadata:
+            name: object-detection-dashboard-backend
+            labels:
+              app: object-detection-dashboard
+          spec:
+            to:
+              kind: Service
+              name: object-detection-dashboard-backend
+            port:
+              targetPort: 5005
+          EOF
+
+          # Wait until the Route is created
+          while true; do
+              BACKEND_URL=$(oc get route object-detection-dashboard-backend -o jsonpath='{.spec.host}')
+              if [[ -n "$BACKEND_URL" ]]; then
+                  BACKEND_URL="http://$BACKEND_URL"
+                  echo "Backend URL: $BACKEND_URL"
+                  break
+              fi
+              echo "Waiting for backend route to be created..."
+              sleep 5
+          done
+
+          # Deploy Frontend
+          cat <<EOF | oc create -f -
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: object-detection-dashboard-frontend
+            labels:
+              app: object-detection-dashboard
+              app.kubernetes.io/part-of: Dashboard
+              app.openshift.io/runtime: "nodejs"
+            annotations:
+              app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"object-detection-dashboard-backend"}]'
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: object-detection-dashboard
+                component: frontend
+            template:
+              metadata:
+                labels:
+                  app: object-detection-dashboard
+                  component: frontend
+              spec:
+                containers:
+                - name: frontend
+                  image: quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+                  ports:
+                  - containerPort: 3000
+                  env:
+                  - name: BACKEND_API_BASE_URL
+                    value: "$BACKEND_URL"
+          EOF
+
+          cat <<EOF | oc create -f -
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: object-detection-dashboard-frontend
+            labels:
+              app: object-detection-dashboard
+          spec:
+            selector:
+              app: object-detection-dashboard
+              component: frontend
+            ports:
+            - protocol: TCP
+              port: 3000
+              targetPort: 3000
+            type: ClusterIP
+          EOF
+
+          cat <<EOF | oc create -f -
+          apiVersion: route.openshift.io/v1
+          kind: Route
+          metadata:
+            name: object-detection-dashboard-frontend
+            labels:
+              app: object-detection-dashboard
+          spec:
+            to:
+              kind: Service
+              name: object-detection-dashboard-frontend
+            port:
+              targetPort: 3000
+          EOF
+
+          echo "Deployment completed successfully."
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+      restartPolicy: Never
+  backoffLimit: 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

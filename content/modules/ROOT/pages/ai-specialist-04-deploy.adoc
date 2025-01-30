@@ -108,21 +108,21 @@ image::dev-workflow.png[]
 
 The custom inference server is a FastAPI application that provides an object detection system using a built-in model. It offers the following RESTful API endpoints:
 
-### 1. `/v1/models/{model_name}/infer` (POST)
+1. `/v1/models/{model_name}/infer` (POST)
 - **Purpose**: Make predictions on an image
 - **Request Body**: JSON with base64 encoded image and optional confidence threshold
 - **Returns**: JSON with detections, inference time, and metadata
 
-### 2. `/v1/models/{model_name}` (GET)
+2. `/v1/models/{model_name}` (GET)
 - **Purpose**: Get model status information
 - **Returns**: JSON with model name, ready status, load time, and device
 
-### 3. `/v1/models/{model_name}/load` (POST)
+3. `/v1/models/{model_name}/load` (POST)
 - **Purpose**: Load a model
 - **Parameters**: model_name and model_path
 - **Returns**: Success/failure message
 
-### 4. `/healthz` (GET)
+4. `/healthz` (GET)
 - **Purpose**: Health check endpoint
 - **Returns**: System health status, GPU availability, and model status
 
@@ -470,7 +470,7 @@ You can now test the access to the dashboard navigating to the Dashboard Fronten
 The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
 
 
-=== Local machine applications
+=== Local machine applications deployment
 
 You’ve successfully deployed the cloud-side applications! Now, take the next step by running the remaining applications seamlessly on your own laptop
 
