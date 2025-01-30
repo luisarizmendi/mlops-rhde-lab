@@ -258,7 +258,7 @@ Visual AI models can take various approaches depending on the objective:
 
 * *Object Classification*: Determines the type of object in an image but does not specify its location.
 
-* *Object Detectio*n: Identifies and localizes objects within an image.
+* *Object Detection*: Identifies and localizes objects within an image.
 
 * *Segmentation*: Divides the image into segments, classifying each pixel into different object categories.
 
