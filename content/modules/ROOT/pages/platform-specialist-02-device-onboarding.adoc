@@ -90,28 +90,183 @@ As the target configuration for devices and device fleets is declarative, users 
 
 == Flight Control deployment
 
-Install a released version of the Flight Control Service into the cluster by running:
+You will now install Flight Control in your own namespace so that you can control your Edge Devices in your Fleet.
 
-$ helm upgrade --install --version=<version-to-install> \
-    --namespace flightctl --create-namespace \
+Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here {openshift-console}/command-line-tools
+
+Login to the shared lab OpenShift {openshift-console}[cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
+
+Install the suggested version of Flight Control into the cluster by running
+
+[source,bash]
+----
+$ helm upgrade --install --version=0.4.0-rc3 \
+    --namespace <your-group-namespace> --create-namespace \
     flightctl oci://quay.io/flightctl/charts/flightctl
+----
 
-Verify your Flight Control Service is up and running:
+NOTE: you might see `flight-ui` pod in CrashLoop, because it didn't catch up with api pod status. Feel free to kill the pod, so that it can become Ready again.
 
-$ kubectl get pods -n flightctl
 
+You can now verify that Flight Control Service is up and running:
+
+[source,bash]
+----
+$ oc get pods -n <your-group-namespace>
+
+NAME                                 READY   STATUS    RESTARTS        AGE
+flightctl-api-7b64b94b64-67stg       1/1     Running   5 (7m34s ago)   10m
+flightctl-db-5bcb9bc55c-fcgz4        1/1     Running   0               10m
+flightctl-kv-0                       1/1     Running   0               10m
+flightctl-periodic-84d6fd99f-gzmwm   1/1     Running   4 (8m11s ago)   10m
+flightctl-ui-68b74c8d59-j7ktn        1/1     Running   0               5m8s
+flightctl-worker-65944b5565-8ztjf    1/1     Running   4 (7m39s ago)   10m
+keycloak-667675fbf9-pmv8q            1/1     Running   0               10m
+keycloak-db-0                        1/1     Running   0               10m
+----
+
+The deployed Flight Control include a Keycloak to authenticate to the Server itself. You can find the credentials for the created admin user and demo-user for Flight Control in the relative Secrets.
+
+[source,bash]
+----
+$ oc get secret/keycloak-demouser-secret -o json | jq .data.username | base64 -di
+$ oc get secret/keycloak-demouser-secret -o json | jq .data.password | base64 -di
+----
+
+You can then access Flight Control GUI using the retrieved demo-user credentials at the following URL
+
+[source,bash]
+----
+$ oc get route/flightctl-ui
+----
+
+image::platform-flightctl-keycloak.png[]
+
+image::platform-flightctl-overview.png[]
+
+You can now install Flight Control CLI since you will need that to generate the base agent configuration.
+
+
+Login to Flight Control API Server like this
+[source,bash]
+----
+----
 
 == Image Manage
+
+Image-based OSes allow the whole OS (and optionally also OS configuration and applications) to be versioned, deployed, and updated as a single unit. This reduces operational risk:
+
+    It minimizes potential drift between what has been thoroughly tested and what is deployed to a large number of devices.
+    It minimizes the risk of failed updates that require expensive maintenance or replacement through transactional updates and rollbacks.
+
+Flight Control initially focuses on image-based Linux OSes running bootable container images (bootc), with support for ostree and rpm-ostree images planned for later. It does not update package-based OSes.
+
+At a high level, the image building process for bootc works as follows:
+
+    Choose a base bootc image (for example Fedora, CentOS, or RHEL).
+    Create a Containerfile that layers onto that base image
+        the Flight Control agent and configuration,
+        (optionally) any drivers specific to your target deployment environment, and
+        (optionally) host configuration (e.g. CA bundles) and application workloads common to all deployments from this image.
+    Build, publish, and sign an OS image (bootc) using podman and skopeo.
+    Build, publish, and sign an OS disk image using bootc-image-builder (bib) and skopeo.
+
+The OS disk image is used to image (or "flash") a device when it is provisioned. For subsequent device updates, only the OS image (bootc) is required. This is because bootc is a file system image, that is it contains just the files in the file system including their attributes, but the disk layout (partitions, volumes) and file systems need to have been created first. The OS disk image includes everything, the disk layout, bootloader, file systems, and the files in the OS image (bootc). It can therefore be written verbatim to the device's drive.
+
+
+
 
 Given include agent 
 
 image::platform-flight-control-agent-include.svg[]
 
+Before you start, ensure you have installed the following prerequisites:
+
+    flightctl CLI latest version (installation guide)
+    oc
+
+When the Flight Control agent starts, it expects to find its configuration in /etc/flightctl/config.yaml. This configuration needs to contain:
+
+    the Flight Control enrollment service to connect to (enrollment endpoint),
+    the X.509 client certificate and key to connect with (enrollment certificate),
+    optionally, any further agent configuration (see Configuring the Flight Control Agent).
+
+Requesting an Enrollment Certificate
+
+Use the flightctl CLI to authenticate with the Flight Control service, then run the following command to obtain enrollment credentials with a validity of one year, in the format of an agent configuration file:
+
+flightctl certificate request --signer=enrollment --expiration=365d --output=embedded > config.yaml
+
+The returned config.yaml contains the URLs of the Flight Control service, its CA bundle, and the enrollment client certificate and key for the agent. It should look similar to this:
+
+enrollment-service:
+  authentication:
+    client-certificate-data: LS0tLS1CRUdJTiBD...
+    client-key-data: LS0tLS1CRUdJTiBF...
+  service:
+    certificate-authority-data: LS0tLS1CRUdJTiBD...
+    server: https://agent-api.flightctl.127.0.0.1.nip.io:7443
+  enrollment-ui-endpoint: https://ui.flightctl.127.0.0.1.nip.io:8081
+  grpc-management-endpoint: grpcs://agent-grpc.flightctl.127.0.0.1.nip.io:7444
+
+Building the OS Image (bootc)
 
 update manually the device
 
 == Device Management
-approval
+
+Enrolling Devices
+
+The first time the Flight Control Agent runs, it generates a cryptographic key pair that serves as the device's unique cryptographic identity. The pair's private key never leaves the device, so that the device cannot be duplicated or impersonated. The cryptographic identity is registered with the Flight Control Service during enrollment and gets wiped during device decommissioning.
+
+When the device is not yet enrolled, the agent performs service discovery to find its Flight Control Service instance. It then establishes a secure, mTLS-protected network connection to the Service using the X.509 enrollment certificate it has been provided with during image building or device provisioning. Next, it submits an Enrollment Request to the service that includes a description of the device's hardware and operating system as well as an X.509 Certificate Signing Request (CSR) including its cryptographic identity to obtain its initial management certificate. At this point, the device is not yet considered trusted and therefore remains quarantined in a "device lobby" until its Enrollment Request has been approved or denied by an authorized user (e.g. a administrator, an installer persona, or an auto-approver process).
+Enrolling using the Web UI
+Enrolling using the CLI
+
+You can list all devices currently waiting to be approved by running the following command:
+
+flightctl get enrollmentrequests
+
+The output should look similar to this:
+
+NAME                                                  APPROVAL  APPROVER  APPROVED LABELS
+54shovu028bvj6stkovjcvovjgo0r48618khdd5huhdjfn6raskg  Pending   <none>    <none>    
+
+The unique device name is generated by the agent and cannot be changed. By default, the agent chooses the "device fingerprint", a base32-encoded hash of the agent's public key, as device name.
+
+Viewing using the CLI
+
+You can see the devices in the device inventory by running the following command:
+
+flightctl get devices
+
+The output will be a table similar to this:
+
+NAME                                                  ALIAS    OWNER   SYSTEM  UPDATED     APPLICATIONS  LAST SEEN
+54shovu028bvj6stkovjcvovjgo0r48618khdd5huhdjfn6raskg  <none>   <none>  Online  Up-to-date  <none>        3 seconds ago
+
+
 fleet management
+
+Organizing Devices
+
+You can organize your devices by assigning them labels, for example to record their location ( ("region=emea", "site=factory-berlin"), hardware type ("hw-model=jetson", "hw-generation=orin"), or purpose ("device-type=autonomous-forklift"). This then allows you select devices by these labels when viewing the device inventory or applying operations to them.
+
+As good practice, labels should take the form of key=value pairs, whereby the key is the criterion you want to group by. However, labels that only consist of keys are also allowed.
+
+Labels must follow certain rules to be valid (in fact, these are the same as for Kubernetes):
+
+    Keys and value must each be 63 characters or less. Value may be omitted.
+    Keys and values may consist of alphanumeric characters (a-z, A-Z, 0-9). They may also contain dashes (-), underscores (_), dots (.), but not as the first or last character.
+
+Once devices are labeled, you can select a subset of devices by writing a "label selector", which is a comma-separated list of labels devices must have to be selected, for example site=factory-berlin,device-type=autonomous-forklift).
+
+There are multiple ways when and how to apply labels to devices:
+
+    You can define a set of default labels during image building that get automatically applied to all devices deploying that image.
+    You can assign initial labels during enrollment (see Enrolling Devices).
+    You can edit labels post-enrollment, which is described in the following sections.
+
+Now that you local Nvidia Device is under management from Flight Control you can define the target configuration template in a declarative way and add the required predefined apps.
 
 Move on to xref:platform-specialist-03-day-2-ops.adoc[Day 2 Operations]
