@@ -3,10 +3,13 @@ kind: AcceleratorProfile
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-  name: nvidia
+  name: migrated-gpu
   namespace: redhat-ods-applications
 spec:
-  displayName: nvidia
+  displayName: NVIDIA GPU
   enabled: true
   identifier: nvidia.com/gpu
-  tolerations: []
+  tolerations:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
