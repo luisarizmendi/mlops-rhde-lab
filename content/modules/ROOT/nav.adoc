@@ -47,5 +47,9 @@
 * xref:platform-specialist-02-device-onboarding.adoc#_device_management[- Device Management]
 * xref:platform-specialist-02-device-onboarding.adoc#_fleet_management[- Fleet Management]
 * xref:platform-specialist-03-day-2-ops.adoc[*3. Day-2 Operations*]
+* xref:platform-specialist-03-day-2-ops.adoc#_os_configuration[- OS Configuration]
+* xref:platform-specialist-03-day-2-ops.adoc#_application_deployment[- Application Deployment]
+* xref:platform-specialist-03-day-2-ops.adoc#_os_update[- OS Update]
+* xref:platform-specialist-03-day-2-ops.adoc#_device_monitoring[- Device Monitoring]
 * -------------------------
 * xref:99-summary.adoc[Summary]
