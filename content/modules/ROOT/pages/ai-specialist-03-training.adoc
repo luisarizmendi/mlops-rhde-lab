@@ -1,6 +1,6 @@
 = Model Training
 
-In production environments, training machine learning models is not as simple as running a script or experimenting in a notebook. A robust pipeline is essential to ensure:
+Training machine learning models in production environments is not as simple as running a script or experimenting in a notebook. A robust pipeline is essential to ensure:
 
 * Scalability: Handle large datasets and distribute computational workloads across resources efficiently.
 * Reproducibility: Replicate training runs for consistent model performance.
@@ -15,7 +15,7 @@ Elyra Pipelines, built on Jupyter Notebooks, offer an accessible way to prototyp
 * Tight dependency on Jupyter Notebook, unsuitable for high-availability systems.
 * Limited monitoring tools, storage integrations, and governance capabilities.
 
-While Elyra is excellent for prototyping, https://www.kubeflow.org/docs/components/pipelines/overview/[Kubeflow Pipelines] stand out as a robust, production-ready solution. Built for Kubernetes, Kubeflow supports the entire machine learning lifecycle—from data preparation to deployment—with features like:
+While Elyra is excellent for prototyping, https://www.kubeflow.org/docs/components/pipelines/overview/[Kubeflow Pipelines] stands out as a robust, production-ready solution. Built for Kubernetes, Kubeflow supports the entire machine learning lifecycle—from data preparation to deployment—with features like:
 
 * Seamless scalability and fault tolerance.
 * Integration with CI/CD platforms, monitoring tools, and storage systems.
@@ -40,7 +40,7 @@ These tools are pre-configured at this point, allowing you to dive straight into
 
 [IMPORTANT]
 
-You must have a Pipeline Server defined to proceed. If this step was completed during the Elyra Pipelines setup, you're all set. However, if you skipped that part, you’ll need to follow the steps to create the Pipeline Server now before continuing.
+To proceed, you must have a Pipeline Server defined. If this step was completed during the Elyra Pipelines setup, you're all set. However, if you skipped that part, you'll need to follow the steps to create the Pipeline Server now before continuing.
 
 
 
