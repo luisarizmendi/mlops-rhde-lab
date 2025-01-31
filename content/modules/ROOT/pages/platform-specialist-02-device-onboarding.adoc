@@ -260,6 +260,12 @@ $ sudo bootc update
 $ sudo reboot
 ----
 
+WARNING: Since we didn't incude the pull secret for Microshift yet, make sure to disable microshift service for now, otherwise the Greenboot will take over and reboot into the previous image version
+[source,bash]
+----
+$ sudo systemctl disable microshift
+----
+
 At reboot if you are connected to the local Nvidia Device console you see something like the image below
 
 image::platform-flight-control-qr.png[]
@@ -292,7 +298,7 @@ After approving the local Nvidia Device you can also see the Device in the devic
 
 [source,bash]
 ----
-$ $ flightctl get devices
+$ flightctl get devices
 
 NAME							ALIAS		OWNER	SYSTEM	UPDATED		APPLICATIONS	LAST SEEN
 cfq3nqurpqqhc91rs4sunh4a133dg3rlnntq9r7kfqr61rtmud60	nvidia-agx-vm	<none>	Unknown	UpToDate	Healthy		6 minutes ago
@@ -308,6 +314,8 @@ image::platform-flight-control-inventory.png[]
 image::platform-flight-control-device-status.png[]
 
 As you noticed from the interface you can also login to the Edge Device in the *Terminal* section
+
+We are not going to add any target OS image since we are going to manage that as part of the Fleet.
 
 NOTE: you can also deregister a device by deleting the agent cert key in /var/lib/flightctl/certs on the Edge Device
 
