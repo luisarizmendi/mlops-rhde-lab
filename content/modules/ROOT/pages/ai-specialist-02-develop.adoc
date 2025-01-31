@@ -360,7 +360,7 @@ Now it's time to start the most time consuming task, the model training. You hav
 
 [NOTE]
 
-By default, By default, the `train` method of the YOLO library handles both "Training" and "Validation" Data Sets, so you will see results for both in the output.
+By default, the `train` method of the YOLO library handles both "Training" and "Validation" Data Sets, so you will see results for both in the output.
 
 
 [source,python,role=execute,subs="attributes"]
