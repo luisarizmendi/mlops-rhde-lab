@@ -1,44 +1,36 @@
 = How to deploy the lab
 
+== OpenShift
+
+=== Lab Baseline
+
+In order to deploy the Lab baseline in OpenShift:
+
+[example]
+====
+
+1- Navigate to OpenShift Console (admin user): {openshift-console}
+
+2- Click on the `+` sign and import the bootstrap-lap YAML. https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/deployment/openshift/bootstrap-lab[Choose the right YAML file depending on the platform where you are deploying].
+
+image::lab-bootstrap.png[]
+
+3- When the Argo CD access is ready, log in using the admin credentials ().
+
+image::lab-argo.png[]
+
+4- Wait until all Applications are in Synced state (`OutofSync` in `common` application is not a problem)
+
+image::lab-argo-finish.png[]
+====
+
+
+=== Workshop Guide deployment
 
 
 
 
-== OpenShift baseline
-
-
-
-[source,yaml,role=execute,subs="attributes"]
-----
-
-----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[source,yaml,role=execute,subs="attributes"]
-----
-
-----
-
-
-
-
-
+antora
 
 
 
@@ -75,3 +67,9 @@ $ ansible-playbook playbook.yml -i inventory
 
 == DNS - DHCP - Router Openwrt
 using this guide https://openwrt.org/docs/guide-user/installation/openwrt_x86 I'll reuse a device at home
+
+
+
+
+
+

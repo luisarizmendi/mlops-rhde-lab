@@ -82,15 +82,12 @@ Let's review the https://github.com/luisarizmendi/workshop-object-detection-rhde
 
 The script defines the pipeline structure, specifying the order in which pipeline components are executed. It also includes the input variable definitions and the Kubernetes resources allocated to each task. Similar to the Elyra pipeline, the steps are distinct, meaning that if variables or files are required from one step in another, they must be explicitly 'passed' between them. Kubeflow simplifies this process by offering tools to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/[manage data handling between tasks] (there is also a feature to https://www.kubeflow.org/docs/components/pipelines/user-guides/data-handling/artifacts/[pass ML artifacts] that is not used in this workshop), allowing you to easily define input and output variables for seamless step-to-step communication. Additionally, Kubeflow provides straightforward mechanisms for creating and attaching Kubernetes Persistent Volumes, enabling file sharing between tasks. For instance, the dataset downloaded by the initial task can be stored on a volume and subsequently accessed by the training task without manual intervention.
 
-
-[NOTE]
-====
 The `train` step has an additional Persistent Volumen mounted to https://stackoverflow.com/questions/43373463/how-to-increase-shm-size-of-a-kubernetes-container-shm-size-equivalent-of-doc[extend the POD's Shared Memory]. This is needed when you run the inference using GPUs. Kubeflow v2 https://github.com/kubeflow/pipelines/pull/10913[already implemented the method to use `EmptyDir`] instead but the current version of the OpenShift AI pipelines does not have this path yet, so a Persistent Volume is used instead. 
 
-There is another important Consideration. When configuring Kubernetes tolerations, node selectors, and similar settings to select nodes with GPUs, it's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
+There is another important Consideration when working with GPUs. When having Kubernetes tolerations, node selectors, and similar settings to select nodes with GPUs, it's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
 
 This is also why you may observe references to NVIDIA GPU labels in tasks that don't directly require or use GPUs. These labels may be included to ensure that the tasks are scheduled correctly across the nodes that have access to the necessary resources, including the Persistent Volume.
-====
+
 
 
 [source,python,role=execute,subs="attributes"]
@@ -645,16 +642,10 @@ You can view the details of each task while it's running to monitor important in
 
 image::ai-train-pipeline-pod-task.png[]
 
-You can also open the OpenShift Console and check how the Persistent Volume was created and bounded into the PODs that are used to run the Pipeline tasks. For example, you can go to the OpenShift `Console > Workloads > PODs`, open the POD with that name for the training tasks and review the logs real time to double-check if a GPU or CPU is used during the training.
+You can open the OpenShift Console and check how the Persistent Volume was created and bounded into the PODs that are used to run the Pipeline tasks or, if using GPUs, you could go to the OpenShift `Console > Workloads > PODs`, open the POD with that name (you can use the Filter box on the top of the list) for the training tasks and review the logs real time to double-check if a GPU or CPU is used during the training (you might need to check the "Show full log" box so see all the log).
 
 
-
-
-
-
-
-
-
+image::ai-train-pipeline-run-gpu-logs[]
 
 
 After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to it.
