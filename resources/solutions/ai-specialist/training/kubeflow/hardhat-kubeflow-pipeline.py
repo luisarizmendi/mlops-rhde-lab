@@ -52,6 +52,9 @@ def train_model(
     batch_size: int = 16,
     img_size: int = 640,
     name: str = "yolo",
+    yolo_model: str = "yolo11m.pt",
+    optimizer: str = "SGD",
+    learning_rate: float = 0.005,
 ) -> NamedTuple('Outputs', [
     ('train_dir', str),
     ('test_dir', str),
@@ -67,12 +70,21 @@ def train_model(
     
     CONFIG = {
         'name': name,
-        'model': 'yolo11m.pt',
+        'model': yolo_model,
         'data': f"{dataset_path}/data.yaml",
         'epochs': epochs,
         'batch': batch_size,
         'imgsz': img_size,
         'device': device,
+        'optimizer': optimizer,
+        'lr0': 0.001,
+        'lrf': learning_rate,
+        'momentum': 0.9,
+        'weight_decay': 0.0005,
+        'warmup_epochs': 3,
+        'warmup_bias_lr': 0.01,
+        'warmup_momentum': 0.8,
+        'amp': False,
     }
 
     # Configure PyTorch
@@ -307,6 +319,9 @@ def yolo_training_pipeline(
     pvc_size: str = "5Gi",
     pvc_name_suffix: str = "-kubeflow-pvc",
     train_name: str = "hardhat",
+    train_yolo_model: str = "yolo11m.pt",
+    train_optimizer: str = "SGD",
+    train_learning_rate: float = 0.005,
     train_epochs: int = 50,
     train_batch_size: int = 16,
     train_img_size: int = 640,
@@ -357,7 +372,10 @@ def yolo_training_pipeline(
         epochs=train_epochs,
         batch_size=train_batch_size,
         img_size=train_img_size,
-        name=train_name
+        name=train_name,
+        optimizer=train_optimizer,
+        learning_rate=train_learning_rate,
+        yolo_model=train_yolo_model
     ).after(download_task)
     train_task.set_gpu_limit(1)
     train_task.set_memory_request('2Gi')

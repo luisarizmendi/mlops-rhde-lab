@@ -625,6 +625,9 @@ It's time to run the imported Kubeflow Pipeline:
     * Ephoch number: <your value>
     * Image Size: `640`
     * Training name (e.g. `hardhat`)
+    * Base YOLO model name: `yolo11m.pt`
+    * Learning Rate: `0.005`
+    * Optimizer: `SGD`
 ====
 
 image::ai-train-pipeline-run.png[]
