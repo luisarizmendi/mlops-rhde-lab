@@ -41,6 +41,11 @@
 * xref:platform-specialist-01-image-bake.adoc#_image_deploy[- Image Deploy]
 * xref:platform-specialist-01-image-bake.adoc#_image_rollout[- Image Rollout]
 * xref:platform-specialist-02-device-onboarding.adoc[*2. Device Onboarding*]
+* xref:platform-specialist-02-device-onboarding.adoc#_flight_control_intro[- Flight Control Intro]
+* xref:platform-specialist-02-device-onboarding.adoc#_flight_control_deployment[- Flight Control Deployment]
+* xref:platform-specialist-02-device-onboarding.adoc#_image_manage[- Image Manage]
+* xref:platform-specialist-02-device-onboarding.adoc#_device_management[- Device Management]
+* xref:platform-specialist-02-device-onboarding.adoc#_fleet_management[- Fleet Management]
 * xref:platform-specialist-03-day-2-ops.adoc[*3. Day-2 Operations*]
 * -------------------------
 * xref:99-summary.adoc[Summary]
