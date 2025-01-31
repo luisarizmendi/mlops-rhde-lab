@@ -17,7 +17,10 @@
 #    train_batch_size: int [Default: 16.0]
 #    train_epochs: int [Default: 50.0]
 #    train_img_size: int [Default: 640.0]
+#    train_learning_rate: float [Default: 0.005]
 #    train_name: str [Default: 'hardhat']
+#    train_optimizer: str [Default: 'SGD']
+#    train_yolo_model: str [Default: 'yolo11m.pt']
 components:
   comp-createpvc:
     executorLabel: exec-createpvc
@@ -219,8 +222,20 @@ components:
           defaultValue: 640.0
           isOptional: true
           parameterType: NUMBER_INTEGER
+        learning_rate:
+          defaultValue: 0.005
+          isOptional: true
+          parameterType: NUMBER_DOUBLE
         name:
           defaultValue: yolo
+          isOptional: true
+          parameterType: STRING
+        optimizer:
+          defaultValue: SGD
+          isOptional: true
+          parameterType: STRING
+        yolo_model:
+          defaultValue: yolo11m.pt
           isOptional: true
           parameterType: STRING
     outputDefinitions:
@@ -400,20 +415,25 @@ deploymentSpec:
         - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
           \ *\n\ndef train_model(\n    dataset_path: str,\n    epochs: int = 50,\n\
           \    batch_size: int = 16,\n    img_size: int = 640,\n    name: str = \"\
-          yolo\",\n) -> NamedTuple('Outputs', [\n    ('train_dir', str),\n    ('test_dir',\
-          \ str),\n    ('metrics', dict)\n]):\n    import torch\n    from ultralytics\
-          \ import YOLO\n    import pandas as pd\n    import os\n\n    device = torch.device(\"\
-          cuda:0\" if torch.cuda.is_available() else \"cpu\")\n    print(f\"Using\
-          \ device: {device}\")\n\n    CONFIG = {\n        'name': name,\n       \
-          \ 'model': 'yolo11m.pt',\n        'data': f\"{dataset_path}/data.yaml\"\
-          ,\n        'epochs': epochs,\n        'batch': batch_size,\n        'imgsz':\
-          \ img_size,\n        'device': device,\n    }\n\n    # Configure PyTorch\n\
-          \    os.environ[\"PYTORCH_CUDA_ALLOC_CONF\"] = \"expandable_segments:True\"\
-          \n\n    # Initialize and train model\n    model = YOLO(CONFIG['model'])\n\
-          \    results_train = model.train(\n        name=CONFIG['name'],\n      \
-          \  data=CONFIG['data'],\n        epochs=CONFIG['epochs'],\n        batch=CONFIG['batch'],\n\
-          \        imgsz=CONFIG['imgsz'],\n        device=CONFIG['device'],\n    )\n\
-          \n    # Evaluate model\n    results_test = model.val(\n        data=CONFIG['data'],\n\
+          yolo\",\n    yolo_model: str = \"yolo11m.pt\",\n    optimizer: str = \"\
+          SGD\",\n    learning_rate: float = 0.005,\n) -> NamedTuple('Outputs', [\n\
+          \    ('train_dir', str),\n    ('test_dir', str),\n    ('metrics', dict)\n\
+          ]):\n    import torch\n    from ultralytics import YOLO\n    import pandas\
+          \ as pd\n    import os\n\n    device = torch.device(\"cuda:0\" if torch.cuda.is_available()\
+          \ else \"cpu\")\n    print(f\"Using device: {device}\")\n\n    CONFIG =\
+          \ {\n        'name': name,\n        'model': yolo_model,\n        'data':\
+          \ f\"{dataset_path}/data.yaml\",\n        'epochs': epochs,\n        'batch':\
+          \ batch_size,\n        'imgsz': img_size,\n        'device': device,\n \
+          \       'optimizer': optimizer,\n        'lr0': 0.001,\n        'lrf': learning_rate,\n\
+          \        'momentum': 0.9,\n        'weight_decay': 0.0005,\n        'warmup_epochs':\
+          \ 3,\n        'warmup_bias_lr': 0.01,\n        'warmup_momentum': 0.8,\n\
+          \        'amp': False,\n    }\n\n    # Configure PyTorch\n    os.environ[\"\
+          PYTORCH_CUDA_ALLOC_CONF\"] = \"expandable_segments:True\"\n\n    # Initialize\
+          \ and train model\n    model = YOLO(CONFIG['model'])\n    results_train\
+          \ = model.train(\n        name=CONFIG['name'],\n        data=CONFIG['data'],\n\
+          \        epochs=CONFIG['epochs'],\n        batch=CONFIG['batch'],\n    \
+          \    imgsz=CONFIG['imgsz'],\n        device=CONFIG['device'],\n    )\n\n\
+          \    # Evaluate model\n    results_test = model.val(\n        data=CONFIG['data'],\n\
           \        split='test',\n        device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n\
           \    )\n\n    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
           \ \"results.csv\")\n    results_df = pd.read_csv(results_csv_path)\n\n \
@@ -655,8 +675,14 @@ root:
               componentInputParameter: train_epochs
             img_size:
               componentInputParameter: train_img_size
+            learning_rate:
+              componentInputParameter: train_learning_rate
             name:
               componentInputParameter: train_name
+            optimizer:
+              componentInputParameter: train_optimizer
+            yolo_model:
+              componentInputParameter: train_yolo_model
         taskInfo:
           name: train-model
       upload-to-minio:
@@ -732,8 +758,20 @@ root:
         defaultValue: 640.0
         isOptional: true
         parameterType: NUMBER_INTEGER
+      train_learning_rate:
+        defaultValue: 0.005
+        isOptional: true
+        parameterType: NUMBER_DOUBLE
       train_name:
         defaultValue: hardhat
+        isOptional: true
+        parameterType: STRING
+      train_optimizer:
+        defaultValue: SGD
+        isOptional: true
+        parameterType: STRING
+      train_yolo_model:
+        defaultValue: yolo11m.pt
         isOptional: true
         parameterType: STRING
 schemaVersion: 2.1.0

@@ -27,13 +27,22 @@ image::lab-argo-finish.png[]
 
 === Workshop Guide deployment
 
+If you want to have your own Workshop Guide:
 
 
+[example]
+====
 
-antora
+1. Clone this GitHub repo
+
+2. Make changes in the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[`antora.yml`] file with your values and change anything that you want in the workshop content.
+
+3. Push Changes
+
+4. 
 
 
-
+====
 
 
 
