@@ -4,18 +4,15 @@
 
 
 
-== OpenShift
+== OpenShift baseline
 
-- create users in ocp
 
 
+[source,yaml,role=execute,subs="attributes"]
+----
 
+----
 
-INSTALL:
-gitops
-minio storage  + create buckets
-pipelines
-flightctl
 
 
 
@@ -24,188 +21,30 @@ flightctl
 
 
 
-remove nvidia operator cluster object and recreate it
 
 
 
-https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.16/html-single/working_with_accelerators/index#enabling-nvidia-gpus_accelerators
 
 
 
 
 
 
+[source,yaml,role=execute,subs="attributes"]
+----
 
+----
 
 
 
-FROM fedora:latest
 
-RUN dnf install -y \
-    curl \
-    && curl -O https://dl.min.io/client/mc/release/linux-amd64/mc \
-    && chmod +x mc \
-    && mv mc /usr/local/bin/ \
-    && dnf clean all
 
-ENTRYPOINT ["mc"]
 
-CMD ["--help"]
 
 
 
 
 
-
-
-
-
-
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: bootstrap-minio
-  namespace: openshift-gitops
-spec:
-  template:
-    spec:
-      containers:
-      - name: bootstrap-lab
-        image: quay.io/luisarizmendi/mc:latest 
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-            MINIO_ALIAS="minio"
-            MINIO_URL="http://minio-service.larizmen-dev.svc.cluster.local:9000"
-            ACCESS_KEY="admin"
-            SECRET_KEY="R3dh4t1!"
-
-            mkdir -p /tmp/mc-config
-            export MC_CONFIG_DIR=/tmp/mc-config
-
-            # Wait to be ready
-            while true; do
-                if mc alias set "$MINIO_ALIAS" "$MINIO_URL" "$ACCESS_KEY" "$SECRET_KEY"; then
-                    echo "MinIO alias set successfully!"
-                    break
-                else
-                    echo "Retrying in 2 seconds..."
-                    sleep 2
-                fi
-            done
-
-            for i in $(seq -w 1 25); do
-                USER="user$i"
-                PASSWORD="redhat$i"
-                POLICY_FILE="/tmp/${USER}-policy.json"
-                BUCKET_NAME="${USER}-ai"
-
-                echo "Creating user: $USER with password: $PASSWORD"
-                mc admin user add $MINIO_ALIAS $USER $PASSWORD
-
-                echo "Creating policy for: $USER"
-                cat > $POLICY_FILE << EOF
-            {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Action": [
-                            "s3:ListBucket"
-                        ],
-                        "Resource": [
-                            "arn:aws:s3:::${USER}-*"
-                        ]
-                    },
-                    {
-                        "Effect": "Allow",
-                        "Action": [
-                            "s3:PutObject",
-                            "s3:DeleteObject",
-                            "s3:GetObject"
-                        ],
-                        "Resource": [
-                            "arn:aws:s3:::${USER}-*/*"
-                        ]
-                    }
-                ]
-            }
-            EOF
-
-                echo "Adding policy to MinIO: ${USER}-policy"
-                mc admin policy create $MINIO_ALIAS ${USER}-policy $POLICY_FILE
-
-                echo "Attaching policy to user: $USER"
-                mc admin policy attach $MINIO_ALIAS ${USER}-policy --user=$USER
-
-                echo "Creating bucket: $BUCKET_NAME"
-                mc mb ${MINIO_ALIAS}/${BUCKET_NAME}
-
-                # Clean up policy file
-                rm -f $POLICY_FILE
-
-                echo "User $USER setup complete."
-                echo "-------------------------"
-            done
-
-            echo "Environment ready!"
-      restartPolicy: Never
-  backoffLimit: 1
-
-
-
-
-
-
-
-
-
-
-mc alias set minio http://minio-service.larizmen-dev.svc.cluster.local:9000 admin R3dh4t1!
-
-
-
-
-
-
-
-
-mc admin user add minio user01 redhat01
-
-cat > user01-policy.json << EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::user01-*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:DeleteObject",
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::user01-*/*"
-            ]
-        }
-    ]
-}
-EOF
-
-mc admin policy create myminio user01-policy user01-policy.json
-
-mc admin policy attach minio user01-policy --user=user01
-
-mc mb minio/user01-ai
 
 == Gitea
 preparing the environment Gitea:
