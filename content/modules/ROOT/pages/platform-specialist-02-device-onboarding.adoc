@@ -311,26 +311,24 @@ As you noticed from the interface you can also login to the Edge Device in the *
 
 NOTE: you can also deregister a device by deleting the agent cert key in /var/lib/flightctl/certs on the Edge Device
 
-=== Fleet Management
+== Fleet Management
 
-You can organize your devices by assigning them labels, for example to record their location ( ("region=emea", "site=factory-berlin"), hardware type ("hw-model=jetson", "hw-generation=orin"), or purpose ("device-type=autonomous-forklift"). This then allows you select devices by these labels when viewing the device inventory or applying operations to them.
+You can now organize your devices by assigning them labels, for example to record their location ( ("region=emea", "site=factory-berlin"), hardware type ("hw-model=jetson", "hw-generation=orin"), or purpose ("device-type=autonomous-forklift"). 
 
-As good practice, labels should take the form of key=value pairs, whereby the key is the criterion you want to group by. However, labels that only consist of keys are also allowed.
+Labels must follow certain rules to be valid (the same as for Kubernetes):
 
-Labels must follow certain rules to be valid (in fact, these are the same as for Kubernetes):
-
-    Keys and value must each be 63 characters or less. Value may be omitted.
-    Keys and values may consist of alphanumeric characters (a-z, A-Z, 0-9). They may also contain dashes (-), underscores (_), dots (.), but not as the first or last character.
+* Keys and value must each be 63 characters or less. Value may be omitted.
+* Keys and values may consist of alphanumeric characters (a-z, A-Z, 0-9). They may also contain dashes (-), underscores (_), dots (.), but not as the first or last character.
 
 Once devices are labeled, you can select a subset of devices by writing a "label selector", which is a comma-separated list of labels devices must have to be selected, for example site=factory-berlin,device-type=autonomous-forklift).
 
-There are multiple ways when and how to apply labels to devices:
+We are now going to create a new Fleet and make sure that it includes the just approved device.
 
-    You can define a set of default labels during image building that get automatically applied to all devices deploying that image.
-    You can assign initial labels during enrollment (see Enrolling Devices).
-    You can edit labels post-enrollment, which is described in the following sections.
+image::platform-flight-control-fleet-def1.png[]
 
-image::platform-flightctl-something.png[]
+image::platform-flight-control-fleet-def2.png[]
+
+image::platform-flight-control-fleet-inventory.png[]
 
 Now that you local Nvidia Device is under management from Flight Control you can define the target configuration template in a declarative way and add the required predefined apps and / or OS configuration.
 
