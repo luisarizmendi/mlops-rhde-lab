@@ -1,48 +1,5 @@
-= How to deploy the lab
 
-== OpenShift
-
-=== Lab Baseline
-
-In order to deploy the Lab baseline in OpenShift:
-
-[example]
-====
-
-1- Navigate to OpenShift Console (admin user): {openshift-console}
-
-2- Click on the `+` sign and import the bootstrap-lap YAML. https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/deployment/openshift/bootstrap-lab[Choose the right YAML file depending on the platform where you are deploying].
-
-image::lab-bootstrap.png[]
-
-3- When the Argo CD access is ready, log in using the admin credentials ().
-
-image::lab-argo.png[]
-
-4- Wait until all Applications are in Synced state (`OutofSync` in `common` application is not a problem)
-
-image::lab-argo-finish.png[]
-====
-
-
-=== Workshop Guide deployment
-
-If you want to have your own Workshop Guide first you need to prepare the values for the guide variables. The default values can be found in the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[`antora.yaml` file]. 
-
-Once you know the values that you want to apply to the guide, you can deploy the guide using a Kubernetes Job that runs Helm.
-
-
-[example]
-====
-In order to deploy the guide you will need to:
-
-1- Navigate to the OpenShift Web Console
-
-2- Click the `+` icon on the top right corner
-
-3- Copy and paste the following YAML file chaning the values according to your needs
-
-----
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -127,46 +84,5 @@ spec:
             type: RuntimeDefault
       restartPolicy: Never
   backoffLimit: 1
-----
-
-4- Click "Create"
-====
-
-Once you create the object, the guide will be deployed in a new the `showroom` OpenShift project. You will find in that project a route pointing to the guide that will be available as soon as the showroom POD is running.
-
-
-== Gitea
-preparing the environment Gitea:
-$ ansible-playbook playbook.yml -i inventory 
-
-== FlighCTL
-
-  # git clone repo
-  # make sure you have the following packaes installed: git, make, and go (>= 1.21), openssl, openssl-devel, podman-compose
-  # sudo dnf install git make golang openssl openssl-devel podman-compose
-  # ensure podman socket is enabled : systemctl --user enable --now podman.socket
-  # build repo: make build
-  # install kind:
-  #[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
-  # install kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
-  # install helm: https://helm.sh/docs/intro/install/#from-script
-  # deploy using helm with kind local cluster (it includes installing helm)
-  # make deploy
-  # CANT USE LOCAL METHOD AS IT DOESN'T INCLUDE UI
-  # install on cluster with acm
-  # helm upgrade --install --version=0-latest     --namespace flightctl --create-namespace     flightctl oci://quay.io/flightctl/charts/flightctl     --values content/modules/ROOT/pages/scripts/environment/values.yaml
-  # fix redis permission by patching ss with this user and group id: 1000860000
-  # install flighctl cli https://github.com/flightctl/flightctl/blob/main/docs/user/getting-started.md#installing-the-flight-control-cli
-  # login into flightctl
-  # $ flightctl login https://api.flightctl.apps.my.lmf.openshift.es/  --insecure-skip-tls-verify --token=sha256~CGM1m_RbqBqS1bbNdakdGVRU6-2aRZlwzlexZLpVQ3Y
-  # now you can get the devices registered with
-  # flightctl get devices
-
-== DNS - DHCP - Router Openwrt
-using this guide https://openwrt.org/docs/guide-user/installation/openwrt_x86 I'll reuse a device at home
-
-
-
-
 
 
