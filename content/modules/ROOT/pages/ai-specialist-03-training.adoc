@@ -73,7 +73,7 @@ image::ai-train-code-terminal.png[]
 git clone http://{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 ----
 
-6. Set Up the Pipeline Script: Create a new file `hardhat-kubeflow-pipeline.py` in the cloned directory (right-click to create a file). Copy the example script from: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[hardhat-kubeflow-pipeline.py]. Save it and prepare for review.
+6- Set Up the Pipeline Script: Create a new file `hardhat-kubeflow-pipeline.py` in the cloned directory (right-click to create a file). Copy the example script from: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[hardhat-kubeflow-pipeline.py]. Save it and prepare for review.
 ====
 
 Next, we’ll review the script’s implementation to understand the pipeline’s logic and adapt it to our needs.
@@ -238,6 +238,10 @@ def yolo_training_pipeline(
 ----
 
 Besides the Pipeline definition, the  https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script] also contains the step (components) definitions.
+
+[NOTE]
+
+For production pipelines it is better to configure https://kfp-kubernetes.readthedocs.io/en/kfp-kubernetes-1.4.0/source/kubernetes.html#[Kubernetes Secrets and import the sensitive information from them] instead of passing them as clear text in the pipeline inputs.
 
 The first step is to download the Dataset. This task has a Persistent Volume attached where it will store the Dataset contents. It will use the Roboflow libraries and the provided input variables to download the files directly from Roboflow, as it was done during the Model Development section.
 
@@ -550,7 +554,7 @@ Before proceeding with the import, we need to convert the Python script into a Y
 ====
 Let's generate the Pipeline YAML file and push it into Gitea.
 
-1. Run the following commands in the Code terminal:
+1- Run the following commands in the Code terminal:
 
 [source,shell,role=execute,subs="attributes"]
 ----
@@ -561,7 +565,7 @@ python hardhat-kubeflow-pipeline.py
 ----
 
 
-2. You will generate a file named `yolo_training_pipeline.yaml`. Next, push the newly created files to Gitea. In the terminal window, run the following commands:
+2- You will generate a file named `yolo_training_pipeline.yaml`. Next, push the newly created files to Gitea. In the terminal window, run the following commands:
 
 [source,shell,role=execute,subs="attributes"]
 ----
@@ -573,7 +577,7 @@ git commit -m "kubeflow Pipeline"
 git push
 ----
 
-3. Now, navigate to Gitea at http://{gitea-server} to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
+3- Now, navigate to Gitea at http://{gitea-server} to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
 
 image::ai-train-gitea-raw.png[]
 
@@ -598,6 +602,9 @@ After the correct import, you will see the Pipeline diagram:
 
 
 image::ai-train-kubeflow-pipe.png[]
+
+
+Once you have imported the pipeline **you should stop the Code Wrokbench** to save resources in the OpenShift cluster.
 
 
 
@@ -675,7 +682,7 @@ In this section, a new Kubeflow Pipeline was created based on the https://github
 
 However, if you used a reduced dataset ("*MockTrain*") or limited epochs for faster training and believe the model might not perform adequately in the field, it is advisable to discard the generated model. Instead, you can upload and use the  https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat[provided pre-trained model] going forward to ensure better accuracy and robustness in deployment.
 
-
+Before jump into the next section, be sure that you stopped your Code Workbench to save some resources in the OpenShift cluster.
 
 
 
