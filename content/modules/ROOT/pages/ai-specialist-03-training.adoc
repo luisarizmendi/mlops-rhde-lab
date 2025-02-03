@@ -29,7 +29,7 @@ For enterprises seeking a scalable MLOps solution, Kubeflow on OpenShift AI is a
 
 We’ll use the following tools to train a YOLO model to detect hardhats:
 
-* OpenShift AI: Manage Kubeflow pipelines within a Kubernetes-based environment. Leverage the Model Registry to store, version, and track models, along with their metadata (e.g., training parameters and metrics).
+* OpenShift AI: Manage Kubeflow pipelines within a Kubernetes-based environment. Leverage the Model Registry to store model version along with their metadata (e.g., training parameters and metrics).
 
 * GitHub: Version control and collaborative development for pipeline definitions.
 
@@ -40,7 +40,7 @@ These tools are pre-configured at this point, allowing you to dive straight into
 
 [IMPORTANT]
 
-To proceed, you must have a Pipeline Server defined. If this step was completed during the Elyra Pipelines setup, you're all set. However, if you skipped that part, you'll need to follow the steps to create the Pipeline Server now before continuing.
+To proceed, you must have a Pipeline Server defined. If this step was completed during the xref:ai-specialist-02-develop.adoc#_create_an_elyra_peline[Elyra Pipelines setup], you're all set. However, if you skipped that part, you'll need to follow the steps to create the Pipeline Server now before continuing.
 
 
 
@@ -84,7 +84,7 @@ The script defines the pipeline structure, specifying the order in which pipelin
 
 The `train` step has an additional Persistent Volumen mounted to https://stackoverflow.com/questions/43373463/how-to-increase-shm-size-of-a-kubernetes-container-shm-size-equivalent-of-doc[extend the POD's Shared Memory]. This is needed when you run the inference using GPUs. Kubeflow v2 https://github.com/kubeflow/pipelines/pull/10913[already implemented the method to use `EmptyDir`] instead but the current version of the OpenShift AI pipelines does not have this path yet, so a Persistent Volume is used instead. 
 
-There is another important Consideration when working with GPUs. When having Kubernetes tolerations, node selectors, and similar settings to select nodes with GPUs, it's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
+There is another important consideration when working with GPUs. When having Kubernetes tolerations, node selectors, and similar settings to select nodes with GPUs, it's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
 
 This is also why you may observe references to NVIDIA GPU labels in tasks that don't directly require or use GPUs. These labels may be included to ensure that the tasks are scheduled correctly across the nodes that have access to the necessary resources, including the Persistent Volume.
 
@@ -367,7 +367,7 @@ def train_model(
 
 The training step also shares the Persistent Volume with the next step, as the trained model needs to be uploaded to Object Storage. Since each training iteration may result in a different name and file path, the training name is passed as an input variable. This allows dynamic calculation of the model paths and the performance result files.
 
-The trained model native PyTorch `.pt` is uploaded to the bucket specified by the input variable, stored in the `/model/pytorch` directory. If you have exported the model in alternative formats, such as `onnx` or `torchscript`, you can upload those files as well. However, it's important to consider that certain model serving solutions, like the Model Server, may require a specific directory structure. For instance, OpenVINO serving with the `onnx-1` format expects the directory structure to be `<version>/<model_name>.onnx`, while NVIDIA Triton for `torchscript` expects the format `<version>/model.pt`.
+The trained model native PyTorch `.pt` is uploaded to the bucket specified by the input variable, stored in the `/model/pytorch` directory. If you have exported the model in alternative formats, such as `onnx` or `torchscript`, you can upload those files as well. However, it's important to consider that certain model serving solutions may require a specific directory structure. For instance, OpenVINO serving with the `onnx-1` format expects the directory structure to be `<version>/<model_name>.onnx`, while NVIDIA Triton for `torchscript` expects the format `<version>/model.pt`.
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -463,7 +463,7 @@ def upload_to_minio(
 
 Once the model has been uploaded to Object Storage, the final step is to register the model in the Model Registry.
 
-The OpenShift AI Model Registry is a centralized repository for storing, managing, and tracking machine learning models throughout their lifecycle. It allows you to add rich metadata to each model's description, which can include performance metrics, hyperparameters, model version, and even the container image used for training. This metadata is invaluable for model versioning, auditing, and traceability, ensuring that all relevant information about the model's origin and performance is easily accessible and well-documented for future use.
+The OpenShift AI Model Registry is a centralized repository for metadata storing, managing, and tracking machine learning models throughout their lifecycle. It allows you to add rich metadata to each model's description, which can include performance metrics, hyperparameters, model version, and even the container image used for training. This metadata is invaluable for model versioning, auditing, and traceability, ensuring that all relevant information about the model's origin and performance is easily accessible and well-documented for future use.
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -544,7 +544,7 @@ def push_to_model_registry(
 
 === Importing the Training Pipeline 
 
-Before proceeding with the import, we need to convert the Python script into a YAML Kubeflow Pipeline definition. Using the `kfp` library, we will execute the script to generate the YAML file required for importing the pipeline
+Before proceeding with the import, we need to convert the Python script into a YAML Kubeflow Pipeline definition (https://www.kubeflow.org/docs/components/pipelines/user-guides/core-functions/compile-a-pipeline/#ir-yaml[Intermediate Representation]). Using the `kfp` library, we will execute the script to generate the YAML file required for importing the pipeline
 
 [example]
 ====
@@ -648,7 +648,7 @@ image::ai-train-pipeline-pod-task.png[]
 You can open the OpenShift Console and check how the Persistent Volume was created and bounded into the PODs that are used to run the Pipeline tasks or, if using GPUs, you could go to the OpenShift `Console > Workloads > PODs`, open the POD with that name (you can use the Filter box on the top of the list) for the training tasks and review the logs real time to double-check if a GPU or CPU is used during the training (you might need to check the "Show full log" box so see all the log).
 
 
-image::ai-train-pipeline-run-gpu-logs[]
+image::ai-train-pipeline-run-gpu-logs.png[]
 
 
 After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to it.
