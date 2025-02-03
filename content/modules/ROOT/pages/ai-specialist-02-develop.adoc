@@ -669,7 +669,7 @@ If you want to run Pipelines in OpenShift AI, you will need to add into your AI 
 To create a Pipeline Server:
 
 1. Navigate to "Data Science Pipelines" in OpenShift AI and configure a new pipeline server.
-2. Fill in the Data Connection information but this time use the Bucket userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to `none` (as it is not configured in MinIO).
+2. Fill in the Data Connection information but this time use the Bucket "userpass:[<span id="gnumberVal"></span>]-ai-pipelines" and set the region to `none` (as it is not configured in MinIO).
 3. Save the configuration.
 4. Once the configuration is ready, restart any running workbenches to apply the updates.
 ====
@@ -865,7 +865,7 @@ Once the Pipeline is finished, you could check that the contents are saved into 
 
 == Solution and Next Steps
 
-In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "*MockTrain*" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/assets/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained used this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat/v1[metrics that you can find here].
+In this section, you created an initial prototype of the model by training it with different hyperparameter values to explore its potential. If the performance metrics obtained are not satisfactory, or if you used the "*MockTrain*" dataset with a reduced set of images, you can now https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/assets/object-detection-hardhat-or-hat/v1/weights/best.pt[download and utilize a pretrained model]. This pretrained model was https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb[trained using this Jupyter Notebook] using https://universe.roboflow.com/luisarizmendi/hardhat-or-hat/dataset/1[this Roboflow Dataset version], obtaining the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat/v1[metrics that you can find here].
 
 You can now also push to the Git Source repository the files that you created:
 

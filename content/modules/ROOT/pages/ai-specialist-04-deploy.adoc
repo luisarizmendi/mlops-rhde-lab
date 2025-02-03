@@ -4,7 +4,7 @@ The Model Serving Phase is where a validated machine learning model is prepared 
 
 Key aspects to take into account while AI Model releasing:
 
-* *Versioning and Registry*: The model is versioned and stored in a registry with metadata like training data, performance metrics, and hyperparameters. This step was already done by the Kubeflow Pipeline by publishing the model into the OpenShift AI Model Registry.
+* *Versioning and Registry*: The model is versioned in a registry with metadata like training data, performance metrics, and hyperparameters. This step was already done by the Kubeflow Pipeline by publishing the model into the OpenShift AI Model Registry.
 * *Packaging*: The model and its dependencies are prepared for consistent execution by containerizing them or converting them into standardized formats like ONNX or TorchScript. During the workshop, we demonstrated how to "export" the model from its native PyTorch format into other formats. For instance, TorchScript is particularly well-suited for edge deployments due to its compact size and efficiency. However, for simplicity in this workshop, you will continue using the native PyTorch file format. This approach ensures flexibility while allowing you to explore the practical benefits of exporting models in production scenarios.
 * *Validation*: Additional tests, such as performance, integration, and scalability, are conducted in staging environments to ensure the model meets production requirements. In this workshop, we will perform a simple live test of the model to verify its functionality before proceeding with full deployment to edge devices.
 * *Deployment*: Techniques like blue-green or canary deployments are commonly used to ensure a smooth and reliable transition to production. While OpenShift AI offers Model Serving capabilities through `KServe` and `ModelMesh` for models within the same cluster, deploying inference on a different environment—such as a Single Node OpenShift cluster or directly on Red Hat Enterprise Linux—requires a separate workflow to handle model transfer and deployment. In this workshop, we demonstrate the use of a custom Inference Server to host the PyTorch model, tailored for deployment beyond the primary OpenShift AI cluster.
@@ -19,7 +19,7 @@ In this step, you will build several container images locally. To do this, ensur
 
 [NOTE]
 
-The examples below use (https//quay.io)[Quay.io] as the Container Registry.
+The examples below use https//quay.io[Quay.io] as the Container Registry.
 
 
 
@@ -51,7 +51,7 @@ Before diving into the deployment details, let’s first understand the overall 
 
 image::ai-deploy-object-detection-webcam.png[]
 
-The solution is based on the following microservices, you can clik on the names to get detailed information about each one.c
+The solution is based on the following microservices, you can clik on the names to get detailed information about each one:
 
 * https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager[Camera Stream Manager]
 
@@ -69,11 +69,11 @@ The workflow is the following:
 1. The Camera Stream Manager sends images to the Inference API
 2. The Inference Server, that contains the AI model detecting objects, returns the predictions
 3. The "Action" service calls the inference endpoint and if detects certain objects it will trigger an alarm, that is sent to the database hosted in a remote site.
-4. The information of the database is shown in the database
+4. The information of the device is shown in the Dashboard
 
 
 
-Although application development is not covered in this workshop, it plays a fundamental role and can also be carried out on OpenShift. OpenShift provides several tools to support application development, such as:
+Although application development is not covered in this workshop, it plays a fundamental role and can also be carried out on OpenShift. You can deploy on top of OpenShift several tools to support application development, such as:
 
 * *OpenShift Developer Hub*: This internal developer portal centralizes access to resources, templates, and documentation, accelerating the onboarding process and standardizing application development across teams. It ensures consistency and visibility into microservices and APIs.
 
@@ -196,7 +196,7 @@ When planning to create a container image, it's essential to consider the system
 
 In our case, we will build x86 container images for the services that are running on the Cloud and container images for both x86 and ARM architectures for the ones running at the Edge, leveraging the multi-architecture container image feature available in certain Container Image Registries like Quay.
 
-You can find the Containerfiles for each application in the `src` directory of each application's URL shared above, along with the application code and other associated files. Feel free to clone the repository and use these files for your own builds.
+You can find the Containerfiles for each application in the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/serving/apps[`src` directory of each application's URL] shared above, along with the application code and other associated files. Feel free to clone the repository and use these files for your own builds.
 
 [NOTE]
 
@@ -511,7 +511,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisar
 4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the Dashboard backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
 
 ----
-podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
+podman run -it --rm --network=host -e ALERT_ENDPOINT=<DASHBOARD_BACKEND_OCP_ROUTE>/alert -e ALIVE_ENDPOINT=<DASHBOARD_BACKEND_OCP_ROUTE>/alive quay.io/luisarizmendi/object-detection-action:prod
 ----
 
 ====
@@ -547,8 +547,7 @@ image::ai-deploy-noy-edge-arch.png[]
 ====
 Let's deploy this architecture:
 
-
-1- Start by the Inference Server.In this case we will need the Kubernetes manifests that we will apply in OpenShift (you can use the project that you created, `userpass:[<span id="gnumberVal"></span>]-ai-test`):
+1- Start by the Inference Server. In this case we will need the Kubernetes manifests that we will apply in OpenShift (you can use the project that you created, `userpass:[<span id="gnumberVal"></span>]-ai-test`):
 
 
 [source,yaml,role=execute,subs="attributes"]
@@ -617,13 +616,13 @@ curl http://inference-server-user99-test.apps.cluster-2cndn.2cndn.sandbox73.open
 4- You still need to deploy the other services locally (although you could also potentially deploy the Actuator in the cloud too), but there is a difference on how you deploy the Camera Stream Manager, since you need to indicate the URL endpoint for the Inference Server (by default it uses `localhost`). You can do it by using the `INFERENCE_SERVER_URL` environment variable (it will be something similar to `http://inference-server-user99-test.apps.cluster-2cndn.2cndn.sandbox73.opentlc.com`).
 
 ----
-sudo podman run -it --rm -p 5000:5000 --privileged -e INFERENCE_SERVER_URL=${INFERENCE_SERVER_OCP_ROUTE} quay.io/luisarizmendi/object-detection-stream-manager:prod
+sudo podman run -it --rm -p 5000:5000 --privileged -e INFERENCE_SERVER_URL=<INFERENCE_SERVER_OCP_ROUTE> quay.io/luisarizmendi/object-detection-stream-manager:prod
 ----
 
 5- Deploy the Actuator. 
 
 ----
-podman run -it --rm --network=host -e ALERT_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alert -e ALIVE_ENDPOINT=${DASHBOARD_BACKEND_OCP_ROUTE}/alive quay.io/luisarizmendi/object-detection-action:prod
+podman run -it --rm --network=host -e ALERT_ENDPOINT=<DASHBOARD_BACKEND_OCP_ROUTE>/alert -e ALIVE_ENDPOINT=<DASHBOARD_BACKEND_OCP_ROUTE>/alive quay.io/luisarizmendi/object-detection-action:prod
 ----
 ====
 
