@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: antiaffinity-webhook
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: antiaffinity-webhook
+  template:
+    metadata:
+      labels:
+        app: antiaffinity-webhook
+    spec:
+      containers:
+      - name: webhook
+        image: quay.io/luisarizmendi/mutating-webhook-auto-antiaffinity:latest
+        ports:
+        - containerPort: 8443
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: antiaffinity-webhook
+  namespace: default
+spec:
+  selector:
+    app: antiaffinity-webhook
+  ports:
+  - port: 8443
+    targetPort: 8443
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bootstrap-mutating-webhook-antiaffinity
+  namespace: openshift-gitops
+spec:
+  template:
+    spec:
+      serviceAccountName: openshift-gitops-argocd-application-controller
+      containers:
+      - name: bootstrap-lab
+        image: quay.io/openshift/origin-cli:latest  
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Wait for the GitOps Server to be ready
+          until oc get pods -n default | grep 'antiaffinity-webhook' | grep 'Running' | grep '1/1'; do
+            echo "Waiting for antiaffinity-webhook pod to be in Running state..."
+            sleep 10
+          done
+
+          oc apply -f - <<EOF
+          apiVersion: admissionregistration.k8s.io/v1
+          kind: MutatingWebhookConfiguration
+          metadata:
+            name: antiaffinity-webhook
+          webhooks:
+          - name: antiaffinity-injector.default.svc
+            clientConfig:
+              service:
+                name: antiaffinity-webhook
+                namespace: default
+                path: "/mutate"
+                port: 8443
+              caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDekNDQWZPZ0F3SUJBZ0lVYXRlMHBxdnZFemsxSDBHZGZTb2ZsV1hjVDF3d0RRWUpLb1pJaHZjTkFRRUwKQlFBd0ZURVRNQkVHQTFVRUF3d0tkMlZpYUc5dmF5MWpZVEFlRncweU5UQXlNRE14TmpNeU1qSmFGdzB5TmpBeQpNRE14TmpNeU1qSmFNQlV4RXpBUkJnTlZCQU1NQ25kbFltaHZiMnN0WTJFd2dnRWlNQTBHQ1NxR1NJYjNEUUVCCkFRVUFBNElCRHdBd2dnRUtBb0lCQVFDNlRoTjRSSVROamNBS2J3TVpPVk04eWR1d29FS082SnI5T1lzL1pBRnoKWitsRy9YKzN0dTUzcXVBMUFxZTNGZnBrblNNN1pWTmcvd1pvR1R6K3R2Q1Q1aFVjZ1ZBaHFyVTVWbDJDa0Q5MApqM3ZxZmRHS3R2UStkVmc5NzZERnpuR3RqN212MTlEWWpRSkw4Y2ptS2FocHJPZmdRc01NbU5QVlNXNTNla0ozCmRZWGhLVlpUditpeSt1WjZFNTh6TzhTdFBydC83QS9LdTFYUG9sZkp3OC9SN0RWdEdzU2NHSnREV1hYRVBxaXEKL0ZWNStKdi9hQ3Mxektzc0I0Sy9INW9hcnV1SUluUVBsRjEyN3UxZkRqSThzbUVENnAyQ3Yrb2swcHc2NTdlcgp2ODlPZUJkSFJWK3Q4WEQrQTR1QWJpSld4WHRTaU1QK1RUby9uMGJtYjlvUEFnTUJBQUdqVXpCUk1CMEdBMVVkCkRnUVdCQlNRdWJaZjhxSFdTdmJXdXVTZy9vU1JKWW1iSkRBZkJnTlZIU01FR0RBV2dCU1F1YlpmOHFIV1N2YlcKdXVTZy9vU1JKWW1iSkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCTAowcEtmZ1BTTlFJbHhRRjRLVGZVVFRrR3dRSEgzcW5oNml6U1NWN2ZHVW9jNHFUVnFwMkVYWWtLWTNRWXJSS1FXCmd5UmtoQ3NZcnkwQURMSkdwWUI4WkVIR1AxTVpIQkpndk9oK2tNalExNjNvNE1VNXFEK3dYVDBOaG1XcVRZZncKQUlvdFA4eTlHQ0pWRkcyQzEzRGRrb2JVWW5IVDhPM2xYOUpqZCtwbjEyRmp4UFJqN3FpWFRSYitWRjF6VHZGRQpkWmNkbUw3ODNVcDJrcU1zZUdCelU3c2lrYmNzSmFZU3RLRlQ4ZE9Jd2plQ2cxTEZ4RWRWUEhwRWxwd2ErL0ZDCkg0c0MzdnVmY0RjYTM2QzNiQlhWaTNYbGphdVFlb3BQamlDOCtLQWpFUEE5V0NZOVcyZmlqazdJQ1k3dWE2b0YKSVcvRXNXSDJHdzk1c1RHd0RERUIKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+            rules:
+            - operations: ["CREATE"]
+              apiGroups: [""]
+              apiVersions: ["v1"]
+              resources: ["pods"]
+            failurePolicy: Fail
+            admissionReviewVersions: ["v1"]
+            sideEffects: None          
+          EOF
+
+          echo "Environment ready!"
+      restartPolicy: Never
+  backoffLimit: 1
+

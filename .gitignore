@@ -23,6 +23,9 @@ www/
 
 # Ignore sensitive or private information
 secrets.json
+*.crt
+*.key
+*.srl
 
 # Ignore compiled binaries or executables
 *.exe

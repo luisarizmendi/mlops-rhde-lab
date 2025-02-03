@@ -784,6 +784,11 @@ platforms:
     deploymentSpec:
       executors:
         exec-download-dataset:
+          podMetadata:
+            annotations:
+              scheduler.alpha.kubernetes.io/antiaffinity: 'true'
+            labels:
+              app: kubeflow-pipeline
           pvcMount:
           - mountPath: /opt/app-root/src
             taskOutputParameter:
