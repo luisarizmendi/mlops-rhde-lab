@@ -86,6 +86,13 @@ openshift-storage          lvms-operator-7f544467bc-pc752             1/1     Ru
 openshift-storage          vg-manager-pqdvr                           1/1     Running   0               3m27s
 ----
 
+Now that Microshift is up and running you might want to also monitor the status of this specific service across your Fleet.
+
+image::platform-flight-control-service1.png[]
+
+image::platform-flight-control-service2.png[]
+
+
 We are now ready to deploy the Applications!
 
 == Application deployment
