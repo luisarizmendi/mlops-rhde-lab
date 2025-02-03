@@ -119,7 +119,7 @@ This Helm repository is also configured in the OpenShift cluster so if you prefe
 
 5. Use the filter to select the "Showroom Single Pod" Chart and click "Create"
 
-6. Modify the variables as mentioned before and include the Guide key/values on the `user_data`.
+6. Modify the variables as mentioned before and include the Guide key/values on the `user_data` instead of using an additional file.
 ====
 
 == Gitea
