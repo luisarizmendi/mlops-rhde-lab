@@ -99,11 +99,11 @@ There are multiple ways to get pre-Labeled image datasets, for example:
 
 * *Public Datasets*: Many datasets are freely available for computer vision tasks. Examples include https://cocodataset.org/#home[COCO] (Common Objects in Context) or the https://storage.googleapis.com/openimages/web/index.html[Open Images Dataset].
 
-* *Open Data Repositories*: Platforms like https://www.kaggle.com/datasets[Kaggle], https://datasetsearch.research.google.com/[Google Dataset Search], and https://universe.roboflow.com/[Roboflow Universe]] provide datasets contributed by the community.
+* *Open Data Repositories*: Platforms like https://www.kaggle.com/datasets[Kaggle], https://datasetsearch.research.google.com/[Google Dataset Search], and https://universe.roboflow.com/[Roboflow Universe] provide datasets contributed by the community.
 
 * *Synthetic Data*: Using AI or simulation tools to generate artificial but realistic datasets. This approach is useful when real-world data is scarce or expensive to obtain.
 
-In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe]] using the already created account in Roboflow. We will use the Datasets that you find in https://universe.roboflow.com/[Roboflow Universe] to add images to your own "Project" in your https://roboflow.com/[Roboflow account].
+In our project, we will be using pre-labeled data from the https://universe.roboflow.com/[Roboflow Universe] using the already created account in Roboflow. We will use the Datasets that you find in https://universe.roboflow.com/[Roboflow Universe] to add images to your own "Project" in your https://roboflow.com/[Roboflow account].
 
 
 === Dataset Search 
@@ -211,7 +211,7 @@ To clone a subset of images in a Dataset you have to:
 4- Click the box right above the first image to select all images.
 
 [NOTE]
-Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example `https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true`
+Probably the Dataset will have more than 50 images that you want to clone. You can go page by page selecting all images but it's a better idea to show all images in a single page before clicking the selection box. In order to do that look in the URL line for the variable `pageSize=50` and change it to the number of images that you want to clone, for example https://universe.roboflow.com/pped/pped-batch1/browse?queryText=class%3Ahelmet&`*pageSize=3500*`&startingIndex=0&browseQuery=true
 
 5- Check that all images are selected and then click "Clone <number> Selected Images" on the top right corner. Select the Workspace and the Project that you created before and click "Clone <number> Images"
 
@@ -371,7 +371,7 @@ These are the most common splits:
 
 * *Training Set*: This subset is used to teach the model by iteratively adjusting parameters to minimize errors. It typically makes up 60-80% of the total dataset.
 * *Validation Set*: During training, this subset helps tune hyperparameters and monitor performance to avoid overfitting. It generally accounts for 10-20% of the dataset.
-* *c*: Held out until the end, this subset provides an unbiased evaluation of the model's generalization to unseen data. It typically comprises 10-20% of the total dataset.
+* *Testing Set*: Held out until the end, this subset provides an unbiased evaluation of the model's generalization to unseen data. It typically comprises 10-20% of the total dataset.
 
 [example]
 ====

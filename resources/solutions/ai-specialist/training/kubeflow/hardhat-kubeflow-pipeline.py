@@ -315,6 +315,7 @@ def yolo_training_pipeline(
     minio_access_key: str,
     minio_secret_key: str,
     minio_bucket: str,
+    k8s_node_selector: str,
     pvc_storage_class: str = "gp3-csi",
     pvc_size: str = "5Gi",
     pvc_name_suffix: str = "-kubeflow-pvc",
@@ -397,7 +398,12 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
-
+    if k8s_node_selector:
+        kubernetes.add_node_selector(
+            train_task,
+            label_key="kubernetes.io/hostname",
+            label_value=k8s_node_selector
+        )
     
     # Upload results
     upload_task = upload_to_minio(
@@ -421,7 +427,6 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
- 
 
 
     delete_pvc = kubernetes.DeletePVC(
