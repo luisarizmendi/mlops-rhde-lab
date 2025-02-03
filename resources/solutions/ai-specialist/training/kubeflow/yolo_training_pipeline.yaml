@@ -2,6 +2,7 @@
 # Name: yolo-training-pipeline
 # Description: Pipeline to download data, train YOLO model, and upload results to MinIO
 # Inputs:
+#    k8s_node_selector: str
 #    minio_access_key: str
 #    minio_bucket: str
 #    minio_endpoint: str
@@ -714,6 +715,8 @@ root:
           name: upload-to-minio
   inputDefinitions:
     parameters:
+      k8s_node_selector:
+        parameterType: STRING
       minio_access_key:
         parameterType: STRING
       minio_bucket:
