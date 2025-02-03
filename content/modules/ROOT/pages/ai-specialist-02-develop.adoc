@@ -21,7 +21,7 @@ When adopting this hybrid approach, you need to bear in mind the following:
 
 * Model Compatibility: Ensure the model format is supported by the serving runtime you plan to use on RHEL.
 
-* Artifact Retrieval: Models stored in the OpenShift AI Model Registry must be exported and transferred to the Edge environment.
+* Artifact Retrieval: Model stored in the Object Storage must be exported and transferred to the Edge environment.
 
 * Monitoring Integration: Set up a feedback loop to forward inference metrics and logs from RHEL or OpenShift at the Edge to OpenShift AI at the Core/Cloud for analysis is not a built-in feature when performing inference in RHEL.
 
@@ -34,18 +34,17 @@ image::ai-build-rhoai-features.png[]
 
 In this section Model Building we will be using Data Science Projects and Jupyter Notebooks. OpenShift AI organizes machine learning workflows into projects, providing a collaborative environment for data scientists. Projects integrate Jupyter Notebooks for data preprocessing, model experimentation, and training. It provides a scalable environment with access to GPUs and shared storage.
 
-No real addaptation for these componentes are needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-03-deploy.adoc[Model Serving] section).
+No real addaptation for these componentes are needed when inference in performed in RHEL, you need to develop and validate models in Jupyter Notebooks and then export the trained model artifacts to the Model Registry or directly to RHEL (explained in xref:ai-specialist-04-deploy.adoc[Model Serving] section).
 
 [NOTE]
 
-In the next section xref:ai-specialist-03-deploy.adoc[Model Serving] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
+In the next section xref:ai-specialist-04-deploy.adoc[Model Serving] we will explore additional OpenShift AI features that are useful when preparing your model to be used in RHEL systems (in contrast when you perform the inference in OpenShift)
 
 [NOTE]
 
 There are other interesting features such as Distributed Training that are not covered in this workshop.
 
-If you platform has GPUs available, OpenShift and OpenShift AI will be preconfigured to use them. You can double check it by navegating to `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), if you see one entry you will know that you can use GPUs during your training.
-
+If you platform has GPUs available, OpenShift and OpenShift AI will be preconfigured to use them. 
 
 
 *Source Code Repository (Gitea)*
@@ -85,6 +84,9 @@ Feature Engineering is the foundation of the model building process, where data 
 Selecting appropriate algorithms involves analyzing the problem type, such as classification or regression, and understanding the data's characteristics to identify the best-fit solution. This process requires balancing performance metrics like accuracy, interpretability, and computational efficiency through experimentation. Designing architectures focuses on defining the structure of the model by choosing the right combination of layers, activation functions, and hyperparameters to capture the complexity of the data. 
 
 We already explained that our project involves a classification problem, and that the pre-selected algorithm is YOLO on its version 11. YOLOv11 (You Only Look Once, version 11) is the latest evolution in the https://docs.ultralytics.com/es/models/[YOLO family] of object detection models, building on its predecessors to achieve faster and more accurate results. This model is designed to meet the growing demands of near real-time object detection applications in fields such as autonomous vehicles, video surveillance, robotics, and more.
+
+
+image::YOLO.png[]
 
 
 During the dataset preparation phase, we incorporated essential feature engineering steps, including balancing the dataset, ensuring high-quality annotations, applying augmentations like flipping, scaling, and mosaic augmentation, and normalizing image sizes. These steps laid a robust foundation for our data.
@@ -554,7 +556,7 @@ AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 
 In the `AWS_S3_ENDPOINT_NAME` we removed the `https://` from the `AWS_S3_ENDPOINT` variable
 
-Once you have the Client configured, you just need to select the files and upload them using the `client.fput_object` method. If you don't want to expend time investigating https://min.io/docs/minio/linux/developers/python/API.html[how to use client.fput_object] you can copy paste the code below to save time:
+Once you have the Object Storage Client configured, you just need to select the files and upload them using the `client.fput_object` method. If you don't want to expend time investigating https://min.io/docs/minio/linux/developers/python/API.html[how to use client.fput_object] you can copy paste the code below to save time:
 
 [source,python,role=execute,subs="attributes"]
 ----
@@ -626,13 +628,12 @@ RUN INSTALL_PKGS="ultralytics roboflow minio" && \
 USER 1001
 ----
 
-Then you can build your Container Image using the Containerfile and push it into a registry (ie. https://quay.io[Quay])
+Then you can build your Container Image using the Containerfile and push it into a Container Image Registry (ie. https://quay.io[Quay])
 
-[source,shell,subs="attributes"]
 ----
-podman build -t $registry/$namespace$/$image-name:$image-tag .
-podman login -u $username $registry
-podman push $registry/$namespace/$image-name:$image-tag
+podman build -t <registry>/<namespace>/<image-name>:<image-tag> .
+podman login -u <username> <registry>
+podman push <registry>/<namespace>/<image-name>:<image-tag>
 ----
 
 [TIP]
