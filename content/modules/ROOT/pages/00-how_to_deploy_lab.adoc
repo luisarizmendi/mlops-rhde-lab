@@ -98,8 +98,6 @@ helm template showroom larizmen-charts/showroom-single-pod --namespace <namespac
 --set-file content.user_data=<your-variables-file> \
 --set content.repoUrl=https://github.com/luisarizmendi/workshop-object-detection-rhde \
 --set general.guid=1 \
---set-string second_terminal_tab.setup="false" \
---set-string terminal.setup="false" \
 | oc apply -f -
 ----
 
