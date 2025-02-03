@@ -377,7 +377,8 @@ def yolo_training_pipeline(
         learning_rate=train_learning_rate,
         yolo_model=train_yolo_model
     ).after(download_task)
-    train_task.set_gpu_limit(1)
+    train_task.set_accelerator_limit(1)
+    train_task.add_node_selector_constraint("nvidia.com/gpu")
     train_task.set_memory_request('2Gi')
     train_task.set_caching_options(enable_caching=False)
     kubernetes.mount_pvc(
