@@ -327,7 +327,7 @@ def yolo_training_pipeline(
     train_img_size: int = 640,
     model_registry_name: str = "object-detection-model-registry"
 ):
-        
+
     from datetime import datetime
     
     # Create PV
@@ -352,6 +352,7 @@ def yolo_training_pipeline(
         version=roboflow_version
     )
     download_task.set_caching_options(enable_caching=False)
+
     kubernetes.mount_pvc(
         download_task,
         pvc_name=pvc.outputs['name'],
@@ -366,6 +367,7 @@ def yolo_training_pipeline(
     )
 
 
+
     # Train model
     train_task = train_model(
         dataset_path=download_task.output,
@@ -378,6 +380,7 @@ def yolo_training_pipeline(
         yolo_model=train_yolo_model
     ).after(download_task)
     train_task.set_accelerator_limit(1)
+    train_task.set_accelerator_type("nvidia.com/gpu")
     train_task.add_node_selector_constraint("nvidia.com/gpu")
     train_task.set_memory_request('2Gi')
     train_task.set_caching_options(enable_caching=False)
@@ -399,6 +402,8 @@ def yolo_training_pipeline(
         effect="NoSchedule"
     )
 
+    
+        
     
     # Upload results
     upload_task = upload_to_minio(
@@ -422,8 +427,6 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
-
-
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
     ).after(upload_task)
