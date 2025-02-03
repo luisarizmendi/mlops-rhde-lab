@@ -167,6 +167,14 @@ $ flightctl get devices
 NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
+NOTE: Should you not have any DISPLAY environment specified on your machine, you can also login just using CLI on terminal
+
+[source,bash]
+----
+$ flightctl login https://{flightctl-api} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
+----
+
+
 == Image Manage
 
 Image Base OS allow the whole Edge Platform (from OS up to Application) to be versioned, deployed, and updated as a single unit. 
@@ -261,6 +269,7 @@ $ sudo reboot
 ----
 
 WARNING: Since we didn't incude the pull secret for Microshift yet, make sure to disable microshift service for now, otherwise the Greenboot will take over and reboot into the previous image version
+
 [source,bash]
 ----
 $ sudo systemctl disable microshift
