@@ -785,8 +785,6 @@ platforms:
       executors:
         exec-download-dataset:
           podMetadata:
-            annotations:
-              scheduler.alpha.kubernetes.io/antiaffinity: 'true'
             labels:
               app: kubeflow-pipeline
           pvcMount:
