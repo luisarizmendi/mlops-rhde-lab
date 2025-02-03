@@ -27,25 +27,101 @@ image::lab-argo-finish.png[]
 
 === Workshop Guide deployment
 
-If you want to have your own Workshop Guide:
+If you want to have your own Workshop Guide first you need to create a file with the variable values that you want to include in the guide. You can find the default values in the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[`antora.yaml` file]. Copy the key/value pairs of the "attributes" section in a new file (e,g, `values.yaml`) that you will use as a Helm input paratemer later. Find below an example.
+
+----
+    # Common
+    git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
+    openshift-console: https://https://console-openshift-console.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com/
+    openshift-api: https://api.cluster-np6lk.np6lk.sandbox2077.opentlc.com:6443
+    openshift-user-base: user
+    openshift-password-base: redhat
+    gitea-server: gitea.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com   # without http://
+    container-registry-gitea: 192.168.1.100
+    container-registry-gitea-user: gitea
+    container-registry-gitea-pass: gitea
+    shared-nvidia-ip: 192.168.1.2
+    shared-nvidia-user: admin
+    shared-nvidia-pass: R3dh4t1!
+    gateway-dns-dhcp-openwrt: http://192.168.1.1
+    # Platform
+    device-ip-base: 192.168.100.1
+    device-username: admin
+    device-password: secret
+    openshift-ai: https://rhods-dashboard-redhat-ods-applications.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com/
+    flightctl-ui: https://flightui-flightctl.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com/
+    flightctl-api: https://flightapi-flightctl.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com/
+    flightctl-user-basename: flightctluser
+    flightctl-password: secretflightctl
+    registry-local-url: http://192.168.100.200/workshop/
+    # AI
+    minio-ui: https://minio-ui-minio.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com
+    minio-api: https://minio-api-minio.apps.cluster-np6lk.np6lk.sandbox2077.opentlc.com
+    minio-user-base: user
+    minio-password-base: redhat
+    registry-url: https://quay.io/user/luisarizmendi/
+----
+
+
+Once you have the variables file, you can deploy the guide using Helm.
 
 
 [example]
 ====
+In order to deploy the guide you will need to add a Helm repository and then deploy using one of the charts contained on it:
 
-1. Clone this GitHub repo
+1- Add the following helm repo:
 
-2. Make changes in the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[`antora.yml`] file with your values and change anything that you want in the workshop content.
+----
+helm repo add larizmen-charts https://raw.githubusercontent.com/luisarizmendi/helm-chart-repo/main/packages
+----
 
-3. Push Changes
+2- Update helm repositories 
 
-4. 
+----
+helm repo update
+----
 
+
+3- Create a new project in OpenShift where to deploy the guide, you can use the Web Console or the CLI:
+
+----
+oc new-project showroom
+----
+
+
+4- Use the `showroom` chart to deploy the guide using your specific variables file:
+
+----
+helm template showroom larizmen-charts/showroom-single-pod --namespace <namespace> --create-namespace \
+--set deployer.domain=<apps.your-cluster-name.clusterdomain> \
+--set-file content.user_data=<your-variables-file> \
+--set content.repoUrl=https://github.com/luisarizmendi/workshop-object-detection-rhde \
+--set general.guid=1 \
+--set-string second_terminal_tab.setup="false" \
+--set-string terminal.setup="false" \
+| oc apply -f -
+----
 
 ====
 
 
+[NOTE]
+====
+This Helm repository is also configured in the OpenShift cluster so if you prefer you can deploy it using the "Developer" view of the OpenShift Console:
 
+1. Navigate to "Developer" by click on the top left drop down
+
+2. Click `+Add`
+
+3. Select the project where to deploy the guide on the top 
+
+4. Click "Helm Chart" on the "Developer Catalog"
+
+5. Use the filter to select the "Showroom Single Pod" Chart and click "Create"
+
+6. Modify the variables as mentioned before and include the Guide key/values on the `user_data`.
+====
 
 == Gitea
 preparing the environment Gitea:
