@@ -238,6 +238,7 @@ RUN dnf -y copr enable @redhat-et/flightctl; \
 RUN subscription-manager repos --enable codeready-builder-for-rhel-9-aarch64-rpms; \
     dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm; \
     dnf -y install podman-compose; \
+    dnf -y clean all; \
     systemctl enable podman.service
 
 ADD flightctl/config.yaml /etc/flightctl/config.yaml

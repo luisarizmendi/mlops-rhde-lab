@@ -122,7 +122,67 @@ using os configuration deploy manifest onto microshift
 
 You can update a device's OS by updating the target OS image name or version in the device's specification. The next time the agent checks in, it learns of the requested update and automatically starts downloading and verifying the new OS version in the background. It then schedules the actual system update to be performed according to the update policy. When the time has come to update, it installs the new version in parallel and performs a reboot into the new version.
 
-include cockpit-ostree to check device updates graphically
+In this case we are going to generate a new image that includes `cockpit-ostree` package, which will allow us to visualize graphically on the cockpit the update tree for the target system.
+
+[source,bash]
+----
+$ flightctl get fleet/my-fleet -o yaml > fleet.yaml
+...
+   spec:
+      updatePolicy:
+        downloadSchedule:
+          at: "* 9-16 * * *"
+        updateSchedule:
+          at: "0 9 * * 5"
+      applications: []
+...
+----
+
+In this case we have decided to download updates everyday, during working hours and we are going to reboot into updated version only on Saturdays, because we know this shift is going to be covered by Ops team.
+
+Let's now add the required package
+
+[source,docker]
+----
+FROM {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+
+RUN dnf -y install cockpit-ostree; \
+    dnf -y clean all
+----
+
+and build and push the new image to the local registry.
+
+We can now change the Fleet definition and point to the reference OS Image URL.
+
+[source,bash]
+----
+$ flightctl get fleet/my-fleet -o yaml > fleet.yaml
+...
+    spec:
+      applications: []
+      os:
+        image: {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+      config:
+----
+
+and wait for the agent to take care of downloading the new image.
+
+You should also be able to see that happening in the Dashboard.
+
+image::platform-flight-control-os-update1.png[]
+
+image::platform-flight-control-os-update2.png[]
+
+Mind you, it might take a while for the agent to download the image (should the agent timeout, you can restart the service easily with `systemctl restart flightctl-agent.service`), but you should now see the Device is ready for reboot.
+
+image::platform-flight-control-os-update3.png[]
+
+which we will trigger manually. After that you should be able to see a new section inside cockpit.
+
+WARNING: SELINUX might be blocking your cockpit interface, you can temporarily disable it with `setenforce 0`
+
+image::platform-flight-control-os-update4.png[]
+
 
 == Device Monitoring
 
