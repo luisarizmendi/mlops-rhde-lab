@@ -661,6 +661,11 @@ It's time to run the imported Kubeflow Pipeline:
 
 image::ai-train-pipeline-run.png[]
 
+[CAUTION]
+
+Be careful not to copy any extra spaces in the names, as this will cause the download task to fail.
+
+
 
 [NOTE]
 
