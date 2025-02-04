@@ -72,7 +72,7 @@ image::ai-train-code-terminal.png[]
 
 [source,shell,role=execute,subs="attributes"]
 ----
-git clone http://{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
+git clone http://gitea.apps.pass:[<span id="cdomainVal"></span>] /user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 ----
 
 6- Set Up the Pipeline Script: Create a new file `hardhat-kubeflow-pipeline.py` in the cloned directory (right-click to create a file). Copy the example script from: https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[hardhat-kubeflow-pipeline.py]. Save it and prepare for review.
@@ -580,13 +580,13 @@ python hardhat-kubeflow-pipeline.py
 ----
 git config --global user.email user<span id="gnumberVal"></span>@acme.com
 git config --global user.name user<span id="gnumberVal"></span>
-git remote set-url origin http://user<span id="gnumberVal"></span>:redhat<span id="gnumberVal"></span>@{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
+git remote set-url origin http://user<span id="gnumberVal"></span>:redhat<span id="gnumberVal"></span>@gitea.apps.pass:[<span id="cdomainVal"></span>] /user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 git add .
 git commit -m "kubeflow Pipeline"
 git push
 ----
 
-3- Now, navigate to Gitea at http://{gitea-server} to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
+3- Now, navigate to Gitea at http://gitea.apps.pass:[<span id="cdomainVal"></span>]  to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
 
 image::ai-train-gitea-raw.png[]
 
@@ -633,7 +633,7 @@ It's time to run the imported Kubeflow Pipeline:
     * Access Key: "userpass:[<span id="gnumberVal"></span>]"
     * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
     * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
-    * Endpoint: {minio-api}
+    * Endpoint: https://minio-api-minio.apps.pass:[<span id="cdomainVal"></span>] 
     * Model Registry Name: `object-detection-model-registry`
     * PVC sufix: `-kubeflow-pvc`
     * Roboflow Key: <your value>
