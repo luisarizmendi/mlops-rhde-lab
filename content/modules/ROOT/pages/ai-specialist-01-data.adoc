@@ -4,6 +4,8 @@ In the context of AI, data management is a critical foundational phase that dete
 
 It involves three essential steps:
 
+image::ai-data-nav0.png[]
+
 * Data Collection: Gathering and inspecting raw data from various sources, such as video feeds, images, or sensor outputs, ensuring it is relevant and representative of the problem you're trying to solve.
 
 * Data Preparation: Cleaning, augmenting, splitting, and labeling the data to ensure it's well organized and free from inconsistencies, making it suitable for training the AI model. This step often includes tasks such as handling missing values, normalizing data, and applying transformations.
@@ -73,6 +75,8 @@ From here, you're ready to start...
 
 
 == Collection
+
+image::ai-data-nav1.png[]
 
 Data collection is the first step in AI model development, involving the systematic gathering and organization of data for training and validation. It starts by identifying relevant sources, including primary data from sensors, surveys, or experiments and secondary data from databases, APIs, or public datasets. The quality and scope of data directly impact model performance, making robust collection methods and quality control essential.
 
@@ -245,6 +249,9 @@ In order to upload new images you have to:
 Right after the upload Roboflow will show a menu to start annotating the image. Hold that page if you want since you can continue from this point in the next step (Preparation > Labeling).
 
 == Preparation
+
+image::ai-data-nav2.png[]
+
 
 Data preparation is a critical phase in the AI development process, serving as the bridge between raw data collection and model training. This step ensures that data is cleaned, organized, and optimized for analysis, directly influencing the quality and performance of AI models.
 
@@ -423,6 +430,9 @@ You might want to rename your version. You can do it by clicking "Edit" on the t
 
 
 == Dataset Publication and Formatting
+
+image::ai-data-nav3.png[]
+
 
 Dataset Publication and Formatting is a critical step that bridges the gap between data preparation and model training. It ensures the dataset is in the right structure, tailored to the specific requirements of the model or framework you are using. By defining the appropriate format and organization, this step optimizes data processing efficiency and supports seamless integration into the model training pipeline, allowing the model to effectively learn from the data provided. This ensures the model can access and process the data in the most efficient way possible.
 
