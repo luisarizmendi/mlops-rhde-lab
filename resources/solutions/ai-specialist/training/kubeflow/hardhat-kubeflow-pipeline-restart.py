@@ -366,7 +366,10 @@ def yolo_training_pipeline_restart(
         version=roboflow_version
     )
     download_task.set_caching_options(enable_caching=False)
-
+    download_task.set_accelerator_limit(1)
+    download_task.set_accelerator_type("nvidia.com/gpu")
+    download_task.add_node_selector_constraint("nvidia.com/gpu")
+    
     kubernetes.mount_pvc(
         download_task,
         pvc_name=pvc_name,
