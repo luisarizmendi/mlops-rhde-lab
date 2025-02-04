@@ -365,16 +365,6 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
-#    kubernetes.add_pod_label(
-#        download_task,
-#        label_key='app', 
-#        label_value='kubeflow-pipeline'
-#    )
-#    kubernetes.add_pod_annotation(
-#        download_task,
-#        annotation_key='scheduler.alpha.kubernetes.io/antiaffinity', 
-#        annotation_value='true'
-#    )
 
     # Train model
     train_task = train_model(
