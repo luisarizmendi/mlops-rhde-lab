@@ -92,9 +92,9 @@ As the target configuration for devices and device fleets is declarative, users 
 
 You will now install Flight Control in your own namespace so that you can control your Edge Devices in your Fleet.
 
-Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here https://console-openshift-console.apps.pass:[<span id="cdomainVal"></span>] /command-line-tools
+Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here {openshift-console}/command-line-tools
 
-Login to the shared lab OpenShift https://console-openshift-console.apps.pass:[<span id="cdomainVal"></span>] [cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
+Login to the shared lab OpenShift {openshift-console} [cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
 
 Install the suggested version of Flight Control into the cluster by running
 
