@@ -324,6 +324,12 @@ deploymentSpec:
           {dataset.location}/test/images\"\n\n\n    print(dataset)\n\n\n\n    with\
           \ open(dataset_path, \"w\") as f:\n        f.write(dataset.location)\n\n"
         image: quay.io/luisarizmendi/pytorch-custom:latest
+        resources:
+          accelerator:
+            count: '1'
+            resourceCount: '1'
+            resourceType: nvidia.com/gpu
+            type: nvidia.com/gpu
     exec-push-to-model-registry:
       container:
         args:
