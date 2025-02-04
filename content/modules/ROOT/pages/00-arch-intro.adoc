@@ -126,7 +126,7 @@ Part of the required information is pre-configured as global variables in the xr
 
 
 * encodeURI(pass:[console-openshift-console.apps.<span id="cdomainVal"></span>])[WEB CONSOLE]
-
+https://console-openshift-console.apps.<span id="cdomainVal"></span>
 
 * Web Console URL: pass:[https://console-openshift-console.apps.<span id="cdomainVal"></span>]
 * API URL: pass:[https://api.<span id="cdomainVal"></span>:6443] 
