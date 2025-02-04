@@ -124,12 +124,8 @@ Part of the required information is pre-configured as global variables in the xr
 
 === OpenShift Cluster
 
-* Web Console URL: link:https://console-openshift-console.apps.[<span id="cdomainVal"></span>][OpenShift Console]
-* Web Console URL: pass:attributes[https://console-openshift-console.apps.<span id="cdomainVal"></span>]
-* Web Console URL: pass:[<a href="https://console-openshift-console.apps.<span id="cdomainVal"></span>">OpenShift Console</a>]
 
-
-
+* (pass:[console-openshift-console.apps.<span id="cdomainVal"></span>])[WEB CONSOLE]
 
 
 * Web Console URL: pass:[https://console-openshift-console.apps.<span id="cdomainVal"></span>]
