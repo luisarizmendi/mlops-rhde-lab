@@ -11,7 +11,7 @@ asciidoc:
     page-pagination: true
     # Common
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
-    openshift-console: https://console-openshift-console.apps.-----TBC----openshift-console----TBC-----
+    openshift-console-base: https://console-openshift-console.apps.
     openshift-api: https://api.-----TBC----openshift-api----TBC-----:6443
     openshift-user-base: user
     openshift-password-base: redhat
