@@ -125,7 +125,7 @@ https://min.io/[MinIO] is an Open Source High Performance Object Storage where w
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai}. 
+1- Navegate to {openshift-ai} 
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
@@ -139,7 +139,7 @@ image::ai-build-authenticator.png[]
 4- Create a new S3 Storage Connection ("Connetions" tab) that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
 
 ** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
-** MinIO API URL: {minio-api}
+** MinIO API URL: {https://}minio-api}
 ** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
 ** Region: "none" 
 
@@ -172,11 +172,11 @@ Now you have your prototyping Jupyter Notebook ready. In order to start the prot
 
 Even being a Mock Training it could take some time to finish if you are using CPUs instead of GPUs, in the meanwhile you can take a look at the cell's output. 
 
-Once the Notebook finishes, you can go to Object Storage MinIO console ({minio-ui}) and click "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. Then you will see a `prototype` directory and inside you will find the model (`best.pt` file) in the `weights` directory along with diferent files containing training performance metrics.
+Once the Notebook finishes, you can go to Object Storage MinIO console ( {minio-ui} ) and click "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. Then you will see a `prototype` directory and inside you will find the model (`best.pt` file) in the `weights` directory along with diferent files containing training performance metrics.
 
 [NOTE]
 
-Remember that you performed a Mock Training with a reduced number of epochs and few data, so you cannot use that model to detect hardhats. During the deployment phase you will use a https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat[provided pre-trained model].
+Remember that you performed a Mock Training with a reduced number of epochs and few data, so you cannot use that model to detect hardhats. During the deployment phase you will use a https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist/assets/object-detection-hardhat-or-hat/v1/model/pytorch[provided pre-trained model].
 
 At this point you can navigate to "Data Science Projects" and stop your Workbench to save resources in the OpenShift cluster. 
 
@@ -223,6 +223,12 @@ To proceed with the Kubeflow Pipeline import:
 
 ====
 
+[NOTE]
+====
+If you don't have GPUs or the GPUs are in use, you might want to import this other pipeline that does the training in the CPU:
+
+`https://raw.githubusercontent.com/luisarizmendi/workshop-object-detection-rhde/refs/heads/main/resources/solutions/ai-specialist/training/kubeflow/yolo_training_pipeline_cpu.yaml`
+====
 
 After the correct import, you will see the Pipeline diagram:
 
@@ -305,7 +311,7 @@ Let’s deploy all the components together and verify if everything works as exp
 ====
 Deploy the Cloud-side sevices in OpenShift
 
-1- Navegate to {openshift-console}. 
+1- Navegate to {openshift-console} 
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
 
