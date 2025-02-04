@@ -99,24 +99,34 @@ We are now ready to deploy the Applications!
 
 You can deploy, update, or undeploy applications on a device by updating the list of applications in the device's specification. The next time the agent checks in, it learns of the change in the specification, downloads any new or updated application packages and images from an OCI-compatible registry, and deploys them to the appropriate application runtime or removes them from that runtime.
 
-The following table shows the application runtimes and formats supported by Flight Control:
-Runtime 	Descriptor Format 	Package Format 	Package Repository 	Note
-Podman 	podman-compose 	(name TBD) 	OCI registry 	requires podman-compose installed on device
-Podman 	podman-compose 	(unpackaged) 	git or inline 	requires podman-compose installed on device
-Podman 	Quadlet 	(name TBD) 	OCI registry 	
-Podman 	Quadlet 	(unpackaged) 	git or inline 	
-MicroShift 	Kubernetes manifests from Helm templates 	Helm Chart 	OCI registry 	requires helm installed on device
-MicroShift 	Kubernetes manifests from kustomize 	(unpackaged) 	git or inline 	
+At the moment the following runtimes and formats are supported: 
 
-To deploy an application to a device, create a new entry in the "applications" section of the device's specification, specifying the following parameters:
-Parameter 	Description
-Name 	A user-defined name for the application. This will be used when the web UI and CLI list applications.
-Image 	A reference to an application package in an OCI registry.
-EnvVars 	(Optional) A list of key/value-pairs that will be passed to the deployment tool as environment variables or command line flags.
+* Podman:	podman-compose
+* Podman: Quadlet
+* MicroShift: Kubernetes manifests
 
+Let's recap for a minute, before deploying anything, what we would like the final application workflow to be.
 
+image::ai-deploy-object-detection-webcam.png[]
 
-using os configuration deploy manifest onto microshift
+On the local *Nvidia Edge Device* we should be running:
+
+* Inference Server app
+* Actuator app
+
+In the Cloud, on *OpenShift Cluster*:
+
+* Dashboard Backend app
+* Dashboard Frontend app
+
+We are now going to deploy the local apps on the Edge Device and then we will proceed with the cloud deployment. 
+
+To add a new application to a device, we will be modifying the Fleet Device Spec template, specifying the following parameters:
+
+* Name: a user-defined name for the application
+* Image: a reference to an application package in an OCI registry
+* EnvVars (optional) a list of key/value-pairs that will be passed to the deployment tool as environment variables or command line flags.
+
 
 == OS Update
 
