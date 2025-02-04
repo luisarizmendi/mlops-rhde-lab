@@ -592,6 +592,16 @@ image::ai-train-gitea-raw.png[]
 
 ====
 
+[NOTE]
+====
+If you don't have GPUs or the GPUs are in use, you might want to import this other pipeline that does the training in the CPU:
+
+`https://raw.githubusercontent.com/luisarizmendi/workshop-object-detection-rhde/refs/heads/main/resources/solutions/ai-specialist/training/kubeflow/yolo_training_pipeline_cpu.yaml`
+====
+
+
+
+
 Once you have the YAML file available in Gitea, you can import it directly into OpenShift AI.
 
 [example]
