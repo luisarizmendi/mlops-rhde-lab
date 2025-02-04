@@ -124,8 +124,8 @@ Part of the required information is pre-configured as global variables in the xr
 
 === OpenShift Cluster
 
-* Web Console URL: (https://console-openshift-console.apps.pass:[<span id="cdomainVal"></span>])
-* API URL: https://api.pass:[<span id="cdomainVal"></span>] :6443
+* Web Console URL: pass:[https://console-openshift-console.apps.<span id="cdomainVal"></span>]
+* API URL: pass:[https://api.<span id="cdomainVal"></span>:6443] 
 * Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]
 * Password: {openshift-password}
 
