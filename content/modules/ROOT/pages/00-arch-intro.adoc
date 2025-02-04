@@ -119,7 +119,7 @@ Part of the required information is pre-configured as global variables in the xr
 === Edge Management (Flight Control)
 
 * UI URL: {flightctl-ui}
-* Username: {flightctl-user-basename}pass:[<span id="gnumberVal"></span>]
+* Username: aaaaapass:[<span id="gnumberVal"></span>]
 * Password: {flightctl-password}
 
 === OpenShift Cluster
