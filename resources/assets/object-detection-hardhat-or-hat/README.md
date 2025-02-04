@@ -8,7 +8,7 @@
 
 ## Model binary
 
-You can [download the model from here](https://github.com/luisarizmendi/ai-apps/raw/refs/heads/main/models/luisarizmendi/object-detection-hardhat-or-hat/object-detection-hardhat-or-hat-m.pt)
+You can [download the model from here](https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/assets/object-detection-hardhat-or-hat/v2/model/pytorch/best.pt)
 
 
 ## Base Model
@@ -36,33 +36,34 @@ https://huggingface.co/luisarizmendi/hardhat-or-hat
 
 ## Model metrics
 
-```
-YOLO11m summary (fused): 303 layers, 20,032,345 parameters, 0 gradients, 67.7 GFLOPs
-                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95)
-                   all       1992      15306      0.844      0.847      0.893      0.546
-                   hat        244        287      0.869      0.811      0.876      0.578
-                helmet       1202       3942      0.916      0.892      0.942       0.61
-             no_helmet        741      11077      0.746      0.838      0.861       0.45
-```
+<div align="center">
+  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/results.png"> <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/results.png">
+</div>
+
 
 
 <div align="center">
-  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/confusion_matrix_normalized.png"> <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/results.png">
+  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/confusion_matrix_normalized.png"> <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/confusion_matrix_normalized.png">
 </div>
 
 
 
 ## Model training
 
-You can [review the Jupyter notebook here](https://github.com/luisarizmendi/ai-apps/blob/main/dev/hardhat-or-hat/train.ipynb)
+You can [review the Jupyter notebook here](https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/development/prototyping.ipynb)
+
+You can [review the Kubeflow Pipeline here](https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py)
+
+
 
 ### Hyperparameters
 
 ```
-epochs: 35
-batch: 2
+base model: yolov11x.pt
+epochs: 150
+batch: 16
 imgsz: 640
-patience: 5
+patience: 15
 optimizer: 'SGD'
 lr0: 0.001
 lrf: 0.01
@@ -71,23 +72,6 @@ weight_decay: 0.0005
 warmup_epochs: 3
 warmup_bias_lr: 0.01
 warmup_momentum: 0.8
-```
-
-### Augmentation
-
-```
-hsv_h=0.015,  # Image HSV-Hue augmentationc
-hsv_s=0.7,   # Image HSV-Saturation augmentation
-hsv_v=0.4,   # Image HSV-Value augmentation
-degrees=10,  # Image rotation (+/- deg)
-translate=0.1,  # Image translation (+/- fraction)
-scale=0.3,   # Image scale (+/- gain)
-shear=0.0,   # Image shear (+/- deg)
-perspective=0.0,  # Image perspective
-flipud=0.1,  # Image flip up-down
-fliplr=0.1,  # Image flip left-right
-mosaic=1.0,  # Image mosaic
-mixup=0.0,   # Image mixup
 ```
 
 
@@ -117,7 +101,7 @@ opencv-python
 torch
 ```
 
-Then [run the python code below ](https://github.com/luisarizmendi/ai-apps/raw/refs/heads/main/models/luisarizmendi/object-detector-hardhat-or-hat/run_model.py) and open `http://localhost:7860` in a browser to upload and scan the images.
+Then [run the python code below ](https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/assets/model_test_app/object-detection-batch-model-file/pytorch/object-detection-pytorch.py) and open `http://localhost:8800` in a browser to upload and scan the images.
 
 
 ```
@@ -128,7 +112,7 @@ import os
 import cv2
 import torch
 
-DEFAULT_MODEL_URL = "https://github.com/luisarizmendi/ai-apps/raw/refs/heads/main/models/luisarizmendi/object-detection-hardhat-or-hat/object-detection-hardhat-or-hat-m.pt"
+DEFAULT_MODEL_URL = "https://github.com/luisarizmendi/workshop-object-detection-rhde/raw/refs/heads/main/resources/assets/object-detection-hardhat-or-hat/v2/model/pytorch/best.pt"
 
 def detect_objects_in_files(model_input, files):
     """

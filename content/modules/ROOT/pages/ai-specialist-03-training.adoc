@@ -23,7 +23,9 @@ While Elyra is excellent for prototyping, https://www.kubeflow.org/docs/componen
 
 For enterprises seeking a scalable MLOps solution, Kubeflow on OpenShift AI is a powerful choice.
 
+In this section you will follow the steps below:
 
+image::ai-train-nav0.png[]
 
 === Tools and preparations
 
@@ -44,10 +46,10 @@ To proceed, you must have a Pipeline Server defined. If this step was completed 
 
 
 
-== Kubeflow Pipeline 
+== Pipeline Creation 
 
+image::ai-train-nav1.png[]
 
-=== Creating the Training Pipeline 
 
 The training pipeline is implemented using Python. OpenShift AI Workbenches provide a coding environment with an integrated IDE. 
 
@@ -84,10 +86,9 @@ The script defines the pipeline structure, specifying the order in which pipelin
 
 The `train` step has an additional Persistent Volumen mounted to https://stackoverflow.com/questions/43373463/how-to-increase-shm-size-of-a-kubernetes-container-shm-size-equivalent-of-doc[extend the POD's Shared Memory]. This is needed when you run the inference using GPUs. Kubeflow v2 https://github.com/kubeflow/pipelines/pull/10913[already implemented the method to use `EmptyDir`] instead but the current version of the OpenShift AI pipelines does not have this path yet, so a Persistent Volume is used instead. 
 
-There is another important consideration when working with GPUs. When having Kubernetes tolerations, node selectors, and similar settings to select nodes with GPUs, it's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
+There is another important consideration when working with GPUs: the kubernetes scheduling. When having Kubernetes taints in the kubernetes nodes to prevent all workloads run on GPU nodes you will need to configure "tolerations" in your pipeline tasks. It's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
 
-This is also why you may observe references to NVIDIA GPU labels in tasks that don't directly require or use GPUs. These labels may be included to ensure that the tasks are scheduled correctly across the nodes that have access to the necessary resources, including the Persistent Volume.
-
+Regarding schedluing it's also important to mention that along with the tolerations, the `set_accelerator_limit`, `set_accelerator_type` and `add_node_selector_constraint` are the methods that make the kubernetes scheduler take into account the GPU selection when selecting the node where the task will be running. 
 
 
 [source,python,role=execute,subs="attributes"]
@@ -111,12 +112,15 @@ def yolo_training_pipeline(
     pvc_size: str = "5Gi",
     pvc_name_suffix: str = "-kubeflow-pvc",
     train_name: str = "hardhat",
+    train_yolo_model: str = "yolo11m.pt",
+    train_optimizer: str = "SGD",
+    train_learning_rate: float = 0.005,
     train_epochs: int = 50,
     train_batch_size: int = 16,
     train_img_size: int = 640,
     model_registry_name: str = "object-detection-model-registry"
 ):
-        
+
     from datetime import datetime
     
     # Create PV
@@ -141,6 +145,7 @@ def yolo_training_pipeline(
         version=roboflow_version
     )
     download_task.set_caching_options(enable_caching=False)
+
     kubernetes.mount_pvc(
         download_task,
         pvc_name=pvc.outputs['name'],
@@ -154,16 +159,20 @@ def yolo_training_pipeline(
         effect="NoSchedule"
     )
 
-
     # Train model
     train_task = train_model(
         dataset_path=download_task.output,
         epochs=train_epochs,
         batch_size=train_batch_size,
         img_size=train_img_size,
-        name=train_name
+        name=train_name,
+        optimizer=train_optimizer,
+        learning_rate=train_learning_rate,
+        yolo_model=train_yolo_model
     ).after(download_task)
-    train_task.set_gpu_limit(1)
+    train_task.set_accelerator_limit(1)
+    train_task.set_accelerator_type("nvidia.com/gpu")
+    train_task.add_node_selector_constraint("nvidia.com/gpu")
     train_task.set_memory_request('2Gi')
     train_task.set_caching_options(enable_caching=False)
     kubernetes.mount_pvc(
@@ -183,7 +192,7 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
-
+        
     
     # Upload results
     upload_task = upload_to_minio(
@@ -207,9 +216,6 @@ def yolo_training_pipeline(
         value="True",           
         effect="NoSchedule"
     )
- 
-
-
     delete_pvc = kubernetes.DeletePVC(
         pvc_name=pvc.outputs['name']
     ).after(upload_task)
@@ -546,7 +552,10 @@ def push_to_model_registry(
 ----
 
 
-=== Importing the Training Pipeline 
+== Pipeline Import 
+
+image::ai-train-nav2.png[]
+
 
 Before proceeding with the import, we need to convert the Python script into a YAML Kubeflow Pipeline definition (https://www.kubeflow.org/docs/components/pipelines/user-guides/core-functions/compile-a-pipeline/#ir-yaml[Intermediate Representation]). Using the `kfp` library, we will execute the script to generate the YAML file required for importing the pipeline
 
@@ -577,11 +586,21 @@ git commit -m "kubeflow Pipeline"
 git push
 ----
 
-3- Now, navigate to Gitea at http://{gitea-server} to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
+3- Now, navigate to Gitea at http://{gitea-server}  to confirm that your files have been successfully pushed. Open the `yolo_training_pipeline.yaml` file and select the Raw option from the top-right menu. Copy the URL of the raw file, as you will need it to import the pipeline.
 
 image::ai-train-gitea-raw.png[]
 
 ====
+
+[NOTE]
+====
+If you don't have GPUs or the GPUs are in use, you might want to import this other pipeline that does the training in the CPU:
+
+`https://raw.githubusercontent.com/luisarizmendi/workshop-object-detection-rhde/refs/heads/main/resources/solutions/ai-specialist/training/kubeflow/yolo_training_pipeline_cpu.yaml`
+====
+
+
+
 
 Once you have the YAML file available in Gitea, you can import it directly into OpenShift AI.
 
@@ -608,7 +627,10 @@ Once you have imported the pipeline **you should stop the Code Wrokbench** to sa
 
 
 
-=== Running the Training Pipeline 
+== Pipeline Run
+
+image::ai-train-nav3.png[]
+
 
 [example]
 ====
@@ -646,7 +668,7 @@ In contrast to Elyra Pipelines, this Kubeflow Pipeline automatically creates and
 
 [TIP]
 
-Keep in mind that if you're short on time and can't wait for a full model training process, you can opt for the so-called '*MockTrain*' by using the reduced dataset you prepared during the Model Development section and configuring only one epoch. However, note that models trained on this dataset won't be suitable for deployment, as they won't achieve accurate object detection. Instead, you'll need to use the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat[provided pre-trained model] during the Deployment section to ensure proper functionality.
+Keep in mind that if you're short on time and can't wait for a full model training process, you can opt for the so-called '*MockTrain*' by using the reduced dataset you prepared during the Model Development section and configuring only one epoch. However, note that models trained on this dataset won't be suitable for deployment, as they won't achieve accurate object detection. Instead, you'll need to use the https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat/v1/model/pytorch[provided pre-trained model] during the Deployment section to ensure proper functionality.
 
 You can view the details of each task while it's running to monitor important information. Additionally, you can check the POD name generated for the task (top right corner, in a red square in the image below), which is useful for accessing real-time logs in the OpenShift Console (since the Logs tab in the OpenShift AI Pipeline view is only available once the task has completed). You can also track the inputs and outputs associated with each task, which will be displayed once the task finishes, providing insight into the data flow and results at each stage of execution.
 
@@ -680,7 +702,7 @@ image::ai-train-schedule.png[]
 
 In this section, a new Kubeflow Pipeline was created based on the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/training/kubeflow/hardhat-kubeflow-pipeline.py[`hardhat-kubeflow-pipeline.py` script]. This pipeline successfully trained the YOLO model for hardhat detection, generated the model file, and uploaded it into the MinIO Object Storage. This model file will be essential for the next section, xref:ai-specialist-04-deploy.adoc[Model Serving].
 
-However, if you used a reduced dataset ("*MockTrain*") or limited epochs for faster training and believe the model might not perform adequately in the field, it is advisable to discard the generated model. Instead, you can upload and use the  https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat[provided pre-trained model] going forward to ensure better accuracy and robustness in deployment.
+However, if you used a reduced dataset ("*MockTrain*") or limited epochs for faster training and believe the model might not perform adequately in the field, it is advisable to discard the generated model. Instead, you can upload and use the  https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets/object-detection-hardhat-or-hat/v1/model/pytorch[provided pre-trained model] going forward to ensure better accuracy and robustness in deployment.
 
 Before jump into the next section, be sure that you stopped your Code Workbench to save some resources in the OpenShift cluster.
 
