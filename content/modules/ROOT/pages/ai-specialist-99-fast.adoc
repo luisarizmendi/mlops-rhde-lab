@@ -305,7 +305,7 @@ Let’s deploy all the components together and verify if everything works as exp
 ====
 Deploy the Cloud-side sevices in OpenShift
 
-1- Navegate to {openshift-console}. 
+1- Navegate to https://console-openshift-console.apps.pass:[<span id="cdomainVal"></span>] . 
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
 
