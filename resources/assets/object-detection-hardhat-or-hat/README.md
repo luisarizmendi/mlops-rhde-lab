@@ -59,8 +59,9 @@ You can [review the Jupyter notebook here](https://github.com/luisarizmendi/ai-a
 ### Hyperparameters
 
 ```
-epochs: 35
-batch: 2
+base model: yolov11x.pt
+epochs: 150
+batch: 16
 imgsz: 640
 patience: 5
 optimizer: 'SGD'
