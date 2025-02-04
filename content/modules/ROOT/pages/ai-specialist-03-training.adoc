@@ -23,7 +23,9 @@ While Elyra is excellent for prototyping, https://www.kubeflow.org/docs/componen
 
 For enterprises seeking a scalable MLOps solution, Kubeflow on OpenShift AI is a powerful choice.
 
+In this section you will follow the steps below:
 
+image::ai-train-nav0.png[]
 
 === Tools and preparations
 
@@ -44,10 +46,10 @@ To proceed, you must have a Pipeline Server defined. If this step was completed 
 
 
 
-== Kubeflow Pipeline 
+== Pipeline Creation 
 
+image::ai-train-nav1.png[]
 
-=== Creating the Training Pipeline 
 
 The training pipeline is implemented using Python. OpenShift AI Workbenches provide a coding environment with an integrated IDE. 
 
@@ -550,7 +552,10 @@ def push_to_model_registry(
 ----
 
 
-=== Importing the Training Pipeline 
+== Pipeline Import 
+
+image::ai-train-nav2.png[]
+
 
 Before proceeding with the import, we need to convert the Python script into a YAML Kubeflow Pipeline definition (https://www.kubeflow.org/docs/components/pipelines/user-guides/core-functions/compile-a-pipeline/#ir-yaml[Intermediate Representation]). Using the `kfp` library, we will execute the script to generate the YAML file required for importing the pipeline
 
@@ -612,7 +617,10 @@ Once you have imported the pipeline **you should stop the Code Wrokbench** to sa
 
 
 
-=== Running the Training Pipeline 
+== Pipeline Run
+
+image::ai-train-nav3.png[]
+
 
 [example]
 ====

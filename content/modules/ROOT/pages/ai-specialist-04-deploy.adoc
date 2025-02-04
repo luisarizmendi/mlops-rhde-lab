@@ -12,6 +12,7 @@ Key aspects to take into account while AI Model releasing:
 
 In this section, we will explore how to deploy our model on a custom inference server and examine the overall application architecture, which is built on microservices. This architecture leverages the model's predictions to create a system that raises alarms when individuals are not wearing hardhats. Additionally, we will demonstrate how to conduct a quick live test of the trained model to ensure it functions as expected.
 
+image::ai-deploy-nav0.png[]
 
 === Tools and preparations
 
@@ -24,6 +25,8 @@ The examples below use https//quay.io[Quay.io] as the Container Registry.
 
 
 == Serving
+
+image::ai-deploy-nav1.png[]
 
 OpenShift AI provides robust serving platforms to deploy models as inference endpoints:
 
@@ -311,6 +314,9 @@ Now you can use the `<registry>/<namespace>/<container image name>:<shared tag>`
 
 
 == Live Testing
+
+image::ai-deploy-nav2.png[]
+
 
 So far, you have completed the AI Specialist's tasks by creating the model and taken on some Application Development responsibilities by manually building the container images. Now, before handing over to the Platform Specialist for deploying the applications to the Edge devices, it's a good idea to perform a final test of the model you created. Let’s deploy all the components together and verify if everything works as expected.
 

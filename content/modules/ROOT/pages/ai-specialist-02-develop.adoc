@@ -4,6 +4,11 @@ The process of AI model prototype building is a multistep journey that transform
 
 While these two stages (Feature Engineering and Model development) are commonly used to describe the model-building process, it's important to note that there are other ways to segment the workflow. For example, some frameworks emphasize Feature Engineering as distinct stages, while others may break down Model Selection or Hyperparameter Optimization as separate steps. Each approach can vary depending on the complexity of the project and the specific needs of the model being developed.
 
+In this section there is also an optional task where you will be able to build a development pipeline.
+
+image::ai-build-nav0.png[]
+
+
 This will be the most time consuming section of the workshop, are you ready?
 
 
@@ -78,6 +83,8 @@ You can check that you have access and that you have your Object Bucket created:
 
 == Feature Engineering
 
+image::ai-build-nav1.png[]
+
 
 Feature Engineering is the foundation of the model building process, where data and features are prepared and transformed into a form that can be consumed by the model. This stage involves selecting appropriate algorithms and designing architectures.
 
@@ -97,6 +104,9 @@ This step requires no actions in this workshop, as these aspects were reviewed a
 
 
 == Model Development
+
+image::ai-build-nav2.png[]
+
 
 At this stage, it is essential to focus on choosing the right hyperparameters during training, such as the learning rate, batch size, input image size, number of epochs, optimizer, etc. These parameters significantly impact the model performance, and fine tuning them is critical for achieving optimal results. Prototyping plays a crucial role in this process, allowing you to experiment with various configurations and refine model architectures iteratively. A common and effective way to perform this experimentation is by using https://jupyter.org/[Jupyter Notebooks].
 
@@ -601,6 +611,8 @@ Finally, I recommend cleaning up the directories created during the training and
 
 
 == Prototyping Pipeline (optional) 
+
+image::ai-build-nav3.png[]
 
 So far, you've used a Jupyter Notebook for quick model prototyping. While this approach is excellent for experimentation, transitioning to a more structured and scalable workflow can bring numerous benefits even for prototyping, such as ensuring consistency, repeatability, and improved collaboration.
 

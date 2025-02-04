@@ -18,7 +18,9 @@
 * xref:ai-specialist-02-develop.adoc#_prototyping_pipeline_optional[- Prototyping Pipeline]
 
 * xref:ai-specialist-03-training.adoc[*3. Model Training*]
-* xref:ai-specialist-03-training.adoc#_training_pipeline[- Training Pipeline]
+* xref:ai-specialist-03-training.adoc#_pipeline_creation[- Pipeline Creation]
+* xref:ai-specialist-03-training.adoc#_pipeline_import[- Pipeline Import]
+* xref:ai-specialist-03-training.adoc#_pipeline_run[- Pipeline Run]
 
 * xref:ai-specialist-04-deploy.adoc[*4. Model Serving*]
 * xref:ai-specialist-04-deploy.adoc#_serving[- Serving]
