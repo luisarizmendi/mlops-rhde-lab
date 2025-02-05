@@ -383,7 +383,7 @@ deploymentSpec:
           precision\"]),\n            \"recall\": str(metrics[\"recall\"])\n     \
           \   }\n\n        rm = registry.register_model(\n            registered_model_name,\n\
           \            f\"s3://{s3_endpoint_url}/{model_artifact_s3_path}\",\n   \
-          \         model_format_name=\"pt\",\n            model_format_version=\"\
+          \         model_format_name=\"Native PyTorch (pt)\",\n            model_format_version=\"\
           1\",\n            version=version_name,\n            description=f\"{registered_model_name}\
           \ is a dense neural network that detects Hardhats in images.\",\n      \
           \      metadata=metadata\n        )\n        print(\"Model registered successfully\"\

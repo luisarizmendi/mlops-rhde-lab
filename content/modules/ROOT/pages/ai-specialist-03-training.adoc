@@ -658,9 +658,9 @@ image::ai-train-nav3.png[]
 It's time to run the imported Kubeflow Pipeline:
 
 1. Click Actions and then `Create run`
-2. Click "Create new experiment" (`hardhat-detection`)
+2. Under the "Project and experiment" section, you might want to click "Create new experiment" (and name it `hardhat-detection`)
 3. Give the run a name (e.g. `v1`)
-4. Fill in the environment variables used in your run:
+4. Fill in the Parameters used in your run:
     * Access Key: "userpass:[<span id="gnumberVal"></span>]"
     * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
     * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
@@ -675,10 +675,15 @@ It's time to run the imported Kubeflow Pipeline:
     * Ephoch number: <your value>
     * Image Size: `640`
     * Training name (e.g. `hardhat`)
-    * Base YOLO model name: `yolo11m.pt`
-    * Learning Rate: `0.005`
-    * Optimizer: `SGD`
+    * Learning Rate: Chose your https://docs.ultralytics.com/usage/cfg/#tasks[learning rate] (`0.005`)
+    * Optimizer: Choose your optimizer (`SGD`)
+    * Train Optimizer: Choose your https://docs.ultralytics.com/usage/cfg/#tasks[optimizer] (`SGD`)
+    * Train YOLO Model: Choose the https://docs.ultralytics.com/models/yolo11/#overview[base model] (`yolo11m.pt`)
 ====
+
+[NOTE]
+
+The first task (`download-dataset`) could take some time to finish if it's the first run because it needs to pull the container image.
 
 image::ai-train-pipeline-run.png[]
 
@@ -706,7 +711,7 @@ You can open the OpenShift Console and check how the Persistent Volume was creat
 image::ai-train-pipeline-run-gpu-logs.png[]
 
 
-After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to it.
+After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to `models` directory in your "userpass:[<span id="gnumberVal"></span>]-ai-models" bucket.
 
 image::ai-train-minio.png[]
 

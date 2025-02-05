@@ -16,7 +16,7 @@ Let's start with the first step.
 
 [IMPORTANT]
 
-Remember that  *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
+Remember that  *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide. The value you save will be applied across all sections, eliminating the need to re-enter your user number every time you navigate to a new page.
 
 
 == 1. Data Management
@@ -145,34 +145,40 @@ image::ai-build-authenticator.png[]
 
 image::ai-build-dataconnection.png[]
 
-5- Create a new Workbench named "Object Detection Notebooks". You will need to select:
+5- Create a new Workbench ("Workbenches" tab) named "Object Detection Notebooks". You will need to select:
 
 ** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
+** Version selection (keep the default)
 ** Container Size (`Small` is enough)
 ** Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage)
-** Object Storage Connection that you already configured. 
-** Additionally, when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+** Attach the Object Storage Connection that you already configured. 
+** Additionally, when you have GPUs you will find that during the Workbench creation you also can use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
-6- Once started, open the Workbench (it could take time to open)
+6- Click "Create Workbench". It will take some time to create and start it.
 
-7- Clone the source the workshop's Git repository: {git-workshop-url}
+7- Once started, open the Workbench (it could take time to open). You will be asked to allow permissions pior to show the Jupyter environment in your browser.
+
+8- Clone the source the workshop's Git repository: {git-workshop-url}. Once you click "Clone" a message will appear in the button right. It could take some time to clone the repository.
 
 image::ai-build-gitclone.png[]
 
-8- Move into the `workshop-object-detection-rhde/resources/solutions/ai-specialist/development` directory. Open the `prototyping.ipynb`
+9- Move into the `workshop-object-detection-rhde/resources/solutions/ai-specialist/development` directory. Open the `prototyping.ipynb`
  file
  
-9- Paste the Roboflow access code in the first code block of the"Step 3: Download from Roboflow" and save your Notebook clicking the disk icon on the top bar menu.
+10- Paste the Roboflow access code in the first code block of the"Step 3: Download from Roboflow" and save your Notebook clicking the disk icon on the top bar menu.
 
 ====
 
-Now you have your prototyping Jupyter Notebook ready. In order to start the prototype training you just need to click the "Run all blocks" (`>>` icon) icon on the top bar menu.
+Now you have your prototyping Jupyter Notebook ready. In order to start the prototype training you just need to click the "Run all blocks" (`>>` icon) icon on the top bar menu (click "Restart" button once it appears in the screen).
 
 Even being a Mock Training it could take some time to finish if you are using CPUs instead of GPUs, in the meanwhile you can take a look at the cell's output. 
 
-Once the Notebook finishes, you can go to Object Storage MinIO console ( {minio-ui} ) and click "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. Then you will see a `prototype` directory and inside you will find the model (`best.pt` file) in the `weights` directory along with diferent files containing training performance metrics.
+You now can go to MinIO console ( {minio-ui} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
+
+image::ai-build-miniomodel.png[]
+
 
 [NOTE]
 
@@ -200,7 +206,7 @@ To create a Pipeline Server:
 
 1. Navigate to "Data Science Pipelines" in OpenShift AI and configure a new pipeline server.
 2. Fill in the Data Connection information but this time use the Bucket userpass:[<span id="gnumberVal"></span>]-ai-pipelines and set the region to `none` (as it is not configured in MinIO).
-3. Save the configuration.
+3. Click "Configure pipeline server".
 ====
 
 image::ai-build-pipeline-server.png[]
@@ -245,9 +251,9 @@ You will find the Roboflow values in the code that you saved before, including K
 It's time to run the imported Kubeflow Pipeline:
 
 1. Click Actions and then `Create run`
-2. Click "Create new experiment" (`hardhat-detection`)
+2. Under the "Project and experiment" section, you might want to click "Create new experiment" (and name it `hardhat-detection`)
 3. Give the run a name (e.g. `v1`)
-4. Fill in the environment variables used in your run:
+4. Fill in the Parameters used in your run:
     * Access Key: "userpass:[<span id="gnumberVal"></span>]"
     * Secret Key: "redhatpass:[<span id="gnumberVal"></span>]"
     * Bucket: "userpass:[<span id="gnumberVal"></span>]-ai-models"
@@ -262,15 +268,21 @@ It's time to run the imported Kubeflow Pipeline:
     * Ephoch number: `1` 
     * Image Size: `640`
     * Training name (e.g. `hardhat`)
+    * Learning Rate: `0.005`
+    * Train Optimizer: `SGD`
+    * Train YOLO Model: `yolo11m.pt`
 ====
 
+[NOTE]
+
+The first task (`download-dataset`) could take some time to finish if it's the first run because it needs to pull the container image.
 
 You can view the details of each task while it's running to monitor important information. Additionally, you can check the POD name generated for the task (top right corner, in a red square in the image below), which is useful for accessing real-time logs in the OpenShift Console (since the Logs tab in the OpenShift AI Pipeline view is only available once the task has completed).
 
 image::ai-train-pipeline-pod-task.png[]
 
 
-After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to it.
+After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to `models` directory in your "userpass:[<span id="gnumberVal"></span>]-ai-models" bucket.
 
 image::ai-train-minio.png[]
 

@@ -68,7 +68,7 @@ Good luck on your mission to create a safer, smarter workplace!
 
 [IMPORTANT]
 
-Part of the shown information in this guide is is automatically populated with user variables that must be entered manually. *You must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide.
+Part of the shown information in this guide is is automatically populated with user variables that must be entered manually. *You must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide. The value you save will be applied across all sections, eliminating the need to re-enter your user number every time you navigate to a new page.
 
 
 == Workshop Video Recording
