@@ -15,17 +15,17 @@ asciidoc:
     openshift-api: https://api.-----TBC----openshift-api----TBC-----:6443
     openshift-user-base: user
     openshift-password-base: redhat
-    container-registry-gitea: 192.168.1.100
-    container-registry-gitea-user: gitea
-    container-registry-gitea-pass: gitea
-    shared-nvidia-ip: 192.168.1.2
-    shared-nvidia-user: admin
-    shared-nvidia-pass: R3dh4t1!
-    gateway-dns-dhcp-openwrt: http://192.168.1.1
     # Platform
     device-ip-base: 192.168.100.1
     device-username: admin
     device-password: secret
+    shared-nvidia-ip: 192.168.1.2
+    shared-nvidia-user: admin
+    shared-nvidia-pass: R3dh4t1!
+    gateway-dns-dhcp-openwrt: http://192.168.1.1
+    container-registry-gitea: 192.168.1.100
+    container-registry-gitea-user: gitea
+    container-registry-gitea-pass: gitea
     flightctl-ui: https://-----TBC----flightctl-ui----TBC-----
     flightctl-api: https://-----TBC----flightctl-api----TBC-----
     flightctl-user-basename: flightctluser
