@@ -1,14 +1,18 @@
-= How to deploy the lab
+= How to deploy the Lab and Workshop guide
 
 You likely already have the necessary environment set up to run this workshop. However, if you want to recreate it on your own, follow the instructions below to prepare your environment.
 
+The "AI Specialist" module only requires the Cloud/Core Datacenter infrastructure, while the "Platform Specialist" needs both the Cloud and the Edge sides.
 
-== OpenShift
+== Cloud/Core Datacenter
+
+
+=== OpenShift
 
 This workshop requires an OpenShift cluster. You might already have one or, if you have access to the Red Hat Demo Platform, you can order either the "RHOAI on OCP on AWS with NVIDIA GPUs" lab, if you want or not GPUs, or the "Red Hat OpenShift Container Platform Cluster (AWS)" lab if you want an "empty" environment.
 
 
-=== Lab Baseline
+==== Lab Baseline
 
 The workshop requires several services and configuration (baseline) in OpenShift. You can prepare your environment easily by just importing some YAMLs in your environment:
 
@@ -30,8 +34,16 @@ image::lab-argo.png[]
 image::lab-argo-finish.png[]
 ====
 
+With these YAMLs you deploy:
 
-=== Workshop Guide deployment
+* OpenShift Workshop user and groups
+* OpenShift AI with Model Registry
+* MinIO Object Storage
+* Gitea as Source Code Repository
+* NVIDIA GPU configuration
+
+
+==== Workshop Guide deployment
 
 If you want to have your own Workshop Guide first you need to prepare the values for the guide variables. The default values can be found in the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[`antora.yaml` file]. 
 
@@ -141,11 +153,20 @@ spec:
 Once you create the object, the guide will be deployed in a new the `showroom` OpenShift project. You will find in that project a route pointing to the guide that will be available as soon as the showroom POD is running.
 
 
-== Gitea
+
+
+
+
+== Edge Site
+
+=== Gitea
+
+Besides the Gitea deployed as Source Code Repository in the Cloud, at the Edge a Container Image Registry is also deployed to minimize the latency and bandwidth usage during the Workshop. For that reason, an other Gitea environment (different from the one on the Cloud) is deployed at the Edge working just as Container Image Registry.
+
 preparing the environment Gitea:
 $ ansible-playbook playbook.yml -i inventory 
 
-== FlighCTL
+=== FlighCTL
 
   # git clone repo
   # make sure you have the following packaes installed: git, make, and go (>= 1.21), openssl, openssl-devel, podman-compose
@@ -168,7 +189,7 @@ $ ansible-playbook playbook.yml -i inventory
   # now you can get the devices registered with
   # flightctl get devices
 
-== DNS - DHCP - Router Openwrt
+=== DNS - DHCP - Router Openwrt
 using this guide https://openwrt.org/docs/guide-user/installation/openwrt_x86 I'll reuse a device at home
 
 
