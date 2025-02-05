@@ -336,9 +336,16 @@ Instructions below are using the provided pre-created container images, but you 
 ====
 Follow the steps below to create the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/backend[Dashboard backend] and https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-dashboard/src/frontend[Dashboard frontend] applications in OpenShift:
 
-1- Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
 
-2- Deploy the backend using the following manifests (you can use the `+` icon on the top right corner of the OpenShift Console to paste them)
+1- Navegate to {openshift-console} 
+
+2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
+
+3- Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
+
+4- Click on the `+` icon on the top right corner of the OpenShift console.
+
+5- Paste there the content shown below to deploy the Dashboard Backend and Click "Create".
 
 [source,yaml,role=execute,subs="attributes"]
 ----
@@ -398,9 +405,9 @@ spec:
     targetPort: 5005
 ----
 
+6- Open the "Route" object and take note of the Dashboard Backend URL, you will need it.
 
-
-3- Create the frontend application. This time you cannot just copy-paste the manifests below since you will need to include in the Deployment manifest a value for the `BACKEND_API_BASE_URL` environment variable. You can get the Backend URL if you check it in the `Networking > Routes` menu in the OpenShift Consol (it will something like `http://object-detection-dashboard-backend-user99-test.apps.cluster-hkr2j.hkr2j.sandbox1307.opentlc.com`)
+7- Click again on the `+` icon on the top right corner of the OpenShift console. Copy the code below and paste it there, **but before creating the object** include in the placeholder `HERE-YOU-BACKEND-API-BASE-URL---` the Dashboard Backend URL that you copied in the previous step.
 
 
 ----
@@ -465,15 +472,16 @@ spec:
     targetPort: 3000
 ----
 
+6- Open the "Route" object and take note of the Dashboard Frontend URL.
 
-4- Go to Routes in the OpenShift Console and take note of the Backend and Frontend URLs
 ====
 
-You can now test the access to the dashboard navigating to the Dashboard Frontend URL.
+
+When all pods are running, you will be able to open the Dashboard using the Frontend URL. You will see an empty page with the "Device Monitoring Dashboard" title.
 
 [CAUTION]
 
-The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
+The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
 
 
 === Local machine applications deployment

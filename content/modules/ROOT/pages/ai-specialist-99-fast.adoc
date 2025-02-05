@@ -327,9 +327,11 @@ Deploy the Cloud-side sevices in OpenShift
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
 
-3- Click on the `+` icon on the top right corner of the OpenShift console.
+3- Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
 
-4- Paste there the content shown below to deploy the Dashboard Backend and Click "Create".
+4- Click on the `+` icon on the top right corner of the OpenShift console.
+
+5- Paste there the content shown below to deploy the Dashboard Backend and Click "Create".
 
 [source,yaml,role=execute,subs="attributes"]
 ----
@@ -389,9 +391,9 @@ spec:
     targetPort: 5005
 ----
 
-5- Go to "Routes" and take note of the Dashboard Backend route, you will need it.
+6- Open the "Route" object and take note of the Dashboard Backend URL, you will need it.
 
-6- Click again on the `+` icon on the top right corner of the OpenShift console. Copy the code below and paste it there, **but before creating the object** include in the placeholder `HERE-YOU-BACKEND-API-BASE-URL---` the Dashboard Backend URL that you copied in the previous step.
+7- Click again on the `+` icon on the top right corner of the OpenShift console. Copy the code below and paste it there, **but before creating the object** include in the placeholder `HERE-YOU-BACKEND-API-BASE-URL---` the Dashboard Backend URL that you copied in the previous step.
 
 ----
 apiVersion: apps/v1
@@ -455,9 +457,13 @@ spec:
     targetPort: 3000
 ----
 
-7- When all pods are running, you will be able to open the Dashboard using the Frontend URL. The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
+6- Open the "Route" object and take note of the Dashboard Frontend URL.
 
 ====
+
+When all pods are running, you will be able to open the Dashboard using the Frontend URL. The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
+
+
 
 **Local machine applications deployment**
 
