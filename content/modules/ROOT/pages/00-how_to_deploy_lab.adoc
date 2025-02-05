@@ -1,6 +1,6 @@
 = How to deploy the lab
 
-You probably already have the environment ready to run this workshop, but if you want to reproduce it on your own you can follow the instructions below to prepare your own environment.
+You likely already have the necessary environment set up to run this workshop. However, if you want to recreate it on your own, follow the instructions below to prepare your environment.
 
 
 == OpenShift
