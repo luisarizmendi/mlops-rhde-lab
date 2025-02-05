@@ -848,6 +848,10 @@ If you are running in an **environment with GPUs**, you must:
 image::ai-build-pipeline-elyra-gpu.png[]
 
 
+[NOTE]
+
+If you want to play a little bit more with the Elyra Pipelines, try to modify the code to get more inputs (environment variables) to, for example, let configure dynamically the `optimizer` or the `learning rate`.
+
 
 === Run the Elyra Pipeline
 

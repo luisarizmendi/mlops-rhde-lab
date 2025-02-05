@@ -692,7 +692,6 @@ image::ai-train-pipeline-run.png[]
 Be careful not to copy any extra spaces in the names, as this will cause the download task to fail.
 
 
-
 [NOTE]
 
 In contrast to Elyra Pipelines, this Kubeflow Pipeline automatically creates and deletes the Persistent Volume used for transferring files between pipeline tasks, ensuring efficient resource management and streamlined execution.
@@ -710,6 +709,10 @@ You can open the OpenShift Console and check how the Persistent Volume was creat
 
 image::ai-train-pipeline-run-gpu-logs.png[]
 
+
+If the Pipeline run POD is scheduled in a node where other workloads using GPUs are located, it could happen that your GPU run out of memory. If it happens try reducing the `batch size` or launch the run again after the other workloads finished or just import the https://raw.githubusercontent.com/luisarizmendi/workshop-object-detection-rhde/refs/heads/main/resources/solutions/ai-specialist/training/kubeflow/yolo_training_pipeline_cpu.yaml[Kubeflow Pipeline that only make use of CPU] (just for testing propouses).
+
+image::ai-train-memoryerror.png[]
 
 After some time, the pipeline will finish. You can at that point go to the Object Storage and check the contents that have been uplaoded to `models` directory in your "userpass:[<span id="gnumberVal"></span>]-ai-models" bucket.
 
