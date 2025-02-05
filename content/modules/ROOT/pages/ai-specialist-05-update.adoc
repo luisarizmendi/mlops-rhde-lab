@@ -43,7 +43,7 @@ Do the following test to detect the issue with our current model.
 1. Open `http://localhost:5000/video_stream`. You should see the camera feed displaying a `no_helmet` or `helmet` detection based on whether you are wearing a hard hat.
 
 
-2. Now, put on any hat or cap (provided during the workshop). You have disappeared...
+2. Now, put on any hat or cap (provided during the workshop). Instantly, you either vanish from detection or appear as if you're wearing a helmet, effectively "confusing" the model.
 
 
 3. Open the Dashboard Frontend URL. Notice that your device is not triggering any alarm, even though you are not wearing a hard hat.
