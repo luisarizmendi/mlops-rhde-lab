@@ -99,6 +99,17 @@ def train_model(
         batch=CONFIG['batch'],
         imgsz=CONFIG['imgsz'],
         device=CONFIG['device'],
+        
+        # Optimizer parameters
+        optimizer=CONFIG['optimizer'],
+        lr0=CONFIG['lr0'],
+        lrf=CONFIG['lrf'],
+        momentum=CONFIG['momentum'],
+        weight_decay=CONFIG['weight_decay'],
+        warmup_epochs=CONFIG['warmup_epochs'],
+        warmup_bias_lr=CONFIG['warmup_bias_lr'],
+        warmup_momentum=CONFIG['warmup_momentum'],
+        amp=CONFIG['amp'],
     )
 
     # Evaluate model

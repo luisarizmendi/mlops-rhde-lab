@@ -438,10 +438,15 @@ deploymentSpec:
           \ and train model\n    model = YOLO(CONFIG['model'])\n    results_train\
           \ = model.train(\n        name=CONFIG['name'],\n        data=CONFIG['data'],\n\
           \        epochs=CONFIG['epochs'],\n        batch=CONFIG['batch'],\n    \
-          \    imgsz=CONFIG['imgsz'],\n        device=CONFIG['device'],\n    )\n\n\
-          \    # Evaluate model\n    results_test = model.val(\n        data=CONFIG['data'],\n\
-          \        split='test',\n        device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n\
-          \    )\n\n    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
+          \    imgsz=CONFIG['imgsz'],\n        device=CONFIG['device'],\n\n      \
+          \  # Optimizer parameters\n        optimizer=CONFIG['optimizer'],\n    \
+          \    lr0=CONFIG['lr0'],\n        lrf=CONFIG['lrf'],\n        momentum=CONFIG['momentum'],\n\
+          \        weight_decay=CONFIG['weight_decay'],\n        warmup_epochs=CONFIG['warmup_epochs'],\n\
+          \        warmup_bias_lr=CONFIG['warmup_bias_lr'],\n        warmup_momentum=CONFIG['warmup_momentum'],\n\
+          \        amp=CONFIG['amp'],\n    )\n\n    # Evaluate model\n    results_test\
+          \ = model.val(\n        data=CONFIG['data'],\n        split='test',\n  \
+          \      device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n    )\n\n\
+          \    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
           \ \"results.csv\")\n    results_df = pd.read_csv(results_csv_path)\n\n \
           \   # Extract metrics\n    metrics = {\n        \"precision\": results_df[\"\
           metrics/precision(B)\"].iloc[-1],\n        \"recall\": results_df[\"metrics/recall(B)\"\
