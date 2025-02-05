@@ -601,7 +601,7 @@ python hardhat-kubeflow-pipeline.py
 ----
 git config --global user.email user<span id="gnumberVal"></span>@acme.com
 git config --global user.name user<span id="gnumberVal"></span>
-git remote set-url origin http://user<span id="gnumberVal"></span>:redhat<span id="gnumberVal"></span>@{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
+git remote set-url origin http://{gitea-user-base}<span id="gnumberVal"></span>:{gitea-password-base}<span id="gnumberVal"></span>@{gitea-server}/user<span id="gnumberVal"></span>/user<span id="gnumberVal"></span>-ai.git
 git add .
 git commit -m "kubeflow Pipeline"
 git push

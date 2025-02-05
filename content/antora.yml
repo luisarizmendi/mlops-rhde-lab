@@ -15,7 +15,6 @@ asciidoc:
     openshift-api: https://api.-----TBC----openshift-api----TBC-----:6443
     openshift-user-base: user
     openshift-password-base: redhat
-    gitea-server: -----TBC----gitea-server----TBC-----   # without http://
     container-registry-gitea: 192.168.1.100
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea
@@ -27,17 +26,20 @@ asciidoc:
     device-ip-base: 192.168.100.1
     device-username: admin
     device-password: secret
-    openshift-ai: https://-----TBC----openshift-ai----TBC-----
     flightctl-ui: https://-----TBC----flightctl-ui----TBC-----
     flightctl-api: https://-----TBC----flightctl-api----TBC-----
     flightctl-user-basename: flightctluser
     flightctl-password: secretflightctl
     registry-local-url: http://192.168.100.200/workshop/
     # AI
+    openshift-ai: https://-----TBC----openshift-ai----TBC-----
     minio-ui: http://-----TBC----minio-ui----TBC-----
     minio-api: http://-----TBC----minio-api----TBC-----
     minio-user-base: user
     minio-password-base: redhat
+    gitea-server: -----TBC----gitea-server----TBC-----   # without http://
+    gitea-user-base: user
+    gitea-password-base: redhat
     registry-url: https://quay.io/user/luisarizmendi/
     page-links:
     - url: https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist
