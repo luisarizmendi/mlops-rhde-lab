@@ -61,7 +61,7 @@ We will use Gitea to store and version-control the Jupyter Notebooks developed f
 If you plan to use Gitea you can take a look and check that the "userpass:[<span id="gnumberVal"></span>]-ai" repository is already created:
 
 1. Navegate to http://{gitea-server}
-2. Click "Sign In" (top right button) with user "userpass:[<span id="gnumberVal"></span>]" and password "redhatpass:[<span id="gnumberVal"></span>]"
+2. Click "Sign In" (top right button) with user "{gitea-user-base}pass:[<span id="gnumberVal"></span>]" and password "{gitea-password-base}pass:[<span id="gnumberVal"></span>]"
 3. You can see on the right the "userpass:[<span id="gnumberVal"></span>]-ai" repository.
 ====
 

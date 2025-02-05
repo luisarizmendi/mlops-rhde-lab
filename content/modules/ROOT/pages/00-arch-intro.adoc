@@ -69,7 +69,7 @@ Running in the Cloud:
 
 * Source Code Repository: GitHub.
 
-* Container Image Registry: Quay.io.
+* Container Image Registry: https://quay.io[Quay.io].
 
 * AI Model Development Environment: OpenShift AI.
 
@@ -100,6 +100,11 @@ The only requirements are:
 
 * Web Browser – to access workshop materials and cloud platforms.
 
+* `podman` or `docker`
+
+* `oc` https://mirror.openshift.com/pub/openshift-v4/clients/ocp/[OpenShift client]
+
+* https://helm.sh/docs/intro/install/[Helm CLI]
 
 == Lab Details
 
@@ -110,31 +115,48 @@ Before beginning the workshop steps, you will need some necessary environment de
 
 Part of the required information is pre-configured as global variables in the xref:https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/content/antora.yml[antora.yml] file. These variables will automatically populate in the workshop guide. However, there is user-specific information that must be entered manually so *you must use the input boxes in the guide’s footer* (scroll down the page to the bottom) to fill them in with the information provided by the instructor and clik on the "Save" button on the right. If not entered, placeholders (e.g., GROUP_NUMBER) will appear in the guide. TThe value you save will be applied across all sections, eliminating the need to re-enter your user number every time you navigate to a new page.
 
-=== Edge Device
+
+=== Cloud/Core Datacenter
+
+
+==== OpenShift Cluster
+
+* Web Console: {openshift-console}
+* API: {openshift-api}
+* OpenShift AI: {openshift-ai}
+* Username: {openshift-user-base}pass:[<span id="gnumberVal"></span>]
+* Password: {openshift-password-base}pass:[<span id="gnumberVal"></span>]
+
+==== Object Storage
+
+* Web Console: {minio-ui}
+* API: {minio-api}
+* Username: {minio-user-base}pass:[<span id="gnumberVal"></span>]
+* Password: {minio-password-base}pass:[<span id="gnumberVal"></span>]
+
+==== Source Code Repository (Gitea)
+
+* Web Console: http://{gitea-server}
+* Username: {gitea-user-base}pass:[<span id="gnumberVal"></span>]
+* Password: {gitea-password-base}pass:[<span id="gnumberVal"></span>]
+
+==== Additional Services
+
+* Workshop GitHub repository: {git-workshop-url}
+* External Container Image Registry: {registry-url}
+
+
+=== Edge location
+
+==== Edge Device
 
 * IP Address: {device-ip-base}pass:[<span id="gnumberVal"></span>] 
 * Username: {device-username}
 * Password: {device-password}
 
-=== Edge Management (Flight Control)
+==== Local server
 
-* UI URL: {flightctl-ui}
-* Username: {flightctl-user-basename}pass:[<span id="gnumberVal"></span>]
-* Password: {flightctl-password}
-
-=== OpenShift Cluster
-
-* Web Console URL: {openshift-console}
-* API URL: {openshift-api}
-* Username: {openshift-user-basename}pass:[<span id="gnumberVal"></span>]
-* Password: {openshift-password}
-
-=== Additional Services
-
-* Workshop GitHub repository: {git-workshop-url}
-* External Container Image Registry: {registry-url}
-* Local Container Image Registry: {registry-local-url}
-
+* Local Container Image Registry (Gitea): {registry-local-url}
 
 == Next
 
