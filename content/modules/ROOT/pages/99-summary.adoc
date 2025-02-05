@@ -34,6 +34,16 @@ The final section addressed the ongoing maintenance of the deployed model. Topic
 
 == Platform Specialist
 
+=== Introduction
+This section provides a summary of the importance of the Platform Specialist in the scenario depicted and an introduction to the tools and technologies used throughout the course.
+
+=== Image Baking
+Attendees will learn in this section how to design, model and build OS images based on Image Mode. This section will also provides attendees with the different deployment option of the images.
+
+=== Device Onboarding
+Attendees will learn how 
+
+=== Day 2 Operations
 
 
 
