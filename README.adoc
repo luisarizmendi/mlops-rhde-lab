@@ -65,6 +65,10 @@ Good luck on your mission to create a safer, smarter workplace!
 This repository contains the workshop guide, solutions and deployment scripts, you won't need to change anything on it since the Workshop guide will ask you to create your own empty repositories to complete the steps, but if you want to build your own workshop based on this one you will need to clone this repo (and probably it's a good idea to create a new branch for your workshop), and then perform the required changes in the Architecture page and the `antora.yml` file variables based on your setup. You will find more information about it in the xref:https://luisarizmendi.github.io/workshop-object-detection-rhde/modules/00-how_to_deploy_lab.html[Deployment Guide].
 
 
+Bear also in mind that large files will be used in this repository (mostly the models)
+
+
+
 == Accessing the workshop
 
 ==== GitHub Pages
