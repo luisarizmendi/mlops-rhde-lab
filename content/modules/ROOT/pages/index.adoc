@@ -139,5 +139,5 @@ xref:00-arch-intro.adoc[*Architecture*]
 
 [.tile]
 xref:99-summary.adoc[*Summary*]
-
+xref:00-how_to_deploy_lab.adoc[*Extra: How to deploy the Workshop*]
 

@@ -1,5 +1,8 @@
 = How to deploy the lab
 
+You probably already have the environment ready to run this workshop, but if you want to reproduce it on your own you can follow the instructions below to prepare your own environment.
+
+
 == OpenShift
 
 This workshop requires an OpenShift cluster. You might already have one or, if you have access to the Red Hat Demo Platform, you can order either the "RHOAI on OCP on AWS with NVIDIA GPUs" lab, if you want or not GPUs, or the "Red Hat OpenShift Container Platform Cluster (AWS)" lab if you want an "empty" environment.
@@ -14,7 +17,7 @@ The workshop requires several services and configuration (baseline) in OpenShift
 
 1- Navigate to OpenShift Console (admin user): {openshift-console}
 
-2- Click on the `+` sign and import the bootstrap-lap YAML. https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/deployment/openshift/bootstrap-lab[Choose the right YAML file depending on the platform where you are deploying]. If using the Demo Platform, choose `bootstrap-lab-rhpds-nvidia.yaml` if you are using the "RHOAI on OCP on AWS with NVIDIA GPUs" lab as a base, or the `bootstrap-lab-empty.yaml` if using the "Red Hat OpenShift Container Platform Cluster (AWS)" lab.
+2- Click on the `+` sign and import the bootstrap-lap YAML. https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/deployment/openshift/bootstrap-lab[Choose the right YAML file] depending on the platform where you are deploying. If using the Demo Platform, choose `bootstrap-lab-rhpds-nvidia.yaml` if you are using the "RHOAI on OCP on AWS with NVIDIA GPUs" lab as a base, or the `bootstrap-lab-empty.yaml` if using the "Red Hat OpenShift Container Platform Cluster (AWS)" lab.
 
 image::lab-bootstrap.png[]
 
