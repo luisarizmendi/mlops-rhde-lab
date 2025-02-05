@@ -16,11 +16,11 @@ The RHEL bootc images differ from the existing application Universal Base Images
 
 One of the most obvious ways to use a bootable container as an operating system is to build it into a disk image. The new https://github.com/osbuild/bootc-image-builder[*Bootc Image Builder*] project is a tool that does exactly that. Depending on your needs, it can generate different types of disk images, including:
 
-* raw: Common image format used by many virtualization tools
-* qcow: An image format primarily used by QEMU
-* iso: For creating bootable media using tools like Balena Etcher
-* vmdk: For creating VMs using VMWare Workstation or ESXi
-* ami: For creating virtual servers on Amazon EC2
+* _raw_: common image format used by many virtualization tools
+* _qcow_: an image format primarily used by QEMU
+* _iso_: for creating bootable media using tools like Balena Etcher
+* _vmdk_: for creating VMs using VMWare Workstation or ESXi
+* _ami_: for creating virtual servers on Amazon EC2
 
 These types of disk images provide lots of options to deploy bootable containers, from booting from a USB drive, starting a virtual machine, or deploying virtual servers to the cloud.
 
@@ -44,15 +44,15 @@ Since bootc image is available both for x86-64 and aarch64 architectures we are 
 The Nvidia device has already been flashed to the latest stable and supported by Red Hat JetPack (6.0). Nvidia JetPack provides a full development environment for the Jetson platform including Jetson Linux with BSP, kernel, RootFS, etc., the NVIDIA AI stack with hardware accelerated libraries, SDKs, and frameworks, and Jetson Platform Services for application development.
 
 A RHEL is already installed on the Nvidia device but it is RPM based. 
-Since you don't know yet the IP address or the credentials to the Nvidia Device and you (as Platform Specialist) would like to standardize and simplify platform building and deployment, you are going to leverage bootc.
+Since you don't know yet the IP address or the credentials to the Nvidia Device and you (as Platform Specialist) would like to standardize and simplify platform building and deployment, you are going to leverage bootc and create and deploy a new standard image on top of it.
 
-We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the console or DisplayPort.
+We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the serial console or visualizing it through the DisplayPort.
 
-You will find this container image on the local container registry (based on Gitea) here: {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
+You will find this base container image on the Edge Container Registry (Gitea) here: {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
-#Make sure to pull the container image with `sudo` since the last step of building the bootc image requires `sudo` permissions.#
+NOTE: Make sure to pull the container image with `sudo` since the last step of building the bootc image requires `sudo` permissions.
 
-Let's analyze the base image provided:
+Let's analyze the base container image provided:
 
 [source,docker]
 ----
@@ -99,7 +99,7 @@ RUN systemctl enable microshift-make-rshared.service
 
 In the Containerfile in order: 
 
-* we are basing image of RHEL 9.4
+* we are basing the image on RHEL 9.4
 * we are including Microshift as well, as we will be using it in the last part of this lab to deploy applications
 * we are creating a `redhat` user, and adding that user to the `video` group, since it will allow him to use GPU resources
 * we are afterwards opening the needed firewall ports
@@ -108,10 +108,10 @@ In the Containerfile in order:
 
 What we are going to add to the image is:
 
-. add administrative rights to the `redhat` user, change the user password and enable passwordless escalation
+. administrative rights to the `redhat` user, change the user password and enable passwordless escalation
 . install and enable cockpit interface for remote graphical management
 . a script to notify you of the acquired IP address
-. a customization to also print the IP address on the console
+. a customization to also print the IP address on the console (in case you do want to attach to the DP)
 
 Since the first 2 points should be fairly easy to include, I'll leave them as exercise for the reader, but you can find them as snippets below.
 
@@ -130,9 +130,9 @@ RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socke
 ----
 ====
 
-For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time.
+For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time (`GROUP-NAME-CHANGE-ME` in your case is "userpass:[<span id="gnumberVal"></span>]")
 
-[source,docker]
+[source,docker,subs="attributes"]
 ----
 RUN cat > /var/tmp/network-info.sh <<EOF
 #!/bin/bash
@@ -155,7 +155,6 @@ JSON="{ \
 \"title\": \"GROUP-NAME-CHANGE-ME\" \
 }"
 
-echo "\$JSON"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
 EOF
@@ -189,22 +188,31 @@ IP: \4
 ----
 
 
-NOTE: To build this new image you are going to use the shared Nvidia Device available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Nvidia Device you have in front of you. 
+NOTE: To build this first new image you are going to use the Edge Nvidia AGX Device available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Nvidia Device you have in front of you (and you can build images using bootc only on same as target device architecture devices). 
 Username and password for the shared Nvidia Device are {shared-nvidia-user}:{shared-nvidia-pass}. 
 
-WARNING: Watch out for using your assigned Nvidia Device to try and build the next iteration of the Device Image! To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*). So for this and the following step you would need to use the shared Nvidia Device mentioned above.  
-
-You can find the complete Containerfile here:
-
-
-.Click to reveal it
-[%collapsible]
-====
+WARNING: Watch out for using your group assigned Nvidia Device to try and build the following iteration of the Device Image! To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*). + 
+So for this step you would need to use the shared Edge Nvidia Device mentioned above and if you want to build the rest of the images in the track on your group assigned Nvidia Device, I suggest you include Virtualization in the Containerfile. +
+In that case you would create a full RHEL9 VM, running on KVM, that _bakes_ new images. +
+You can find the additional packages needed in the Containerfile below.+ 
 [source,docker]
+----
+RUN dnf -y install qemu-kvm libvirt virt-install && dnf -y clean all 
+RUN for drv in qemu network nodedev nwfilter secret storage interface; do systemctl enable virt${drv}d{,-ro,-admin}.socket; done
+----
+
+You can find the complete Containerfile here (`GROUP-NAME-CHANGE` in your case is "userpass:[<span id="gnumberVal"></span>]"):
+
+
+====
+[source,docker,subs="attributes"]
 ----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
 RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socket
+
+RUN dnf -y install qemu-kvm libvirt virt-install && dnf -y clean all 
+RUN for drv in qemu network nodedev nwfilter secret storage interface; do systemctl enable virt${drv}d{,-ro,-admin}.socket; done
 
 # Modifying default user
 RUN usermod -aG wheel redhat
@@ -233,7 +241,6 @@ JSON="{ \
 \"title\": \"GROUP-NAME-CHANGE-ME\" \
 }"
 
-echo "\$JSON"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
 EOF
@@ -266,17 +273,17 @@ EXPOSE 9090
 ----
 ====
 
-Given the complete Containerfile, we are going to build a new container image and then push it to the central Gitea Container Registry.
+Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
-Make sure to create a new folder on the shared Nvidia Device with your group name and copy the created Containerfile there.  
+Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Edge Nvidia Device and copy the created Containerfile there.  
 You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Container Registry):
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
-$ sudo podman build -t {container-registry-gitea}/group-name-change-me/nvidia:0.0.2 .
+$ sudo podman build -t {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2 .
 ----
 
-You can now create the new Organization inside Gitea to push the newly baked container image to. 
+You can now create the new *Organization* (following your assigned group) inside Gitea to push the newly baked container image to. 
 
 You can find that functionality here:
 
@@ -285,15 +292,15 @@ image::platform-image-mode-gitea.png[]
 
 Now we can push it to the Container Registry like this
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
-$ sudo podman push <imageID> {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+$ sudo podman push <imageID> {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
 ----
 
 
 == Image Deploy
 
-Now that you have built the "refreshed" container image we need to deploy it to your personal Nvidia Device sitting on your desk.
+Now that you have built the "refreshed" container image we need to deploy it to your own Nvidia Device sitting on your desk.
 
 For that we need to use the `bootc-image-builder` as highlighted https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems[here].  
 
@@ -310,7 +317,7 @@ Here we will define:
 
 This is the example TOML file
 
-[source,toml]
+[source,toml,subs="attributes"]
 ----
 [customizations.installer.kickstart]
 contents = """
@@ -341,7 +348,7 @@ cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
 location = "{container-registry-gitea}"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
 %end
 
 %post
@@ -354,9 +361,9 @@ Now we can go ahead and create the ISO image (make sure to save the above file a
 
 TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure registry.
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
-$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
 ----
 
 NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created with the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
@@ -364,7 +371,7 @@ NOTE: during the build process the `nvidia-local` repo will fail, it is normal s
 
 == Image Rollout
 
-You can now burn the ISO to a USB stick and boot your Nvidia Device up.
+You can now burn the ISO to a USB stick and boot your assigned Nvidia Device.
 
 [source,bash]
 ----
@@ -375,9 +382,9 @@ The automated installation will take approximately 10 minutes after which the De
 
 image::platform-image-mode-gitea-inventories.png[]
 
-You will now have access to the Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the local Nvidia Device.
+You will now have access to the assigned Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
 
-You can also verify that the Device is pointing to the Central Container Registry by running the following: 
+You can now also verify that the Device is pointing to the Edge Container Registry by running the following: 
 
 [source,bash]
 ----
@@ -415,7 +422,11 @@ status:
 
 ----
 
-NOTE: You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device.
+NOTE: You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device. We can go ahead and disable Microshift for now with+ 
+[source,bash]
+----
+$ sudo systemctl disable microshift --now
+----
 
 .SOLUTION
 ====
