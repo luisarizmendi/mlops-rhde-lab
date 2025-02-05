@@ -86,9 +86,30 @@ The script defines the pipeline structure, specifying the order in which pipelin
 
 The `train` step has an additional Persistent Volumen mounted to https://stackoverflow.com/questions/43373463/how-to-increase-shm-size-of-a-kubernetes-container-shm-size-equivalent-of-doc[extend the POD's Shared Memory]. This is needed when you run the inference using GPUs. Kubeflow v2 https://github.com/kubeflow/pipelines/pull/10913[already implemented the method to use `EmptyDir`] instead but the current version of the OpenShift AI pipelines does not have this path yet, so a Persistent Volume is used instead. 
 
-There is another important consideration when working with GPUs: the kubernetes scheduling. When having Kubernetes taints in the kubernetes nodes to prevent all workloads run on GPU nodes you will need to configure "tolerations" in your pipeline tasks. It's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
+There is another important consideration when working with GPUs: the **Kubernetes scheduling**. 
 
-Regarding schedluing it's also important to mention that along with the tolerations, the `set_accelerator_limit`, `set_accelerator_type` and `add_node_selector_constraint` are the methods that make the kubernetes scheduler take into account the GPU selection when selecting the node where the task will be running. 
+When working with GPUs in Kubeflow Pipelines, one crucial aspect to consider is Kubernetes scheduling. By default, Kubeflow does not interact with the Kubernetes Scheduler to optimize task placement across nodes from a global perspective. Instead, it makes scheduling decisions on a per-task basis. This means that each task is scheduled independently, without considering how previous or future tasks are placed.
+
+While this behavior is not inherently problematic, it can lead to issues when dealing with shared resources, for example, a Persistent Volume (PV) shared across multiple tasks like in our case. This challenge becomes even more pronounced in environments with multiple deployment zones, where Kubernetes may inadvertently schedule a pod in a zone where it cannot access the shared resource. The issue is particularly critical when there are only a few nodes per zone, as is often the case in workshop environments like this one.
+
+Consider an OpenShift cluster deployed across three zones in a public cloud (us-east-a, us-east-b, us-east-c). In this scenario, the cloud provider does not allow sharing Persistent Volumes across zones, meaning that all pods needing a specific PV must be scheduled in the same zone.
+
+Let's walk through what happens when running a Kubeflow Pipeline:
+
+The Download Dataset Task does not require GPUs. Kubernetes schedules the corresponding pod in us-east-a, where resources are available. The pod is deployed, downloads the dataset, and stores it in the Persistent Volume.
+
+The Training Task requires GPUs. Kubernetes tries to schedule the pod in us-east-a because the Persistent Volume is bound to that zone. However, if no GPU-enabled nodes exist in us-east-a, or if they are fully occupied, the scheduler fails.
+
+This issue arises because Kubernetes prioritizes Persistent Volume placement over GPU availability, potentially leading to a scheduling failure when GPUs are needed.
+
+How can be that solved? We use the `set_accelerator_limit`, `set_accelerator_type` and `add_node_selector_constraint` as the methods that make the kubernetes scheduler take into account the GPU selection when selecting the node where the task will be running. Although not ideal, there is a workaround to solve this issue with you have multiple zones and few nodes in each zone, scheduling all tasks (in our example the Download and the Training task) taking into account all the resources that will be needed globally, so in this case we should use the GPUs to know where to locate the "Download" task eventhough it does not use any GPU at all. That will give us consistency and avoid having scheduling failures in environments with few nodes per zone.
+
+The main drawback of this workaround is that non-GPU workloads will be scheduled on GPU nodes, potentially leading to inefficient resource utilization. A better long-term solution is to remove the shared Persistent Volume dependency by uploading data to Object Storage instead. However, for simplicity in this workshop, we will proceed with the Persistent Volume approach while implementing the scheduling workaround.
+
+
+Also bear in mind that other schudule configurations need to be also consistent, for example when having Kubernetes taints in the Kubernetes nodes to prevent any workload run on GPU nodes, you will need to configure "tolerations" in your pipeline tasks. It's crucial to ensure that these configurations are consistently applied across all tasks that share a Persistent Volume (although GPUs will be only used during Training task). If these configurations are not uniform, there is a risk that the scheduler may attempt to deploy a pod for one of the tasks in a zone where the shared volume is not available.
+
+You will see all these configuration on the Pipeline definition below:
 
 
 [source,python,role=execute,subs="attributes"]
