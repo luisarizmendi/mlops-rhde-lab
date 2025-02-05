@@ -139,7 +139,7 @@ image::ai-build-authenticator.png[]
 4- Create a new S3 Storage Connection ("Connetions" tab) that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
 
 ** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
-** MinIO API URL: {https://}minio-api}
+** MinIO API URL: {minio-api}
 ** Bucket name "userpass:[<span id="gnumberVal"></span>]-ai-models" 
 ** Region: "none" 
 
