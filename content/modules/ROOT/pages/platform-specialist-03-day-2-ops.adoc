@@ -176,7 +176,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: {container-registry-gitea}/gitea/object-detection-dashboard-backend:v1
+        image: quay.io/luisarizmendi/object-detection-dashboard-backend:v1
         ports:
         - containerPort: 5005
 ---
@@ -238,7 +238,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: {container-registry-gitea}/gitea/object-detection-dashboard-frontend:v1
+        image: quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
         ports:
         - containerPort: 3000
         env:
@@ -280,6 +280,11 @@ spec:
 You can now test the access to the dashboard navigating to the Dashboard Frontend URL.
 
 CAUTION: The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
+
+You should be able to see something like this navigating to the browser:
+
+image::platform-cloud-dashboard.png[]
+
 
 === Integrated Applications Test
 
