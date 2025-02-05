@@ -461,7 +461,11 @@ spec:
 
 ====
 
-When all pods are running, you will be able to open the Dashboard using the Frontend URL. The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
+When all pods are running, you will be able to open the Dashboard using the Frontend URL. You will see an empty page with the "Device Monitoring Dashboard" title.
+
+[CAUTION]
+
+The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running.
 
 
 
@@ -484,6 +488,9 @@ podman run -it --rm -p 8080:8080 quay.io/luisarizmendi/object-detection-inferenc
 ----
 
 [NOTE]
+
+This is a large image, the pull could take time
+
 
 If you have an https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html[NVIDA GPU and you have it configured in your system] (`sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`), you might want to use it for inferencing by running `podman run -it --rm -p 8080:8080 --device nvidia.com/gpu=all --security-opt=label=disable quay.io/luisarizmendi/object-detection-inference-server:prod`
 
