@@ -1,7 +1,7 @@
 ---
 site:
   title: Object Detection with Red Hat Device Edge
-  url: https://luisarizmendi.github.io/workshop-object-detection-rhde
+  url: https://github.com/luisarizmendi/workshop-object-detection-rhde
   start_page: modules::index.adoc
 
 content:
