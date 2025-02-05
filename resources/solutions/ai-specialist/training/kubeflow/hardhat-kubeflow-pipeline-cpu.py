@@ -281,7 +281,7 @@ def push_to_model_registry(
         rm = registry.register_model(
             registered_model_name,
             f"s3://{s3_endpoint_url}/{model_artifact_s3_path}",
-            model_format_name="pt",
+            model_format_name="Native PyTorch (pt)",
             model_format_version="1",
             version=version_name,
             description=f"{registered_model_name} is a dense neural network that detects Hardhats in images.",

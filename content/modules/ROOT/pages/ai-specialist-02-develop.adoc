@@ -138,23 +138,25 @@ image::ai-build-authenticator.png[]
 
 image::ai-build-dataconnection.png[]
 
-5- Create a new Workbench named "Object Detection Notebooks". You will need to select:
+5- Create a new Workbench ("Workbenches" tab) named "Object Detection Notebooks". You will need to select:
 
 ** Base image that will be used to run your Jupyter Notebooks (select `PyTorch`)
 ** Container Size (`Small` is enough)
 ** Persistent Volume associated to the container (you can keep the default 20Gi Persistent Volume for your Notebook but you won't need that much storage)
 ** Object Storage Connection that you already configured. 
-** Additionally, when you have GPUs and you have defined `Accelerator profiles` in your environment (`Settings > Accelerator profiles`), you will find that during the Workbench creation you don't only can select the instance size, but also if you want to use accelerators (see an example below with NVIDIA GPUs).
+** Additionally, when you have GPUs you will find that during the Workbench creation you also can use accelerators (see an example below with NVIDIA GPUs).
 
 image::ai-build-workbench.png[]
 
-6- Once started, open the Workbench (it could take time to open)
+6- Click "Create Workbench". It will take some time to create and start it.
 
-7- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu (you can find the repository clone URL opening the Gitea repository).
+7- Once started, open the Workbench (it could take time to open). You will be asked to allow permissions pior to show the Jupyter environment in your browser.
+
+8- Clone the source code repository that you created ("userpass:[<span id="gnumberVal"></span>]-ai") using the left menu (you can find the repository clone URL opening the Gitea repository). Once you click "Clone" a message will appear in the button right. It could take some time to clone the repository.
 
 image::ai-build-gitclone.png[]
 
-8- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
+9- Create a `prototype.ipynb` file inside the cloned directory ("userpass:[<span id="gnumberVal"></span>]-ai")
 ====
 
 
@@ -609,7 +611,9 @@ for file_path_test in files_test:
         print("Error occurred: ", e)
 ----
 
-You now can go to MinIO console ( {minio-ui} ) and "Browse Files" on your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket.
+You now can go to MinIO console ( {minio-ui} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
+
+image::ai-build-miniomodel.png[]
 
 Finally, I recommend cleaning up the directories created during the training and evaluation processes to save some space. To achieve this, include a final piece of code in your Notebook that removes these directories.
 
@@ -686,7 +690,7 @@ To create a Pipeline Server:
 
 1. Navigate to "Data Science Pipelines" in OpenShift AI and configure a new pipeline server.
 2. Fill in the Data Connection information but this time use the Bucket "userpass:[<span id="gnumberVal"></span>]-ai-pipelines" and set the region to `none` (as it is not configured in MinIO).
-3. Save the configuration.
+3. Click "Configure pipeline server".
 4. Once the configuration is ready, restart any running workbenches to apply the updates.
 ====
 

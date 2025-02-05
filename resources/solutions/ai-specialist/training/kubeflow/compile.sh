@@ -7,3 +7,4 @@
 pip install kfp[kubernetes]
 
 python hardhat-kubeflow-pipeline.py
+python hardhat-kubeflow-pipeline-cpu.py
