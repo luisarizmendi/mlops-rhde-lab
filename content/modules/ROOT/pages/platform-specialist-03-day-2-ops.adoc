@@ -112,6 +112,7 @@ image::ai-deploy-object-detection-webcam.png[]
 On the local *Nvidia Edge Device* we should be running:
 
 * Inference Server app
+* Camera Stream Manager app
 * Actuator app
 
 In the Cloud, on *OpenShift Cluster*:
@@ -119,13 +120,168 @@ In the Cloud, on *OpenShift Cluster*:
 * Dashboard Backend app
 * Dashboard Frontend app
 
-We are now going to deploy the local apps on the Edge Device and then we will proceed with the cloud deployment. 
+We are now going to deploy the local apps on the Edge Device and then we will proceed with the cloud deployment (assuming you haven't deployed that in the xref:ai-specialist-04-deploy.adoc[AI Specialist App Deployment]). 
+
+=== Edge Applications
 
 To add a new application to a device, we will be modifying the Fleet Device Spec template, specifying the following parameters:
 
 * Name: a user-defined name for the application
 * Image: a reference to an application package in an OCI registry
 * EnvVars (optional) a list of key/value-pairs that will be passed to the deployment tool as environment variables or command line flags.
+
+[source,bash]
+----
+$ flightctl get fleet/my-fleet -o yaml > fleet.yaml
+...
+   spec:
+      updatePolicy:
+        downloadSchedule:
+          at: "* 9-16 * * *"
+        updateSchedule:
+          at: "0 9 * * 5"
+      applications: []
+...
+----
+
+=== Cloud Applications
+
+You can follow these steps:
+
+. Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
+
+. Deploy the backend using the following manifests (you can use the `+` icon on the top right corner of the OpenShift Console to paste them)
++
+[source,yaml,role=execute,subs="attributes"]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "python"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: {container-registry-gitea}/gitea/object-detection-dashboard-backend:v1
+        ports:
+        - containerPort: 5005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 5005
+    targetPort: 5005
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-backend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-backend
+  port:
+    targetPort: 5005
+----
+
+. Create the frontend application. This time you cannot just copy-paste the manifests below since you will need to include in the Deployment manifest a value for the `BACKEND_API_BASE_URL` environment variable. You can get the Backend URL if you check it in the `Networking > Routes` menu in the OpenShift Console (it will something like `http://object-detection-dashboard-backend-user99-test.apps.cluster-hkr2j.hkr2j.sandbox1307.opentlc.com`)
++
+[source,yaml,role=execute,subs="attributes"]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+    app.kubernetes.io/part-of: Dashboard
+    app.openshift.io/runtime: "nodejs"
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"object-detection-dashboard-backend"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-detection-dashboard
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: object-detection-dashboard
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: {container-registry-gitea}/gitea/object-detection-dashboard-frontend:v1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: BACKEND_API_BASE_URL
+          value: HERE-YOU-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  selector:
+    app: object-detection-dashboard
+    component: frontend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: object-detection-dashboard-frontend
+  labels:
+    app: object-detection-dashboard
+spec:
+  to:
+    kind: Service
+    name: object-detection-dashboard-frontend
+  port:
+    targetPort: 3000
+----
+
+. Go to Routes in the OpenShift Console and take note of the Backend and Frontend URLs
+
+You can now test the access to the dashboard navigating to the Dashboard Frontend URL.
+
+CAUTION: The Dashboard application does not use TLS, so the URL must start `http://` and `https://` otherwhile you will get a message "Application is not available" even when then POD is already running. 
+
+=== Integrated Applications Test
 
 
 == OS Update
