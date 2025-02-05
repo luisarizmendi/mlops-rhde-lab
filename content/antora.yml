@@ -40,19 +40,10 @@ asciidoc:
     minio-password-base: redhat
     registry-url: https://quay.io/user/luisarizmendi/
     page-links:
-    - url: https://redhat.com
-      text: Video - AI Specialist Video
-    - url: https://www.nvidia.com
-      text: Solution - Model
-    - url: https://www.nvidia.com
-      text: Video - APP Developer Video
-    - url: https://www.nvidia.com
-      text: Solution - Applications
-    - url: https://www.nvidia.com
-      text: Video - Platform Specialist Video
-    - url: https://www.nvidia.com
-      text: Solution - Device Image and Config
-
-
-
+    - url: https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/ai-specialist
+      text: AI Specialist solutions
+    - url: https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/platform-specialist
+      text: Platform Specialist solutions
+    - url: https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/assets
+      text: Additional Assets
 
