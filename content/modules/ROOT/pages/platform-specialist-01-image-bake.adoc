@@ -134,7 +134,7 @@ For the third point, we are going to use the following script and add that as a 
 
 [source,docker,subs="attributes"]
 ----
-RUN cat > /var/tmp/network-info.sh << 'EOF'
+RUN cat > /var/tmp/network-info.sh <<'EOF'
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -344,7 +344,7 @@ reboot --eject
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
+cat > /etc/containers/registries.conf.d/gitea-registry.conf <<'EOF'
 [[registry]]
 location = "{container-registry-gitea}"
 insecure = true
