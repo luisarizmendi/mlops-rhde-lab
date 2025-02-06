@@ -124,25 +124,80 @@ We are now going to deploy the local apps on the Edge Device and then we will pr
 
 === Edge Applications
 
-To add a new application to a device, we will be modifying the Fleet Device Spec template, specifying the following parameters:
+To add a new application to a device, we will be modifying the Fleet Device Spec template. Given we are targeting Microshift as platform we will need to add Kubernetes manifests to the Fleet template (you can see why is that https://docs.redhat.com/en/documentation/red_hat_build_of_microshift/4.17/html/running_applications/applications-with-microshift#how-microshift-uses-manifests[here]).
 
-* Name: a user-defined name for the application
-* Image: a reference to an application package in an OCI registry
-* EnvVars (optional) a list of key/value-pairs that will be passed to the deployment tool as environment variables or command line flags.
+So we want to apply again the logic we saw above on defining an OS config (since manifests are just configuration on the filesystem).
+
+You will be able to find all the pre-built Edge apps in the Edge Container Registry under:
+
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-stream-manager:v1
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-inference-server:v1
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-action:v1
+
+Given the kustomize files require a complex file structure, we will use the Git Config Provider option (mentioned above) in Flight Control.
+
+.Git Config Provider
+====
+
+You can store device configuration in a Git repository such as GitHub or GitLab and let Flight Control synchronize it to the device's file system by adding a Git Config Provider.
+
+The Git Config Provider takes the following parameters:
+
+* Repository: the name of a Repository resource defined in Flight Control.
+* TargetRevision: the branch, tag, or commit of the repository to checkout.
+* Path: the subdirectory of the repository that contains the configuration.
+* MountPath: (optional) the directory in the device's file system to write the configuration to. Defaults to the file system root /.
+
+The Repository resource definition tells Flight Control the Git repository to connect to and which protocol and access credentials to use. It needs to be set up once (see Setting Up Repositories) and can then be used to configure multiple devices or fleets.
+====
+
+Now we can start by creating this Git repository on your Github (we would be able to also use the private Edge Container Registry if we had full control over the network, important in case you want to store secrets as well inside the git repo).
+
+You can find the full folder structure for the 3 Edge apps with kubernetes manifest files here: 
+
+We can now define the Git repo inside Flight Control.
+
+Image
+
+image
+
+Now we can modify the Fleet template accordingly:
 
 [source,bash]
 ----
 $ flightctl get fleet/my-fleet -o yaml > fleet.yaml
 ...
    spec:
-      updatePolicy:
-        downloadSchedule:
-          at: "* 9-16 * * *"
-        updateSchedule:
-          at: "0 9 * * 5"
-      applications: []
+   ...
+      config:
+      - gitRef:
+          mountPath: /
+          path: /demos/basic-nginx-demo/configuration
+          repository: edge-apps
+          targetRevision: main
+        name: microshift-manifests
 ...
 ----
+
+You should now see something similar in Flight Control interface
+
+image::platform-flight-control-apps-device.png[]
+
+You should also see the new manifests now landed on your Edge Device (in case you don't I suggest you restart `flightctl-agent.service` again)
+
+[source,bash]
+----
+$ sudo ls /etc/microshift/manifests
+----
+
+You now go ahead and restart Microshift, so that it picks up the new manifests and apply them automatically with kustomizer.
+And check finally if the applications are running correctly on Microshift:
+
+[source,bash]
+----
+$ sudo oc --kubeconfig /var/lib/microshift/resources/kubeadmin/kubeconfig get pods -A
+----
+
 
 === Cloud Applications
 

@@ -19,11 +19,11 @@ asciidoc:
     device-ip-base: 192.168.100.1
     device-username: admin
     device-password: secret
-    shared-nvidia-ip: 192.168.1.2
+    shared-nvidia-ip: 192.168.2.128
     shared-nvidia-user: admin
     shared-nvidia-pass: R3dh4t1!
-    gateway-dns-dhcp-openwrt: http://192.168.1.1
-    container-registry-gitea: 192.168.1.100
+    gateway-dns-dhcp-openwrt: http://192.168.2.1
+    container-registry-gitea: 192.168.2.100
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea
     flightctl-ui: https://-----TBC----flightctl-ui----TBC-----
