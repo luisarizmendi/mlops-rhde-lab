@@ -238,7 +238,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"pass:[<span id="gnumberVal"></span>]\" \
+\"title\": \"<span id="gnumberVal"></span>\" \
 }"
 
 
