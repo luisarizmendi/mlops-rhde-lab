@@ -201,7 +201,7 @@ RUN dnf -y install qemu-kvm libvirt virt-install && dnf -y clean all
 RUN for drv in qemu network nodedev nwfilter secret storage interface; do systemctl enable virt${drv}d{,-ro,-admin}.socket; done
 ----
 
-You can find the complete Containerfile here (`GROUP-NAME-CHANGE` in your case is "userpass:[<span id="gnumberVal"></span>]"):
+You can find the complete Containerfile here:
 
 
 ====
