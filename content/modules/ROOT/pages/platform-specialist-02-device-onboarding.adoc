@@ -227,7 +227,7 @@ With this file available we are now ready to build the new Containerfile
 
 [source,docker]
 ----
-FROM {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+FROM {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 
 RUN dnf -y copr enable @redhat-et/flightctl; \
     dnf -y install flightctl-agent; \
@@ -248,7 +248,7 @@ and push it to the central Container Registry
 
 [source,bash]
 ----
-$ sudo podman push <image-id> {container-registry-gitea}/group-name-change-me/nvidia:0.0.2
+$ sudo podman push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
 You can now update manually the local Nvidia Device (remember we disabled auto-updates with bootc).

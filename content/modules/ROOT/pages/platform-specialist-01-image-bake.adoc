@@ -130,7 +130,7 @@ RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socke
 ----
 ====
 
-For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time (`GROUP-NAME-CHANGE-ME` in your case is "userpass:[<span id="gnumberVal"></span>]")
+For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time 
 
 [source,docker,subs="attributes"]
 ----
