@@ -37,13 +37,13 @@ https://huggingface.co/luisarizmendi/hardhat-or-hat
 ## Model metrics
 
 <div align="center">
-  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/results.png"> <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/results.png">
+  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/results.png"> 
 </div>
 
 
 
 <div align="center">
-  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/confusion_matrix_normalized.png"> <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/confusion_matrix_normalized.png">
+  <img width="640" alt="luisarizmendi/hardhat-or-hat" src="v2/train-val/confusion_matrix_normalized.png"> 
 </div>
 
 
