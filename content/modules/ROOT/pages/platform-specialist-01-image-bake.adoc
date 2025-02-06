@@ -152,7 +152,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"GROUP-NAME-CHANGE-ME\" \
+\"title\": \"<span id="gnumberVal"></span>\" \
 }"
 
 
@@ -206,7 +206,8 @@ You can find the complete Containerfile here (`GROUP-NAME-CHANGE` in your case i
 
 ====
 
-
+[source,docker,role=execute,subs="attributes"]
+----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
 RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socket
@@ -238,7 +239,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"pass:[<span id="gnumberVal"></span>]\" \
+\"title\": \"<span id="gnumberVal"></span>\" \
 }"
 
 
@@ -270,7 +271,7 @@ RUN echo "IP: \4" >> /etc/issue
 # Mandatory firewall configuration
 RUN firewall-offline-cmd --zone=public --add-port=9090/tcp
 EXPOSE 9090
-
+----
 ====
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
@@ -280,7 +281,7 @@ You can now build the new Container image like this (assuming there is just one 
 
 [source,bash,subs="attributes"]
 ----
-$ sudo podman build -t {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2 .
+$ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
 ----
 
 You can now create the new *Organization* (following your assigned group) inside Gitea to push the newly baked container image to. 
@@ -294,7 +295,7 @@ Now we can push it to the Container Registry like this
 
 [source,bash,subs="attributes"]
 ----
-$ sudo podman push <imageID> {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
+$ sudo podman push <imageID> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
 
@@ -348,7 +349,7 @@ cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
 location = "{container-registry-gitea}"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 %end
 
 %post
@@ -363,7 +364,7 @@ TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure
 
 [source,bash,subs="attributes"]
 ----
-$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/GROUP-NAME-CHANGE-ME/nvidia:0.0.2
+$ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
 NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created with the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
