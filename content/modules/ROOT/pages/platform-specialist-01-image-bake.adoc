@@ -205,7 +205,7 @@ You can find the complete Containerfile here (`GROUP-NAME-CHANGE` in your case i
 
 
 ====
-[source,docker,subs="attributes"]
+
 ----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
