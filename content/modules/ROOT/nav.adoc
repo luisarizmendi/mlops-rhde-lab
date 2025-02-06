@@ -57,5 +57,5 @@
 * xref:platform-specialist-03-day-2-ops.adoc#_os_update[- OS Update]
 * xref:platform-specialist-03-day-2-ops.adoc#_device_monitoring[- Device Monitoring]
 * -------------------------
-* xref:99-summary.adoc[Summary]
+* xref:99-summary.adoc[*Summary*]
 * xref:00-how_to_deploy_lab.adoc[*Extra: Deploying the Lab*]
