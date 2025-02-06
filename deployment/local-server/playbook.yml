@@ -2,12 +2,12 @@
   hosts: podmanhosts
   become: true
   vars:
-    gitea_user: luca
+    gitea_user: admin
     gitea_admin: gitea
     gitea_password: gitea
     gitea_port: 5000
     gitea_version: "1.21.7"
-    server_hostname: osbuild.lmf.openshift.es
+    server_hostname: 192.168.2.128
   tasks:
     - name: Install Git CLI
       become: true
