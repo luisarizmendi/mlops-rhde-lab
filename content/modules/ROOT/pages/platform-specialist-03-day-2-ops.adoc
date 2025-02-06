@@ -157,9 +157,9 @@ You can find the full folder structure for the 3 Edge apps with kubernetes manif
 
 We can now define the Git repo inside Flight Control.
 
-Image
+image::platform-flight-control-repo1.png[]
 
-image
+image::platform-flight-control-repo2.png[]
 
 Now we can modify the Fleet template accordingly:
 
