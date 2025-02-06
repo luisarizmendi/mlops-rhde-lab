@@ -206,7 +206,7 @@ You can find the complete Containerfile here (`GROUP-NAME-CHANGE` in your case i
 
 ====
 
-----
+
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
 RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socket
@@ -238,7 +238,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"<span id="gnumberVal"></span>\" \
+\"title\": \"pass:[<span id="gnumberVal"></span>]\" \
 }"
 
 
@@ -270,7 +270,7 @@ RUN echo "IP: \4" >> /etc/issue
 # Mandatory firewall configuration
 RUN firewall-offline-cmd --zone=public --add-port=9090/tcp
 EXPOSE 9090
-----
+
 ====
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
