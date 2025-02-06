@@ -38,12 +38,12 @@ The final section addressed the ongoing maintenance of the deployed model. Topic
 This section provides a summary of the importance of the Platform Specialist in the scenario depicted and an introduction to the tools and technologies used throughout the course.
 
 === Image Baking
-Attendees will learn in this section how to design, model and build OS images based on Image Mode. This section will also provides attendees with the different deployment option of the images.
+Attendees will learn in this section how to design, manage and build OS images based on Image Mode. This section will also explain to the attendees how to deploy to different targets. A short overview of bootc technology is also provided.
 
 === Device Onboarding
-Attendees will learn how 
+Attendees will learn the role played by Flight Control in Edge Management, how to deploy it, how it works and the main objects it manages. Attendees will also learn how to enrol a Device into Flight Control in an image mode way.
 
 === Day 2 Operations
-
+Attendees will apply all day 2 typical operation activities, such as OS upgrade, OS configuration change, Application deployment / upgrade, by means of Flight Control. We will also explore some basic Edge monitoring capabilities provided.
 
 
