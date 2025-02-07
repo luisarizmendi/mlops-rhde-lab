@@ -223,7 +223,7 @@ Remember to make the images public once you pushed into the registry for simplic
 
 For the applications that will run at the Edge, we need to create container images for both x86 and ARM architectures. If you're working on an x86 system, you can build the x86 images using the same procedure as outlined earlier. But what about the ARM images? Strictly speaking, you would need access to an ARM system to build ARM-based images. However, you can use cross-compilation tools to create ARM images directly on x86 systems (and vice versa). In this section, we’ll focus on how to perform cross-compilation on x86 RHEL-based systems.
 
-If your laptop is running an x86 Linux distribution (preferably Fedora or RHEL), you can leverage `qemu-user-static` to enable the creation of ARM images.
+If your laptop is running a Fedora/RHEL based Linux distribution, you can leverage `qemu-user-static` to enable the creation of ARM images (In MacOS, even with M3 chip, you can direcly `brew` podman with the `--platform` option as shown below, there is no need to install the `qemu-user-static` package)
 
 What is qemu-user-static? `qemu-user-static` is a versatile user-space emulator that enables programs compiled for one architecture to run on another. By using this tool, you can emulate the ARM architecture on an x86 system, making it possible to build and test ARM container images without requiring native ARM hardware.
 
