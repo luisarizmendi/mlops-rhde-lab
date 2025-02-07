@@ -2,7 +2,7 @@
   hosts: podmanhosts
   become: true
   vars:
-    gitea_user: admin
+    machine_user: admin
     gitea_admin: gitea
     gitea_password: gitea
     gitea_port: 5000
@@ -171,12 +171,13 @@
             - 201
             - 409
     #todo create repo
+    # add ansible.posix collection and podman collection
     #todo add local registry in the etc containers file as trusted insecure both locally and on the shared nvidia
-    #todo push all needed images
+    #todo push all needed images from nvidia (so that it is arm based)
     #  quay.io/luisarizmendi/object-detection-stream-manager:prod
     #  quay.io/luisarizmendi/object-detection-inference-server:prod
     #  quay.io/luisarizmendi/object-detection-action:prod
     # create users orgs  
-    # create folders for users on edge nvidia device
+    # create folders for users on shared nvidia device
     # cleanup script
    
