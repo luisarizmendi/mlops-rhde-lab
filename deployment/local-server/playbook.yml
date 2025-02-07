@@ -209,7 +209,6 @@
 
 
     #todo create repo
-    #todo add local registry in the etc containers file as trusted insecure both locally and on the shared nvidia
     #todo push all needed images from nvidia (so that it is arm based)
     #  quay.io/luisarizmendi/object-detection-stream-manager:prod
     #  quay.io/luisarizmendi/object-detection-inference-server:prod
