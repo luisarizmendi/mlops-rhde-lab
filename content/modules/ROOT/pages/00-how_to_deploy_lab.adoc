@@ -165,7 +165,7 @@ Besides the Gitea deployed as Source Code Repository in the Cloud, there is anot
 
 Remember that Gitea as other container registries, can do store multi-arch images, but it will still warn you if it stores images designed for a different arch.
 
-To install this on a machine called A, make sure that you have sudo / passwordless access to A and add machine A to the inventory file.
+To install this on a machine called A, make sure that you have sudo / passwordless access to A and add machine A to the inventory file. Same for the shared Nvidia Device that will used as first Image Builder machine.
 
 Then install all needed collections on your machine:
 

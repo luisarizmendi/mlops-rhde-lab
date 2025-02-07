@@ -17,7 +17,7 @@
         name: "git"
 
     - name: Install Podman
-      when:  inventory_hostname in groups['registry_machine']
+      when:  inventory_hostname in lookup('inventory_hostnames', 'registry_machine:shared_nvidia')
       become: true
       ansible.builtin.dnf:
         state: latest
@@ -197,16 +197,33 @@
           body_format: json
           method: POST
           body:
-            username: "lmf1"
+            username: "lmf2"
           status_code:
             - 201
             - 409
 
-    - name: add insecure registry on both hosts
+    - name: add insecure registry on both hosts ADD PORT
       when:  inventory_hostname in lookup('inventory_hostnames', 'registry_machine:shared_nvidia')
       become: true
-      shell: sed -i 's/# \[\[registry\]\]/\[\[registry\]\]\nlocation=\"{{groups['registry_machine'][0]}}\"\ninsecure = true\n/g' /etc/containers/registries.conf
+      shell: sed -i 's/# \[\[registry\]\]/\[\[registry\]\]\nlocation=\"{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}\"\ninsecure = true\n/g' /etc/containers/registries.conf
 
+    - name: pull local edge device images (and save associated image ids)
+      when:  inventory_hostname in groups['shared_nvidia']
+      become: false
+      containers.podman.podman_image:
+        name: quay.io/luisarizmendi/object-detection-action:prod
+        arch: arm64
+        
+    - name: push images to local edge registry
+      when:  inventory_hostname in groups['shared_nvidia']
+      become: false
+      containers.podman.podman_image:
+        name: quay.io/luisarizmendi/object-detection-action:prod
+        push: true
+        username: "{{ gitea_admin }}"
+        password: "{{ gitea_password }}"
+        push_args:
+          dest: "{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}/{{ gitea_admin }}/object-detection-action:v1"
 
     #todo create repo
     #todo push all needed images from nvidia (so that it is arm based)
