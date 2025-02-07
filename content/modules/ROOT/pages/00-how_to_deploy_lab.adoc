@@ -174,7 +174,7 @@ Then install all needed collections on your machine:
 $ ansible-galaxy install -r requirements.yml
 ----
 
-Then install and configure Gitea on A using the playbook provided: 
+Then install and configure Gitea on A using the playbook provided. The playbook also requires an accessible Nvidia Device that is designated as shared in the lab, for image building purposes. 
 
 [source,bash]
 ----
