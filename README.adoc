@@ -100,11 +100,11 @@ Live-reload is not supported.
 You can also
 
 . Clone the repo and `cd` into it
-. Run ./utilities/lab-serve
+. Run ./utilities/lab-build
+. Run ./utilities/lab-serve to publish the guide
 . Open http://localhost:8080 in your browser
-. Run ./utilities/lab-build to build your html
 
-To rebuild your html, run `./utilites/build`.
+To rebuild your html, run `./utilites/lab-build`.
 
 
 
