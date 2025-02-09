@@ -20,10 +20,13 @@ asciidoc:
     device-ip-base: 192.168.100.1
     device-username: admin
     device-password: secret
+    # Shared Nvidia Device 
     shared-nvidia-ip: 192.168.2.128
     shared-nvidia-user: admin
     shared-nvidia-pass: R3dh4t1!
+    # Router / dns / dhcp
     gateway-dns-dhcp-openwrt: http://192.168.2.1
+    # Edge Container Registry
     container-registry-gitea: 192.168.2.100:5000
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea

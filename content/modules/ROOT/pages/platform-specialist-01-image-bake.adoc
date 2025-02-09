@@ -423,16 +423,16 @@ status:
 
 ----
 
-NOTE: You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device. We can go ahead and disable Microshift for now with+ 
+[NOTE]
+--
+You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device. 
+We can go ahead and disable Microshift for now with
+
 [source,bash]
 ----
 $ sudo systemctl disable microshift --now
 ----
-
-.SOLUTION
-====
-pointer to the image built already with script
-====
+--
 
 
 Move on to xref:platform-specialist-02-device-onboarding.adoc[Device Onboarding]
