@@ -296,9 +296,14 @@ The Repository resource definition tells Flight Control the Git repository to co
 
 Now we can start by creating this Git repository on your Github (we would be able to also use the private Edge Container Registry if we had full control over the network, important in case you want to store secrets as well inside the git repo).
 
-You can find the full folder structure for the 3 Edge apps with kubernetes manifest files here: 
+You can find the full folder structure for the 3 Edge apps with kubernetes manifest files https://github.com/lucamaf/flight-apps-rh1[here]
 
 We can now define the Git repo inside Flight Control.
+
+CAUTION: the repo that you find above needs to be forked and customized according to your own use case before being used as a source in Flight Control. Specifically you would need to change: + 
+- the `image` location in all deployments +
+- the `ALIVE_ENDPOINT` and `ALERT_ENDPOINT` in `action` deployment, to link it to the Dashboard previously deployed in the Cloud
+
 
 image::platform-flight-control-repo1.png[]
 
@@ -314,11 +319,12 @@ $ flightctl get fleet/my-fleet -o yaml > fleet.yaml
    ...
       config:
       - gitRef:
-          mountPath: /
-          path: /demos/basic-nginx-demo/configuration
-          repository: edge-apps
+          mountPath: /etc/microshift/manifests.d/
+          path: /
+          repository: object-detection
           targetRevision: main
         name: microshift-manifests
+
 ...
 ----
 
@@ -330,7 +336,9 @@ You should also see the new manifests now landed on your Edge Device (in case yo
 
 [source,bash]
 ----
-$ sudo ls /etc/microshift/manifests
+$ sudo ls /etc/microshift/manifests.d/
+
+action	inference-server  stream-manager
 ----
 
 You now go ahead and restart Microshift, so that it picks up the new manifests and apply them automatically with kustomizer.
@@ -338,7 +346,27 @@ And check finally if the applications are running correctly on Microshift:
 
 [source,bash]
 ----
-$ sudo oc --kubeconfig /var/lib/microshift/resources/kubeadmin/kubeconfig get pods -A
+$ sudo oc --kubeconfig /var/lib/microshift/resources/kubeadmin/kubeconfig get all -n object-detection
+
+NAME                                                                READY   STATUS    RESTARTS   AGE
+pod/object-detection-action-deployment-54c6b68b47-h9swt             1/1     Running   0          30m
+pod/object-detection-inference-server-deployment-7f99bd57dc-vh6pm   1/1     Running   0          30m
+pod/object-detection-stream-manager-deployment-5c95454654-wcpnb     1/1     Running   0          25m
+
+NAME                                                TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
+service/object-detection-inference-server-service   LoadBalancer   10.43.220.243   192.168.122.117   8080:31583/TCP   30m
+service/object-detection-stream-manager-service     NodePort       10.43.168.194   <none>            5000:32160/TCP   30m
+
+NAME                                                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/object-detection-action-deployment             1/1     1            1           30m
+deployment.apps/object-detection-inference-server-deployment   1/1     1            1           30m
+deployment.apps/object-detection-stream-manager-deployment     1/1     1            1           30m
+
+NAME                                                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/object-detection-action-deployment-54c6b68b47             1         1         1       30m
+replicaset.apps/object-detection-inference-server-deployment-7f99bd57dc   1         1         1       30m
+replicaset.apps/object-detection-stream-manager-deployment-5c95454654     1         1         1       30m
+
 ----
 
 
@@ -346,25 +374,27 @@ $ sudo oc --kubeconfig /var/lib/microshift/resources/kubeadmin/kubeconfig get po
 
 Given the 2 previous deployments worked fine you should see a Device popping up in the Device Monitoring Dashboard like this:
 
-image::
+image::platform-day2-integrated1.png[]
 
 We can now interact with the Inference Server and see how the situation changes when we move the camera and focus on your face
 
-To be able to reach the Streaming app you might need to open the related firewall port:
+To be able to reach the Streaming app you might need to open the related firewall port on the Local Edge Device (in this case we are opening the NodePort we defined in the stream-manager service definition):
 
 [source,bash]
 ----
-$ sudo firewall-cmd --zone=public --add-port=5000/tcp --permanent
+$ sudo firewall-cmd --zone=public --add-port=32160/tcp --permanent
 $ sudo firewall-cmd --reload
 ----
 
-image::
+Given we are not wearing any helmet at the moment, this should be the result: 
 
-image::
+image::platform-day2-integrated2.png[]
+
+image::platform-day2-integrated3.png[]
 
 Should the Edge Device disconnect from the Cloud you should see something like this:
 
-image:: 
+image::platform-day2-integrated4.png[]
 
 == OS Update
 
@@ -526,6 +556,8 @@ status:
     status: UpToDate
 
 ----
+
+As we can see in the _Status_, the _Resources_ are all healthy (_CPU_, _Disk_, _Memory_).
 
 Since the Device is managed inside a Fleet we would need to update the Fleet template
 

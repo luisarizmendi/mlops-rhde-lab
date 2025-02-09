@@ -201,6 +201,7 @@
           status_code:
             - 201
             - 409
+            - 422
 
     - name: add insecure registry on both hosts ADD PORT
       when:  inventory_hostname in lookup('inventory_hostnames', 'registry_machine:shared_nvidia')
