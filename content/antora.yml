@@ -27,7 +27,7 @@ asciidoc:
     # Router / dns / dhcp
     gateway-dns-dhcp-openwrt: http://192.168.2.1
     # Edge Container Registry
-    container-registry-gitea: 192.168.2.100:5000
+    container-registry-gitea: 192.168.2.200:5000
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea
     # AI
