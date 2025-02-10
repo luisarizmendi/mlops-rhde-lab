@@ -21,11 +21,13 @@ Configuration can come from multiple sources, called "configuration providers" i
 * HTTP Config Provider: Fetches device configuration files from an HTTP(S) endpoint.
 * Inline Config Provider: Allows specifying device configuration files inline in the device manifest without querying external systems.
 
-What we would need to add in this case in terms of configuration, is the pull-secret for Microshift that will be placed under `/etc/crio/openshift-pull-secret`
+What we would need to add in this case in terms of configuration, is the pull-secret for Microshift that will be placed under `/etc/crio/openshift-pull-secret`.
+
+NOTE: You can find the `pull-secret` athe end of this https://console.redhat.com/openshift/downloads[page]
 
 Since the Device is managed under a Fleet, we would need to update the Fleet template to include this configuration file (you might also want to add more labels to select for example only the Devices that include Microshift for this specific case).
 
-We can decide to process through the CLI or GUI
+We can decide to proceed through the CLI (from your Workstations) or GUI
 
 [source,bash]
 ----
@@ -56,9 +58,16 @@ spec:
 
 ----
 
+and apply the above
+
+[source,bash]
+----
+$ flightctl apply -f fleet.yaml
+----
+
 image::platform-flight-control-configuration-file.png[]
 
-We can now proceed and start Microshift again with more success after checking that the Nvidia Device has received the new pull-secret.
+We can now start Microshift again with much more success after checking that the Local Edge Device has received the pull-secret.
 
 [source,bash]
 ----
@@ -67,7 +76,7 @@ $ cat /etc/crio/openshift-pull-secret
 $ sudo systemctl enable microshift --now
 ----
 
-After 5 to 10 minutes (downloading the container images) you should be able to see the pods running on the Nvidia Device
+After 5 to 10 minutes (downloading the container images) you should be able to see the pods running on the Local Edge Device
 
 [source,bash]
 ----
@@ -120,13 +129,11 @@ In the Cloud, on *OpenShift Cluster*:
 * Dashboard Backend app
 * Dashboard Frontend app
 
-We are now going to deploy the local apps on the Edge Device and we will proceed with the cloud deployment (assuming you haven't deployed that in the xref:ai-specialist-04-deploy.adoc[AI Specialist App Deployment]). 
-
-We will start with the Cloud deployment since we would need the URL of the Cloud App to receive the notification from the alert app on the Edge.
+Assuming you haven't deployed that in the xref:ai-specialist-04-deploy.adoc[AI Specialist App Deployment] we will start with the Cloud deployment since we would need the URL of the Cloud App to receive the notification from the alert app on the Edge.
 
 === Cloud Applications
 
-You can follow these steps:
+You can follow these steps from your Workstation:
 
 . Create a new OpenShift Project (`userpass:[<span id="gnumberVal"></span>]-ai-test`)
 
@@ -223,7 +230,7 @@ spec:
         - containerPort: 3000
         env:
         - name: BACKEND_API_BASE_URL
-          value: HERE-YOU-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
+          value: HERE-YOUR-BACKEND-API-BASE-URL-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-DONT-FORGET-TO-COMPLETE
 ---
 apiVersion: v1
 kind: Service
@@ -294,22 +301,25 @@ The Git Config Provider takes the following parameters:
 The Repository resource definition tells Flight Control the Git repository to connect to and which protocol and access credentials to use. It needs to be set up once (see Setting Up Repositories) and can then be used to configure multiple devices or fleets.
 ====
 
-Now we can start by creating this Git repository on your Github (we would be able to also use the private Edge Container Registry if we had full control over the network, important in case you want to store secrets as well inside the git repo).
+Now we can start by creating this Git repository on your Github (we would be able to also use the private Edge Container Registry if we had full control over the network, to bear in mind in case you want to store secrets inside the git repo).
 
 You can find the full folder structure for the 3 Edge apps with kubernetes manifest files https://github.com/lucamaf/flight-apps-rh1[here]
 
 We can now define the Git repo inside Flight Control.
 
-CAUTION: the repo that you find above needs to be forked and customized according to your own use case before being used as a source in Flight Control. Specifically you would need to change: + 
-- the `image` location in all deployments +
-- the `ALIVE_ENDPOINT` and `ALERT_ENDPOINT` in `action` deployment, to link it to the Dashboard previously deployed in the Cloud
+[CAUTION]
+--
+The repo that you find above needs to be forked and customized according to your own use case before being used as a source in Flight Control. Specifically you would need to change:
 
+* the `image` location in all deployments +
+* the `ALIVE_ENDPOINT` and `ALERT_ENDPOINT` in `action` deployment, to link it to the Dashboard previously deployed in the Cloud
+--
 
 image::platform-flight-control-repo1.png[]
 
 image::platform-flight-control-repo2.png[]
 
-Now we can modify the Fleet template accordingly:
+Now we can modify the Fleet template accordingly and apply the modification once again from your Workstation:
 
 [source,bash]
 ----
@@ -372,7 +382,7 @@ replicaset.apps/object-detection-stream-manager-deployment-5c95454654     1     
 
 === Integrated Applications Test
 
-Given the 2 previous deployments worked fine you should see a Device popping up in the Device Monitoring Dashboard like this:
+If the two previous deployments worked fine you should see a Device popping up in the Device Monitoring Dashboard like this:
 
 image::platform-day2-integrated1.png[]
 
@@ -385,6 +395,8 @@ To be able to reach the Streaming app you might need to open the related firewal
 $ sudo firewall-cmd --zone=public --add-port=32160/tcp --permanent
 $ sudo firewall-cmd --reload
 ----
+
+Now navigate to the IP of the Local Edge Device with port 32160, under the URL `video_stream`
 
 Given we are not wearing any helmet at the moment, this should be the result: 
 
@@ -428,7 +440,7 @@ RUN dnf -y install cockpit-ostree; \
     dnf -y clean all
 ----
 
-and build and push the new image to the local registry.
+and build and push the new image to the Local Edge Registry (again using either the Shared Edge Builder or the VM on your Local Edge Device).
 
 [source,bash,subs="attributes"]
 ----
@@ -458,7 +470,7 @@ image::platform-flight-control-os-update1.png[]
 
 image::platform-flight-control-os-update2.png[]
 
-Mind you, it might take a while for the agent to download the image (should the agent timeout, you can restart the service easily with `systemctl restart flightctl-agent.service`), but you should now see the Device is ready for reboot.
+Mind you, it might take a while for the agent to download the image (should the agent timeout, you can restart the service easily with `systemctl restart flightctl-agent.service`). After a while you should see the Device is ready for reboot.
 
 image::platform-flight-control-os-update3.png[]
 
@@ -594,7 +606,7 @@ and apply the modified yaml configuration again
 $ flightctl apply -f fleet.yaml
 ----
 
-You should now see something chainging in the *Resource status* section
+You should now see something changing in the *Resource status* section
 
 image::platform-flight-control-monitoring.png[]
 
