@@ -367,7 +367,7 @@ TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure
 $ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
-NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created with the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
+NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created for the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
 
 
 == Image Rollout
