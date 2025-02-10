@@ -2,7 +2,7 @@
 
 After deployment on Day 1, you as a Platform Specalist, are faced with the challenging task of scaling this to the 1000s of devices that you would like to onboard across the different factories. 
 
-This, as part of Day 2 Operations, is what would fall under Edge Management, to ensure that these distributed systems are operating efficiently, securely, and reliably. Some of the fuinctionalities expected by Edge Management involve overseeing the deployment, monitoring, and maintenance of Edge Devices, ensuring they are well-integrated with the overall network, and balancing resources to maximize performance and minimize latency.
+This, as part of Day 2 Operations, is what would fall under Edge Management, to ensure that these distributed systems are operating efficiently, securely, and reliably. Some of the functionalities expected by Edge Management involve overseeing the deployment, monitoring, and maintenance of Edge Devices, ensuring they are well-integrated with the overall network, and balancing resources to maximize performance and minimize latency.
 
 However there are several challenges that this kind of solution would need to overcome: 
 
@@ -90,18 +90,18 @@ As the target configuration for devices and device fleets is declarative, users 
 
 == Flight Control deployment
 
-You will now install Flight Control in your own namespace so that you can control your Edge Devices in your Fleet.
+You will now install Flight Control in your own namespace so that you can control your edge devices in your Fleet.
 
 Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here {openshift-console}/command-line-tools
 
-Login to the shared lab OpenShift {openshift-console} [cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
+Login to the shared lab OpenShift {openshift-console}[cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
 
 Install the suggested version of Flight Control into the cluster by running
 
 [source,bash]
 ----
 $ helm upgrade --install --version=0.4.0 \
-    --namespace <your-group-namespace> --create-namespace \
+    --namespace user<span id="gnumberVal"></span> --create-namespace \
     flightctl oci://quay.io/flightctl/charts/flightctl
 ----
 
@@ -112,7 +112,7 @@ You can now verify that Flight Control Service is up and running:
 
 [source,bash]
 ----
-$ oc get pods -n <your-group-namespace>
+$ oc get pods -n user<span id="gnumberVal"></span>
 
 NAME                                 READY   STATUS    RESTARTS        AGE
 flightctl-api-7b64b94b64-67stg       1/1     Running   5 (7m34s ago)   10m
@@ -157,7 +157,7 @@ $ mv "${FC_CLI_BINARY}" flightctl && chmod +x flightctl
 $ sudo cp flightctl /usr/bin
 ----
 
-Finally you can login to Flight Control API Server and verify you have access by querying for available Devices
+Finally you can login to Flight Control API Server from your Workstation and verify you have access by querying for available Devices
 
 [source,bash]
 ----
@@ -167,13 +167,15 @@ $ flightctl get devices
 NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
-NOTE: Should you not have any DISPLAY environment specified on your machine, you can also login just using CLI on terminal
+[NOTE]
+--
+Should you not have any DISPLAY environment specified on your machine, you can also login just using CLI on terminal
 
 [source,bash]
 ----
 $ flightctl login https://{flightctl-api} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
 ----
-
+--
 
 == Image Manage
 
@@ -223,7 +225,7 @@ enrollment-service:
   enrollment-ui-endpoint: https://ui.flightctl.127.0.0.1.nip.io:8081
 ----
 
-With this file available we are now ready to build the new Containerfile
+With this file available we are now ready to build the new Containerfile (_either on the Shared Edge Builder or on your Local Edge Device using KVM_)
 
 [source,docker]
 ----
@@ -258,8 +260,8 @@ pushing the new image to the Edge Container Registry
 $ sudo podman push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
-You can now update manually the local Nvidia Device (remember we disabled auto-updates with bootc).
-To make it effective you would need to also reboot the Device.
+You can now update manually the Local Edge Device (remember that we disabled auto-updates with bootc).
+To make it effective you would need to also reboot the device.
 
 [source,bash]
 ----
@@ -276,14 +278,14 @@ $ sudo bootc update
 $ sudo reboot
 ----
 
-WARNING: Since we didn't incude the pull secret for Microshift yet, make sure to disable microshift service for now, otherwise the Greenboot will take over and reboot into the previous image version
+WARNING: Since we didn't incude the pull secret for Microshift yet, make sure we keep the microshift service disabled for now, otherwise the Greenboot will take over and reboot into the previous image version
 
 [source,bash]
 ----
 $ sudo systemctl disable microshift
 ----
 
-At reboot if you are connected to the local Nvidia Device console you see something like the image below
+At reboot if you are connected to the Local Edge Device console you see something like the image below
 
 image::platform-flight-control-qr.png[]
 
@@ -295,7 +297,7 @@ The first time the Flight Control Agent runs, it generates a cryptographic key p
 
 When the device is not yet enrolled, the agent performs service discovery to find its Flight Control Service instance. It then establishes a secure, mTLS-protected network connection to the Service using the X.509 enrollment certificate it has been provided with during image building or device provisioning. Next, it submits an Enrollment Request to the service that includes a description of the device's hardware and operating system as well as an X.509 Certificate Signing Request (CSR) including its cryptographic identity to obtain its initial management certificate. At this point, the device is not yet considered trusted and therefore remains quarantined in a "device lobby" until its Enrollment Request has been approved or denied by an authorized user.
 
-You can check for the devices that are currently waiting to be approved using the cli tool:
+You can check for devices that are currently waiting to be approved using the cli tool:
 
 [source,bash]
 ----
@@ -311,7 +313,7 @@ We can now go ahead and approve the Device using the GUI
 
 image::platform-flight-control-agent-include.svg[]
 
-After approving the local Nvidia Device you can also see the Device in the device inventory.
+After approving the Local Edge Device you can also see the Device in the device inventory.
 
 [source,bash]
 ----
@@ -334,7 +336,7 @@ As you noticed from the interface you can also login to the Edge Device in the *
 
 We are not going to add any target OS image since we are going to manage that as part of the Fleet.
 
-NOTE: you can also deregister a device by deleting the agent cert key in /var/lib/flightctl/certs on the Edge Device
+TIP: in case you want to recreate the device on Flight Control, you can deregister it by deleting the agent cert key in /var/lib/flightctl/certs on the Edge Device
 
 == Fleet Management
 
@@ -355,6 +357,6 @@ image::platform-flight-control-fleet-def2.png[]
 
 image::platform-flight-control-fleet-inventory.png[]
 
-Now that you local Nvidia Device is under management from Flight Control you can define the target configuration template in a declarative way and add the required predefined apps and / or OS configuration.
+Now that you Local Edge Device is under management from Flight Control you can define the target configuration template in a declarative way and add the required predefined apps and / or OS configuration.
 
 Move on to xref:platform-specialist-03-day-2-ops.adoc[Day 2 Operations]
