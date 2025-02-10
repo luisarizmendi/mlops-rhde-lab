@@ -244,7 +244,14 @@ RUN subscription-manager repos --enable codeready-builder-for-rhel-9-aarch64-rpm
 ADD flightctl/config.yaml /etc/flightctl/config.yaml
 ----
 
-and push it to the central Container Registry
+building phase
+
+[source,bash,subs="attributes"]
+----
+$ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
+----
+
+pushing the new image to the Edge Container Registry
 
 [source,bash]
 ----

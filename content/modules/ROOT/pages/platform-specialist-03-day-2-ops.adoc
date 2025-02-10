@@ -430,6 +430,13 @@ RUN dnf -y install cockpit-ostree; \
 
 and build and push the new image to the local registry.
 
+[source,bash,subs="attributes"]
+----
+$ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
+$ sudo push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
+----
+
+
 We can now change the Fleet definition and point to the reference OS Image URL.
 
 [source,bash]
