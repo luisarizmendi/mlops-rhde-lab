@@ -1,6 +1,6 @@
 = Image Baking
 
-So by now you should already be familiar with building a standardized OS using Image Mode, but here is a recap just in case.
+By now you should already be familiar with building a standardized OS using Image Mode, but here is a recap just in case.
 
 Image mode is a new approach to operating system (OS) deployment that lets users build, deploy, and manage Red Hat Enterprise Linux as a bootc container image. 
 Bootc is the original project on which this is built on https://containers.github.io/bootc/intro.html[*Bootc*].
@@ -39,14 +39,15 @@ In the following sections we will go through the following phases:
 image::platform-image-mode-phases.png[]
 
 == Image Build
-Since bootc image is available both for x86-64 and aarch64 architectures we are able to leverage this technology on the Nvidia Orin Nano device in front of you. 
 
-The Nvidia device has already been flashed to the latest stable and supported by Red Hat JetPack (6.0). Nvidia JetPack provides a full development environment for the Jetson platform including Jetson Linux with BSP, kernel, RootFS, etc., the NVIDIA AI stack with hardware accelerated libraries, SDKs, and frameworks, and Jetson Platform Services for application development.
+Since bootc image is available both for x86-64 and aarch64 architectures we are able to leverage this technology on the Local Edge Device in front of you. 
+
+The device has already been flashed to the latest stable and supported by Red Hat JetPack (6.0). Nvidia JetPack provides a full development environment for the Jetson platform including Jetson Linux with BSP, kernel, RootFS, etc., the NVIDIA AI stack with hardware accelerated libraries, SDKs, and frameworks, and Jetson Platform Services for application development.
 
 A RHEL is already installed on the Nvidia device but it is RPM based. 
 Since you don't know yet the IP address or the credentials to the Nvidia Device and you (as Platform Specialist) would like to standardize and simplify platform building and deployment, you are going to leverage bootc and create and deploy a new standard image on top of it.
 
-We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Nvidia Device remotely, without plugging on to the serial console or visualizing it through the DisplayPort.
+We will use as starting point a prebuilt bootc-compatible image and we will build on it, with the objective to include a way to allow us to reach the Local Edge Device remotely, without plugging into the serial console or into the DisplayPort.
 
 You will find this base container image on the Edge Container Registry (Gitea) here: {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
@@ -143,18 +144,15 @@ IP_ADDRESS=\$(nmcli -t -f IP4.ADDRESS con show "\$conn_name" | head -n 1 | cut -
 MAC_ADDRESS=\$(nmcli -g GENERAL.HWADDR device show "\$device_name" | tr -d '\\')
 MAC_ADDRESS_FORMAT=\$(echo "\$MAC_ADDRESS" | tr -d ':')
 
-
 if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] ; then
     echo "One or more required variables are empty. Script failed."
     exit 1
 fi
 
-
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
 \"title\": \"<span id="gnumberVal"></span>\" \
 }"
-
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
 EOF
@@ -188,18 +186,25 @@ IP: \4
 ----
 
 
-NOTE: To build this first new image you are going to use the Edge Nvidia AGX Device available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Nvidia Device you have in front of you (and you can build images using bootc only on same as target device architecture devices). 
-Username and password for the shared Nvidia Device are {shared-nvidia-user}:{shared-nvidia-pass}. 
+NOTE: To build this first new image you are going to use the *Shared Edge Builder* available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Local Edge Device you have in front of you (and you can build images using bootc only on same as target device architecture devices). 
+Username and password for the Shared Edge Builder are {shared-nvidia-user}:{shared-nvidia-pass}. 
 
-WARNING: Watch out for using your group assigned Nvidia Device to try and build the following iteration of the Device Image! To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*). + 
-So for this step you would need to use the shared Edge Nvidia Device mentioned above and if you want to build the rest of the images in the track on your group assigned Nvidia Device, I suggest you include Virtualization in the Containerfile. +
-In that case you would create a full RHEL9 VM, running on KVM, that _bakes_ new images. +
-You can find the additional packages needed in the Containerfile below.+ 
+[WARNING]
+--
+After this first module, you might want to use your Local Edge Device to build the next iteration of the system image. 
+To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*).
+
+So for this to happen you would need to include Virtualization in the Containerfile, so tht you can run a Virtualized OS dedicated to building images.
+With these packages enabled you can create a full RHEL9 VM, running on KVM, that _bakes_ new images.
+
+You can find the additional packages needed in the Containerfile below.
+
 [source,docker]
 ----
 RUN dnf -y install qemu-kvm libvirt virt-install && dnf -y clean all 
 RUN for drv in qemu network nodedev nwfilter secret storage interface; do systemctl enable virt${drv}d{,-ro,-admin}.socket; done
 ----
+--
 
 You can find the complete Containerfile here:
 
@@ -236,12 +241,10 @@ if [ -z "\$IP_ADDRESS" ] || [ -z "\$MAC_ADDRESS" ] ; then
     exit 1
 fi
 
-
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
 \"title\": \"<span id="gnumberVal"></span>\" \
 }"
-
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
 EOF
@@ -276,8 +279,9 @@ EXPOSE 9090
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
-Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Edge Nvidia Device and copy the created Containerfile there.  
-You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Container Registry):
+Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Shared Edge Builder and copy the created Containerfile there.
+
+You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Edge Container Registry):
 
 [source,bash,subs="attributes"]
 ----
@@ -301,7 +305,7 @@ $ sudo podman push <imageID> {container-registry-gitea}/<span id="gnumberVal"></
 
 == Image Deploy
 
-Now that you have built the "refreshed" container image we need to deploy it to your own Nvidia Device sitting on your desk.
+Now that you have built the "refreshed" container image we need to deploy it to your own Local Edge Device sitting on your desk.
 
 For that we need to use the `bootc-image-builder` as highlighted https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/using_image_mode_for_rhel_to_build_deploy_and_manage_operating_systems/creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems#creating-bootc-compatible-base-disk-images-with-bootc-image-builder_using-image-mode-for-rhel-to-build-deploy-and-manage-operating-systems[here].  
 
@@ -358,7 +362,7 @@ systemctl mask bootc-fetch-apply-updates.timer
 """
 ----
 
-Now we can go ahead and create the ISO image (make sure to save the above file as config.toml and create an output directory).
+Now we can go ahead and create the ISO image (make sure to save the above file as config.toml and create an output directory) by running this on the Shared Edge Builder.
 
 TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure registry.
 
@@ -367,12 +371,12 @@ TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure
 $ sudo podman run     --rm     -it     --privileged    --pull=newer     --security-opt label=type:unconfined_t     -v /var/lib/containers/storage:/var/lib/containers/storage     -v $(pwd)/config.toml:/config.toml     -v $(pwd)/output:/output     registry.redhat.io/rhel9/bootc-image-builder:latest     --type iso  --tls-verify=false    --config /config.toml   {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
-NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created for the initial image (0.0.1). The whole building process will last approximately 15 minutes. 
+NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created for the initial image (0.0.1). The whole building process will last approximately 15 minutes, you are welcomed to either take a break or start reading about how to remotely manage this newly minted Edge Device in the next module.
 
 
 == Image Rollout
 
-You can now burn the ISO to a USB stick and boot your assigned Nvidia Device.
+You can now burn the ISO to a USB stick and boot your assigned Local Edge Device.
 
 [source,bash]
 ----
@@ -385,7 +389,7 @@ image::platform-image-mode-gitea-inventories.png[]
 
 You will now have access to the assigned Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
 
-You can now also verify that the Device is pointing to the Edge Container Registry by running the following: 
+You can now also verify that the Device is pointing to the Edge Container Registry by running the following on the Local Edge Device: 
 
 [source,bash]
 ----
@@ -426,7 +430,7 @@ status:
 [NOTE]
 --
 You will see healthchecks for Microshift fail, since we have yet to include the pull-secret needed to pull container images into the Device. 
-We can go ahead and disable Microshift for now with
+We can go ahead and disable Microshift for now (we will be renabling it later)
 
 [source,bash]
 ----

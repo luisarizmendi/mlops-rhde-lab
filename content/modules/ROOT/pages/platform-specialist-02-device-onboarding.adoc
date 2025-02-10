@@ -241,7 +241,7 @@ RUN subscription-manager repos --enable codeready-builder-for-rhel-9-aarch64-rpm
     dnf -y clean all; \
     systemctl enable podman.service
 
-ADD flightctl/config.yaml /etc/flightctl/config.yaml
+ADD config.yaml /etc/flightctl/config.yaml
 ----
 
 building phase
