@@ -17,7 +17,7 @@ asciidoc:
     openshift-password-base: redhat
     # Platform
     # Local Edge Devices to be (hopefully) assigned with corresponding group ids
-    device-ip-base: 192.168.100.1
+    device-ip-base: 192.168.2.0
     device-username: admin
     device-password: secret
     # Shared Nvidia Device 

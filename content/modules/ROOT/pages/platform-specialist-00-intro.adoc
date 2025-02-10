@@ -53,6 +53,15 @@ image::platform-workflow.png[]
     * Device monitoring: centralized system health monitoring
     * Device updates: deploying application workload and system patches from the centralized console
 
+The physical architecture in the lab is the one depicted below (which includes the assigned IP addresses).
+
+image::platform-architecture.png[]
+
+[NOTE]
+--
+The lab, with its private network, represents an Edge site with several *Local Edge Device* (Nvidia Nano) and attached USB cameras distributed inside the factory. The Edge site includes an Edge Mirror server (Lenovo m710q) which is running an *Edge Container Registry* (Gitea). A *Shared Edge Builder* (Nvidia AGX) will provide you with the capabilities to build your first system image. Your *Workstation* will sit on the same network as the Local Edge Device and Edge Container Registry. 
+--
+
 Key feedback loop: Operational insights drive image improvements and updates, ensuring continuous refinement of base images based on real world usage patterns and requirements.
 
 
