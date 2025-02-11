@@ -121,11 +121,11 @@ Part of the required information is pre-configured as global variables in the xr
 
 ==== OpenShift Cluster
 
-* Web Console: {openshift-console}
-* API: {openshift-api}
-* OpenShift AI: {openshift-ai}
-* Username: {openshift-user-base}pass:[<span id="gnumberVal"></span>]
-* Password: {openshift-password-base}pass:[<span id="gnumberVal"></span>]
+* Web Console: {openshift_console_url}
+* API: {openshift_api_server_url}
+* OpenShift AI: {openshift_api_server_url}
+* Username:{openshift_cluster_user_base}
+* Password:{openshift_cluster_user_password}
 
 ==== Object Storage
 
@@ -136,9 +136,9 @@ Part of the required information is pre-configured as global variables in the xr
 
 ==== Source Code Repository (Gitea)
 
-* Web Console: http://{gitea-server}
-* Username: {gitea-user-base}pass:[<span id="gnumberVal"></span>]
-* Password: {gitea-password-base}pass:[<span id="gnumberVal"></span>]
+* Web Console: {gitea_console_url}
+* Username: {gitea_user}
+* Password: {gitea_password}
 
 ==== Additional Services
 
