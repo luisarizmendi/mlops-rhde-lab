@@ -203,10 +203,6 @@ You can find the Containerfiles for each application in the https://github.com/l
 
 [NOTE]
 
-For the Inference Server you will find two different Containerfiles, one can be used to create a container image that runs on your laptop and the other one is building the container image that runs on the NVIDIA Jetson devices. You will be using the later during the Platform Specialist module of this workshop.
-
-[NOTE]
-
 The build process is closely tied to the architecture of the system you're using. If you build on an ARM-based system, the resulting container images will default to the ARM architecture unless you specifically perform cross-compilation (which we'll cover in more detail below). For this workshop, we will be using an x86-based system for the build process.
 
 For this workshop, we will be building the container images locally instead of utilizing an automated CI/CD pipeline. For the applications running on the Cloud (x86 only) you just need to build the images in the normal way:
