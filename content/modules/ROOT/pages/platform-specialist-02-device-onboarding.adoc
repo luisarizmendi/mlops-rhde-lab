@@ -101,6 +101,7 @@ Install the suggested version of Flight Control into the cluster by running
 
 [source,shell,role=execute,subs="attributes"]
 ----
+$ oc new-project user<span id="gnumberVal"></span>
 $ helm upgrade --install --version=0.4.0 \
     --namespace user<span id="gnumberVal"></span> --create-namespace \
     flightctl oci://quay.io/flightctl/charts/flightctl
@@ -129,7 +130,7 @@ keycloak-db-0                        1/1     Running   0               10m
 
 The deployed Flight Control include a Keycloak to authenticate to the Server itself. You can find the credentials for the created admin user and demo-user for Flight Control in the relative Secrets.
 
-[source,bash]
+[source,shell,role=execute,subs="attributes"]
 ----
 $ oc project user<span id="gnumberVal"></span>
 $ oc get secret/keycloak-demouser-secret -o json | jq .data.username | base64 -di
