@@ -161,7 +161,7 @@ Password: {wifi_password}
 
 ==== Local server
 
-* Local Container Image Registry (Gitea): {registry-local-url}
+* Local Container Image Registry (Gitea): {container-registry-gitea}
 
 == Next
 
