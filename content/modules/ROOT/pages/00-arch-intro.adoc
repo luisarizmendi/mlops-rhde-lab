@@ -150,8 +150,8 @@ Part of the required information is pre-configured as global variables in the xr
 
 ==== WIFI
 
-SSID: {wifi_ssid}
-Password: {wifi_password}
+* SSID: {wifi_ssid}
+* Password: {wifi_password}
 
 ==== Edge Device
 
@@ -161,7 +161,15 @@ Password: {wifi_password}
 
 ==== Local server
 
-* Local Container Image Registry (Gitea): {container-registry-gitea}
+* Local Container Image Registry (Gitea)
+** Address: {container-registry-gitea}
+** Username: {gitea-user-base}pass:[<span id="gnumberVal"></span>]
+** Password: {gitea-password-base}pass:[<span id="gnumberVal"></span>]
+
+* Local Edge Builder:
+** Addresss: {shared-nvidia-ip}
+** Username: {shared-nvidia-user}
+** Password: {shared-nvidia-pass}
 
 == Next
 
