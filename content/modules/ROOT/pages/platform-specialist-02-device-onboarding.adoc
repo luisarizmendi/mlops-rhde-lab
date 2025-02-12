@@ -99,9 +99,10 @@ Login to the shared lab OpenShift {openshift-console}[cluster] using the provide
 Install the suggested version of Flight Control into the cluster by running
 
 
+[source,shell,role=execute,subs="attributes"]
 ----
 $ helm upgrade --install --version=0.4.0 \
-    --namespace userpass:[<span id="gnumberVal"></span>] --create-namespace \
+    --namespace user<span id="gnumberVal"></span> --create-namespace \
     flightctl oci://quay.io/flightctl/charts/flightctl
 ----
 
@@ -111,8 +112,9 @@ NOTE: you might see `flight-ui` pod in CrashLoop, because it didn't catch up wit
 You can now verify that Flight Control Service is up and running:
 
 
+[source,shell,role=execute,subs="attributes"]
 ----
-$ oc get pods -n userpass:[<span id="gnumberVal"></span>]
+$ oc get pods -n user<span id="gnumberVal"></span>
 
 NAME                                 READY   STATUS    RESTARTS        AGE
 flightctl-api-7b64b94b64-67stg       1/1     Running   5 (7m34s ago)   10m
@@ -168,14 +170,14 @@ NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
 [NOTE]
---
+====
 Should you not have any DISPLAY environment specified on your machine, you can also login just using CLI on terminal
 
 [source,bash]
 ----
 $ flightctl login https://{flightctl-api} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
 ----
---
+====
 
 == Image Manage
 
@@ -228,8 +230,9 @@ enrollment-service:
 With this file available we are now ready to build the new Containerfile (_either on the Shared Edge Builder or on your Local Edge Device using KVM_)
 
 
+[source,docker,role=execute,subs="attributes"]
 ----
-FROM {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2
+FROM {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 
 RUN dnf -y copr enable @redhat-et/flightctl; \
     dnf -y install flightctl-agent; \
@@ -247,16 +250,18 @@ ADD config.yaml /etc/flightctl/config.yaml
 ----
 
 building phase
-]
+
+[source,shell,role=execute,subs="attributes"]
 ----
-$ sudo podman build -t {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2 .
+$ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
 ----
 
 pushing the new image to the Edge Container Registry
 
 
+[source,shell,role=execute,subs="attributes"]
 ----
-$ sudo podman push <image-id> {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2
+$ sudo podman push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
 You can now update manually the Local Edge Device (remember that we disabled auto-updates with bootc).
