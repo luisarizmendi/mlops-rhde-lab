@@ -296,6 +296,13 @@ You can find that functionality here:
 
 image::platform-image-mode-gitea.png[]
 
+You would then need to log into the Edge Container Registry with the credentials used before:
+
+[source,bash,subs="attributes"]
+----
+$ sudo podman login {container-registry-gitea}
+----
+
 
 Now we can push it to the Container Registry like this
 
