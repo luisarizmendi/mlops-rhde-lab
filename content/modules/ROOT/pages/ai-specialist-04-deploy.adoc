@@ -492,6 +492,10 @@ You’ve successfully deployed the cloud-side applications! Now, take the next s
 
 Instructions for Fedora/RHEL based systems and using the interactive mode, so you can review live logs easily (you will need to use three different command line terminals).
 
+[CAUTION]
+
+Be sure that you have the ports `tcp/8080` and `tcp/5000` ports open un your local machine. 
+
 [example]
 ====
 
