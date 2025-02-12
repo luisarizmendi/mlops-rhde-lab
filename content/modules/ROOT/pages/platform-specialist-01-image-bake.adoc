@@ -353,7 +353,7 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-cat > /etc/containers/registries.conf.d/gitea-registry.conf <<EOF
+cat > /etc/containers/registries.conf.d/gitea-registry.conf << EOF
 [[registry]]
 location = "YOUR-GITEA-CONTAINER-IMAGE-REGISTRY"
 insecure = true
