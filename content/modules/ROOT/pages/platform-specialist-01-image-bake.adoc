@@ -94,7 +94,7 @@ Type=oneshot
 ExecStart=/usr/bin/mount --make-rshared /
 [Install]
 WantedBy=multi-user.target
-EOF
+ EOF
 RUN systemctl enable microshift-make-rshared.service
 ----
 
@@ -155,7 +155,7 @@ JSON="{ \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
-EOF
+ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
@@ -172,7 +172,7 @@ ExecStart=/bin/bash -c 'while true; do /var/tmp/network-info.sh && /usr/bin/touc
 
 [Install]
 WantedBy=default.target
-EOF
+ EOF
 
 RUN systemctl enable network-info.service
 ----
@@ -243,7 +243,7 @@ JSON="{ \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
-EOF
+ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
@@ -260,7 +260,7 @@ ExecStart=/bin/bash -c 'while true; do /var/tmp/network-info.sh && /usr/bin/touc
 
 [Install]
 WantedBy=default.target
-EOF
+ EOF
 
 RUN systemctl enable network-info.service
 
@@ -357,7 +357,7 @@ cat > /etc/containers/registries.conf.d/gitea-registry.conf << EOF
 [[registry]]
 location = "{container-registry-gitea}"
 insecure = true
-EOF
+ EOF
 bootc switch --mutate-in-place --transport registry {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 %end
 
