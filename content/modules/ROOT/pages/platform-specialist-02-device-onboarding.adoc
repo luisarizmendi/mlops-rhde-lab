@@ -173,7 +173,7 @@ NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 
 [NOTE]
 ====
-Should you not have any DISPLAY environment specified on your machine, you can also login just using CLI on terminal
+Should you not have any DISPLAY environment specified on your Workstation, you can also login just using CLI on terminal
 
 [source,bash]
 ----
@@ -208,14 +208,14 @@ This configuration will contain:
 * the Flight Control enrollment service to connect to (enrollment endpoint),
 * the X.509 client certificate and key to connect with (enrollment certificate),
 
-The above mentioned configuration file can be obtained from Flight Control service using the `flightctl` cli from your own machine
+The above mentioned configuration file can be obtained from Flight Control service using the `flightctl` cli from your own Workstation
 
 [source,bash]
 ----
 $ flightctl certificate request --signer=enrollment --expiration=365d --output=embedded > config.yaml
 ----
 
-The returned config.yaml contains the URLs of the Flight Control service, its CA bundle, and the enrollment client certificate and key for the agent. It should look something like this:
+The returned `config.yaml` contains the URLs of the Flight Control service, its CA bundle, and the enrollment client certificate and key for the agent. It should look something like this:
 
 [source,yaml]
 ----
@@ -229,7 +229,9 @@ enrollment-service:
   enrollment-ui-endpoint: https://ui.flightctl.127.0.0.1.nip.io:8081
 ----
 
-With this file available we are now ready to build the new Containerfile (_either on the Shared Edge Builder or on your Local Edge Device using KVM_)
+With this file available we are now ready to build the new Containerfile.
+
+Transfer the generated files to either the Shared Edge Builder or your Local Edge Device on the created VM.
 
 
 [source,docker,role=execute,subs="attributes"]
@@ -251,14 +253,14 @@ RUN subscription-manager repos --enable codeready-builder-for-rhel-9-aarch64-rpm
 ADD config.yaml /etc/flightctl/config.yaml
 ----
 
-building phase
+Start the building phase
 
 [source,shell,role=execute,subs="attributes"]
 ----
 $ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
 ----
 
-pushing the new image to the Edge Container Registry
+And push the new image to the Edge Container Registry
 
 
 [source,shell,role=execute,subs="attributes"]
