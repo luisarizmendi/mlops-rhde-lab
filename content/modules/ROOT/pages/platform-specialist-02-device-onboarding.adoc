@@ -101,7 +101,7 @@ Install the suggested version of Flight Control into the cluster by running
 
 ----
 $ helm upgrade --install --version=0.4.0 \
-    --namespace user<span id="gnumberVal"></span> --create-namespace \
+    --namespace userpass:[<span id="gnumberVal"></span>] --create-namespace \
     flightctl oci://quay.io/flightctl/charts/flightctl
 ----
 
@@ -112,7 +112,7 @@ You can now verify that Flight Control Service is up and running:
 
 
 ----
-$ oc get pods -n user<span id="gnumberVal"></span>
+$ oc get pods -n userpass:[<span id="gnumberVal"></span>]
 
 NAME                                 READY   STATUS    RESTARTS        AGE
 flightctl-api-7b64b94b64-67stg       1/1     Running   5 (7m34s ago)   10m
@@ -229,7 +229,7 @@ With this file available we are now ready to build the new Containerfile (_eithe
 
 
 ----
-FROM {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
+FROM {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2
 
 RUN dnf -y copr enable @redhat-et/flightctl; \
     dnf -y install flightctl-agent; \
@@ -249,14 +249,14 @@ ADD config.yaml /etc/flightctl/config.yaml
 building phase
 ]
 ----
-$ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
+$ sudo podman build -t {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2 .
 ----
 
 pushing the new image to the Edge Container Registry
 
 
 ----
-$ sudo podman push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
+$ sudo podman push <image-id> {container-registry-gitea}/pass:[<span id="gnumberVal"></span>]/nvidia:0.0.2
 ----
 
 You can now update manually the Local Edge Device (remember that we disabled auto-updates with bootc).
