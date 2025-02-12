@@ -279,6 +279,8 @@ EXPOSE 9090
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
+Log into the Shared Edge Builder at {shared-nvidia-ip} with ssh credentials {shared-nvidia-user} : {shared-nvidia-pass}
+
 Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Shared Edge Builder and copy the created Containerfile there.
 
 You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Edge Container Registry):
