@@ -371,7 +371,7 @@ systemctl mask bootc-fetch-apply-updates.timer
 """
 ----
 
-Now we can go ahead and create the ISO image (make sure to save the above file as config.toml and create an output directory) by running this on the Shared Edge Builder.
+Now we can go ahead and create the ISO image: make sure to save the above file as config.toml and create an output directory by running this on the Shared Edge Builder.
 
 Make sure to create a `config.toml` file according to the example above and an `output` directory all in the folder you saved the previously used Containerfile.
 
@@ -388,7 +388,7 @@ You will find the produced ISO file in the `output` directory, under `bootiso`.
 
 == Image Rollout
 
-Grab the baked ISO with `scp` from the Shared Edge Builder to your Workstation and burn the ISO to a USB stick and get ready to boot your assigned Local Edge Device.
+Connect a USB thumbdrive to the Edge Image Builder and burn the ISO to it and get ready to boot your assigned Local Edge Device.
 
 [source,bash]
 ----
