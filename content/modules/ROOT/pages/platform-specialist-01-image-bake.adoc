@@ -222,7 +222,7 @@ RUN echo "redhat:R3dh4t1!" | chpasswd
 RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
 
 # Network info script
-RUN cat > /var/tmp/network-info.sh <<EOF
+RUN cat > /var/tmp/network-info.sh <<EL
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -243,11 +243,11 @@ JSON="{ \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
-EOF
+EL
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat > /etc/systemd/system/network-info.service <<'EOF'
+RUN cat > /etc/systemd/system/network-info.service <<EL
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -260,7 +260,7 @@ ExecStart=/bin/bash -c 'while true; do /var/tmp/network-info.sh && /usr/bin/touc
 
 [Install]
 WantedBy=default.target
-EOF
+EL
 
 RUN systemctl enable network-info.service
 
