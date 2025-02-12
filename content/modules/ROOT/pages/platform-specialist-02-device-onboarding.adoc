@@ -362,6 +362,7 @@ We are now going to create a new Fleet and make sure that it includes the just a
 image::platform-flight-control-fleet-def1.png[]
 
 image::platform-flight-control-fleet-def2.png[]
+_make sure to leave the ref system image empty since we will use that in the next section_
 
 image::platform-flight-control-fleet-inventory.png[]
 
