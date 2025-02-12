@@ -24,7 +24,7 @@ COPY requirements.txt /opt/app-root/src/
 
 RUN mkdir /opt/app-root/src/whls
 
-COPY jetson-wheels-cp39/* /opt/app-root/src/whls/
+COPY jetson/wheels-cp39/* /opt/app-root/src/whls/
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --no-cache-dir /opt/app-root/src/whls/*
@@ -35,7 +35,7 @@ RUN rm -f /etc/yum.repos.d/nvidia-l4t.repo &&\
     dnf -y install tesseract &&\
     dnf -y clean all
 
-COPY ./libs/ /usr/lib64/
+COPY jetson/libs/ /usr/lib64/
 
 COPY object-detection-inference-server.py /opt/app-root/src/main.py
 COPY model.pt /opt/app-root/src/models/1/
