@@ -192,7 +192,6 @@ At this point you can navigate to "Data Science Projects" and stop your Workbenc
 
 You have the full guide for this task in the xref:ai-specialist-03-training.adoc[Model Training] section
 
-
 In production environments, training machine learning models is not as simple as running a script or experimenting in a notebook. A robust pipeline is essential. In this workshop we will use https://www.kubeflow.org/docs/components/pipelines/overview/[Kubeflow Pipelines].
 
 In this step you will use the same tools than in the previous one: OpenShift AI and MinIO Object Storage.
