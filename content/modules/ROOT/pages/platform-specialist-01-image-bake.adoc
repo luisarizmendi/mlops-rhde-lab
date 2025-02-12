@@ -306,6 +306,7 @@ Now we can push it to the Container Registry like this
 $ sudo podman push <imageID> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
 
+image::platform-gitea-packages.png[]
 
 == Image Deploy
 
