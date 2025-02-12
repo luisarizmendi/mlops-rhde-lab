@@ -51,7 +51,7 @@ We will use as starting point a prebuilt bootc-compatible image and we will buil
 
 You will find this base container image on the Edge Container Registry (Gitea) here: {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
-NOTE: Make sure to pull the container image with `sudo` since the last step of building the bootc image requires `sudo` permissions.
+NOTE: Make sure to pull the container image with `sudo` from the Shared Edge Builder since the last step of building the bootc image requires `sudo` permissions.
 
 Let's analyze the base container image provided:
 
@@ -187,7 +187,7 @@ IP: \4
 
 
 NOTE: To build this first new image you are going to use the *Shared Edge Builder* available on this network at the following address {shared-nvidia-ip} since we are assuming that you don't know yet how to reach the Local Edge Device you have in front of you (and you can build images using bootc only on same as target device architecture devices). 
-Username and password for the Shared Edge Builder are {shared-nvidia-user}:{shared-nvidia-pass}. 
+Username and password for the Shared Edge Builder are userpass:[<span id="gnumberVal"></span>] : redhatpass:[<span id="gnumberVal"></span>] 
 
 [WARNING]
 --
@@ -251,7 +251,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat > /etc/systemd/system/network-info.service <<'EOF'
+RUN cat > /etc/systemd/system/network-info.service <<EOF
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -279,9 +279,8 @@ EXPOSE 9090
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
-Log into the Shared Edge Builder at {shared-nvidia-ip} with ssh credentials {shared-nvidia-user} : {shared-nvidia-pass}
+Log into the Shared Edge Builder at {shared-nvidia-ip} with ssh credentials userpass:[<span id="gnumberVal"></span>] : {openshift-password-base}pass:[<span id="gnumberVal"></span>]
 
-Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Shared Edge Builder and copy the created Containerfile there.
 
 You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Edge Container Registry):
 
