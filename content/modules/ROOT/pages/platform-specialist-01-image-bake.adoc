@@ -226,7 +226,7 @@ RUN echo "redhat:R3dh4t1!" | chpasswd
 RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
 
 # Network info script
-RUN cat > /var/tmp/network-info.sh <<'EOF'
+RUN cat > /var/tmp/network-info.sh <<EOF
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -279,6 +279,8 @@ EXPOSE 9090
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
+Log into the Shared Edge Builder at {shared-nvidia-ip} with ssh credentials {shared-nvidia-user} : {shared-nvidia-pass}
+
 Make sure to use the folder with your "userpass:[<span id="gnumberVal"></span>]" on the shared Shared Edge Builder and copy the created Containerfile there.
 
 You can now build the new Container image like this (assuming there is just one Containerfile in the working directory from where you are building and that you are already logged into the Edge Container Registry):
@@ -293,6 +295,13 @@ You can now create the new *Organization* (following your assigned group) inside
 You can find that functionality here:
 
 image::platform-image-mode-gitea.png[]
+
+You would then need to log into the Edge Container Registry with the credentials used before:
+
+[source,bash,subs="attributes"]
+----
+$ sudo podman login {container-registry-gitea}
+----
 
 
 Now we can push it to the Container Registry like this
@@ -343,7 +352,7 @@ part pv.01 --grow
 volgroup rhel pv.01
 logvol / --vgname=rhel --fstype=xfs --percent=70 --name=root
 
-reboot --eject
+halt
 
 %post
 #Switch bootc to shared registry upstream
@@ -362,7 +371,9 @@ systemctl mask bootc-fetch-apply-updates.timer
 """
 ----
 
-Now we can go ahead and create the ISO image (make sure to save the above file as config.toml and create an output directory) by running this on the Shared Edge Builder.
+Now we can go ahead and create the ISO image: make sure to save the above file as config.toml and create an output directory by running this on the Shared Edge Builder.
+
+Make sure to create a `config.toml` file according to the example above and an `output` directory all in the folder you saved the previously used Containerfile.
 
 TIP: we introduce the parameter `--tls-verify=false` as we are using an insecure registry.
 
@@ -373,21 +384,24 @@ $ sudo podman run     --rm     -it     --privileged    --pull=newer     --securi
 
 NOTE: during the build process the `nvidia-local` repo will fail, it is normal since it is a local only repo, created for the initial image (0.0.1). The whole building process will last approximately 15 minutes, you are welcomed to either take a break or start reading about how to remotely manage this newly minted Edge Device in the next module.
 
+You will find the produced ISO file in the `output` directory, under `bootiso`.
 
 == Image Rollout
 
-You can now burn the ISO to a USB stick and boot your assigned Local Edge Device.
+Connect a USB thumbdrive to the Edge Image Builder and burn the ISO to it and get ready to boot your assigned Local Edge Device.
 
 [source,bash]
 ----
 $ sudo dd if=output/bootiso/install.iso of=/dev/sda bs=4M status=progress oflag=sync
 ----
 
-The automated installation will take approximately 10 minutes after which the Device will reboot and post the detected IP address on Gitea, inside the `inventories` repo, as an issue: 
+The automated installation will take approximately 10 minutes after which the Device will shutdown (you can check powerled and fan).
+
+Remove the USB stick and power the Local Edge Device back on and at startup the device will post the detected IP address on Gitea, inside the `inventories` repo, as an issue: 
 
 image::platform-image-mode-gitea-inventories.png[]
 
-You will now have access to the assigned Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
+You will now have access to the assigned Local Edge Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
 
 You can now also verify that the Device is pointing to the Edge Container Registry by running the following on the Local Edge Device: 
 

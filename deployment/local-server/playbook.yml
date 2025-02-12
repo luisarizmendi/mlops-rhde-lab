@@ -1,13 +1,13 @@
 - name: Deploy Gitea & configure shared Nvidia Device
   hosts: all
   vars:
-    machine_user: admin
+    machine_user: luca
     gitea_admin: gitea
     gitea_password: gitea
     gitea_port: 5000
     gitea_version: "1.21.7"
     # to be changed, has to be the same as the podmanhosts hostname
-    server_hostname: 192.168.2.128
+    server_hostname: 192.168.2.200
   tasks:
     - name: Install Git CLI
       when:  inventory_hostname in groups['registry_machine']
@@ -197,34 +197,35 @@
           body_format: json
           method: POST
           body:
-            username: "lmf2"
+            username: "99"
           status_code:
             - 201
             - 409
             - 422
 
     - name: add insecure registry on both hosts ADD PORT
-      when:  inventory_hostname in lookup('inventory_hostnames', 'registry_machine:shared_nvidia')
+      with_inventory_hostnames:
+      - all
       become: true
-      shell: sed -i 's/# \[\[registry\]\]/\[\[registry\]\]\nlocation=\"{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}\"\ninsecure = true\n/g' /etc/containers/registries.conf
-
-    - name: pull local edge device images (and save associated image ids)
-      when:  inventory_hostname in groups['shared_nvidia']
-      become: false
-      containers.podman.podman_image:
-        name: quay.io/luisarizmendi/object-detection-action:prod
-        arch: arm64
+      shell: 
+       cmd: |
+        cat > /etc/containers/registries.conf.d/gitea-registry.conf <<'EOF'
+        [[registry]]
+        location = "{{ server_hostname }}:{{ gitea_port | default('3000') }}"
+        insecure = true
+        EOF
         
     - name: push images to local edge registry
       when:  inventory_hostname in groups['shared_nvidia']
       become: false
       containers.podman.podman_image:
         name: quay.io/luisarizmendi/object-detection-action:prod
+        arch: arm64
         push: true
         username: "{{ gitea_admin }}"
         password: "{{ gitea_password }}"
         push_args:
-          dest: "{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}/{{ gitea_admin }}/object-detection-action:v1"
+          dest: "{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}/{{ gitea_admin }}/object-detection-action:v1-arm"
 
     #todo create repo
     #todo push all needed images from nvidia (so that it is arm based)
