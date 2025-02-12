@@ -150,7 +150,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"<span id="gnumberVal"></span>\" \
+\"title\": \"YOUR-GROUP-NUMBER\" \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
@@ -237,7 +237,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"<span id="gnumberVal"></span>\" \
+\"title\": \"YOUR-GROUP-NUMBER\" \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
@@ -355,7 +355,7 @@ cat > /etc/containers/registries.conf.d/gitea-registry.conf <<EOF
 location = "{container-registry-gitea}"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry {container-registry-gitea}/YOUR-GROUP-NUMBER/nvidia:0.0.2
 %end
 
 %post
