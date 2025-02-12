@@ -148,6 +148,11 @@ Part of the required information is pre-configured as global variables in the xr
 
 === Edge location
 
+==== WIFI
+
+SSID: {wifi_ssid}
+Password: {wifi_password}
+
 ==== Edge Device
 
 * IP Address: {device-ip-base}pass:[<span id="gnumberVal"></span>] 
