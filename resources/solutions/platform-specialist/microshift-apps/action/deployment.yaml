@@ -27,7 +27,7 @@ spec:
           value: http://object-detection-dashboard-backend-dashboard.apps.cluster-xmsj9.dynamic.redhatworkshops.io/alive
         - name: ALERT_ENDPOINT
           value: http://object-detection-dashboard-backend-dashboard.apps.cluster-xmsj9.dynamic.redhatworkshops.io/alert
-        image: osbuild.lmf.openshift.es:5000/gitea/object-detection-action:v1-arm
+        image: osbuild.lmf.openshift.es:5000/gitea/object-detection-action:prod
         name: object-detection-action
         securityContext:
           runAsNonRoot: true

@@ -225,7 +225,7 @@
         username: "{{ gitea_admin }}"
         password: "{{ gitea_password }}"
         push_args:
-          dest: "{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}/{{ gitea_admin }}/object-detection-action:v1-arm"
+          dest: "{{groups['registry_machine'][0]}}:{{ gitea_port | default('3000') }}/{{ gitea_admin }}/object-detection-action:prod"
 
     #todo create repo
     #todo push all needed images from nvidia (so that it is arm based)

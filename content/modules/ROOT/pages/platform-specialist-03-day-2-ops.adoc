@@ -23,7 +23,7 @@ Configuration can come from multiple sources, called "configuration providers" i
 
 What we would need to add in this case in terms of configuration, is the pull-secret for Microshift that will be placed under `/etc/crio/openshift-pull-secret`.
 
-NOTE: You can find the `pull-secret` athe end of this https://console.redhat.com/openshift/downloads[page]
+NOTE: You can see how to get your `pull-secret` in this https://access.redhat.com/solutions/4844461[page]
 
 Since the Device is managed under a Fleet, we would need to update the Fleet template to include this configuration file (you might also want to add more labels to select for example only the Devices that include Microshift for this specific case).
 
@@ -280,9 +280,9 @@ So we want to apply again the logic we saw above on defining an OS config (since
 
 You will be able to find all the pre-built Edge apps in the Edge Container Registry under:
 
-* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-stream-manager:v1-arm
-* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-inference-server:v1-arm
-* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-action:v1-arm
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-stream-manager:prod
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-inference-server:prod
+* {container-registry-gitea}/{container-registry-gitea-user}/object-detection-action:prod
 
 Given the kustomize files require a complex file structure, we will use the Git Config Provider option (mentioned above) in Flight Control.
 
