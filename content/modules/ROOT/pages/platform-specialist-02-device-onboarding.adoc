@@ -152,7 +152,7 @@ You can now install Flight Control CLI since you will need that to generate the 
 
 Select the appropriate Flight Control CLI binary for your OS (linux or darwin) and CPU architecture (amd64 or arm64), download the flightctl binary to your Workstation, rename it to flightctl and make it executable, move it into a location within your shell's search path.
 
-[source,bash]
+[source,shell,role=execute,subs="attributes"]
 ----
 $ FC_CLI_BINARY=flightctl-linux-amd64
 $ curl -LO https://github.com/flightctl/flightctl/releases/download/latest/${FC_CLI_BINARY}
@@ -163,7 +163,7 @@ $ sudo cp flightctl /usr/bin
 
 Finally you can login to Flight Control API Server from your Workstation and verify you have access by querying for available Devices
 
-[source,bash]
+[source,shell,role=execute,subs="attributes"]
 ----
 $ flightctl login https://api.user<span id="gnumberVal"></span>.apps.{ocp_cluster_url} --web --insecure-skip-tls-verify
 $ flightctl get devices
@@ -172,14 +172,14 @@ NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
 [NOTE]
-
+====
 Should you not have any DISPLAY environment specified on your Workstation, you can also login just using CLI on terminal
 
-[source,bash]
+[source,shell,role=execute,subs="attributes"]
 ----
 $ flightctl login https://api.user<span id="gnumberVal"></span>.apps.{ocp_cluster_url} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
 ----
-
+====
 
 == Image Manage
 
