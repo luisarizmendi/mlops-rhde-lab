@@ -352,7 +352,7 @@ part pv.01 --grow
 volgroup rhel pv.01
 logvol / --vgname=rhel --fstype=xfs --percent=70 --name=root
 
-reboot --eject
+halt
 
 %post
 #Switch bootc to shared registry upstream
@@ -395,11 +395,13 @@ Connect a USB thumbdrive to the Edge Image Builder and burn the ISO to it and ge
 $ sudo dd if=output/bootiso/install.iso of=/dev/sda bs=4M status=progress oflag=sync
 ----
 
-The automated installation will take approximately 10 minutes after which the Device will reboot and post the detected IP address on Gitea, inside the `inventories` repo, as an issue: 
+The automated installation will take approximately 10 minutes after which the Device will shutdown (you can check powerled and fan).
+
+Remove the USB stick and power the Local Edge Device back on and at startup the device will post the detected IP address on Gitea, inside the `inventories` repo, as an issue: 
 
 image::platform-image-mode-gitea-inventories.png[]
 
-You will now have access to the assigned Nvidia Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
+You will now have access to the assigned Local Edge Device with one of the defined users (either in the Containerfile or Kickstart file) and could also access the Cockpit interface of the same.
 
 You can now also verify that the Device is pointing to the Edge Container Registry by running the following on the Local Edge Device: 
 
