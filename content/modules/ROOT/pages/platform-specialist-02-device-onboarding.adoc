@@ -94,11 +94,11 @@ You will now install Flight Control in your own namespace so that you can contro
 
 Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here {openshift-console}/command-line-tools
 
-Login to the shared lab OpenShift {openshift-console}[cluster] using the provided username and password {openshift-user-base}:{openshift-password-base}. 
+Login to the shared lab OpenShift {openshift-console}[cluster] using the provided username and password {openshift-user-base}pass:[<span id="gnumberVal"></span>]:{openshift-password-base}pass:[<span id="gnumberVal"></span>]. 
 
 Install the suggested version of Flight Control into the cluster by running
 
-[source,bash]
+
 ----
 $ helm upgrade --install --version=0.4.0 \
     --namespace user<span id="gnumberVal"></span> --create-namespace \
@@ -110,7 +110,7 @@ NOTE: you might see `flight-ui` pod in CrashLoop, because it didn't catch up wit
 
 You can now verify that Flight Control Service is up and running:
 
-[source,bash]
+
 ----
 $ oc get pods -n user<span id="gnumberVal"></span>
 
@@ -227,7 +227,7 @@ enrollment-service:
 
 With this file available we are now ready to build the new Containerfile (_either on the Shared Edge Builder or on your Local Edge Device using KVM_)
 
-[source,docker]
+
 ----
 FROM {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 
@@ -247,15 +247,14 @@ ADD config.yaml /etc/flightctl/config.yaml
 ----
 
 building phase
-
-[source,bash,subs="attributes"]
+]
 ----
 $ sudo podman build -t {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2 .
 ----
 
 pushing the new image to the Edge Container Registry
 
-[source,bash]
+
 ----
 $ sudo podman push <image-id> {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 ----
