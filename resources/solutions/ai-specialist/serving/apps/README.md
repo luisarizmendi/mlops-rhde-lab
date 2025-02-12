@@ -69,9 +69,9 @@ After that, start the rest of the services:
 ```bash
 podman run -d --network=host quay.io/luisarizmendi/object-detection-action:prod
 
-podman run -d -p 5005:5005 quay.io/luisarizmendi/object-detection-dashboard-backend:v1
+podman run -d -p 5005:5005 quay.io/luisarizmendi/object-detection-dashboard-backend:prod
 
-podman run -d -p 3000:3000 quay.io/luisarizmendi/object-detection-dashboard-frontend:v1
+podman run -d -p 3000:3000 quay.io/luisarizmendi/object-detection-dashboard-frontend:prod
 ```
 
 
