@@ -20,7 +20,7 @@ spec:
           echo "Creating values.yaml..."
           cat <<EOF > /tmp/values.yaml
           # Common
-          cluster_url: xxxxxxxxxxxxxxxxxxxxxxxxxx
+          ocp_cluster_url: xxxxxxxxxxxxxxxxxxxxxxxxxx
           git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
           openshift-user-base: user
           openshift-password-base: redhat
