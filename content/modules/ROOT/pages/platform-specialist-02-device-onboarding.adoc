@@ -172,14 +172,14 @@ NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
 ----
 
 [NOTE]
-====
+
 Should you not have any DISPLAY environment specified on your Workstation, you can also login just using CLI on terminal
 
 [source,bash]
 ----
 $ flightctl login https://api.user<span id="gnumberVal"></span>.apps.{ocp_cluster_url} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
 ----
-====
+
 
 == Image Manage
 
