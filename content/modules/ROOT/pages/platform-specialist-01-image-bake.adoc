@@ -135,7 +135,7 @@ For the third point, we are going to use the following script and add that as a 
 
 [source,docker,subs="attributes"]
 ----
-RUN cat > /var/tmp/network-info.sh <<'EOF'
+RUN cat > /var/tmp/network-info.sh <<EOF
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -190,10 +190,8 @@ NOTE: To build this first new image you are going to use the *Shared Edge Builde
 Username and password for the Shared Edge Builder are userpass:[<span id="gnumberVal"></span>] : redhatpass:[<span id="gnumberVal"></span>] 
 
 [WARNING]
---
 After this first module, you might want to use your Local Edge Device to build the next iteration of the system image. 
-To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*).
-
+To do that you would need a fully subscribed RHEL 9 System, with the same system architecture as the target device (so *aarch64*). +
 So for this to happen you would need to include Virtualization in the Containerfile, so tht you can run a Virtualized OS dedicated to building images.
 With these packages enabled you can create a full RHEL9 VM, running on KVM, that _bakes_ new images.
 
@@ -204,12 +202,10 @@ You can find the additional packages needed in the Containerfile below.
 RUN dnf -y install qemu-kvm libvirt virt-install && dnf -y clean all 
 RUN for drv in qemu network nodedev nwfilter secret storage interface; do systemctl enable virt${drv}d{,-ro,-admin}.socket; done
 ----
---
+
 
 You can find the complete Containerfile here:
 
-
-====
 
 [source,docker,role=execute,subs="attributes"]
 ----
@@ -251,7 +247,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat > /etc/systemd/system/network-info.service <<EOF
+RUN cat > /etc/systemd/system/network-info.service <<'EOF'
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -275,7 +271,7 @@ RUN echo "IP: \4" >> /etc/issue
 RUN firewall-offline-cmd --zone=public --add-port=9090/tcp
 EXPOSE 9090
 ----
-====
+
 
 Given the complete Containerfile, we are going to build a new container image and then push it to the Edge Container Registry.
 
