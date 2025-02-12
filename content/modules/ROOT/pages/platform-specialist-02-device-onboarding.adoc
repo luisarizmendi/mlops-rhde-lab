@@ -233,6 +233,13 @@ With this file available we are now ready to build the new Containerfile.
 
 Transfer the generated files to either the Shared Edge Builder or your Local Edge Device on the created VM.
 
+NOTE: In case you want to add a virtualized your Local Edge Device, you can find the qcow2 image on the Shared Edge Builder (under `/var/lib/libvirt/images/`). You can transfer it to your Local Edge Device and start it like this (remember to also add insecure registry like shown xref:platform-specialist-01-image.adoc#_image_creation[here] in the kickstart file)
+
+[source,bash]
+----
+sudo virt-install --import --name edge-builder --boot uefi --arch aarch64 --memory 4000 --network network=default --os-variant detect=on,name=rhel-unknown --cloud-init root-password-file=./pwdfile --disk=size=30,backing_store="/var/lib/libvirt/images/rhel-9.4-aarch64-kvm.qcow2"
+----
+
 
 [source,docker,role=execute,subs="attributes"]
 ----
