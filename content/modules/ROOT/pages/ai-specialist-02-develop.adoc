@@ -60,7 +60,7 @@ We will use Gitea to store and version-control the Jupyter Notebooks developed f
 ====
 If you plan to use Gitea you can take a look and check that the "userpass:[<span id="gnumberVal"></span>]-ai" repository is already created:
 
-1. Navegate to http://{gitea-server}
+1. Navegate to http://gitea.apps.{ocp_cluster_url}
 2. Click "Sign In" (top right button) with user "{gitea-user-base}pass:[<span id="gnumberVal"></span>]" and password "{gitea-password-base}pass:[<span id="gnumberVal"></span>]"
 3. You can see on the right the "userpass:[<span id="gnumberVal"></span>]-ai" repository.
 ====
@@ -76,7 +76,7 @@ In this workshop MinIO, an Open Source High Performance Object Storage, is deplo
 ====
 You can check that you have access and that you have your Object Bucket created:
 
-1. Navegate to {minio-ui} 
+1. Navegate to https://minio-ui-minio.apps.{ocp_cluster_url}
 2. Log in with {minio-user-base}pass:[<span id="gnumberVal"></span>] / {minio-password-base}pass:[<span id="gnumberVal"></span>]
 ====
 
@@ -118,7 +118,7 @@ Jupyter Notebooks are an interactive computing environment that combines live co
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai} 
+1- Navegate to https://rhods-dashboard-redhat-ods-applications.apps.{ocp_cluster_url} 
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
@@ -132,7 +132,7 @@ image::ai-build-authenticator.png[]
 4- Create a new S3 Storage Connection ("Connetions" tab) that will be used by your Jupyter Notebooks to save the model and performance stats. Include:
 
 ** MinIO username and password ( Access key={minio-user-base}pass:[<span id="gnumberVal"></span>] / Secret key={minio-password-base}pass:[<span id="gnumberVal"></span>] )
-** MinIO API URL: {minio-api}
+** MinIO API URL: https://minio-api-minio.apps.{ocp_cluster_url}
 ** Bucket name: "userpass:[<span id="gnumberVal"></span>]-ai-models" 
 ** Region. You can keep the Region empty but it's better to include any string (e.g. `none`). 
 
@@ -611,7 +611,7 @@ for file_path_test in files_test:
         print("Error occurred: ", e)
 ----
 
-You now can go to MinIO console ( {minio-ui} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
+You now can go to MinIO console ( https://minio-ui-minio.apps.{ocp_cluster_url} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
 
 image::ai-build-miniomodel.png[]
 
@@ -861,7 +861,7 @@ It's time to run you Pipeline (click the "play" button on the top bar menu).
 ====
 You can see the Pipeline progress by:
 
-1. Navegating to OpenShift AI: {openshift-ai}
+1. Navegating to OpenShift AI: https://rhods-dashboard-redhat-ods-applications.apps.{ocp_cluster_url}
 2. Selecting the Pipeline name in "Experiments and runs".
 3. Opening the running task.
 ====

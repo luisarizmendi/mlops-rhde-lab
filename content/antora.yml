@@ -10,9 +10,8 @@ asciidoc:
     release-version: master
     page-pagination: true
     # Common
+    ocp_cluster_url: xxxxxxxxxxxxxxxxxxxxxxxxxx
     git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
-    openshift-console: https://console-openshift-console.apps.-----TBC----openshift-console----TBC-----
-    openshift-api: https://api.-----TBC----openshift-api----TBC-----:6443
     openshift-user-base: user
     openshift-password-base: redhat
     # Platform
@@ -33,12 +32,8 @@ asciidoc:
     container-registry-gitea-user: gitea
     container-registry-gitea-pass: gitea
     # AI
-    openshift-ai: https://-----TBC----openshift-ai----TBC-----
-    minio-ui: http://-----TBC----minio-ui----TBC-----
-    minio-api: http://-----TBC----minio-api----TBC-----
     minio-user-base: user
     minio-password-base: redhat
-    gitea-server: -----TBC----gitea-server----TBC-----   # without http://
     gitea-user-base: user
     gitea-password-base: redhat
     registry-url: https://quay.io/user/luisarizmendi/

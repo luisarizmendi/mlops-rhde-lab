@@ -92,9 +92,9 @@ As the target configuration for devices and device fleets is declarative, users 
 
 You will now install Flight Control in your own namespace so that you can control your edge devices in your Fleet.
 
-Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here {openshift-console}/command-line-tools
+Make sure you have installed `oc` and `helm` cli on your own machine. You can find them here https://console-openshift-console.apps.{ocp_cluster_url}/command-line-tools
 
-Login to the shared lab OpenShift {openshift-console}[cluster] using the provided username and password {openshift-user-base}pass:[<span id="gnumberVal"></span>]:{openshift-password-base}pass:[<span id="gnumberVal"></span>] from your Workstation. 
+Login to the shared lab OpenShift https://console-openshift-console.apps.{ocp_cluster_url}[cluster] using the provided username and password {openshift-user-base}pass:[<span id="gnumberVal"></span>]:{openshift-password-base}pass:[<span id="gnumberVal"></span>] from your Workstation. 
 
 Install the suggested version of Flight Control into the cluster by running
 
@@ -165,7 +165,7 @@ Finally you can login to Flight Control API Server from your Workstation and ver
 
 [source,bash]
 ----
-$ flightctl login https://{flightctl-api} --web --insecure-skip-tls-verify
+$ flightctl login https://api.user<span id="gnumberVal"></span>.apps.{ocp_cluster_url} --web --insecure-skip-tls-verify
 $ flightctl get devices
 
 NAME	ALIAS	OWNER	SYSTEM	UPDATED	APPLICATIONS	LAST SEEN
@@ -177,7 +177,7 @@ Should you not have any DISPLAY environment specified on your machine, you can a
 
 [source,bash]
 ----
-$ flightctl login https://{flightctl-api} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
+$ flightctl login https://api.user<span id="gnumberVal"></span>.apps.{ocp_cluster_url} --insecure-skip-tls-verify --username {flightctl-user-basename} --password {flightctl-password}
 ----
 ====
 

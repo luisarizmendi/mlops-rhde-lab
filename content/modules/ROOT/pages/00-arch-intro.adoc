@@ -121,22 +121,22 @@ Part of the required information is pre-configured as global variables in the xr
 
 ==== OpenShift Cluster
 
-* Web Console: {openshift-console}
+* Web Console: https://console-openshift-console.apps.{ocp_cluster_url}
 * API: {openshift-api}
-* OpenShift AI: {openshift-ai}
+* OpenShift AI: https://rhods-dashboard-redhat-ods-applications.apps.{ocp_cluster_url}
 * Username: {openshift-user-base}pass:[<span id="gnumberVal"></span>]
 * Password: {openshift-password-base}pass:[<span id="gnumberVal"></span>]
 
 ==== Object Storage (MinIO)
 
-* Web Console: {minio-ui}
-* API: {minio-api}
+* Web Console: https://minio-ui-minio.apps.{ocp_cluster_url}
+* API: https://minio-api-minio.apps.{ocp_cluster_url}
 * Username: {minio-user-base}pass:[<span id="gnumberVal"></span>]
 * Password: {minio-password-base}pass:[<span id="gnumberVal"></span>]
 
 ==== Source Code Repository (Gitea)
 
-* Web Console: http://{gitea-server}
+* Web Console: http://gitea.apps.{ocp_cluster_url}
 * Username: {gitea-user-base}pass:[<span id="gnumberVal"></span>]
 * Password: {gitea-password-base}pass:[<span id="gnumberVal"></span>]
 

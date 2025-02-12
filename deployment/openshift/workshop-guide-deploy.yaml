@@ -20,9 +20,8 @@ spec:
           echo "Creating values.yaml..."
           cat <<EOF > /tmp/values.yaml
           # Common
+          cluster_url: xxxxxxxxxxxxxxxxxxxxxxxxxx
           git-workshop-url: https://github.com/luisarizmendi/workshop-object-detection-rhde
-          openshift-console: https://console-openshift-console.apps.-----TBC----openshift----TBC-----
-          openshift-api: https://api.-----TBC----openshift----TBC-----:6443
           openshift-user-base: user
           openshift-password-base: redhat
           # Platform
@@ -43,12 +42,8 @@ spec:
           container-registry-gitea-user: gitea
           container-registry-gitea-pass: gitea
           # AI
-          openshift-ai: https://rhods-dashboard-redhat-ods-applications.apps.-----TBC----openshift----TBC-----
-          minio-ui: https://minio-ui-minio.apps.-----TBC----openshift----TBC-----
-          minio-api: https://minio-api-minio.apps.-----TBC----openshift----TBC-----
           minio-user-base: user
           minio-password-base: redhat
-          gitea-server: gitea.apps.-----TBC----openshift----TBC-----   # without http://
           gitea-user-base: user
           gitea-password-base: redhat
           registry-url: https://quay.io/user/luisarizmendi/

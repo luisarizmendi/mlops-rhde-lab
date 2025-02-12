@@ -125,7 +125,7 @@ https://min.io/[MinIO] is an Open Source High Performance Object Storage where w
 ====
 To get started, you will create a new, empty Jupyter Notebook using OpenShift AI. In order to do so you have to 
 
-1- Navegate to {openshift-ai}[OpenShift AI]
+1- Navegate to https://rhods-dashboard-redhat-ods-applications.apps.{ocp_cluster_url}[OpenShift AI]
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>]. It's a good idea to refresh the page right after the first log in in order to let the left menu load completly with all the additional enabled features.  
 
@@ -175,7 +175,7 @@ Now you have your prototyping Jupyter Notebook ready. In order to start the prot
 
 Even being a Mock Training it could take some time to finish if you are using CPUs instead of GPUs, in the meanwhile you can take a look at the cell's output. 
 
-You now can go to MinIO console ( {minio-ui} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
+You now can go to MinIO console ( https://minio-ui-minio.apps.{ocp_cluster_url} ) and open your "userpass:[<span id="gnumberVal"></span>]-ai-models" Bucket. You will find the model with the best performance metrics (`best.pt`) and the last produced with the last training epoch (`last.pt`) along with the performance stats for the Test, Validation and Training sets.
 
 image::ai-build-miniomodel.png[]
 
@@ -327,7 +327,7 @@ Let’s deploy all the components together and verify if everything works as exp
 ====
 Deploy the Cloud-side sevices in OpenShift
 
-1- Navegate to {openshift-console} 
+1- Navegate to https://console-openshift-console.apps.{ocp_cluster_url}
 
 2- Log in using your OpenShift credentials: {openshift-user-base}pass:[<span id="gnumberVal"></span>]  /  {openshift-password-base}pass:[<span id="gnumberVal"></span>].
 
