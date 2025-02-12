@@ -133,7 +133,6 @@ RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socke
 
 For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time 
 
-[source,docker,subs="attributes"]
 ----
 RUN cat > /var/tmp/network-info.sh <<EOF
 #!/bin/bash
@@ -151,7 +150,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"YOUR-GROUP-NUMBER\" \
+\"title\": \"<span id="gnumberVal"></span>\" \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
@@ -207,7 +206,6 @@ RUN for drv in qemu network nodedev nwfilter secret storage interface; do system
 You can find the complete Containerfile here:
 
 
-[source,docker,role=execute,subs="attributes"]
 ----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
@@ -239,7 +237,7 @@ fi
 
 JSON="{ \
 \"body\":\"\$IP_ADDRESS\", \
-\"title\": \"YOUR-GROUP-NUMBER\" \
+\"title\": \"<span id="gnumberVal"></span>\" \
 }"
 
 /usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
@@ -327,7 +325,6 @@ Here we will define:
 
 This is the example TOML file
 
-[source,toml,subs="attributes"]
 ----
 [customizations.installer.kickstart]
 contents = """
@@ -353,12 +350,12 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-cat > /etc/containers/registries.conf.d/gitea-registry.conf << EOF
+cat > /etc/containers/registries.conf.d/gitea-registry.conf <<EOF
 [[registry]]
-location = "YOUR-GITEA-CONTAINER-IMAGE-REGISTRY"
+location = "{container-registry-gitea}"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry YOUR-GITEA-CONTAINER-IMAGE-REGISTRY/YOUR-GROUP-NUMBER/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry {container-registry-gitea}/<span id="gnumberVal"></span>/nvidia:0.0.2
 %end
 
 %post
