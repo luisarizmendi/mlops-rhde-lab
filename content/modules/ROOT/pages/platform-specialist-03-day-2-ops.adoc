@@ -303,7 +303,7 @@ The Repository resource definition tells Flight Control the Git repository to co
 
 Now we can start by creating this Git repository on your Github (we would be able to also use the private Edge Container Registry if we had full control over the network, to bear in mind in case you want to store secrets inside the git repo).
 
-You can find the full folder structure for the 3 Edge apps with  https://github.com/luisarizmendi/workshop-object-detection-rhde/tree/main/resources/solutions/platform-specialist/microshift-apps[kubernetes manifest files here]
+You can find the full folder structure for the 3 Edge apps (and Nvidia device plugin) with  https://github.com/lucamaf/flight-apps-rh1[kubernetes manifest files here]
 
 We can now define the Git repo inside Flight Control.
 
@@ -348,7 +348,7 @@ You should also see the new manifests now landed on your Edge Device (in case yo
 ----
 $ sudo ls /etc/microshift/manifests.d/
 
-action	inference-server  stream-manager
+action	inference-server  stream-manager nvidia
 ----
 
 You now go ahead and restart Microshift, so that it picks up the new manifests and apply them automatically with kustomizer.
