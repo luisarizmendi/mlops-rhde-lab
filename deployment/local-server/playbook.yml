@@ -209,7 +209,7 @@
       become: true
       shell: 
        cmd: |
-        cat > /etc/containers/registries.conf.d/gitea-registry.conf <<'EOF'
+        cat > /etc/containers/registries.conf.d/gitea-registry.conf << EOF
         [[registry]]
         location = "{{ server_hostname }}:{{ gitea_port | default('3000') }}"
         insecure = true
