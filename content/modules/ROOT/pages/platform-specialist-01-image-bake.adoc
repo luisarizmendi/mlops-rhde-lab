@@ -84,7 +84,7 @@ RUN firewall-offline-cmd --zone=public --add-port=22/tcp && \
 
 # Create a systemd unit to recursively make the root filesystem subtree
 # shared as required by OVN images
-RUN cat << EOF > /etc/systemd/system/microshift-make-rshared.service
+RUN cat <<EOF > /etc/systemd/system/microshift-make-rshared.service
 [Unit]
 Description=Make root filesystem shared
 Before=microshift.service
@@ -135,7 +135,7 @@ For the third point, we are going to use the following script and add that as a 
 
 [source,docker,subs="attributes"]
 ----
-RUN cat << EOF > /var/tmp/network-info.sh
+RUN cat <<EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -159,7 +159,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat << EOF > /etc/systemd/system/network-info.service
+RUN cat <<EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -221,7 +221,7 @@ RUN echo "redhat:R3dh4t1!" | chpasswd
 RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
 
 # Network info script
-RUN cat << EOF > /var/tmp/network-info.sh
+RUN cat <<EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -246,7 +246,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat << EOF > /etc/systemd/system/network-info.service
+RUN cat <<EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -352,7 +352,7 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-cat << EOF > /etc/containers/registries.conf.d/gitea-registry.conf
+cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
 [[registry]]
 location = "{container-registry-gitea}"
 insecure = true
