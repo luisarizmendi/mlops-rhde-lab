@@ -354,11 +354,9 @@ halt
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
 cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
----
 [[registry]]
 location = "GITEA-URL"
 insecure = true
-...
 EOF
 bootc switch --mutate-in-place --transport registry GITEA-URL/YOUR-GROUP-NUMBER/nvidia:0.0.2
 %end
