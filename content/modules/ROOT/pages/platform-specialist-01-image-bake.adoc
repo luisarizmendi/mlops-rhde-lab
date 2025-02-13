@@ -326,6 +326,9 @@ Here we will define:
 
 This is the example TOML file
 
+cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
+f
+EOF
 
 ----
 [customizations.installer.kickstart]
