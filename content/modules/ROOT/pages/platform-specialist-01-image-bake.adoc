@@ -325,6 +325,7 @@ Here we will define:
 
 This is the example TOML file
 
+[source,bash,subs="attributes"]
 ----
 [customizations.installer.kickstart]
 contents = """
