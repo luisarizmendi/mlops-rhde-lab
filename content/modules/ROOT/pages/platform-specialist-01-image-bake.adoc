@@ -55,7 +55,7 @@ NOTE: Make sure to pull the container image with `sudo` from the Shared Edge Bui
 
 Let's analyze the base container image provided:
 
-[source,docker]
+
 ----
 FROM registry.gitlab.com/redhat/rhel/sst/orin-sidecar/nvidia-jetson-sidecar/rhel-9.4:36.3.1-20240516220919
 
@@ -84,7 +84,7 @@ RUN firewall-offline-cmd --zone=public --add-port=22/tcp && \
 
 # Create a systemd unit to recursively make the root filesystem subtree
 # shared as required by OVN images
-RUN `cat <<EOF >` /etc/systemd/system/microshift-make-rshared.service
+RUN cat <<EOF > /etc/systemd/system/microshift-make-rshared.service
 [Unit]
 Description=Make root filesystem shared
 Before=microshift.service
@@ -133,9 +133,9 @@ RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socke
 
 For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time 
 
-[source,docker,subs="attributes"]
+
 ----
-RUN `cat <<EOF >` /var/tmp/network-info.sh
+RUN cat <<EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -154,12 +154,12 @@ JSON="{ \
 \"title\": \"YOUR-GROUP-NUMBER\" \
 }"
 
-/usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
+/usr/bin/curl -k -H 'Content-Type: application/json' -u YOUR-GITEA-USER:YOUR-GITEA-pass --data "\$JSON" http://GITEA-URL/api/v1/repos/YOUR-GITEA-USER/inventories/issues
 EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN `cat <<EOF >` /etc/systemd/system/network-info.service
+RUN cat <<EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -206,7 +206,7 @@ RUN for drv in qemu network nodedev nwfilter secret storage interface; do system
 
 You can find the complete Containerfile here:
 
-[source,docker,subs="attributes"]
+
 ----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
@@ -221,7 +221,7 @@ RUN echo "redhat:R3dh4t1!" | chpasswd
 RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
 
 # Network info script
-RUN `cat <<EOF >` /var/tmp/network-info.sh
+RUN cat <<EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -241,12 +241,12 @@ JSON="{ \
 \"title\": \"YOUR-GROUP-NUMBER\" \
 }"
 
-/usr/bin/curl -k -H 'Content-Type: application/json' -u {container-registry-gitea-user}:{container-registry-gitea-pass} --data "\$JSON" http://{container-registry-gitea}/api/v1/repos/{container-registry-gitea-user}/inventories/issues
+/usr/bin/curl -k -H 'Content-Type: application/json' -u YOUR-GITEA-USER:YOUR-GITEA-PASS --data "\$JSON" http://GITEA-URL/api/v1/repos/YOUR-GITEA-USER/inventories/issues
 EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN `cat <<EOF >` /etc/systemd/system/network-info.service
+RUN cat <<EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -290,7 +290,7 @@ You can find that functionality here:
 
 image::platform-image-mode-gitea.png[]
 
-You would then need to log into the Edge Container Registry with the credentials {container-registry-gitea-user} : {container-registry-gitea-pass}
+You would then need to log into the Edge Container Registry with the credentials used before:
 
 [source,bash,subs="attributes"]
 ----
@@ -326,7 +326,7 @@ Here we will define:
 
 This is the example TOML file
 
-[source,bash,subs="attributes"]
+
 ----
 [customizations.installer.kickstart]
 contents = """
@@ -352,12 +352,12 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-`cat <<EOF >` /etc/containers/registries.conf.d/gitea-registry.conf
+cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
 [[registry]]
-location = "{container-registry-gitea}"
+location = "GITEA-URL"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry {container-registry-gitea}/YOUR-GROUP-NUMBER/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry GITEA-URL/YOUR-GROUP-NUMBER/nvidia:0.0.2
 %end
 
 %post
