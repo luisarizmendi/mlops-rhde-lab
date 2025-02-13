@@ -163,8 +163,8 @@ Part of the required information is pre-configured as global variables in the xr
 
 * Local Container Image Registry (Gitea)
 ** Address: {container-registry-gitea}
-** Username: {gitea-user-base}pass:[<span id="gnumberVal"></span>]
-** Password: {gitea-password-base}pass:[<span id="gnumberVal"></span>]
+** Username: {container-registry-gitea-user}
+** Password: {container-registry-gitea-pass}
 
 * Local Edge Builder:
 ** Addresss: {shared-nvidia-ip}
