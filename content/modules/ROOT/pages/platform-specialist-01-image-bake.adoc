@@ -325,8 +325,8 @@ Here we will define:
 
 This is the example TOML file
 
-
-====
+[source,bash,subs="attributes"]
+----
 [customizations.installer.kickstart]
 contents = """
 lang en_US.UTF-8
@@ -351,7 +351,7 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-cat > /etc/containers/registries.conf.d/gitea-registry.conf <<EOF
+cat << EOF > /etc/containers/registries.conf.d/gitea-registry.conf
 [[registry]]
 location = "{container-registry-gitea}"
 insecure = true
@@ -363,7 +363,7 @@ bootc switch --mutate-in-place --transport registry {container-registry-gitea}/Y
 systemctl mask bootc-fetch-apply-updates.timer
 %end
 """
-====
+----
 
 Now we can go ahead and create the ISO image: make sure to save the above file as config.toml and create an output directory by running this on the Shared Edge Builder.
 
