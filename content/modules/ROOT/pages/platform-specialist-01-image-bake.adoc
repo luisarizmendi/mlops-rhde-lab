@@ -326,10 +326,8 @@ Here we will define:
 
 This is the example TOML file
 
-cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
-f
-EOF
 
+[source,shell,role=execute,subs="attributes"]
 ----
 [customizations.installer.kickstart]
 contents = """
@@ -355,7 +353,9 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
+```
 cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
+```
 [[registry]]
 location = "GITEA-URL"
 insecure = true
