@@ -84,7 +84,7 @@ RUN firewall-offline-cmd --zone=public --add-port=22/tcp && \
 
 # Create a systemd unit to recursively make the root filesystem subtree
 # shared as required by OVN images
-RUN cat > /etc/systemd/system/microshift-make-rshared.service <<EOF
+RUN cat << EOF > /etc/systemd/system/microshift-make-rshared.service
 [Unit]
 Description=Make root filesystem shared
 Before=microshift.service
@@ -133,8 +133,9 @@ RUN dnf -y install cockpit && dnf -y clean all && systemctl enable cockpit.socke
 
 For the third point, we are going to use the following script and add that as a service in our Containerfile so that it is started at boot time 
 
+[source,docker,subs="attributes"]
 ----
-RUN cat > /var/tmp/network-info.sh <<EOF
+RUN cat << EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -158,7 +159,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat > /etc/systemd/system/network-info.service <<EOF
+RUN cat << EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
@@ -205,7 +206,7 @@ RUN for drv in qemu network nodedev nwfilter secret storage interface; do system
 
 You can find the complete Containerfile here:
 
-
+[source,docker,subs="attributes"]
 ----
 FROM {container-registry-gitea}/{container-registry-gitea-user}/nvidia:0.0.1
 
@@ -220,7 +221,7 @@ RUN echo "redhat:R3dh4t1!" | chpasswd
 RUN echo "%wheel        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/wheel-sudo
 
 # Network info script
-RUN cat > /var/tmp/network-info.sh <<EOF
+RUN cat << EOF > /var/tmp/network-info.sh
 #!/bin/bash
 sleep 5
 conn_name=\$(nmcli -t -f NAME con show | head -n 1)
@@ -245,7 +246,7 @@ EOF
 
 RUN chmod +x  /var/tmp/network-info.sh
 
-RUN cat > /etc/systemd/system/network-info.service <<EOF
+RUN cat << EOF > /etc/systemd/system/network-info.service
 [Unit]
 Description=Register Network Info onto Gitea
 After=network.target
