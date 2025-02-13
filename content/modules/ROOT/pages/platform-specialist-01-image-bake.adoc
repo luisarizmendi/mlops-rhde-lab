@@ -326,7 +326,7 @@ Here we will define:
 
 This is the example TOML file
 
-[source,toml,role=execute,subs="attributes"]
+
 ----
 [customizations.installer.kickstart]
 contents = """
@@ -352,15 +352,12 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
-[.console-input]
-....
 cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
-....
 [[registry]]
-location = "{git-workshop-url}"
+location = "GITEA-URL"
 insecure = true
 EOF
-bootc switch --mutate-in-place --transport registry {git-workshop-url}/YOUR-GROUP-NUMBER/nvidia:0.0.2
+bootc switch --mutate-in-place --transport registry GITEA-URL/YOUR-GROUP-NUMBER/nvidia:0.0.2
 %end
 
 %post
