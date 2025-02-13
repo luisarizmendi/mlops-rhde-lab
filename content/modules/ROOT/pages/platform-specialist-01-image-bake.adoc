@@ -352,6 +352,7 @@ halt
 %post
 #Switch bootc to shared registry upstream
 mkdir -p /etc/containers/registries.conf.d/
+[.console-input]
 ....
 cat <<EOF > /etc/containers/registries.conf.d/gitea-registry.conf
 ....
