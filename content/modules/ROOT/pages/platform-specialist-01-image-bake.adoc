@@ -290,7 +290,7 @@ You can find that functionality here:
 
 image::platform-image-mode-gitea.png[]
 
-You would then need to log into the Edge Container Registry with the credentials used before:
+You would then need to log into the Edge Container Registry with the credentials {container-registry-gitea-user} : {container-registry-gitea-pass}
 
 [source,bash,subs="attributes"]
 ----
