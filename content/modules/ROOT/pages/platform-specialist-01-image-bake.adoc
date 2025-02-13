@@ -327,7 +327,7 @@ Here we will define:
 This is the example TOML file
 
 [.console-input]
-[source,console]
+[source,toml,role=execute,subs="attributes"]
 ----
 [customizations.installer.kickstart]
 contents = """
