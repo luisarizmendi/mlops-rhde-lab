@@ -529,7 +529,7 @@ sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisar
 
 [NOTE]
 
-This won't work for MAC users since camera access from containers is different in that OS. If you are a MAC user you can still run this service by downloading and running directly the (https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/src/object-detection-stream-manager.py)[`object-detection-stream-manager.py` python script] on your system with `python object-detection-stream-manager.py`. Remember install the (https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/src/requirements.txt)[python dependencies] with `pip install` and to grant permissions to access cameras if needed.
+This won't work for MAC users since camera access from containers is different in that OS. If you are a MAC user you can still run this service by downloading and running directly the https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/src/object-detection-stream-manager.py[`object-detection-stream-manager.py` python script] on your system with `python object-detection-stream-manager.py`. Remember install the (https://github.com/luisarizmendi/workshop-object-detection-rhde/blob/main/resources/solutions/ai-specialist/serving/apps/object-detection-stream-manager/src/requirements.txt)[python dependencies] with `pip install` and to grant permissions to access cameras if needed.
 
 
 
