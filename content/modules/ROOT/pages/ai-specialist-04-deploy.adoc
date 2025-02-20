@@ -527,6 +527,9 @@ curl http://localhost:8080/healthz
 sudo podman run -it --rm -p 5000:5000 --privileged --network=host quay.io/luisarizmendi/object-detection-stream-manager:prod
 ----
 
+[NOTE]
+
+Remember to grant permissions to access cameras if needed.
 
 4- Deploy the Actuator. It needs also to use the host network. Also you will need to include the Dashboard backend route. Please, don't forget the `/alert` and `/alive` as part of the environment variable value.
 

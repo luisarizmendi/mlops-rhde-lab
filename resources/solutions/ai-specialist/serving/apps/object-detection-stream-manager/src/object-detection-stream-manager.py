@@ -12,6 +12,7 @@ import queue
 import time
 from collections import defaultdict
 import random
+import platform 
 
 app = Flask(__name__)
 
@@ -127,16 +128,23 @@ def initialize_camera():
         return True
 
     camera_index = int(os.getenv('CAMERA_INDEX', -1))
+    system = platform.system()
     
     if camera_index != -1:
-        cap = cv2.VideoCapture(camera_index)
+        if system == 'Darwin':
+            cap = cv2.VideoCapture(camera_index, cv2.CAP_AVFOUNDATION)
+        else:
+            cap = cv2.VideoCapture(camera_index)
         if cap.isOpened():
             selected_camera_index = camera_index
             return True
 
     # Auto-detect camera
     for i in range(10):
-        cap = cv2.VideoCapture(i)
+        if system == 'Darwin':
+            cap = cv2.VideoCapture(i, cv2.CAP_AVFOUNDATION)
+        else:
+            cap = cv2.VideoCapture(i)
         if cap.isOpened():
             selected_camera_index = i
             return True
