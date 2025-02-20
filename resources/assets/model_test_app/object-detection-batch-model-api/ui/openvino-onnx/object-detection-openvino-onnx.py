@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 from typing import List, Dict
 
+# Get inference URL from environment variable if it exists
+DEFAULT_INFERENCE_URL = os.getenv('INFERENCE_URL', '')
+
 def generate_distinct_colors(n: int) -> List[tuple]:
     """Generate n visually distinct colors using HSV color space."""
     colors = []
@@ -204,7 +207,7 @@ def calculate_iou(box1, box2):
 interface = gr.Interface(
     fn=detect_objects,
     inputs=[
-        gr.Text(label="Inference Endpoint URL"),
+        gr.Text(label="Inference Endpoint URL", value=DEFAULT_INFERENCE_URL),
         gr.Files(file_types=["image"], label="Select Images"),
         gr.Textbox(label="Class Names (comma-separated)", placeholder="Leave empty to use default class names (class0, class1, etc.)"),
         gr.Slider(minimum=0.0, maximum=1.0, value=0.25, step=0.05, label="Confidence Threshold")
