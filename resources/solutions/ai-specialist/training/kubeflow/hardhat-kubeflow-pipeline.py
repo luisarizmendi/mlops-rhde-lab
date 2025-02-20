@@ -120,6 +120,9 @@ def train_model(
         imgsz=CONFIG['imgsz']
     )
 
+    # Export to ONNX format
+    model.export(format='onnx', imgsz=CONFIG['imgsz'])
+    
     # Compute metrics from CSV
     results_csv_path = os.path.join(results_train.save_dir, "results.csv")
     results_df = pd.read_csv(results_csv_path)
@@ -182,7 +185,7 @@ def upload_to_minio(
 
     files_model_pt = os.path.join(train_dir, "weights") + "/best.pt"
     
-    #files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
+    files_model_onnx = os.path.join(train_dir, "weights") + "/best.onnx"
     #files_model_torchscript = os.path.join(train_dir, "weights") + "/best.torchscript"
     
     files_test = [os.path.join(test_dir, f) for f in os.listdir(test_dir) 
@@ -211,10 +214,10 @@ def upload_to_minio(
     except S3Error as e:
         print(f"Error uploading {files_model_pt}: {e}")
 
-    #try:
-    #    client.fput_object(bucket, f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", files_model_onnx)
-    #except S3Error as e:
-    #    print(f"Error uploading {files_model_onnx}: {e}")
+    try:
+        client.fput_object(bucket, f"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}", files_model_onnx)
+    except S3Error as e:
+        print(f"Error uploading {files_model_onnx}: {e}")
 
     #try:
     #    client.fput_object(bucket, f"models/{directory_name}/model/torchscript/1/model.pt", files_model_torchscript)
