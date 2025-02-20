@@ -365,7 +365,8 @@ deploymentSpec:
           \        amp=CONFIG['amp'],\n    )\n\n    # Evaluate model\n    results_test\
           \ = model.val(\n        data=CONFIG['data'],\n        split='test',\n  \
           \      device=CONFIG['device'],\n        imgsz=CONFIG['imgsz']\n    )\n\n\
-          \    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
+          \    # Export to ONNX format\n    model.export(format='onnx', imgsz=CONFIG['imgsz'])\n\
+          \n    # Compute metrics from CSV\n    results_csv_path = os.path.join(results_train.save_dir,\
           \ \"results.csv\")\n    results_df = pd.read_csv(results_csv_path)\n\n \
           \   # Extract metrics\n    metrics = {\n        \"precision\": results_df[\"\
           metrics/precision(B)\"].iloc[-1],\n        \"recall\": results_df[\"metrics/recall(B)\"\
@@ -419,7 +420,7 @@ deploymentSpec:
           \ f))]\n    files_models = [os.path.join(weights_path, f) for f in os.listdir(weights_path)\n\
           \                    if os.path.isfile(os.path.join(weights_path, f))]\n\
           \n    files_model_pt = os.path.join(train_dir, \"weights\") + \"/best.pt\"\
-          \n\n    #files_model_onnx = os.path.join(train_dir, \"weights\") + \"/best.onnx\"\
+          \n\n    files_model_onnx = os.path.join(train_dir, \"weights\") + \"/best.onnx\"\
           \n    #files_model_torchscript = os.path.join(train_dir, \"weights\") +\
           \ \"/best.torchscript\"\n\n    files_test = [os.path.join(test_dir, f) for\
           \ f in os.listdir(test_dir) \n                  if os.path.isfile(os.path.join(test_dir,\
@@ -434,10 +435,10 @@ deploymentSpec:
           \  f.write(\"models/\" + directory_name)\n\n    try:\n        client.fput_object(bucket,\
           \ f\"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}\"\
           , files_model_pt)\n    except S3Error as e:\n        print(f\"Error uploading\
-          \ {files_model_pt}: {e}\")\n\n    #try:\n    #    client.fput_object(bucket,\
+          \ {files_model_pt}: {e}\")\n\n    try:\n        client.fput_object(bucket,\
           \ f\"models/{directory_name}/model/onnx/1/{os.path.basename(files_model_onnx)}\"\
-          , files_model_onnx)\n    #except S3Error as e:\n    #    print(f\"Error\
-          \ uploading {files_model_onnx}: {e}\")\n\n    #try:\n    #    client.fput_object(bucket,\
+          , files_model_onnx)\n    except S3Error as e:\n        print(f\"Error uploading\
+          \ {files_model_onnx}: {e}\")\n\n    #try:\n    #    client.fput_object(bucket,\
           \ f\"models/{directory_name}/model/torchscript/1/model.pt\", files_model_torchscript)\n\
           \    #except S3Error as e:\n    #    print(f\"Error uploading {files_model_torchscript}:\
           \ {e}\")\n\n\n    model_artifact_s3_path=f\"models/{directory_name}/model/pytorch/{os.path.basename(files_model_pt)}\"\

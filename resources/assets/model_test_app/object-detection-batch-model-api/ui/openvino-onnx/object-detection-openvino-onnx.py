@@ -3,16 +3,62 @@ import requests
 import os
 import cv2
 import numpy as np
+from typing import List, Dict
+
+def generate_distinct_colors(n: int) -> List[tuple]:
+    """Generate n visually distinct colors using HSV color space."""
+    colors = []
+    for i in range(n):
+        hue = i / n
+        saturation = 0.8 + (i % 3) * 0.1  # Varying saturation
+        value = 0.9 + (i % 2) * 0.1  # Varying value
+        
+        # Convert HSV to RGB
+        h = hue * 6
+        c = value * saturation
+        x = c * (1 - abs(h % 2 - 1))
+        m = value - c
+        
+        if h < 1:
+            r, g, b = c, x, 0
+        elif h < 2:
+            r, g, b = x, c, 0
+        elif h < 3:
+            r, g, b = 0, c, x
+        elif h < 4:
+            r, g, b = 0, x, c
+        elif h < 5:
+            r, g, b = x, 0, c
+        else:
+            r, g, b = c, 0, x
+            
+        r, g, b = int((r + m) * 255), int((g + m) * 255), int((b + m) * 255)
+        colors.append((b, g, r))  # BGR format for OpenCV
+    
+    return colors
 
 def load_model(model_url):
     return model_url
 
-def detect_objects(model_url, image_paths, class_names):
+def detect_objects(model_url, image_paths, class_names, confidence_threshold):
     if not image_paths:
         return "No images uploaded.", []
 
-    # Parse class names into a list
-    class_names_list = [name.strip() for name in class_names.split(",")]
+    # Convert confidence threshold to float
+    try:
+        confidence_threshold = float(confidence_threshold)
+    except ValueError:
+        return "Invalid confidence threshold value. Please enter a number between 0 and 1.", []
+
+    if not 0 <= confidence_threshold <= 1:
+        return "Confidence threshold must be between 0 and 1.", []
+
+    # Parse class names into a list or generate default names
+    if class_names.strip():
+        class_names_list = [name.strip() for name in class_names.split(",")]
+    else:
+        # We'll determine the number of classes from the first detection
+        class_names_list = []
 
     results_images = []
     for image_path in image_paths:
@@ -39,8 +85,19 @@ def detect_objects(model_url, image_paths, class_names):
 
             result = response.json()
             output = np.array(result['outputs'][0]['data']).reshape(result['outputs'][0]['shape'])
+            
+            # If class names weren't provided, generate them from the first detection
+            if not class_names_list:
+                num_classes = output.shape[1] - 4  # Subtract 4 for bbox coordinates
+                class_names_list = [f"class{i}" for i in range(num_classes)]
+            
+            # Generate colors for all classes
+            colors = generate_distinct_colors(len(class_names_list))
+            
             processed_image = cv2.imread(image_path)
-            detections, annotated_img = postprocess_predictions(output, processed_image, class_names_list)
+            detections, annotated_img = postprocess_predictions(
+                output, processed_image, class_names_list, colors, confidence_threshold
+            )
 
             # Convert annotated image to RGB
             annotated_img_rgb = cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB)
@@ -51,7 +108,6 @@ def detect_objects(model_url, image_paths, class_names):
 
     return "Processing completed.", results_images
 
-
 def preprocess_image(image_data):
     img = cv2.imdecode(np.frombuffer(image_data, np.uint8), cv2.IMREAD_COLOR)
     img_resized = cv2.resize(img, (640, 640))
@@ -60,37 +116,22 @@ def preprocess_image(image_data):
     img_batched = np.expand_dims(img_transposed, axis=0)
     return img_batched.tolist()
 
-def postprocess_predictions(output, original_img, class_names, confidence_threshold=0.5):
-    print("First detection full details:", output[0].T[0])
-    
+def postprocess_predictions(output, original_img, class_names, colors, confidence_threshold):
     output = output[0]
     detections = []
 
     for detection in output.T:
-        x_center, y_center, width, height = detection[:4]
-        confidence = detection[4]
-        class_probs = detection[5:]
-        
+        class_probs = detection[4:]
+        class_id = np.argmax(class_probs)
+        confidence = class_probs[class_id]
+
         if confidence > confidence_threshold:
-            print("DETECT: ", detection)
-
-            class_id = np.argmax(class_probs)
-            class_name = class_names[class_id] if class_id < len(class_names) else f'class{class_id}'
-            
-            print(f"Detection: Class {class_id} ({class_name}), Confidence: {confidence}")
-  
-
-
-    for detection in output.T:
-        confidence = detection[4]
-        if confidence > confidence_threshold:
-            class_id = np.argmax(detection[5:])
             x_center, y_center, width, height = detection[:4]
-
-            x = x_center - width/2
-            y = y_center - height/2
+            x = x_center - width / 2
+            y = y_center - height / 2
 
             detections.append({
+                'class_id': class_id,
                 'class_name': class_names[class_id] if class_id < len(class_names) else f'class{class_id}',
                 'confidence': confidence,
                 'bbox': [x, y, width, height]
@@ -105,12 +146,15 @@ def postprocess_predictions(output, original_img, class_names, confidence_thresh
         x, y, width, height = det['bbox']
         x, width = x/scale_x, width/scale_x
         y, height = y/scale_y, height/scale_y
+        
+        # Get color for this class
+        color = colors[det['class_id'] % len(colors)]
 
         cv2.rectangle(
             original_img,
             (int(x), int(y)),
             (int(x+width), int(y+height)),
-            (0, 255, 0),
+            color,
             2
         )
 
@@ -121,7 +165,7 @@ def postprocess_predictions(output, original_img, class_names, confidence_thresh
             (int(x), int(y-10)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.9,
-            (0, 255, 0),
+            color,
             2
         )
 
@@ -162,7 +206,8 @@ interface = gr.Interface(
     inputs=[
         gr.Text(label="Inference Endpoint URL"),
         gr.Files(file_types=["image"], label="Select Images"),
-        gr.Textbox(label="Class Names (comma-separated)")
+        gr.Textbox(label="Class Names (comma-separated)", placeholder="Leave empty to use default class names (class0, class1, etc.)"),
+        gr.Slider(minimum=0.0, maximum=1.0, value=0.25, step=0.05, label="Confidence Threshold")
     ],
     outputs=[
         gr.Textbox(label="Status"),
